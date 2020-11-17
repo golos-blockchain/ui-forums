@@ -1,5 +1,5 @@
 module.exports = {
-    REST_API: 'http://localhost:5000',
+    REST_API: 'http://37.18.27.45:5000',
     STM_Config: {
         img_proxy_prefix: "https://steemitimages.com/",
         ipfs_prefix: false,

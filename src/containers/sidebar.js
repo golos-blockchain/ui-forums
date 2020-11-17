@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import { Button, Header, Icon, Menu, Segment } from 'semantic-ui-react'
 import * as accountActions from '../actions/accountActions'
 import { Link } from 'react-router-dom'
+import tt from 'counterpart';
 
 class Sidebar extends React.Component {
   render() {
@@ -33,13 +34,13 @@ class Sidebar extends React.Component {
     requestForum = (
         <Segment basic textAlign='center'>
             <Header size='small'>
-                Start your own community forum!
+                {tt('sidebar.start_your_own_forum')}
             </Header>
             <p>
                 <Button
                     as={Link}
                     to='/create/forum'
-                    content='Get Started'
+                    content={tt('sidebar.get_started')}
                     size='small'
                     color='blue'
                 />

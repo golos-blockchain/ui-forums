@@ -25,7 +25,7 @@ import GlobalNotice from '../components/global/notice'
 import './app.css'
 import '../../node_modules/noty/lib/noty.css'
 
-steem.api.setOptions({ url: 'https://api.steemit.com' });
+steem.api.setOptions({ url: 'https://api.golos.id' });
 
 const App = () => (
     <BrowserRouter history={browserHistory}>

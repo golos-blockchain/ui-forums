@@ -1,0 +1,26 @@
+{
+  "forum_controls": {
+    "new_post": "New Post",
+    "you_must_be_logged_in_to_post": "You must be logged in to post.",
+    "show_hidden": "Show hidden"
+  },
+  "sidebar": {
+    "start_your_own_forum": "Start your own community forum!",
+    "get_started": "Get Started"
+  },
+  "login": {
+    "sign_in": "Login",
+    "key_warn": "Please use your keys responsibly.",
+    "key_warn_description": "As with all Steem powered applications, please be aware of what website you're on and if you trust the organization running it. Make sure you are only using your posting key and your active/owner keys remain safe (preferrably in a wallet or offline). Use active key only if cases when you want transfer some tokens, etc.",
+    "account_name": "Account Name",
+    "password": "Password (or Posting Private Key)",
+    "no_such_account_name": "No such account name",
+    "wrong_password_format": "Invalid format of password/key",
+    "wrong_password": "Wrong password/key"
+  },
+  "g": {
+    "cancel": "Cancel",
+    "proceed": "Proceed ",
+    "error" :"Error"
+  }
+}

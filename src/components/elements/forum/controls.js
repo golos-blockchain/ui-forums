@@ -1,4 +1,5 @@
 import React from 'react';
+import tt from 'counterpart';
 
 import { Button, Checkbox, Menu, Popup } from 'semantic-ui-react'
 
@@ -12,12 +13,12 @@ export default class ForumIndex extends React.Component {
                     trigger={
                         <Button floated='left' size='tiny'>
                             <i className='pencil icon'></i>
-                            New Post
+                            {tt('forum_controls.new_post')}
                         </Button>
                     }
                     position='bottom center'
                     inverted
-                    content='You must be logged in to post.'
+                    content={tt('forum_controls.you_must_be_logged_in_to_post')}
                     basic
                 />
             )
@@ -25,7 +26,7 @@ export default class ForumIndex extends React.Component {
             newPostButton = (
                 <Button floated='left' color='green' size='tiny' onClick={this.props.showNewPost}>
                     <i className='pencil icon'></i>
-                    Post
+                    {tt('forum_controls.new_post')}
                 </Button>
             )
         }
@@ -36,7 +37,7 @@ export default class ForumIndex extends React.Component {
                 </Menu.Item>
                 <Menu.Item>
                     <Checkbox
-                        label='Show hidden'
+                        label={tt('forum_controls.show_hidden')}
                         name='moderatedVisible'
                         onChange={this.props.changeVisibility}
                         checked={this.props.showModerated}

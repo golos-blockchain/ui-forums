@@ -1,6 +1,7 @@
 import React from 'react'
 import { Button, Form, Header, Icon, Message, Modal } from 'semantic-ui-react'
 import steem from 'steem'
+import tt from 'counterpart';
 
 export default class LoginModal extends React.Component {
 
@@ -17,8 +18,8 @@ export default class LoginModal extends React.Component {
   }
 
   handleOpen = (e) => this.setState({
-    warningOpen: true,
-    loginOpen: false
+    warningOpen: false,
+    loginOpen: true
   })
 
   handleSwap = (e) => this.setState({
@@ -49,7 +50,7 @@ export default class LoginModal extends React.Component {
         if(!result.length) {
           t.setState({
             loading: false,
-            error: 'Invalid account name'
+            error: tt('login.no_such_account_name')
           })
           return
         }
@@ -68,14 +69,14 @@ export default class LoginModal extends React.Component {
         } else {
           t.setState({
             loading: false,
-            error: 'Invalid WIF Key for Account'
+            error:  tt('login.wrong_password')
           })
         }
       })
     } else {
       t.setState({
         loading: false,
-        error: 'Invalid WIF Key'
+        error: tt('login.wrong_password_format')
       })
     }
 
@@ -97,7 +98,7 @@ export default class LoginModal extends React.Component {
             fluid={buttonFluid}
             color={buttonColor}
             floated={buttonFloated}
-            content={buttonText || 'Sign-in'}
+            content={buttonText || tt('login.sign_in')}
             icon={buttonIcon}
             onClick={this.handleOpen}
           />
@@ -109,13 +110,13 @@ export default class LoginModal extends React.Component {
         size='small'
         className='modal-warning'
       >
-        <Header icon='warning' content='Please use your keys responsibly.' />
+        <Header icon='warning' content={tt('login.key_warn')} />
         <Modal.Content>
-          <h4>As with all Steem powered applications, please be aware of what website you're on and if you trust the organization running it. Make sure you are only using your posting key and your active/owner keys remain safe (preferrably in a wallet or offline).</h4>
+          <h4>{tt('login.key_warn_description')}</h4>
         </Modal.Content>
         <Modal.Actions>
-          <Button color='orange' onClick={this.handleClose}>Cancel</Button>
-          <Button color='green' icon onClick={this.handleSwap}>Proceed <Icon name='right chevron' /></Button>
+          <Button color='orange' onClick={this.handleClose}>{tt('g.cancel')}</Button>
+          <Button color='green' icon onClick={this.handleSwap}>{tt('g.proceed')} <Icon name='right chevron' /></Button>
         </Modal.Actions>
       </Modal>
     )
@@ -125,38 +126,38 @@ export default class LoginModal extends React.Component {
           open={this.state.loginOpen}
           size='small'
         >
-          <Header icon='lock' content='Login using your account credentials' />
+          <Header icon='lock' content={tt('login.sign_in')} />
           <Modal.Content>
-            <Message>
+            {/*<Message>
               <Message.Header>Before you login, please note:</Message.Header>
               <Message.List>
                 <Message.Item>chainBB uses Steem&lsquo;s Post Beneficiaries feature at 5% of all posts. This reward is split between the users who operate the forums and the chainBB developers.</Message.Item>
                 <Message.Item>You can login to chainBB using your Steem posting key (WIF format, starts with the number 5). These keys are currently stored unencrypted in your browser and used for posting and voting.</Message.Item>
                 <Message.Item>chainBB is currently in <strong>BETA</strong> and may contain bugs.</Message.Item>
               </Message.List>
-            </Message>
+            </Message>*/}
             <Form
               error={(this.state.error) ? true : false}
               loading={this.state.loading}>
-              <Form.Input placeholder='Account Name' name='account' value={this.state.account} onChange={this.handleChange} />
-              <Form.Input placeholder='Posting (Private Key)' type='password' name='key' value={this.state.key} onChange={this.handleChange} />
-              <p>
+              <Form.Input placeholder={tt('login.account_name')} name='account' value={this.state.account} onChange={this.handleChange} />
+              <Form.Input placeholder={tt('login.password')} type='password' name='key' value={this.state.key} onChange={this.handleChange} />
+              {/*<p>
                 Need help finding your <strong>Posting (Private Key)</strong>?
                 {' '}
                 <a rel='nofollow' target='_blank' href='https://steemit.com/steemit-guides/@rgeddes/getting-your-posting-key---made-easy'>
                   Read this post by @rgeddes on steemit.com.
                 </a>
-              </p>
+              </p>*/}
               <Message
                 error
-                header='Error'
+                header={tt('g.error')}
                 content={this.state.error}
               />
             </Form>
           </Modal.Content>
           <Modal.Actions>
-            <Button color='orange' onClick={this.handleClose}>Cancel</Button>
-            <Button color='blue' icon onClick={this.handleSubmit}>Sign-in <Icon name='right chevron' /></Button>
+            <Button color='orange' onClick={this.handleClose}>{tt('g.cancel')}</Button>
+            <Button color='blue' icon onClick={this.handleSubmit}>{tt('login.sign_in')} <Icon name='right chevron' /></Button>
           </Modal.Actions>
         </Modal>
       )
