@@ -38,14 +38,14 @@ export default class LoginModal extends React.Component {
     e.preventDefault()
     const { account, key } = this.state,
           t = this
-    let isValidKey = golos.auth.isWif(key),
+    let wif = golos.auth.getWif(account, key),
         isValidForAccount = false
     // Indicate we're loading
     t.setState({
       loading: true,
       error: false
     })
-    if(isValidKey) {
+    if(wif) {
       golos.api.getAccounts([account], function(err, result) {
         if(!result.length) {
           t.setState({
@@ -55,16 +55,15 @@ export default class LoginModal extends React.Component {
           return
         }
         if(result) {
-          let public_key = golos.auth.wifToPublic(key),
-              key_auths = result[0].posting.key_auths
+          let key_auths = result[0].posting.key_auths
           for(var i=0; i < key_auths.length; i++) {
-            if(key_auths[i][0] === public_key) {
+            if(golos.auth.wifIsValid(wif, key_auths[i][0])) {
               isValidForAccount = true
             }
           }
         }
         if(isValidForAccount) {
-          t.props.actions.signinAccount(account, key)
+          t.props.actions.signinAccount(account, wif)
           t.handleClose()
         } else {
           t.setState({
