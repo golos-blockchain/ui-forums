@@ -3,6 +3,7 @@ import { Helmet } from "react-helmet";
 import { BrowserRouter, browserHistory, Route, Redirect } from 'react-router-dom';
 
 import steem from 'steem'
+import golos from 'golos-classic-js'
 
 import { Container } from 'semantic-ui-react'
 
@@ -26,6 +27,7 @@ import './app.css'
 import '../../node_modules/noty/lib/noty.css'
 
 steem.api.setOptions({ url: 'https://api.golos.id' });
+golos.config.set('websocket', 'https://api.golos.id');
 
 const App = () => (
     <BrowserRouter history={browserHistory}>

@@ -1,6 +1,6 @@
 import React from 'react'
 import { Button, Form, Header, Icon, Message, Modal } from 'semantic-ui-react'
-import steem from 'steem'
+import golos from 'golos-classic-js'
 import tt from 'counterpart';
 
 export default class LoginModal extends React.Component {
@@ -38,7 +38,7 @@ export default class LoginModal extends React.Component {
     e.preventDefault()
     const { account, key } = this.state,
           t = this
-    let isValidKey = steem.auth.isWif(key),
+    let isValidKey = golos.auth.isWif(key),
         isValidForAccount = false
     // Indicate we're loading
     t.setState({
@@ -46,7 +46,7 @@ export default class LoginModal extends React.Component {
       error: false
     })
     if(isValidKey) {
-      steem.api.getAccounts([account], function(err, result) {
+      golos.api.getAccounts([account], function(err, result) {
         if(!result.length) {
           t.setState({
             loading: false,
@@ -55,7 +55,7 @@ export default class LoginModal extends React.Component {
           return
         }
         if(result) {
-          let public_key = steem.auth.wifToPublic(key),
+          let public_key = golos.auth.wifToPublic(key),
               key_auths = result[0].posting.key_auths
           for(var i=0; i < key_auths.length; i++) {
             if(key_auths[i][0] === public_key) {
