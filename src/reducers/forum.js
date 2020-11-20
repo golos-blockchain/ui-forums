@@ -1,5 +1,5 @@
 import * as types from '../actions/actionTypes';
-import * as GLOBAL from '../global';
+import * as CONFIG from '../../config';
 import _ from 'lodash'
 
 export default function forum(state = {last: null}, action) {
@@ -27,7 +27,7 @@ export default function forum(state = {last: null}, action) {
 }
 
 export function setProgression(forum) {
-    const { increment, steps } = GLOBAL.PROGRESSION
+    const { increment, steps } = CONFIG.PROGRESSION
     const initialCost = 2
     if (!forum) return forum
     let { funded } = forum

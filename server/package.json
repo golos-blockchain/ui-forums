@@ -9,7 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "golos-classic-js": "0.7.62",
+    "golos-classic-js": "0.7.64",
     "koa": "^2.13.0",
     "koa-cors": "0.0.16",
     "koa-livereload": "^0.2.0",

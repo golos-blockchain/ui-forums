@@ -3,72 +3,49 @@ const koaRouter = require('koa-router')
 const cors = require('koa-cors');
 const livereload = require('koa-livereload');
 const golos = require('golos-classic-js');
+const CONFIG = require('../config');
 
-golos.config.set('websocket', 'wss://api.golos.id/ws');
+golos.config.set('websocket', CONFIG.GOLOS_NODE);
 
 const app = new koa()
 const router = new koaRouter()
 
-let forums = [{
-    '_id': 'cats',
-    'name': 'Коты',
-    'creator': 'lex',
-    'created': '2020-01-01T10:10:10',
-    'created_height': 0,
-    'created_tx': 0,
-    'expires': '2022-01-01T10:10:10',
-    'stats': {'replies' : '100', 'posts' : '500'}
-}, {
-    '_id': 'dogs',
-    'name': 'Ламантин Консташук',
-    'creator': 'lex',
-    'created': '2020-01-01T10:10:10',
-    'created_height': 0,
-    'created_tx': 0,
-    'expires': '2022-01-01T10:10:10',
-    'stats': {'replies' : '100', 'posts' : '500'}
-}, {
-    '_id': 'cryptocurrencies',
-    'name': 'Криптовалюты',
-    'creator': 'lex',
-    'created': '2020-01-01T10:10:10',
-    'created_height': 0,
-    'created_tx': 0,
-    'expires': '2022-01-01T10:10:10',
-    'stats': {'replies' : '100', 'posts' : '500'}
-}, {
-    '_id': 'scam-how-to',
-    'name': 'Скам. С чего начать',
-    'creator': 'lex',
-    'created': '2020-01-01T10:10:10',
-    'created_height': 0,
-    'created_tx': 0,
-    'expires': '2022-01-01T10:10:10',
-    'stats': {'replies' : '100', 'posts' : '500'}
-}, {
-    '_id': 'spice-sol-fen',
-    'name': 'Как продавать шаурму через блокчейн',
-    'creator': 'lex',
-    'created': '2020-01-01T10:10:10',
-    'created_height': 0,
-    'created_tx': 0,
-    'expires': '2022-01-01T10:10:10',
-    'stats': {'replies' : '100', 'posts' : '500'}
-}, {
-    '_id': 'fludilka',
-    'name': 'Флудилка',
-    'creator': 'lex',
-    'created': '2020-01-01T10:10:10',
-    'created_height': 0,
-    'created_tx': 0,
-    'expires': '2022-01-01T10:10:10',
-    'stats': {'replies' : '100', 'posts' : '500'}
-}];
+let getForumsObj = async function() {
+    const forums_val = await golos.api.getValue(CONFIG.FORUM.owner, 'g.f.' + CONFIG.FORUM.name);
+    if (forums_val == '') {
+        return {};
+    }
+    let forums_obj = {};
+    try {
+        forums_obj = JSON.parse(forums_val);
+    } catch (ex) {
+        return {};
+    }
+    for (let [_id, forum] of Object.entries(forums_obj)) {
+        forum._id = _id;
+        forum.creator = CONFIG.FORUM.owner;
+        forum.created = '2020-01-01T10:10:10';
+        forum.created_height = 0;
+        forum.created_tx = 0;
+        forum.expires =  '2022-01-01T10:10:10';
+        forum.stats = {'replies' : '0', 'posts' : '0'}
+    }
+    return forums_obj;
+};
 
-router.get('/', (ctx) => {
+let getForums = async function() {
+    let forums = [];
+    let forums_obj = await getForumsObj();
+    for (let [_id, forum] of Object.entries(forums_obj)) {
+        forums.push(forum);
+    }
+    return forums;
+};
+
+router.get('/', async (ctx) => {
     ctx.body = {
         data: {
-            'forums': forums,
+            'forums': await getForums(),
             'users': {
                 'stats': {
                     'total': 1,
@@ -82,17 +59,18 @@ router.get('/', (ctx) => {
     }
 })
 
-router.get('/forums', (ctx) => {
+router.get('/forums', async (ctx) => {
     ctx.body = {
         data: {
-            'forums': forums,
+            'forums': await getForums(),
         }, 
         "network": {}, 
         "status": "ok"
     }
 })
 
-router.get('/forum/:slug', (ctx) => {
+router.get('/forum/:slug', async (ctx) => {
+    let forums_obj = await getForumsObj();
     ctx.body = {
         data: [
             {
@@ -111,7 +89,9 @@ router.get('/forum/:slug', (ctx) => {
         ], 
         "network": {}, 
         "status": "ok",
-        forum: {"_id":"cats","creator":"lex"}, children: [], meta: {'query':{},'sort':{}}
+        forum: forums_obj[ctx.params.slug],
+        children: forums_obj[ctx.params.slug].children,
+        meta: {'query':{},'sort':{}}
     }
 })
 

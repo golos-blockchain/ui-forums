@@ -4,6 +4,7 @@ import { Menu } from 'semantic-ui-react'
 import AccountPosts from './tabs/posts'
 import AccountReplies from './tabs/replies'
 import AccountResponses from './tabs/responses'
+import tt from 'counterpart';
 
 export default class AccountActivity extends React.Component {
   constructor(props) {
@@ -35,9 +36,9 @@ export default class AccountActivity extends React.Component {
     return (
       <div>
         <Menu pointing color="blue" attached="top" size="large" secondary>
-          <Menu.Item name='posts' active={tab === 'posts'} onClick={this.changeTab} />
-          <Menu.Item name='responses' active={tab === 'responses'} onClick={this.changeTab} />
-          <Menu.Item name='replies' active={tab === 'replies'} onClick={this.changeTab} />
+          <Menu.Item name='posts' active={tab === 'posts'} onClick={this.changeTab}>{tt('account.posts')}</Menu.Item>
+          <Menu.Item name='responses' active={tab === 'responses'} onClick={this.changeTab}>{tt('account.responses')}</Menu.Item>
+          <Menu.Item name='replies' active={tab === 'replies'} onClick={this.changeTab}>{tt('account.replies')}</Menu.Item>
         </Menu>
         {content}
       </div>

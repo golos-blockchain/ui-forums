@@ -138,7 +138,7 @@ export default class LoginModal extends React.Component {
             <Form
               error={(this.state.error) ? true : false}
               loading={this.state.loading}>
-              <Form.Input placeholder={tt('login.account_name')} name='account' value={this.state.account} onChange={this.handleChange} />
+              <Form.Input placeholder={tt('login.account_name')} autoFocus name='account' value={this.state.account} onChange={this.handleChange} />
               <Form.Input placeholder={tt('login.password')} type='password' name='key' value={this.state.key} onChange={this.handleChange} />
               {/*<p>
                 Need help finding your <strong>Posting (Private Key)</strong>?

@@ -2,7 +2,7 @@ import React from 'react';
 
 import { Breadcrumb, Dimmer, Loader, Grid, Header, Segment } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
-import * as GLOBAL from '../../global';
+import * as CONFIG from '../../../config';
 import AccountLink from './account/link'
 import TimeAgo from 'react-timeago'
 
@@ -21,7 +21,7 @@ export default class Forum extends React.Component {
     async getForum() {
       try {
         const { category } = this.props;
-        const response = await fetch(`${ GLOBAL.REST_API }/topics/${ category }`);
+        const response = await fetch(`${ CONFIG.REST_API }/topics/${ category }`);
         if (response.ok) {
           const result = await response.json();
           this.setState({

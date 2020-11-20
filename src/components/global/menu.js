@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom'
 
 import { Button, Container, Dropdown, Grid, Header, Icon, Menu, Popup } from 'semantic-ui-react'
 
+import * as CONFIG from '../../../config';
 import * as accountActions from '../../actions/accountActions'
 import * as accountsActions from '../../actions/accountsActions'
 import * as statusActions from '../../actions/statusActions'
@@ -165,7 +166,7 @@ class HeaderMenu extends Component {
       <Menu color='blue' size='large' inverted style={{borderBottom: '3px solid #767676'}}>
         <Container>
           <Link to='/' className='title active item'>
-            <strong>chainBB.com</strong>
+            <strong>{CONFIG.FORUM.title}</strong>
           </Link>
           {/*
           <Link to='/' className='title item'>General</Link>

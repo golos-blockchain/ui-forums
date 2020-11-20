@@ -1,9 +1,10 @@
 import * as types from '../actions/actionTypes';
 import update from 'immutability-helper';
+import * as CONFIG from '../../config';
 
 const initialState = {
   trail: [{
-    name: 'Forums',
+    name: CONFIG.FORUM.title,
     link: '/'
   }]
 }

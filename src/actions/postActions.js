@@ -5,7 +5,7 @@ import _ from 'lodash'
 import * as types from './actionTypes';
 import * as BreadcrumbActions from './breadcrumbActions';
 import * as ForumActions from './forumActions';
-import * as GLOBAL from '../global';
+import * as CONFIG from '../../config';
 
 export function setVoteProcessing(id) {
   return {
@@ -62,7 +62,7 @@ export function fetchPostResolved(payload = {}) {
 export function fetchPost(params) {
   return async dispatch => {
     const { category, author, permlink } = params;
-    const response = await fetch(`${ GLOBAL.REST_API }/${ category }/@${ author }/${ permlink }`);
+    const response = await fetch(`${ CONFIG.REST_API }/${ category }/@${ author }/${ permlink }`);
     if (response.ok) {
       const result = await response.json();
       const trail = [{
@@ -103,7 +103,7 @@ export function fetchPostByAuthorResolved(payload = {}) {
 
 export function fetchPostByAuthor(author, page = 1) {
   return async dispatch => {
-    let uri = `${ GLOBAL.REST_API }/@${ author }`;
+    let uri = `${ CONFIG.REST_API }/@${ author }`;
     if (page > 1) {
       uri = uri + '?page=' + page;
     }
@@ -172,7 +172,7 @@ export function fetchPostRepliesByAuthorStarted(payload = {}) {
 
 export function fetchPostRepliesByAuthor(author, page = 1) {
   return async dispatch => {
-    let uri = `${ GLOBAL.REST_API }/@${ author }/replies`;
+    let uri = `${ CONFIG.REST_API }/@${ author }/replies`;
     if (page > 1) {
       uri = uri + '?page=' + page;
     }
@@ -209,7 +209,7 @@ export function fetchPostResponsesByAuthorResolved(payload = {}) {
 
 export function fetchPostResponsesByAuthor(author, page = 1) {
   return async dispatch => {
-    let uri = `${ GLOBAL.REST_API }/@${ author }/responses`;
+    let uri = `${ CONFIG.REST_API }/@${ author }/responses`;
     if (page > 1) {
       uri = uri + '?page=' + page;
     }
@@ -244,7 +244,7 @@ export function fetchPostResponsesResolved(payload = {}) {
 export function fetchPostResponses(params) {
   return async dispatch => {
     const { category, author, permlink } = params;
-    const response = await fetch(`${ GLOBAL.REST_API }/${ category }/@${ author }/${ permlink }/responses`);
+    const response = await fetch(`${ CONFIG.REST_API }/${ category }/@${ author }/${ permlink }/responses`);
     if (response.ok) {
       const result = await response.json();
       dispatch(fetchPostResponsesResolved(result.data))

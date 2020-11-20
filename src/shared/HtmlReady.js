@@ -1,6 +1,6 @@
 import xmldom from 'xmldom'
 import linksRe from '../utils/Links'
-import * as GLOBAL from '../global';
+import * as CONFIG from '../../config';
 
 const noop = () => {}
 const DOMParser = new xmldom.DOMParser({
@@ -187,12 +187,12 @@ function header(tag, state, child) {
 
 // For all img elements with non-local URLs, prepend the proxy URL (e.g. `https://img0.steemit.com/0x0/`)
 function proxifyImages(doc) {
-    if (!GLOBAL.STM_Config.img_proxy_prefix) return
+    if (!CONFIG.STM_Config.img_proxy_prefix) return
     if (!doc) return;
     [...doc.getElementsByTagName('img')].forEach(node => {
         const url = node.getAttribute('src')
         if(! linksRe.local.test(url))
-            node.setAttribute('src', GLOBAL.STM_Config.img_proxy_prefix + '0x0/' + url)
+            node.setAttribute('src', CONFIG.STM_Config.img_proxy_prefix + '0x0/' + url)
     })
 }
 
@@ -298,12 +298,12 @@ function embedVimeoNode(child, links, /*images*/) {try{
 } catch(error) {console.log(error); return false}}
 
 function ipfsPrefix(url) {
-    if(GLOBAL.STM_Config.ipfs_prefix) {
+    if(CONFIG.STM_Config.ipfs_prefix) {
         // Convert //ipfs/xxx  or /ipfs/xxx  into  https://steemit.com/ipfs/xxxxx
         if(/^\/?\/ipfs\//.test(url)) {
             const slash = url.charAt(1) === '/' ? 1 : 0
             url = url.substring(slash + '/ipfs/'.length) // start with only 1 /
-            return GLOBAL.STM_Config.ipfs_prefix + '/' + url
+            return CONFIG.STM_Config.ipfs_prefix + '/' + url
         }
     }
     return url

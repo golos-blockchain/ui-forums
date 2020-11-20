@@ -7,10 +7,11 @@ import { goToTop } from 'react-scrollable-anchor'
 import ReactDOMServer from 'react-dom/server'
 import Noty from 'noty'
 import slug from 'slug'
+import tt from 'counterpart';
 
 import { Accordion, Dimmer, Grid, Header, Icon, Loader, Message, Segment } from 'semantic-ui-react'
 
-import * as GLOBAL from '../global';
+import * as CONFIG from '../../config';
 import * as breadcrumbActions from '../actions/breadcrumbActions'
 import * as forumActions from '../actions/forumActions'
 import * as moderationActions from '../actions/moderationActions'
@@ -125,6 +126,10 @@ class Forum extends React.Component {
     this.getForum()
   }
 
+  getForumName = (forum) => {
+      return (tt.getLocale() == 'ru') ? forum.name_ru : forum.name;
+  }
+
   setForum = (forum) => {
       this.setState({forum})
       this.props.actions.setForum(forum)
@@ -133,7 +138,7 @@ class Forum extends React.Component {
       if (result.forum) {
           const trail = [
             {
-              name: result.forum.name,
+              name: this.getForumName(result.forum),
               link: `/f/${result.forum._id}`
             }
           ];
@@ -180,7 +185,7 @@ class Forum extends React.Component {
     if (!page) page = this.state.page;
     try {
       const { forumid } = this.props
-      let url = `${ GLOBAL.REST_API }/forum/${ forumid }?page=${ page }`
+      let url = `${ CONFIG.REST_API }/forum/${ forumid }?page=${ page }`
       if (this.state.showModerated) {
         url += `&filter=all`
       } else if (this.state.filter && this.state.filter !== 'false') {
@@ -262,7 +267,7 @@ class Forum extends React.Component {
                       size='small'
                       key='subforums-title'
                       as={Accordion.Title}
-                      content={`Subforums (${children.length})`}
+                      content={tt('forum_controls.subcats') + `${children.length})`}
                       icon='fork'
                       onClick={this.toggleSubforums}
                       style={{marginBottom: 0}}
@@ -408,15 +413,15 @@ class Forum extends React.Component {
     if(forum && forum._id) {
         meta = (
             <Helmet>
-                <title>{`/f/${forum._id} - ${forum.name}`}</title>
+                <title>{`/f/${forum._id} - ${this.getForumName(forum)}`}</title>
                 <meta name="description" content={forum.description} />
-                <meta itemprop="name" content={`${forum._id} - ${forum.name}`} />
+                <meta itemprop="name" content={`${forum._id} - ${this.getForumName(forum)}`} />
                 <meta itemprop="description" content={forum.description} />
                 <meta itemprop="image" content="https://steemit-production-imageproxy-upload.s3.amazonaws.com/DQmckc76UaBZSicePvDG9dKwrgyS5GoZRxAnBZ8AzxtVwH8" />
-                <meta name="twitter:title" content={`${forum._id} - ${forum.name}`} />
+                <meta name="twitter:title" content={`${forum._id} - ${this.getForumName(forum)}`} />
                 <meta name="twitter:description" content={forum.description} />
                 <meta name="twitter:image:src" content="https://steemit-production-imageproxy-upload.s3.amazonaws.com/DQmckc76UaBZSicePvDG9dKwrgyS5GoZRxAnBZ8AzxtVwH8" />
-                <meta property="og:title" content={`${forum._id} - ${forum.name}`} />
+                <meta property="og:title" content={`${forum._id} - ${this.getForumName(forum)}`} />
                 <meta property="og:url" content={`http://netify.chainbb.com/f/${forum._id}`} />
                 <meta property="og:description" content={forum.description} />
             </Helmet>

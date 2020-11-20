@@ -2,11 +2,22 @@
   "forum_controls": {
     "new_post": "Создать тему",
     "you_must_be_logged_in_to_post": "Войдите, чтобы постить",
-    "show_hidden": "Показать скрытые"
+    "show_hidden": "Показать скрытые",
+    "subcats": "Подкатегории (",
+    "created_by": "создан",
+    "posts": "Тем",
+    "replies": "Сообщений",
+    "recently_active": "Последний пост"
   },
   "sidebar": {
     "start_your_own_forum": "Создайте свой собственный форум!",
-    "get_started": "Создать"
+    "get_started": "Создать",
+    "view_this_account": "Этот аккаунт на..."
+  },
+  "account": {
+    "posts": "Посты",
+    "responses": "Ответы",
+    "replies": "Комментарии"
   },
   "login": {
     "sign_in": "Войти",

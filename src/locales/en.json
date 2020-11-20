@@ -2,11 +2,22 @@
   "forum_controls": {
     "new_post": "New Post",
     "you_must_be_logged_in_to_post": "You must be logged in to post.",
-    "show_hidden": "Show hidden"
+    "show_hidden": "Show hidden",
+    "subcats": "Subforums (",
+    "created_by": "created by",
+    "posts": "Posts",
+    "replies": "Replies",
+    "recently_active": "Recently Active"
   },
   "sidebar": {
     "start_your_own_forum": "Start your own community forum!",
-    "get_started": "Get Started"
+    "get_started": "Get Started",
+    "view_this_account": "View this account on..."
+  },
+  "account": {
+    "posts": "Posts",
+    "responses": "Responses",
+    "replies": "Replies"
   },
   "login": {
     "sign_in": "Login",

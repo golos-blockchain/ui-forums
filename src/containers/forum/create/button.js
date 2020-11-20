@@ -7,7 +7,7 @@ import _ from 'lodash'
 import { Button, Dimmer, Header, Icon, Loader, Modal, Segment } from 'semantic-ui-react'
 import ForumCreateForm from './form'
 
-import * as GLOBAL from '../../../global';
+import * as CONFIG from '../../../../config';
 import * as accountActions from '../../../actions/accountActions'
 import * as forumActions from '../../../actions/forumActions'
 import * as statusActions from '../../../actions/statusActions'
@@ -79,7 +79,7 @@ class ForumCreateButton extends React.Component {
     }
     async nsUnique(value) {
         try {
-          let uri = GLOBAL.REST_API + `/api/ns_lookup?ns=${value}`;
+          let uri = CONFIG.REST_API + `/api/ns_lookup?ns=${value}`;
           const response = await fetch(uri);
           if (response.ok) {
             const result = await response.json();

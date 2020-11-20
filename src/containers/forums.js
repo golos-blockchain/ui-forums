@@ -2,11 +2,12 @@ import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux'
 import { goToTop } from 'react-scrollable-anchor'
+import tt from 'counterpart';
 
 
 import { Button, Dimmer, Divider, Loader, Grid, Header, Segment  } from 'semantic-ui-react'
 
-import * as GLOBAL from '../global';
+import * as CONFIG from '../../config';
 import * as accountActions from '../actions/accountActions'
 import * as breadcrumbActions from '../actions/breadcrumbActions'
 import * as postActions from '../actions/postActions'
@@ -62,7 +63,7 @@ class Forums extends React.Component {
 
     async getForums() {
       try {
-        let uri = GLOBAL.REST_API;
+        let uri = CONFIG.REST_API;
         if(this.props.forums && this.props.forums.group) {
           uri = uri + '/' + this.props.forums.group;
         }
@@ -152,17 +153,17 @@ class Forums extends React.Component {
                           </Grid.Column>
                           <Grid.Column width={2} className='tablet or lower hidden' textAlign='center'>
                             <Header size='tiny' style={{ display: isMinimized ? "none" : "" }}>
-                              Posts
+                              {tt('forum_controls.posts')}
                             </Header>
                           </Grid.Column>
                           <Grid.Column width={2} className='tablet or lower hidden'>
                             <Header size='tiny' textAlign='center' style={{ display: isMinimized ? "none" : "" }}>
-                              Replies
+                              {tt('forum_controls.replies')}
                             </Header>
                           </Grid.Column>
                           <Grid.Column computer={5} tablet={6} mobile={6} style={{ display: isMinimized ? "none" : "" }}>
-                            <Header size='tiny'>
-                              Recently Active
+                            <Header size='tiny' textAlign='right'>
+                              {tt('forum_controls.recently_active')}
                             </Header>
                           </Grid.Column>
                         </Grid.Row>

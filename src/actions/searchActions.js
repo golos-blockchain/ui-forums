@@ -1,9 +1,9 @@
 import * as types from './actionTypes';
-import * as GLOBAL from '../global';
+import * as CONFIG from '../../config';
 
 export function search(query) {
   return async dispatch => {
-    const response = await fetch(`${ GLOBAL.REST_API }/search?q=${query}`);
+    const response = await fetch(`${ CONFIG.REST_API }/search?q=${query}`);
     if (response.ok) {
       const result = await response.json();
       const searchResults = result.data.map((item) => {

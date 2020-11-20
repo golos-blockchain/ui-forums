@@ -5,6 +5,7 @@ import AccountAvatar from './avatar'
 import AccountFollow from './follow'
 import AccountLink from './link'
 import AccountSidebarInfo from './sidebar/info'
+import tt from 'counterpart';
 
 export default class AccountSidebar extends React.Component {
   constructor(props) {
@@ -49,23 +50,11 @@ export default class AccountSidebar extends React.Component {
         </Segment>
         <Divider horizontal>Account Info</Divider>
         <Menu color='blue' inverted fluid vertical>
-          <Dropdown color='blue' text='View this account on...' size='small' pointing='left' className='link item'>
+          <Dropdown color='blue' text={tt('sidebar.view_this_account')} size='small' pointing='left' className='link item'>
             <Dropdown.Menu>
-              <a href={`https://steemit.com/@${username}`} target='_blank' className='item'>
+              <a href={`https://golos.id/@${username}`} target='_blank' className='item'>
                 <Icon name='external' />
-                steemit.com
-              </a>
-              <a href={`https://busy.org/@${username}`} target='_blank' className='item'>
-                <Icon name='external' />
-                busy.org
-              </a>
-              <a href={`https://steemdb.com/@${username}`} target='_blank' className='item'>
-                <Icon name='external' />
-                steemdb.com
-              </a>
-              <a href={`https://steemd.com/@${username}`} target='_blank' className='item'>
-                <Icon name='external' />
-                steemd.com
+                golos.id
               </a>
             </Dropdown.Menu>
           </Dropdown>

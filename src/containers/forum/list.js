@@ -6,7 +6,7 @@ import { goToTop } from 'react-scrollable-anchor'
 
 import { Dimmer, Loader, Grid, Header, Segment  } from 'semantic-ui-react'
 
-import * as GLOBAL from '../../global';
+import * as CONFIG from '../../../config';
 import * as accountActions from '../../actions/accountActions'
 import * as breadcrumbActions from '../../actions/breadcrumbActions'
 import * as postActions from '../../actions/postActions'
@@ -52,7 +52,7 @@ class ForumList extends React.Component {
 
     async getForumList() {
       try {
-        let uri = GLOBAL.REST_API + '/forums';
+        let uri = CONFIG.REST_API + '/forums';
         const response = await fetch(uri);
         if (response.ok) {
           const result = await response.json();

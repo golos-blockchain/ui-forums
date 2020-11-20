@@ -2,7 +2,7 @@ import React from 'react'
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux'
 import TimeAgo from 'react-timeago'
-import * as GLOBAL from '../../global';
+import * as CONFIG from '../../../config';
 
 import { Button, Dimmer, Divider, Grid, Header, Icon, Label, Loader, Segment } from 'semantic-ui-react'
 
@@ -73,7 +73,7 @@ class Response extends React.Component {
           let hidden = (post.net_votes < 0),
               parent_post = this.getParent(post),
               quote = ''
-          const isBot = GLOBAL.BOTS.indexOf(post.author) >= 0
+          const isBot = CONFIG.BOTS.indexOf(post.author) >= 0
           if(parent_post['_id']) {
             quote = (
               <div>

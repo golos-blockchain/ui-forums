@@ -1,7 +1,7 @@
 import * as types from './actionTypes';
 import axios from 'axios'
 import steem from 'steem'
-import * as GLOBAL from '../global';
+import * as CONFIG from '../../config';
 import * as statusActions from './statusActions'
 
 export function forumReservation(account, name, namespace) {
@@ -85,7 +85,7 @@ export function setForum(forum) {
 
 export function fetchForumDetails(ns) {
     return (dispatch: () => void) => {
-        axios.get(`${ GLOBAL.REST_API }/status/${ns}`)
+        axios.get(`${ CONFIG.REST_API }/status/${ns}`)
             .then(response => {
                 dispatch(statusActions.setStatus(response.data))
                 dispatch({
