@@ -38,8 +38,7 @@ export default class LoginModal extends React.Component {
     e.preventDefault()
     const { account, key } = this.state,
           t = this
-    let wif = golos.auth.getWif(account, key),
-        isValidForAccount = false
+    let wif = golos.auth.getWif(account, key)
     // Indicate we're loading
     t.setState({
       loading: true,
@@ -54,23 +53,39 @@ export default class LoginModal extends React.Component {
           })
           return
         }
-        if(result) {
-          let key_auths = result[0].posting.key_auths
-          for(var i=0; i < key_auths.length; i++) {
-            if(golos.auth.wifIsValid(wif, key_auths[i][0])) {
-              isValidForAccount = true
-            }
+
+        let key_auths = result[0].active.key_auths;
+        for (var i = 0; i < key_auths.length; i++) {
+          if(golos.auth.wifIsValid(wif, key_auths[i][0])) {
+            t.setState({
+              loading: false,
+              error: tt('login.wrong_password_active')
+            })
+            return;
           }
         }
-        if(isValidForAccount) {
-          t.props.actions.signinAccount(account, wif)
-          t.handleClose()
-        } else {
-          t.setState({
-            loading: false,
-            error:  tt('login.wrong_password')
-          })
+        key_auths = result[0].owner.key_auths;
+        for (var i = 0; i < key_auths.length; i++) {
+          if (golos.auth.wifIsValid(wif, key_auths[i][0])) {
+            t.setState({
+              loading: false,
+              error: tt('login.wrong_password_owner')
+            })
+            return;
+          }
         }
+        key_auths = result[0].posting.key_auths;
+        for (var i = 0; i < key_auths.length; i++) {
+          if (golos.auth.wifIsValid(wif, key_auths[i][0])) {
+            t.props.actions.signinAccount(account, wif)
+            t.handleClose()
+            return;
+          }
+        }
+        t.setState({
+          loading: false,
+          error: tt('login.wrong_password')
+        })
       })
     } else {
       t.setState({

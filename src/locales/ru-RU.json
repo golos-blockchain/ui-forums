@@ -17,7 +17,9 @@
   "account": {
     "posts": "Посты",
     "responses": "Ответы",
-    "replies": "Комментарии"
+    "replies": "Комментарии",
+    "profile": "Профиль",
+    "sign_out": "Выйти"
   },
   "login": {
     "sign_in": "Войти",
@@ -27,7 +29,9 @@
     "password": "Пароль или приватный posting-ключ",
     "no_such_account_name": "Такого имени не существует",
     "wrong_password_format": "Неправильный формат пароля/ключа",
-    "wrong_password": "Неправильный пароль/ключ"
+    "wrong_password": "Неправильный пароль/ключ",
+    "wrong_password_active": "Нельзя входить с active-ключом (даже если такой же ключ служит и posting-ключом)",
+    "wrong_password_owner": "Нельзя входить с owner-ключом (даже если такой же ключ служит и posting-ключом)"
   },
   "g": {
     "cancel": "Отмена",

@@ -17,7 +17,9 @@
   "account": {
     "posts": "Posts",
     "responses": "Responses",
-    "replies": "Replies"
+    "replies": "Replies",
+    "profile": "Profile",
+    "sign_out": "Sign out"
   },
   "login": {
     "sign_in": "Login",
@@ -27,7 +29,9 @@
     "password": "Password (or Posting Private Key)",
     "no_such_account_name": "No such account name",
     "wrong_password_format": "Invalid format of password/key",
-    "wrong_password": "Wrong password/key"
+    "wrong_password": "Wrong password/key",
+    "wrong_password_active": "Cannot login with active key (even if posting key is same)",
+    "wrong_password_owner": "Cannot login with owner key (even if posting key is same)"
   },
   "g": {
     "cancel": "Cancel",

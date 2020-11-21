@@ -29,6 +29,7 @@ let getForumsObj = async function() {
         forum.created_tx = 0;
         forum.expires =  '2022-01-01T10:10:10';
         forum.stats = {'replies' : '0', 'posts' : '0'}
+        forum.tags = ['fm-' + CONFIG.FORUM.name, 'fm-' + CONFIG.FORUM.name + '-' + _id]
     }
     return forums_obj;
 };

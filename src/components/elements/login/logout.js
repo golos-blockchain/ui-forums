@@ -1,5 +1,6 @@
 import React from 'react'
 import { Dropdown } from 'semantic-ui-react'
+import tt from 'counterpart';
 
 export default class LogoutItem extends React.Component {
   logout = (e) => {
@@ -12,7 +13,7 @@ export default class LogoutItem extends React.Component {
         size='mini'
         icon='sign out'
         onClick={this.logout}
-        content='Sign out'
+        content={tt('account.sign_out')}
       />
     )
   }

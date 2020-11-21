@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
+import tt from 'counterpart';
 
 import { Button, Container, Dropdown, Grid, Header, Icon, Menu, Popup } from 'semantic-ui-react'
 
@@ -32,9 +33,7 @@ class HeaderMenu extends Component {
     if(nextProps.account && nextProps.account.data) {
       const { data } = nextProps.account
       const fields = [
-        'reward_sbd_balance',
-        'reward_steem_balance',
-        'reward_vesting_balance'
+        'balance',
       ];
       const hasBalance = fields.filter((field) => {
         return (parseFloat(data[field].split(" ")[0]) > 0)
@@ -101,11 +100,19 @@ class HeaderMenu extends Component {
           username={name}
         />
       )
+      /*userItem = (
+        <Dropdown style={{padding: '0 1.1em'}} item trigger={avatar} pointing='top right' icon={null} className='icon'>
+          <Dropdown.Menu>
+            <Dropdown.Item as="a" href={`/@${name}`} icon="user" content={tt('account.profile')} />
+            <Dropdown.Item as="a" href={`/accounts`} icon="users" content="Accounts" />
+            <LogoutItem {...this.props} />
+          </Dropdown.Menu>
+        </Dropdown>
+      )*/
       userItem = (
         <Dropdown style={{padding: '0 1.1em'}} item trigger={avatar} pointing='top right' icon={null} className='icon'>
           <Dropdown.Menu>
-            <Dropdown.Item as="a" href={`/@${name}`} icon="user" content="Profile" />
-            <Dropdown.Item as="a" href={`/accounts`} icon="users" content="Accounts" />
+            <Dropdown.Item as="a" href={`/@${name}`} icon="user" content={tt('account.profile')} />
             <LogoutItem {...this.props} />
           </Dropdown.Menu>
         </Dropdown>

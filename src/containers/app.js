@@ -60,7 +60,7 @@ const App = () => (
           <Route exact path="/" component={IndexLayout} />
           {/* <Route exact path="/" render={(props) => <Redirect to="/forums"/>}/> */}
           <Route path="/@:username" component={Account} />
-          <Route path="/accounts" component={AccountsLayout} />
+          {/*<Route path="/accounts" component={AccountsLayout} />*/}
           <Route path="/create/forum" component={ForumCreateLayout} />
           <Route path="/feed" component={FeedLayout} />
           <Route path="/forums" component={ForumsLayout} />
