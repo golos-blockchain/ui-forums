@@ -7,7 +7,24 @@
     "created_by": "created by",
     "posts": "Posts",
     "replies": "Replies",
-    "recently_active": "Recently Active"
+    "recently_active": "Recently Active",
+
+    "forum_info": "Forum Settings",
+    "return_ro_froum": "Return to forum",
+    "overview": "Overview",
+    "categories": "Categories",
+    "permissions": "Permissions",
+    "configuration": "Configuration",
+    "only_creator_can_edit": "You do not have access to edit this forum.",
+    "submit_changes": "Submit Changes"
+  },
+  "categories": {
+    "title": "Forum Categories",
+    "description": "These settings control the structure of this forum and can be changed at any time. If your want to restore deleted category, just create new one with same tags.",
+    "tag": "Tag",
+    "name_ru": "Name in Russian",
+    "name": "Name in English",
+    "add": "Add Category"
   },
   "sidebar": {
     "start_your_own_forum": "Start your own community forum!",
@@ -36,6 +53,8 @@
   "g": {
     "cancel": "Cancel",
     "proceed": "Proceed ",
-    "error" :"Error"
+    "error": "Error",
+    "add": "Add",
+    "this_field_required": "This field is required."
   }
 }

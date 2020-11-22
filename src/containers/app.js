@@ -57,7 +57,6 @@ const App = () => (
         <BreadcrumbMenu />
         <GlobalNotice />
         <Container>
-          <Route exact path="/" component={IndexLayout} />
           {/* <Route exact path="/" render={(props) => <Redirect to="/forums"/>}/> */}
           <Route path="/@:username" component={Account} />
           {/*<Route path="/accounts" component={AccountsLayout} />*/}
@@ -70,6 +69,7 @@ const App = () => (
           <Route path="/replies" component={RepliesLayout} />
           <Route path="/topic/:category" component={TopicLayout} />
           <Route path="/:category/@:author/:permlink/:action?" component={ThreadLayout} />
+          <Route exact path="/:section?" component={IndexLayout} />
         </Container>
         <BreadcrumbMenu />
         <FooterMenu />

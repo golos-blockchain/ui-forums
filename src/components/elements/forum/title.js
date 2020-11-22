@@ -65,7 +65,7 @@ export default class ForumTitle extends React.Component {
                                     </Header.Content>
                                 </Header>
                             </Grid.Column>
-                            <Grid.Column width={2}>
+                            {/*<Grid.Column width={2}>
                                 <Popup
                                   trigger={
                                       <Button
@@ -80,7 +80,7 @@ export default class ForumTitle extends React.Component {
                                   content='Forum Information'
                                   inverted
                                 />
-                            </Grid.Column>
+                            </Grid.Column>*/}
                         </Grid.Row>
                     </Grid>
                 </Segment>

@@ -4,10 +4,12 @@ import { connect } from 'react-redux'
 import { withRouter } from "react-router-dom";
 import { Button, Header, Icon, Segment, Tab } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
+import tt from 'counterpart';
 
 import AccountLink from '../../components/elements/account/link'
 import ForumConfigForm from './manage/config'
-import ForumUpgrade from '../../components/elements/forum/manage/upgrade'
+import ForumCategoriesForm from './manage/categories'
+//import ForumUpgrade from '../../components/elements/forum/manage/upgrade'
 import ForumOverview from '../../components/elements/forum/manage/overview'
 import ForumPermissions from '../../components/elements/forum/manage/permissions'
 import ForumReservation from '../../components/elements/forum/reservation'
@@ -41,7 +43,7 @@ class ForumManage extends React.Component {
         } else {
             // Push the history if the tab has changed
             if(this.props.section !== data.panes[data.activeIndex].menuItem.key) {
-                this.props.history.push(`/f/${this.props.forum.target._id}/${data.panes[data.activeIndex].menuItem.key}`);
+                this.props.history.push(`/${data.panes[data.activeIndex].menuItem.key}`);
             }
         }
     }
@@ -55,10 +57,11 @@ class ForumManage extends React.Component {
             return <ForumReservation status={this.props.status} reservation={reservation} />
         }
         let panes = [
-            { menuItem: { key: 'overview', icon: 'cubes', color: 'black', content: 'Overview' }, render: () => <ForumOverview forum={forum} /> },
-            { menuItem: { key: 'permissions', icon: 'protect', color: 'purple', content: 'Permissions' }, render: () => <ForumPermissions forum={forum} /> },
-            { menuItem: { key: 'configuration', icon: 'settings', color: 'orange', content: 'Configuration' }, render: () => <ForumConfigForm newForum={this.props.newForum} hideConfig={this.props.hideConfig}/> },
-            { menuItem: { key: 'upgrades', icon: 'arrow circle up', color: 'blue', content: 'Upgrades' }, render: () => <ForumUpgrade account={account} forum={forum} target={target} /> },
+            { menuItem: { key: 'overview', icon: 'cubes', color: 'black', content: tt('forum_controls.overview') }, render: () => <ForumOverview forum={forum} /> },
+            { menuItem: { key: 'categories', icon: 'indent', color: 'red', content: tt('forum_controls.categories') }, render: () => <ForumCategoriesForm newForum={this.props.newForum} hideConfig={this.props.hideConfig}/> },
+            { menuItem: { key: 'permissions', icon: 'protect', color: 'purple', content: tt('forum_controls.permissions') }, render: () => <ForumPermissions forum={forum} /> },
+            { menuItem: { key: 'configuration', icon: 'settings', color: 'orange', content: tt('forum_controls.configuration') }, render: () => <ForumConfigForm newForum={this.props.newForum} hideConfig={this.props.hideConfig}/> },
+            //{ menuItem: { key: 'upgrades', icon: 'arrow circle up', color: 'blue', content: 'Upgrades' }, render: () => <ForumUpgrade account={account} forum={forum} target={target} /> },
             { menuItem: { key: 'close', icon: 'window close', color: 'black', position: 'right' } },
         ]
         let display = (
@@ -100,9 +103,8 @@ class ForumManage extends React.Component {
                 {display}
                 <Segment basic textAlign='center'>
                     <Button
-                        as={Link}
-                        to={`/f/${(forum && forum.target) ? forum.target._id : 'unknown'}`}
-                        content='Return to Forum'
+                        onClick={this.props.hideConfig.bind(this)}
+                        content={tt('forum_controls.return_ro_froum')}
                         size='small'
                         color='blue'
                     />
@@ -117,7 +119,7 @@ class ForumManage extends React.Component {
 function mapStateToProps(state, ownProps) {
     return {
         account: state.account,
-        forum: state.forum,
+        forum: ownProps.forum,
         preferences: state.preferences,
         status: state.status
     }

@@ -1,9 +1,9 @@
 module.exports = {
-    GOLOS_NODE: 'ws://localhost:8091',
+    GOLOS_NODE: 'ws://37.18.27.45:8091',
     REST_API: 'http://37.18.27.45:5000',
     FORUM: {
-        owner: 'cyberfounder',
-        name: 'golostalks',
+        _id: 'golostalks',
+        creator: 'cyberfounder',
         title: 'GolosTalks',
     },
     STM_Config: {

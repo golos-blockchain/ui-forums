@@ -1,11 +1,13 @@
 import React from 'react'
+import { connect } from 'react-redux'
+import { withRouter } from "react-router-dom";
 
 import { Grid } from 'semantic-ui-react'
 
 import Forums from '../../containers/forums'
 import Sidebar from '../../containers/sidebar'
 
-export default class IndexLayout extends React.Component {
+class IndexLayout extends React.Component {
   render() {
     const params = this.props.match.params;
     return(
@@ -18,10 +20,12 @@ export default class IndexLayout extends React.Component {
             />
           </Grid.Column>
           <Grid.Column mobile={16} tablet={12} computer={12}>
-            <Forums forums={params} />
+            <Forums forums={params} section={params.section} />
           </Grid.Column>
         </Grid.Row>
       </Grid>
     );
   }
 }
+
+export default withRouter(IndexLayout);

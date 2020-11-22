@@ -2,10 +2,11 @@ import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux'
 import { goToTop } from 'react-scrollable-anchor'
+import { withRouter } from "react-router-dom";
 import tt from 'counterpart';
 
 
-import { Button, Dimmer, Divider, Loader, Grid, Header, Segment  } from 'semantic-ui-react'
+import { Button, Dimmer, Divider, Loader, Grid, Header, Segment, Popup } from 'semantic-ui-react'
 
 import * as CONFIG from '../../config';
 import * as accountActions from '../actions/accountActions'
@@ -16,6 +17,7 @@ import * as preferenceActions from '../actions/preferenceActions'
 
 import AccountLink from '../components/elements/account/link'
 import ForumIndex from '../components/elements/forum/index'
+import ForumManage from './forum/manage'
 
 class Forums extends React.Component {
 
@@ -25,7 +27,8 @@ class Forums extends React.Component {
       this.state = {
         group: false,
         minimized: props.preferences.forums_minimized || [],
-        forums: []
+        forums: [],
+        showConfig: (['overview', 'categories', 'permissions', 'configuration'].indexOf(props.section) >= 0) ? true : false,
       };
       this.getForums = this.getForums.bind(this);
       this.getForums()
@@ -84,6 +87,21 @@ class Forums extends React.Component {
       }
     }
 
+  showConfig = () => {
+      if(!this.state.showConfig) {
+          this.setState({showConfig: true})
+          this.props.history.push(`/overview`);
+      }
+  }
+  hideConfig = () => {
+      if(this.state.showConfig) {
+          this.setState({showConfig: false})
+          this.props.history.push(`/`);
+          this.getForums()
+      }
+  }
+  toggleConfig = () => (this.state.showConfig) ? this.hideConfig() : this.showConfig()
+
     render() {
       let loaded = (this.state.forums.length > 0),
           loader = {
@@ -94,11 +112,12 @@ class Forums extends React.Component {
             content: 'Loading'
           },
           activeusers = false,
+          account = this.props.account,
           display = <Dimmer active inverted style={loader.style}>
                       <Loader size='large' content={loader.content}/>
                     </Dimmer>
       if(loaded) {
-        let { forums, users } = this.state,
+        let { forums, users, showConfig } = this.state,
             // Find the unique forum groupings
             groups = forums.map((forum, index) => {
               return (!this.state.forums[index-1] || this.state.forums[index-1].group !== forum.group) ? forum['group'] : null
@@ -126,59 +145,75 @@ class Forums extends React.Component {
             </span>)}
           </Segment>
         )
-        display = groups.map((group) => {
-          const isMinimized = this.state.minimized.indexOf(group) >= 0
-          let groupings = forums.filter(function(forum) {
-            return forum['group'] === group
-          }).map((forum, index) => {
-            return <ForumIndex key={index} forum={forum} isMinimized={isMinimized} />
+        if (showConfig) {
+          let forum4 = {
+            target: CONFIG.FORUM
+          }
+          display = (
+              <ForumManage
+                  account={account}
+                  newForum={this.state.newForum}
+                  section={this.props.section}
+                  target={CONFIG.FORUM}
+                  forum={forum4}
+                  hideConfig={this.hideConfig.bind(this)}
+              />
+          )
+        } else {
+          display = groups.map((group) => {
+            const isMinimized = this.state.minimized.indexOf(group) >= 0
+            let groupings = forums.filter(function(forum) {
+              return forum['group'] === group
+            }).map((forum, index) => {
+              return <ForumIndex key={index} forum={forum} isMinimized={isMinimized} />
+            })
+            return  <div key={group} style={{marginBottom: "10px"}}>
+                      <Segment secondary attached>
+                        <Grid>
+                          <Grid.Row verticalAlign="middle">
+                            <Grid.Column computer={1} tablet={2} mobile={2}>
+                              <Button
+                                basic
+                                onClick={this.toggleVisibility}
+                                value={group}
+                                icon={isMinimized ? "plus" : "minus"}
+                                size="small"
+                              />
+                            </Grid.Column>
+                            <Grid.Column computer={6} tablet={8} mobile={8}>
+                              <Header>
+                                {group}
+                              </Header>
+                            </Grid.Column>
+                            <Grid.Column width={2} className='tablet or lower hidden' textAlign='center'>
+                              <Header size='tiny' style={{ display: isMinimized ? "none" : "" }}>
+                                {tt('forum_controls.posts')}
+                              </Header>
+                            </Grid.Column>
+                            <Grid.Column width={2} className='tablet or lower hidden'>
+                              <Header size='tiny' textAlign='center' style={{ display: isMinimized ? "none" : "" }}>
+                                {tt('forum_controls.replies')}
+                              </Header>
+                            </Grid.Column>
+                            <Grid.Column computer={5} tablet={6} mobile={6} style={{ display: isMinimized ? "none" : "" }}>
+                              <Header size='tiny' textAlign='right'>
+                                {tt('forum_controls.recently_active')}
+                              </Header>
+                            </Grid.Column>
+                          </Grid.Row>
+                        </Grid>
+                      </Segment>
+                      {groupings}
+                    </div>
           })
-          return  <div key={group} style={{marginBottom: "10px"}}>
-                    <Segment secondary attached>
-                      <Grid>
-                        <Grid.Row verticalAlign="middle">
-                          <Grid.Column computer={1} tablet={2} mobile={2}>
-                            <Button
-                              basic
-                              onClick={this.toggleVisibility}
-                              value={group}
-                              icon={isMinimized ? "plus" : "minus"}
-                              size="small"
-                            />
-                          </Grid.Column>
-                          <Grid.Column computer={6} tablet={8} mobile={8}>
-                            <Header>
-                              {group}
-                            </Header>
-                          </Grid.Column>
-                          <Grid.Column width={2} className='tablet or lower hidden' textAlign='center'>
-                            <Header size='tiny' style={{ display: isMinimized ? "none" : "" }}>
-                              {tt('forum_controls.posts')}
-                            </Header>
-                          </Grid.Column>
-                          <Grid.Column width={2} className='tablet or lower hidden'>
-                            <Header size='tiny' textAlign='center' style={{ display: isMinimized ? "none" : "" }}>
-                              {tt('forum_controls.replies')}
-                            </Header>
-                          </Grid.Column>
-                          <Grid.Column computer={5} tablet={6} mobile={6} style={{ display: isMinimized ? "none" : "" }}>
-                            <Header size='tiny' textAlign='right'>
-                              {tt('forum_controls.recently_active')}
-                            </Header>
-                          </Grid.Column>
-                        </Grid.Row>
-                      </Grid>
-                    </Segment>
-                    {groupings}
-                  </div>
-        })
+        }
       }
       return(
         <div>
           <Segment stacked color="blue">
             <Grid>
               <Grid.Row>
-                <Grid.Column width={12}>
+                <Grid.Column width={14}>
                   <Header
                     icon='users'
                     color='blue'
@@ -186,6 +221,21 @@ class Forums extends React.Component {
                     content='Home'
                     subheader='A curated list of community forums to get you started.'
                   />
+                </Grid.Column>
+                <Grid.Column width={2}>
+                    <Popup
+                      trigger={
+                          <Button
+                              rounded
+                              size='large'
+                              floated='right'
+                              icon='cogs'
+                              onClick={this.showConfig.bind(this)}
+                          />
+                      }
+                      content={tt('forum_controls.forum_info')}
+                      inverted
+                    />
                 </Grid.Column>
               </Grid.Row>
             </Grid>
@@ -216,4 +266,4 @@ function mapDispatchToProps(dispatch) {
   }, dispatch)}
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Forums);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Forums));
