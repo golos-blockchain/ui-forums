@@ -7,16 +7,17 @@ import _ from 'lodash'
 import slug from 'slug'
 import Noty from 'noty'
 import tt from 'counterpart';
+import golos from 'golos-classic-js'
 
-import { Button, Dimmer, Divider, Header, Icon, Label, Loader, Modal, Segment, Table } from 'semantic-ui-react'
+import { Button, Dimmer, Divider, Header, Icon, Label, Loader, Modal, Segment, Table, List, Popup } from 'semantic-ui-react'
 import { Form } from 'formsy-semantic-ui-react'
 
 import * as types from '../../../actions/actionTypes';
 import * as forumActions from '../../../actions/forumActions'
+import * as CONFIG from '../../../../config';
 
 import AccountLink from '../../../components/elements/account/link'
-
-const fields = ['name', 'description', 'tags', 'exclusive']
+import LoginModal from '../../../components/elements/login/modal'
 
 class ForumCategoriesForm extends React.Component {
     constructor(props) {
@@ -29,27 +30,15 @@ class ForumCategoriesForm extends React.Component {
             awaitingBlock: false,
             processing: false,
             showConfirm: false,
-            addingCategory: false,
-            tags_detected: []
+            addEditParentIds: null,
+            editCatId: null,
+            tags_detected: [],
         }
-        const state = {}
-        fields.map((field) => state[field] = null)
-        this.state = state
+        this.state.categories = props.categories
     }
-    componentWillMount() {
-        const { target } = this.props.forum
-        fields.map((field) => this.handleChange(false, {
-            name: field,
-            value: target[field] || false
-        }))
-        if(target.exclusive) {
-            this.setState({
-                exclusive: target.exclusive
-            })
-        }
-    }
+
     componentWillReceiveProps(nextProps) {
-        const { forum } = nextProps
+        /*const { forum } = nextProps
         if(forum.last) {
             switch(forum.last.type) {
                 case types.FORUM_CONFIG_PROCESSING:
@@ -91,7 +80,7 @@ class ForumCategoriesForm extends React.Component {
                 default:
                     break;
             }
-        }
+        }*/
     }
     handleChange = (e, data) => {
         if (data.value && data.value.constructor === Array) {
@@ -117,36 +106,169 @@ class ForumCategoriesForm extends React.Component {
         this.setState({exclusive: data.checked})
     }
 
-    addCategory = (e) => {
+    getParentCat = (categories, parentIds) => {
+      let subcats = categories;
+      let parent = {children: subcats};
+      for (let parentId of parentIds) {
+        parent = subcats[parentId];
+        subcats = parent.children;
+      }
+      return parent;
+    }
+
+    addEditCategory = (e, data) => {
       e.preventDefault()
-      this.setState({addingCategory: true})
+      this.setState({
+        addEditParentIds: data.parentIds,
+        editCatId: data.editCatId ? data.editCatId : null
+      })
       return false
     }
-    onAddCancel = (e) => {
-      e.preventDefault()
-      this.setState({addingCategory: false})
-      return false
+    onAddEditCancel = (e) => {
+      e.preventDefault();
+      this.setState({addEditParentIds: null, editCatId: null});
+      return false;
+    }
+    onAddEdit = (formData) => {
+      let categories = Object.assign({}, this.state.categories);
+      let parentCat = this.getParentCat(categories, this.state.addEditParentIds)
+      if (!parentCat.children) parentCat.children = {}; // There are no guarantee what category has children - account_notes not stores empty children to reduce HDD usage 
+      let cats = parentCat.children;
+
+      if (!this.state.editCatId) {
+        cats[formData.tag] = {name: formData.name, name_ru: formData.name_ru};
+      } else {
+        let cat = cats[this.state.editCatId];
+        cat.name = formData.name;
+        cat.name_ru = formData.name_ru;
+      }
+      this.setState({
+        addEditParentIds: null,
+        editCatId: null,
+        categories
+      });
+    }
+
+    removeCategory = (e, data) => {
+      e.preventDefault();
+      let categories = Object.assign({}, this.state.categories);
+      let subcats = this.getParentCat(categories, data.parentIds).children // There IS guarantee what parent category has children
+      delete subcats[data.catId]; 
+      this.setState({categories});
+      return false;
     }
 
     handleSubmit = (data) => {
         this.setState({showConfirm: true})
     }
     hideConfirm = () => this.setState({showConfirm: false})
-    broadcast = () => {
-        const settings = {
-            description: this.state.description,
-            exclusive: this.state.exclusive,
-            name: this.state.name,
-            tags: this.state.tags_detected,
-        }
-        const namespace = this.props.forum.target._id
-        this.props.actions.forumConfig(this.props.account, namespace, settings)
+    broadcast = (account, wif) => {
+        let values = JSON.stringify(this.state.categories);
+
+        golos.broadcast.customJson(wif, [account], [], "account_notes",
+          JSON.stringify(['set_value', {
+            account: account,
+            key: 'g.f.' + CONFIG.FORUM._id,
+            value: values
+          }]),
+          function (err, result) {
+            if (err) {
+                alert(err);
+                return;
+            }
+          });
     }
     render() {
-        const { account, forum } = this.props
-        const { target } = forum
-        const { _id } = target
-        const { name, description, tags, addingCategory } = this.state
+        const { account } = this.props
+        const { name, description, tags, categories, addEditParentIds, editCatId, showConfirm } = this.state
+
+        let catsToItems = (cats, parentIds=[]) => {
+          let listItems = [];
+          for (let [_id, forum] of Object.entries(cats)) {
+            let innerList = null;
+            if (forum.children && Object.keys(forum.children).length) {
+              innerList = (
+                <List.List>
+                  {catsToItems(forum.children, parentIds.concat(_id))}
+                </List.List>
+              );
+            }
+            listItems.push(
+                <List.Item>
+                  <List.Icon name={innerList ? 'folder' : 'file'} />
+                  <List.Content>
+                    <table>
+                    <tbody><tr><td>
+                      <List.Header>{forum.name_ru}</List.Header>
+                      <List.Description>
+                        {forum.name}
+                      </List.Description>
+                    </td><td>&nbsp;&nbsp;&nbsp;</td><td>
+                      <Popup
+                        trigger={
+                          <Button
+                            icon='add'
+                            size='mini'
+                            color='green'
+                            parentIds={parentIds.concat(_id)}
+                            onClick={this.addEditCategory}
+                          />
+                        }
+                        content={tt('categories.add_sub')}
+                        inverted
+                      />
+                      {/*<Popup
+                        trigger={
+                          <Button
+                            basic
+                            icon='chevron up'
+                            size='mini'
+                            color='blue'
+                          />
+                        }
+                        content={tt('categories.move_up')}
+                        inverted
+                      />*/}
+                      <Popup
+                        trigger={
+                          <Button
+                            basic
+                            icon='pencil'
+                            size='mini'
+                            color='orange'
+                            parentIds={parentIds}
+                            editCatId={_id}
+                            onClick={this.addEditCategory}
+                          />
+                        }
+                        content={tt('g.edit')}
+                        inverted
+                      />
+                      <Popup
+                        trigger={
+                          <Button
+                            basic
+                            icon='cancel'
+                            size='mini'
+                            color='red'
+                            catId={_id}
+                            parentIds={parentIds}
+                            onClick={this.removeCategory}
+                          />
+                        }
+                        content={tt('g.remove')}
+                        inverted
+                      />
+                    </td></tr></tbody></table>
+                    {innerList}
+                  </List.Content>
+                </List.Item>
+            );
+          }
+          return listItems;
+        };
+        let listItems = catsToItems(categories);
+
         const tag_labels = (this.state.tags) ? this.state.tags_detected.map((tag) => (
             <Label as='a' color='blue' key={tag}>
                 <Icon name='tag' />
@@ -159,79 +281,11 @@ class ForumCategoriesForm extends React.Component {
                 {tt('forum_controls.only_creator_can_edit')}
             </Button>
         )
-        if (account.name === target.creator) {
+        if (account.name === CONFIG.FORUM.creator) {
             submit = (
                 <Button fluid color='blue' type='submit'>
                     {tt('forum_controls.submit_changes')}
                 </Button>
-            )
-        }
-        let modal = false
-        if (this.state.showConfirm) {
-            let { awaitingBlock, processing } = this.state
-            modal = (
-                <Modal
-                    open={true}
-                    closeIcon={true}
-                    color='blue'
-                    onClose={this.hideConfirm}
-                    size='small'
-                >
-                    <Segment basic style={{marginTop: 0}} color='orange'>
-                        <Dimmer active={processing}>
-                            <Loader>Submitting...</Loader>
-                        </Dimmer>
-                        <Dimmer active={awaitingBlock}>
-                            <Loader indeterminate>Waiting for next block...</Loader>
-                        </Dimmer>
-                        <Header icon='wait' content='Confirm Information' style={{marginTop: 0}} />
-                        <Modal.Content>
-                            <Segment basic padded>
-                                <p style={{fontSize: '1.33em'}}>
-                                    Please review this information to ensure it is correct. Broadcast the transaction once completed.
-                                </p>
-                                <Table definition>
-                                    <Table.Row>
-                                        <Table.Cell collapsing>Account</Table.Cell>
-                                        <Table.Cell><AccountLink username={account.name} /></Table.Cell>
-                                    </Table.Row>
-                                    <Table.Row>
-                                        <Table.Cell collapsing>Namespace</Table.Cell>
-                                        <Table.Cell>{target._id}</Table.Cell>
-                                    </Table.Row>
-                                    <Table.Row>
-                                        <Table.Cell collapsing>Exclusive</Table.Cell>
-                                        <Table.Cell>
-                                            {(this.state.exclusive)
-                                                ? <Icon color='green' name='checkmark' />
-                                                : <Icon color='red' name='close' />
-                                            }
-                                        </Table.Cell>
-                                    </Table.Row>
-                                    <Table.Row>
-                                        <Table.Cell collapsing>Name</Table.Cell>
-                                        <Table.Cell>{this.state.name}</Table.Cell>
-                                    </Table.Row>
-                                    <Table.Row>
-                                        <Table.Cell collapsing>Description</Table.Cell>
-                                        <Table.Cell>{this.state.description}</Table.Cell>
-                                    </Table.Row>
-                                    <Table.Row>
-                                        <Table.Cell collapsing>Tags</Table.Cell>
-                                        <Table.Cell>{tag_labels}</Table.Cell>
-                                    </Table.Row>
-                                </Table>
-                                <Segment basic textAlign='center'>
-                                    <Button
-                                        color='blue'
-                                        content='Confirmed - Broadcast Transaction'
-                                        onClick={this.broadcast}
-                                    />
-                                </Segment>
-                            </Segment>
-                        </Modal.Content>
-                    </Segment>
-                </Modal>
             )
         }
         let newForumDisplay = false
@@ -261,9 +315,15 @@ class ForumCategoriesForm extends React.Component {
                 </Segment>
             )
         }
+        let editCat = null;
+        if (editCatId) {
+            let cats = this.getParentCat(categories, this.state.addEditParentIds).children;
+            editCat = cats[editCatId];
+        }
+        let actions = {signinAccount: this.broadcast, onClose: this.hideConfirm};
         return (
             <div>
-                {modal}
+                <LoginModal authType="active" noButton={true} open={showConfirm} actions={actions}/>
                 {newForumDisplay}
                 <Form
                     loading={this.state.loading}
@@ -280,30 +340,24 @@ class ForumCategoriesForm extends React.Component {
                     <Segment attached>
                           <Button
                             color='purple'
-                            onClick={this.addCategory}
+                            parentIds={[]}
+                            onClick={this.addEditCategory}
                           >
                             {tt('g.add')}
                           </Button>
-                          <Table size='small' verticalAlign='middle'>
-                            <Table.Header>
-                              <Table.Row>
-                                <Table.HeaderCell>{tt('categories.tag')}</Table.HeaderCell>
-                                <Table.HeaderCell>{tt('categories.name_ru')}</Table.HeaderCell>
-                                <Table.HeaderCell>{tt('categories.name')}</Table.HeaderCell>
-                                <Table.HeaderCell />
-                              </Table.Row>
-                            </Table.Header>
-                            <Table.Body />
-                          </Table>
+                            <List>
+                            {listItems}
+                            </List>
                         <Divider section />
                         {submit}
                     </Segment>
-                      <Modal size='small' open={addingCategory}>
-                        <Modal.Header>{tt('categories.add')}</Modal.Header>
+                      <Modal size='small' open={addEditParentIds != null}>
+                        <Modal.Header>{(addEditParentIds == null || !addEditParentIds.length) ? tt('categories.add') : tt('categories.add_sub') + ' ' + this.getParentCat(categories, addEditParentIds).name_ru}</Modal.Header>
                         <Modal.Content>
                           <Modal.Description>
                             <Form
                               ref={ref => this.form = ref }
+                              onValidSubmit={this.onAddEdit}
                             >
                               <Form.Input
                                 name="name_ru"
@@ -311,16 +365,18 @@ class ForumCategoriesForm extends React.Component {
                                 required
                                 focus
                                 autoFocus
+                                value={editCat ? editCat.name_ru : undefined}
                                 validationErrors={{
                                   isDefaultRequiredValue: tt('g.this_field_required')
                                 }}
                                 errorLabel={ errorLabel }
                               />
                               <Form.Input
-                                name="name_en"
+                                name="name"
                                 label={tt('categories.name')}
                                 required
                                 focus
+                                value={editCat ? editCat.name : undefined}
                                 validationErrors={{
                                   isDefaultRequiredValue: tt('g.this_field_required')
                                 }}
@@ -331,6 +387,8 @@ class ForumCategoriesForm extends React.Component {
                                 label={tt('categories.tag')}
                                 required
                                 focus
+                                value={editCat ? editCatId : undefined}
+                                disabled={editCat != null}
                                 placeholder={tt('categories.tag')}
                                 validationErrors={{
                                   isDefaultRequiredValue: tt('g.this_field_required')
@@ -338,9 +396,9 @@ class ForumCategoriesForm extends React.Component {
                                 errorLabel={ errorLabel }
                               />
                               <Divider hidden />
-                              <Button floated='right' primary>{tt('categories.add')}</Button>
+                              <Button floated='right' primary>{editCat ? tt('categories.edit') : tt('categories.add')}</Button>
                               <Button color='orange' 
-                                onClick={this.onAddCancel}>{tt('g.cancel')}</Button>
+                                onClick={this.onAddEditCancel}>{tt('g.cancel')}</Button>
                             </Form>
                           </Modal.Description>
                         </Modal.Content>
@@ -354,7 +412,6 @@ class ForumCategoriesForm extends React.Component {
 function mapStateToProps(state, ownProps) {
     return {
         account: state.account,
-        forum: state.forum,
         preferences: state.preferences,
         status: state.status
     }

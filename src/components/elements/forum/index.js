@@ -50,6 +50,11 @@ export default class ForumIndex extends React.Component {
                       </Header.Subheader>
                     </Header>
     }
+    let childs = [];
+    if (forum.children)
+      for (let [_id, f] of Object.entries(forum.children)) {
+        childs.push(<span key={_id}>{" • "}<ForumLink forum={f}/></span>);
+      }
     return (
       <Segment
         attached
@@ -75,18 +80,10 @@ export default class ForumIndex extends React.Component {
                         : ''
                     }
                   </Header.Subheader>
-                  {
-                    (forum.children && forum.children.length > 0)
-                    ? (
+                  {childs.length ? 
                       <Header.Subheader style={{marginTop: '0.1rem'}}>
-                        {forum.children.map((forum, i) => (<span key={i}>
-                          {!!i && " • "}
-                          <ForumLink forum={forum}/>
-                        </span>))}
-                      </Header.Subheader>
-                    )
-                    : ''
-                  }
+                        {childs}
+                      </Header.Subheader> : null}
                 </Header.Content>
               </Header>
             </Grid.Column>

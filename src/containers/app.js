@@ -28,7 +28,11 @@ import './app.css'
 import '../../node_modules/noty/lib/noty.css'
 
 steem.api.setOptions({ url: CONFIG.GOLOS_NODE });
+
 golos.config.set('websocket', CONFIG.GOLOS_NODE);
+if (CONFIG.GOLOS_CHAIN_ID && CONFIG.GOLOS_CHAIN_ID.length) {
+  golos.config.set('chain_id', CONFIG.GOLOS_CHAIN_ID);
+}
 
 const App = () => (
     <BrowserRouter history={browserHistory}>

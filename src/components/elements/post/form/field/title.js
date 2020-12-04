@@ -1,7 +1,10 @@
 import React from 'react';
+import tt from 'counterpart';
 
 import { Label } from 'semantic-ui-react'
 import { Form } from 'formsy-semantic-ui-react'
+
+import "./styles.css"
 
 export default class PostFormFieldTitle extends React.Component {
   render() {
@@ -10,10 +13,9 @@ export default class PostFormFieldTitle extends React.Component {
       <Form.Field>
         <Form.Input
           name="title"
-          label="Post Title"
-          required
+          className="PostFormTitle"
           defaultValue={value}
-          placeholder='What should this post be titled?'
+          placeholder={tt('post_form.title')}
           validationErrors={{
             isDefaultRequiredValue: 'A title is required'
           }}

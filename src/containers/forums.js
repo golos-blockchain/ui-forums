@@ -27,7 +27,7 @@ class Forums extends React.Component {
       this.state = {
         group: false,
         minimized: props.preferences.forums_minimized || [],
-        forums: [],
+        forums: null,
         showConfig: (['overview', 'categories', 'permissions', 'configuration'].indexOf(props.section) >= 0) ? true : false,
       };
       this.getForums = this.getForums.bind(this);
@@ -103,29 +103,30 @@ class Forums extends React.Component {
   toggleConfig = () => (this.state.showConfig) ? this.hideConfig() : this.showConfig()
 
     render() {
-      let loaded = (this.state.forums.length > 0),
+      let loaded = !!this.state.forums,
           loader = {
             style:{
               minHeight: '100px',
               display: 'block'
-            },
-            content: 'Loading'
+            }
           },
           activeusers = false,
           account = this.props.account,
           display = <Dimmer active inverted style={loader.style}>
-                      <Loader size='large' content={loader.content}/>
+                      <Loader size='large' />
                     </Dimmer>
       if(loaded) {
-        let { forums, users, showConfig } = this.state,
+        let { forums, users, showConfig } = this.state;
             // Find the unique forum groupings
-            groups = forums.map((forum, index) => {
-              return (!this.state.forums[index-1] || this.state.forums[index-1].group !== forum.group) ? forum['group'] : null
-            }).filter(function(name) {
-              return name !== null
-            })
+            let groups = [];
+            let prev_group = 0; // instead of null - hack for forums w/o groups
+            for (let [_id, forum] of Object.entries(forums)) {
+              if (forum.group == prev_group) continue;
+              groups.push(forum.group);
+              prev_group = forum.group;
+            }
 
-        activeusers = (
+        let activeusers = (
           <Segment>
             <Header size='large'>
               Active Posters
@@ -156,17 +157,18 @@ class Forums extends React.Component {
                   section={this.props.section}
                   target={CONFIG.FORUM}
                   forum={forum4}
+                  categories={this.state.forums}
                   hideConfig={this.hideConfig.bind(this)}
               />
           )
         } else {
           display = groups.map((group) => {
-            const isMinimized = this.state.minimized.indexOf(group) >= 0
-            let groupings = forums.filter(function(forum) {
-              return forum['group'] === group
-            }).map((forum, index) => {
-              return <ForumIndex key={index} forum={forum} isMinimized={isMinimized} />
-            })
+            const isMinimized = this.state.minimized.indexOf(group) >= 0;
+            let groupings = [];
+            for (let [_id, forum] of Object.entries(forums)) {
+              if (forum.group !== group) continue;
+              groupings.push(<ForumIndex key={_id} forum={forum} isMinimized={isMinimized} />);
+            }
             return  <div key={group} style={{marginBottom: "10px"}}>
                       <Segment secondary attached>
                         <Grid>

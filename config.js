@@ -1,5 +1,6 @@
 module.exports = {
     GOLOS_NODE: 'ws://37.18.27.45:8091',
+    GOLOS_CHAIN_ID: '5876894a41e6361bde2e73278f07340f2eb8b41c2facd29099de9deef6cdb679',
     REST_API: 'http://37.18.27.45:5000',
     FORUM: {
         _id: 'golostalks',

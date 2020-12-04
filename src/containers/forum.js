@@ -36,7 +36,7 @@ class Forum extends React.Component {
     const hash = props.history.location.hash.replace('#','')
     super(props, state);
     this.state = {
-      children: [],
+      children: {},
       loadingPosts: true,
       page: 1,
       topics: false,
@@ -258,7 +258,12 @@ class Forum extends React.Component {
         perPage = 20,
         posts = (forum && forum.stats) ? forum.stats.posts : 0,
         topics = this.state.topics
-    if(children.length > 0) {
+    const children_cnt = Object.keys(children).length
+    if(children_cnt > 0) {
+        let childs = [];
+        for (let [_id, forum] of Object.entries(children)) {
+          childs.push(<ForumIndex forum={forum} key={_id} />);
+        }
         const panels = [
             {
               key: 'subforums',
@@ -267,7 +272,7 @@ class Forum extends React.Component {
                       size='small'
                       key='subforums-title'
                       as={Accordion.Title}
-                      content={tt('forum_controls.subcats') + `${children.length})`}
+                      content={tt('forum_controls.subcats') + `${children_cnt})`}
                       icon='fork'
                       onClick={this.toggleSubforums}
                       style={{marginBottom: 0}}
@@ -277,9 +282,7 @@ class Forum extends React.Component {
                   active: this.state.showSubforums,
                   content: (
                       <Segment basic>
-                          {children.map((forum, index) => {
-                            return <ForumIndex forum={forum} key={index} />
-                          })}
+                          {childs}
                       </Segment>
                   ),
                   key: 'subforums'
@@ -327,19 +330,11 @@ class Forum extends React.Component {
             display = (
               <PostForm
                 formHeader={(
-                  <PostFormHeader
-                    title='Create a new Post'
-                    color='green'
-                    subtitle={
-                      <span>
-                        This post will automatically be placed within /f/{forum._id}.
-                      </span>
-                    }
-                    />
+                  <br/>
                 )}
                 forum={forum}
                 filter={this.state.filter}
-                elements={['body', 'rewards', 'title', 'tags']}
+                elements={['body', 'title']}
                 onCancel={this.hideNewPost}
                 onComplete={this.handleNewPost}
                 target={this.state.forum}
@@ -364,7 +359,7 @@ class Forum extends React.Component {
               display = (
                 <Grid.Column width={16} style={{minHeight: '200px'}}>
                   <Dimmer inverted active style={{minHeight: '100px', display: 'block'}}>
-                    <Loader size='large' content='Loading Post...'/>
+                    <Loader size='large'/>
                   </Dimmer>
                 </Grid.Column>
               )
@@ -403,7 +398,7 @@ class Forum extends React.Component {
         <Segment>
             <Grid.Column width={16} style={{minHeight: '200px'}}>
                 <Dimmer inverted active style={{minHeight: '100px', display: 'block'}}>
-                    <Loader size='large' content='Loading Post...'/>
+                    <Loader size='large'/>
                 </Dimmer>
             </Grid.Column>
         </Segment>

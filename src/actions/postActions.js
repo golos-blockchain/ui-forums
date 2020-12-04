@@ -1,4 +1,5 @@
 import steem from 'steem'
+import golos from 'golos-classic-js'
 import slug from 'slug'
 import _ from 'lodash'
 
@@ -341,15 +342,13 @@ export function submit(account, data, parent, action = 'post') {
     const parent_permlink = (data.existingPost) ? data.existingPost.parent_permlink : (parent) ? parent.permlink : data.category
     // JSON to append to the post
     const meta = {
-      app: 'chainbb/0.4',
-      namespace: namespace,
-      format: 'markdown+html',
+      app: 'chainbb/0.1',
+      format: 'html',
       tags: data.tags
     }
     const json_metadata = JSON.stringify(meta)
     // Predefined beneficiaries for the platform
     let beneficiaries = [
-      { "account": "chainbb", "weight": 500 }
     ]
     // If the forum is funded, add the creator as a beneficiary
     if (data.forum && data.forum.progression) {
@@ -357,7 +356,6 @@ export function submit(account, data, parent, action = 'post') {
         const chainbbPercent = 500
         const ownerPercent = (target.progression) ? target.progression.split : 100
         beneficiaries = [
-            { "account": "chainbb", "weight": chainbbPercent - ownerPercent}
         ]
         if(ownerPercent > 0) {
             beneficiaries.push({ "account": target.creator, "weight": ownerPercent})
@@ -375,10 +373,6 @@ export function submit(account, data, parent, action = 'post') {
     })
     // Sort the beneficiaries alphabetically
     beneficiaries = _.sortBy(beneficiaries, 'account');
-    // If this is a root post, append the post footer to the post
-    if(!parent) {
-      body += `<div class="chainbb-footer"><hr><em><small><a href="https://chainbb.com/${data.category}/@${author}/${permlink}">Originally posted</a> in the <a href="https://chainbb.com/f/${namespace}">/f/${namespace}</a> forum on <a href="https://chainbb.com">chainBB.com</a> (<a href="https://chainbb.com/chainbb/@jesta/chainbb-frequently-asked-questions-faq">learn more</a>).</small></em></div>`
-    }
     // Build the comment operation
     ops.push(['comment', { author, body, json_metadata, parent_author, parent_permlink, permlink, title }])
     // If this is not an edit, add the comment options
@@ -388,7 +382,7 @@ export function submit(account, data, parent, action = 'post') {
       const extensions = [[0, {
         "beneficiaries": beneficiaries
       }]]
-      let max_accepted_payout = "1000000.000 SBD"
+      let max_accepted_payout = "1000000.000 GBG"
       let percent_steem_dollars = 10000
       // Modify payout parameters based on reward option choosen
       switch(data.rewards) {
@@ -396,25 +390,12 @@ export function submit(account, data, parent, action = 'post') {
           percent_steem_dollars = 0
           break
         case "decline":
-          max_accepted_payout = "0.000 SBD"
+          max_accepted_payout = "0.000 GBG"
           break
         default:
           break
       }
       ops.push(['comment_options', { allow_curation_rewards, allow_votes, author, extensions, max_accepted_payout, percent_steem_dollars, permlink }]);
-      // If this is a root post, associate it with the namespace, regardless of category used
-      if(!parent) {
-          ops.push(['custom_json', {
-              required_auths: [],
-              required_posting_auths: [author],
-              id: 'chainbb',
-              json: JSON.stringify(['forum_post', {
-                  namespace,
-                  author,
-                  permlink,
-              }])
-          }])
-      }
     }
     // Uncomment below to debug posts without submitting
     // console.log('data')
@@ -432,7 +413,8 @@ export function submit(account, data, parent, action = 'post') {
     //     }
     //   })
     // }, 6000)
-    steem.broadcast.send({ operations: ops, extensions: [] }, { posting: account.key }, function(err, result) {
+    alert(JSON.stringify(ops))
+    golos.broadcast.send({ operations: ops, extensions: [] }, { posting: account.key }, function(err, result) {
       if(err) {
         dispatch({
           type: types.POST_SUBMIT_ERROR,

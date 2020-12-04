@@ -1,9 +1,17 @@
 import React from 'react';
+import tt from 'counterpart';
 
 import { Label } from 'semantic-ui-react'
 import { Form } from 'formsy-semantic-ui-react'
+import HtmlEditor from '../HtmlEditor/HtmlEditor'
 
 export default class PostFormFieldTitle extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      rteState: HtmlEditor.getStateFromHtml('')
+    };
+  }
   processBody = (string) => {
     const parser = new DOMParser();
     const doc = parser.parseFromString(string, "text/html").querySelector("body");
@@ -15,6 +23,15 @@ export default class PostFormFieldTitle extends React.Component {
     // Return HTML
     return doc.innerHTML
   }
+
+  _onHtmlEditorChange = state => {
+      this.setState(
+          {
+              rteState: state,
+          }
+      );
+  };
+
   render() {
     const { disableAutoFocus, value } = this.props
     let content = false
@@ -23,11 +40,17 @@ export default class PostFormFieldTitle extends React.Component {
     }
     const errorLabel = <Label color="red" pointing />
     return (
-      <Form.TextArea
+      <HtmlEditor
         name="body"
-        label={(<span>Post Body (Markdown Enabled - <a href='https://blog.ghost.org/markdown/' target='_blank'>Learn Markdown (?)</a>)</span>)}
-        placeholder='Write your post here.'
-        required
+        placeholder={tt('post_form.body')}
+        ref="editor"
+        value={this.state.rteState}
+        onChange={this._onHtmlEditorChange}
+      />
+    )
+      /*<Form.TextArea
+        name="body"
+        placeholder={tt('post_form.body')}
         autoFocus={!disableAutoFocus}
         rows={14}
         defaultValue={content}
@@ -35,7 +58,6 @@ export default class PostFormFieldTitle extends React.Component {
         validationErrors={{
           isDefaultRequiredValue: 'A post body is required.',
         }}
-      />
-    )
+      />*/
   }
 }

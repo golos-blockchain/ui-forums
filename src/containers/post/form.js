@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import _ from 'lodash'
 import store from 'store'
 import ReactDOMServer from 'react-dom/server';
+import tt from 'counterpart';
 
 import { Button, Dimmer, Divider, Header, Loader, Menu, Segment } from 'semantic-ui-react'
 import { Form } from 'formsy-semantic-ui-react'
@@ -15,8 +16,6 @@ import PostFormFieldBody from '../../components/elements/post/form/field/body'
 import PostFormFieldRewards from '../../components/elements/post/form/field/rewards'
 import PostFormFieldTags from '../../components/elements/post/form/field/tags'
 import PostFormFieldTitle from '../../components/elements/post/form/field/title'
-
-import PostPreview from '../../components/elements/post/form/preview'
 
 import * as postActions from '../../actions/postActions'
 import * as statusActions from '../../actions/statusActions'
@@ -41,7 +40,7 @@ class PostForm extends React.Component {
     this.drafts = props.drafts || {}
     this.state = {
       formId: _.uniqueId('postform_'),
-      activeItem: 'post',
+      activeItem: tt('post_form.tab_post'),
       beneficiaries: {},
       existingPost: (existingPost) ? existingPost : false,
       category: (existingPost) ? existingPost.parent_permlink : (filter) ? filter : (forum && forum.tags) ? forum.tags[0] : false,
@@ -265,27 +264,21 @@ class PostForm extends React.Component {
       )
     }
 
-    if(this.props.elements.length > 1) {
+    if(this.props.elements.length > 2) {
       enableMenu = true
       const items = [
         {
           key: 'post',
-          active: (activeItem === 'post'),
-          name: 'post',
-          onClick: this.handleItemClick
-        },
-        {
-          key: 'tags',
-          active: (activeItem === 'tags'),
-          name: 'tags',
+          active: (activeItem === tt('post_form.tab_post')),
+          name: tt('post_form.tab_post'),
           onClick: this.handleItemClick
         },
       ]
       if(this.props.elements.indexOf('rewards') !== -1) {
         items.push({
           key: 'rewards',
-          active: (activeItem === 'rewards'),
-          name: 'rewards',
+          active: (activeItem === tt('post_form.tab_rewards')),
+          name: tt('post_form.tab_rewards'),
           onClick: this.handleItemClick
         })
       }
@@ -325,14 +318,14 @@ class PostForm extends React.Component {
               tags={tags}
             />
           </Segment>
-          <Segment attached='bottom' padded className={`${activeItem === 'post' ? 'active ' : ''}tab`}>
+          <Segment attached='bottom' padded className={`${activeItem === tt('post_form.tab_post') ? 'active ' : ''}tab`}>
             {formFieldTitle}
             <PostFormFieldBody
               disableAutoFocus={disableAutoFocus}
               value={ (draft.body) ? draft.body : (existingPost) ? existingPost.body : '' }
             />
           </Segment>
-          <Segment attached='bottom' padded className={`${activeItem === 'rewards' ? 'active ' : ''}tab`}>
+          <Segment attached='bottom' padded className={`${activeItem === tt('post_form.tab_rewards') ? 'active ' : ''}tab`}>
             <PostFormFieldRewards
               author={account.name}
               draft={draft}
@@ -344,10 +337,13 @@ class PostForm extends React.Component {
       )
     } else {
       menuDisplay = (
+        <div>
+        {formFieldTitle}
         <PostFormFieldBody
           disableAutoFocus={disableAutoFocus}
           value={ (draft.body) ? draft.body : (existingPost) ? existingPost.body : '' }
         />
+        </div>
       )
     }
     return (
@@ -355,12 +351,9 @@ class PostForm extends React.Component {
         <Dimmer inverted active={this.state.submitting} style={{minHeight: '100px'}}>
           <Loader size='large' indeterminate>
             <Header>
-              Submitting to the Steem blockchain
-              <Header.Subheader>
-                If you get stuck submitted, hit cancel below to reload this page and reconnect. Your post will be saved as a draft.
-              </Header.Subheader>
+              {tt('post_form.submitting')}
             </Header>
-            <Button onClick={this.cancelSubmitting}>Cancel</Button>
+            <Button onClick={this.cancelSubmitting}>{tt('g.cancel')}</Button>
           </Loader>
         </Dimmer>
         <Dimmer inverted active={this.state.waitingforblock} style={{minHeight: '100px'}}>
@@ -382,15 +375,15 @@ class PostForm extends React.Component {
           {menu}
           {menuDisplay}
           <Divider hidden />
+          <Button color='orange' onClick={this.handleCancel}>{tt('post_form.cancel')}</Button>
           <Button
             ref={ref => this.formSubmit = ref}
+            floated='right'
             primary
             onClick={this.submit}
           >
-            Post
+            {tt('post_form.submit')}
           </Button>
-          <PostPreview preview={this.state.preview} author={this.props.account.name} />
-          <Button floated='right' color='orange' onClick={this.handleCancel}>Cancel & Delete Draft</Button>
         </Form>
       </div>
     )

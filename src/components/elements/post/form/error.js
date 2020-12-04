@@ -1,4 +1,5 @@
 import React from 'react';
+import tt from 'counterpart';
 
 import { Button, Header, Icon, Modal } from 'semantic-ui-react'
 import { Form, TextArea } from 'formsy-semantic-ui-react'
@@ -15,7 +16,7 @@ export default class PostFormError extends React.Component {
         basic
         size='small'
         >
-        <Header icon='alarm outline' content='Error Submitting to the Blockchain' />
+        <Header icon='alarm outline' content={tt('post_form.error_submitting')} />
         <Modal.Content>
           <Header color='red'>{error.message}</Header>
           <Form>
@@ -24,12 +25,12 @@ export default class PostFormError extends React.Component {
              defaultValue={message}
              name='error'
            />
-           <p>If you need assistance, please notify @jesta here on the forums, on steemit.com, or via steemit.chat. Please include the error messages, all of the text in the box above, and a description of what you were attempting to do.</p>
+           <p>{tt('post_form.error_submitting_description')}</p>
          </Form>
         </Modal.Content>
         <Modal.Actions>
           <Button color='green' onClick={this.props.onClose} inverted>
-            <Icon name='checkmark' /> Got it
+            <Icon name='checkmark' /> OK
           </Button>
         </Modal.Actions>
       </Modal>
