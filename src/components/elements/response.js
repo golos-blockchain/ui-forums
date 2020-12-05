@@ -50,7 +50,7 @@ class Response extends React.Component {
               <Grid.Column width={16}>
                 <Segment clearing basic style={{minHeight: '150px'}}>
                   <Dimmer inverted active style={{minHeight: '150px', display: 'block'}}>
-                    <Loader size='large' content='Loading Replies...'/>
+                    <Loader size='large' />
                   </Dimmer>
                 </Segment>
               </Grid.Column>

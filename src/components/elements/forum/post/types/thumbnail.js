@@ -53,11 +53,11 @@ export default class ForumPostThumbnail extends React.Component {
           {(topic.last_reply_url)
             ? (
               <Link to={topic.last_reply_url}>
-                <TimeAgo date={`${topic.last_reply}Z`} />
+                <TimeAgo date={`${topic.last_reply}Z`} live={false} />
               </Link>
             )
             : (
-              <TimeAgo date={`${topic.last_reply}Z`} />
+              <TimeAgo date={`${topic.last_reply}Z`} live={false} />
             )
           }
         </Grid.Column>

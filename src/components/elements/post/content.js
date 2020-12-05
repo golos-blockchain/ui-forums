@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOMServer from 'react-dom/server';
 import Noty from 'noty';
+import tt from 'counterpart';
 
 import { Button, Divider, Header, Popup, Segment } from 'semantic-ui-react'
 
@@ -101,12 +102,12 @@ export default class PostContent extends React.Component {
             trigger={
               <Button floated='right'>
                 <i className={"left quote icon"}></i>
-                Reply
+                {tt('g.reply')}
               </Button>
             }
             position='bottom center'
             inverted
-            content='You must be logged in to post.'
+            content={tt('forum_controls.you_must_be_logged_in_to_post')}
             basic
           />
         ),
@@ -125,7 +126,7 @@ export default class PostContent extends React.Component {
           onClick={this.handleResponding}
           color='green'
           icon='left quote'
-          content='Reply'
+          content={tt('g.reply')}
           floated='right'
         />
       )
@@ -144,7 +145,7 @@ export default class PostContent extends React.Component {
           }
           position='bottom center'
           inverted
-          content='Edit your post'
+          content={tt('g.edit')}
           basic
         />
       )

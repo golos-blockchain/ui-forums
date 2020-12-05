@@ -17,7 +17,7 @@ class Post extends React.Component {
     let display = (
           <Grid.Column only='tablet computer' width={16}>
             <Dimmer inverted active style={{minHeight: '100px', display: 'block'}}>
-              <Loader size='large' content='Loading Post...'/>
+              <Loader size='large' />
             </Dimmer>
           </Grid.Column>
         )

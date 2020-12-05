@@ -1,4 +1,5 @@
 import React from 'react';
+import tt from 'counterpart';
 
 import { Button, Divider, List, Header, Popup, Segment } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
@@ -14,12 +15,12 @@ export default class Forum404 extends React.Component {
             trigger={
               <Button size='large'>
                 <i className='pencil icon'></i>
-                Create new post
+                {tt('forum_controls.be_first_button')}
               </Button>
             }
             position='bottom center'
             inverted
-            content='You must be logged in to post.'
+            content={tt('forum_controls.you_must_be_logged_in_to_post')}
             basic
           />
         )
@@ -27,36 +28,17 @@ export default class Forum404 extends React.Component {
       button = (
         <Button primary onClick={showNewPost}>
           <i className='pencil icon'></i>
-          New Post
+          {tt('forum_controls.be_first_button')}
         </Button>
       )
-    }
-    let tagUsage = false
-    if(!forum.exclusive) {
-        tagUsage = (
-            <div>
-                <Divider hidden></Divider>
-                <p>
-                    If you'd like to post to this forum from another Steem powered application, please make sure to use one of the following tags as the first tag in your post:
-                </p>
-                <List>
-                  {forum.tags.map((tag, i) => <List.Item key={i}>
-                    <Link to={`/topic/${tag}`}>
-                      #{tag}
-                    </Link>
-                  </List.Item>)}
-                </List>
-            </div>
-        )
     }
     return (
       <Segment textAlign='center' padded='very'>
         <Header size='huge'>
-          No posts yet!
+          {tt('forum_controls.no_posts')}
           <Header.Subheader>
-            <p>Be the first to create a post in this forum.</p>
+            <p>{tt('forum_controls.no_posts_description')}</p>
             {button}
-            {tagUsage}
           </Header.Subheader>
         </Header>
       </Segment>

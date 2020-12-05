@@ -31,7 +31,7 @@ class PostForm extends React.Component {
   constructor(props) {
     super(props)
     const { action, filter, forum, existingPost } = props;
-    let tags = (filter) ? [filter] : (forum && forum.tags) ? [forum.tags[0]] : [];
+    let tags = (filter) ? [filter] : (forum && forum.tags) ? forum.tags : [];
     if (action === 'edit') {
       if (existingPost.json_metadata && existingPost.json_metadata.tags && existingPost.json_metadata.tags.length) {
         tags = existingPost.json_metadata.tags;
@@ -49,7 +49,8 @@ class PostForm extends React.Component {
       waitingforblock: false,
       preview: {},
       submitted: {},
-      tags: tags
+      tags: tags,
+      rewards: 'decline'
     };
   }
 
@@ -74,16 +75,16 @@ class PostForm extends React.Component {
         theme: 'semanticui',
         text: ReactDOMServer.renderToString(
           <Header>
-            Draft Loaded
+            {tt('post_form.draft_loaded')}
             <Header.Subheader>
-              chainBB has loaded unsubmitted draft you had for this forum/thread. Hit cancel to delete this draft.
+              {tt('post_form.draft_loaded_description')}
             </Header.Subheader>
           </Header>
         ),
         type: 'success',
-        timeout: 8000
+        timeout: 4000
       }).show();
-      this.setState({preview: draft || {}})
+      this.setState({preview: draft || {}, body: draft.body || ''})
     }
   }
 
@@ -155,7 +156,13 @@ class PostForm extends React.Component {
   }
 
   handleChange = (e, { name, value }) => {
-    this.setState({ [name]: value })
+    this.setState({ [name]: value }, () => {
+      const drafts = this.drafts || store.get('drafts') || {}
+      const identifier = this.getIdentifier();
+      drafts[identifier][name] = value;
+      store.set('drafts', drafts)
+      this.drafts = drafts;
+    });
   }
 
   handleBeneficiariesUpdate = (beneficiaries) => this.setState({beneficiaries})
@@ -322,6 +329,7 @@ class PostForm extends React.Component {
             {formFieldTitle}
             <PostFormFieldBody
               disableAutoFocus={disableAutoFocus}
+              handleChange={this.handleChange}
               value={ (draft.body) ? draft.body : (existingPost) ? existingPost.body : '' }
             />
           </Segment>
@@ -341,6 +349,7 @@ class PostForm extends React.Component {
         {formFieldTitle}
         <PostFormFieldBody
           disableAutoFocus={disableAutoFocus}
+          handleChange={this.handleChange}
           value={ (draft.body) ? draft.body : (existingPost) ? existingPost.body : '' }
         />
         </div>

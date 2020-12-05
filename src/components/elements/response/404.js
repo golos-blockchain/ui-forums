@@ -1,4 +1,5 @@
 import React from 'react';
+import tt from 'counterpart';
 
 import { Grid, Header, Message, Segment } from 'semantic-ui-react'
 
@@ -31,9 +32,9 @@ export default class Response404 extends React.Component {
         <Grid.Column width={12}>
           <Segment basic padded>
             <Header size='huge' textAlign='center'>
-              No Responses yet!
+              {tt('forum_controls.no_comments')}
               <Header.Subheader>
-                Be the first to leave a reply
+                {tt('forum_controls.no_comments_description')}
               </Header.Subheader>
             </Header>
             {warning}

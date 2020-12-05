@@ -1,7 +1,11 @@
 import React from 'react';
 import { Grid, Header, Icon, Segment } from 'semantic-ui-react'
 import TimeAgo from 'react-timeago'
+import ruStrings from 'react-timeago/lib/language-strings/ru'
+import buildFormatter from 'react-timeago/lib/formatters/buildFormatter'
 import { Link } from 'react-router-dom'
+
+import * as CONFIG from '../../../../../../config';
 
 import AccountAvatar from '../../../account/avatar'
 import AccountLink from '../../../account/link'
@@ -41,6 +45,7 @@ export default class ForumPostText extends React.Component {
         />
       )
     }
+    const formatter = buildFormatter(ruStrings);
     if(topic.last_reply) {
       last_reply = (
         <Grid.Column mobile={6} tablet={6} computer={4} largeScreen={4} widescreen={4}>
@@ -53,11 +58,11 @@ export default class ForumPostText extends React.Component {
           {(topic.last_reply_url)
             ? (
               <Link to={topic.last_reply_url}>
-                <TimeAgo date={`${topic.last_reply}Z`} />
+                <TimeAgo date={`${topic.last_reply}Z`} live={false} formatter={formatter} />
               </Link>
             )
             : (
-              <TimeAgo date={`${topic.last_reply}Z`} />
+              <TimeAgo date={`${topic.last_reply}Z`} live={false} formatter={formatter} />
             )
           }
         </Grid.Column>
@@ -77,6 +82,7 @@ export default class ForumPostText extends React.Component {
         />
       )
     }
+    const forum_url_prefix = '/fm-' + CONFIG.FORUM._id + '-';
     return (
       <Segment
         attached
@@ -95,12 +101,12 @@ export default class ForumPostText extends React.Component {
             <Grid.Column mobile={10} tablet={10} computer={9} largeScreen={9}>
               <Header size='small'>
                 <Header.Content>
-                  <Link to={`/${(forum) ? forum._id : topic.category}/@${topic._id}`}>
+                  <Link to={'/' + topic.url.substring(forum_url_prefix.length)}>
                     {topic.title}
                   </Link>
                   <Header.Subheader>
                     {'↳ '}
-                    <TimeAgo date={`${topic.created}Z`} />
+                    <TimeAgo date={`${topic.created}Z`} live={false} formatter={formatter} />
                     {' • '}
                     <AccountLink username={topic.author} />
                     {' • '}

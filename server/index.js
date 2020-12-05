@@ -29,7 +29,7 @@ let getForums = async function() {
         forum.created_tx = 0;
         forum.expires =  '2022-01-01T10:10:10';
         forum.stats = {'replies' : '0', 'posts' : '0'}
-        forum.tags = ['fm-' + CONFIG.FORUM._id, 'fm-' + CONFIG.FORUM._id + '-' + _id]
+        forum.tags = ['fm-' + CONFIG.FORUM._id + '-' + _id, 'fm-' + CONFIG.FORUM._id]
     }
     return forums_obj;
 };
@@ -63,27 +63,29 @@ router.get('/forums', async (ctx) => {
 
 router.get('/forum/:slug', async (ctx) => {
     let forums_obj = await getForums();
+    const data = await golos.api.getAllDiscussionsByActive(
+        '', '', 10000000,
+        "fm-" + CONFIG.FORUM._id + "-" + ctx.params.slug,
+        0, 20
+    );
     ctx.body = {
-        data: [
-            {
-        "_id":"kakom-kverhu",
-        "author":"lex",
-        "title":"Как работать с воркерами? FAQ"
-        },{
-        "_id":"dermo",
-        "author":"lomashuk",
-        "title":"Критика вашего блокчейна"
-        },{
-        "_id":"ya-nadzirayu-za-snezhnim-komom",
-        "author":"Роскомнадзор",
-        "title":"Я надзираю за снежным комом"
-        }
-        ], 
+        data: data, 
         "network": {}, 
         "status": "ok",
         forum: forums_obj[ctx.params.slug],
         children: Object.assign({}, forums_obj[ctx.params.slug].children),
         meta: {'query':{},'sort':{}}
+    }
+})
+
+const DEFAULT_VOTE_LIMIT = 10000
+
+router.get('/:category/@:author/:permlink', async (ctx) => {
+    const data =  await golos.api.getContent(ctx.params.author, ctx.params.permlink, DEFAULT_VOTE_LIMIT);
+    ctx.body = {
+        data: data,
+        "network": {}, 
+        "status": "ok"
     }
 })
 
