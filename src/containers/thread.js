@@ -5,6 +5,7 @@ import { connect } from 'react-redux'
 import { goToTop, goToAnchor } from 'react-scrollable-anchor'
 import ReactDOMServer from 'react-dom/server';
 import Noty from 'noty';
+import tt from 'counterpart';
 
 import { Divider, Grid, Header, Segment } from 'semantic-ui-react'
 
@@ -162,10 +163,7 @@ class Thread extends React.Component {
           <Grid.Row verticalAlign='middle'>
             <Grid.Column className='mobile hidden' width={8}>
               <Header>
-                Comments ({responses.length})
-                <Header.Subheader>
-                  Page {page} of {pages}
-                </Header.Subheader>
+                {tt('forum_controls.comments')} ({responses.length})
               </Header>
             </Grid.Column>
             <Grid.Column mobile={16} tablet={8} computer={8}>
@@ -180,11 +178,26 @@ class Thread extends React.Component {
         </Grid>
       </Segment>
     )
-    let postFormHeader = (
-      <PostFormHeader
-        title='Reply to Thread'
-        subtitle='Replying to the thread will reply leave a response at the end of the thread responding to the original post.'
-        />
+    let nav = (
+      <Segment basic>
+        <Grid id={(page ? `comments-page-${page}` : '')}>
+          <Grid.Row verticalAlign='middle'>
+            <Grid.Column className='mobile hidden' width={8}>
+              <Header>
+              Напишите Ваш ответ
+              </Header>
+            </Grid.Column>
+            <Grid.Column mobile={16} tablet={8} computer={8}>
+              <Paginator
+                page={page}
+                perPage={perPage}
+                total={responses.length}
+                callback={this.changePage}
+                />
+            </Grid.Column>
+          </Grid.Row>
+        </Grid>
+      </Segment>
     )
     if(this.props.post && this.props.post.content && this.props.account && this.props.account.isUser) {
       postForm = (
@@ -193,7 +206,6 @@ class Thread extends React.Component {
             key={this.state.submitted}
             action='threadReply'
             actions={this.props.actions}
-            formHeader={postFormHeader}
             disableAutoFocus={true}
             elements={['body']}
             forum={this.props.post.forum}
@@ -236,7 +248,7 @@ class Thread extends React.Component {
           changePage={this.changePage}
           scrollToPost={this.scrollToPost}
           { ...this.props } />
-        { comments_nav }
+        { nav }
         <Divider />
         <Grid>
           <Grid.Row>

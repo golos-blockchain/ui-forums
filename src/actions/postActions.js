@@ -347,41 +347,13 @@ export function submit(account, data, parent, action = 'post') {
       tags: data.tags
     }
     const json_metadata = JSON.stringify(meta)
-    // Predefined beneficiaries for the platform
-    let beneficiaries = [
-    ]
-    // If the forum is funded, add the creator as a beneficiary
-    if (data.forum && data.forum.progression) {
-        const target = data.forum
-        const chainbbPercent = 500
-        const ownerPercent = (target.progression) ? target.progression.split : 100
-        beneficiaries = [
-        ]
-        if(ownerPercent > 0) {
-            beneficiaries.push({ "account": target.creator, "weight": ownerPercent})
-        }
-    }
-    // The percentage overall (after platform splits) that the user receives - should be dynamic in the future
-    const authorPercent = 95
-    // Add additional beneficiaries as requested by the user
-    Object.keys(data.beneficiaries).forEach((account) => {
-      const requested = parseFloat(data.beneficiaries[account])
-      if(requested > 0) {
-        const weight = parseInt((requested / 100) * authorPercent * 100, 10)
-        beneficiaries.push({account, weight})
-      }
-    })
-    // Sort the beneficiaries alphabetically
-    beneficiaries = _.sortBy(beneficiaries, 'account');
     // Build the comment operation
     ops.push(['comment', { author, body, json_metadata, parent_author, parent_permlink, permlink, title }])
     // If this is not an edit, add the comment options
     if(action !== 'edit') {
       const allow_curation_rewards = true
       const allow_votes = true
-      const extensions = [[0, {
-        "beneficiaries": beneficiaries
-      }]]
+      const extensions = []
       let max_accepted_payout = "1000000.000 GBG"
       let percent_steem_dollars = 10000
       // Modify payout parameters based on reward option choosen

@@ -89,6 +89,15 @@ router.get('/:category/@:author/:permlink', async (ctx) => {
     }
 })
 
+router.get('/:category/@:author/:permlink/responses', async (ctx) => {
+    const data = await golos.api.getAllContentReplies(ctx.params.author, ctx.params.permlink, DEFAULT_VOTE_LIMIT);
+    ctx.body = {
+        data: data,
+        "network": {}, 
+        "status": "ok"
+    }
+})
+
 app.use(livereload());
 app.use(cors());
 app.use(router.routes());

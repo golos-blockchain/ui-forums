@@ -11,7 +11,6 @@ import AccountAvatar from '../../../account/avatar'
 import AccountLink from '../../../account/link'
 import Paginator from '../paginator'
 import ForumPostModeration from '../moderation'
-import PlatformLink from '../../../../../utils/link/platform'
 
 export default class ForumPostText extends React.Component {
   render() {
@@ -103,16 +102,14 @@ export default class ForumPostText extends React.Component {
                 <Header.Content>
                   <Link to={'/' + topic.url.substring(forum_url_prefix.length)}>
                     {topic.title}
-                  </Link>
                   <Header.Subheader>
                     {'↳ '}
                     <TimeAgo date={`${topic.created}Z`} live={false} formatter={formatter} />
                     {' • '}
                     <AccountLink username={topic.author} />
-                    {' • '}
-                    <PlatformLink post={topic} />
                     {paginator}
                   </Header.Subheader>
+                  </Link>
                 </Header.Content>
               </Header>
             </Grid.Column>
@@ -121,7 +118,6 @@ export default class ForumPostText extends React.Component {
                 {topic.children}
               </Header>
             </Grid.Column>
-            {last_reply}
           </Grid.Row>
         </Grid>
       </Segment>
