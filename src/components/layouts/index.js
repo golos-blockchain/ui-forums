@@ -5,13 +5,13 @@ import { withRouter } from "react-router-dom";
 import { Grid } from 'semantic-ui-react'
 
 import Forums from '../../containers/forums'
-import Sidebar from '../../containers/sidebar'
+//import Sidebar from '../../containers/sidebar'
 
 class IndexLayout extends React.Component {
   render() {
     const params = this.props.match.params;
     return(
-      <Grid stackable>
+      /*<Grid stackable>
         <Grid.Row>
           <Grid.Column width={4} className='mobile hidden'>
             <Sidebar
@@ -23,7 +23,8 @@ class IndexLayout extends React.Component {
             <Forums forums={params} section={params.section} />
           </Grid.Column>
         </Grid.Row>
-      </Grid>
+      </Grid>*/
+      <Forums forums={params} section={params.section} />
     );
   }
 }

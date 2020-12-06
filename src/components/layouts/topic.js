@@ -3,13 +3,13 @@ import React from 'react'
 import { Grid } from 'semantic-ui-react'
 
 import Topic from '../elements/topic'
-import Sidebar from '../../containers/sidebar'
+//import Sidebar from '../../containers/sidebar'
 
 export default class TopicLayout extends React.Component {
   render() {
     const { category } = this.props.match.params;
     return(
-      <Grid divided>
+      /*<Grid divided>
         <Grid.Row>
           <Grid.Column width={4}>
             <Sidebar />
@@ -18,7 +18,8 @@ export default class TopicLayout extends React.Component {
             <Topic category={category} />
           </Grid.Column>
         </Grid.Row>
-      </Grid>
+      </Grid>*/
+      <Topic category={category} />
     );
   }
 }

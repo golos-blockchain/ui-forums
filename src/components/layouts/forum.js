@@ -3,13 +3,13 @@ import React from 'react'
 import { Grid } from 'semantic-ui-react'
 
 import Forum from '../../containers/forum'
-import Sidebar from '../../containers/sidebar'
+//import Sidebar from '../../containers/sidebar'
 
 export default class ForumLayout extends React.Component {
   render() {
     const { id, section } = this.props.match.params;
     return(
-      <Grid>
+      /*<Grid>
         <Grid.Row>
           <Grid.Column width={4} className='mobile hidden'>
             <Sidebar />
@@ -18,7 +18,8 @@ export default class ForumLayout extends React.Component {
             <Forum forumid={id} section={section} />
           </Grid.Column>
         </Grid.Row>
-      </Grid>
+      </Grid>*/
+      <Forum forumid={id} section={section} />
     );
   }
 }
