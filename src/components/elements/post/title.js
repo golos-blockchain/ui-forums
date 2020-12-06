@@ -44,36 +44,6 @@ export default class PostTitle extends React.Component {
                 </Header>
               </Grid.Column>
               <Grid.Column tablet={8} computer={8} mobile={4} textAlign='right' verticalAlign='middle'>
-                <Popup
-                  className='mobile hidden'
-                    trigger={(
-                        <small>
-                            <PlatformLink post={content} />
-                        </small>
-                    )}
-                    hoverable
-                    header='View this post on...'
-                    content={(
-                        <List>
-                            <List.Item as='a' href={`https://steemit.com/${content.category}/@${content.author}/${content.permlink}`} target='_blank'>
-                                steemit.com
-                            </List.Item>
-                            <List.Item as='a' href={`https://busy.org/${content.category}/@${content.author}/${content.permlink}`} target='_blank'>
-                                busy.org
-                            </List.Item>
-                            <List.Item as='a' href={`https://steemd.com/${content.category}/@${content.author}/${content.permlink}`} target='_blank'>
-                                steemd.com (explorer)
-                            </List.Item>
-                            <List.Item as='a' href={`https://steemdb.com/${content.category}/@${content.author}/${content.permlink}`} target='_blank'>
-                                steemdb.com (explorer)
-                            </List.Item>
-                        </List>
-                    )}
-                    on={['hover']}
-                />
-                <PostVotes
-                  target={content}
-                />
               </Grid.Column>
             </Grid.Row>
           </Grid>

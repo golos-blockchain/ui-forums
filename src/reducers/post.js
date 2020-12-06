@@ -111,14 +111,36 @@ export default function post(state = initialState, action) {
       })
     case types.POST_VOTE_RESOLVED:
       let content = state.content,
+          responses0 = state.responses,
+          author0 = action.payload.author,
+          permlink0 = action.payload.permlink,
           voter = action.payload.account.name,
           weight = action.payload.weight
-      if(content.author === action.payload.author) {
-        content.votes[voter] = weight
+      let msg = content;
+      if (content.author !== author0 || content.permlink !== permlink0) {
+        for (let i in responses0) {
+          if (responses0[i].author === author0 && responses0[i].permlink === permlink0) {
+            msg = responses0[i];
+            break;
+          }
+        }
       }
-      setResponseVote(state, action.payload)
+      let found = null;
+      for (let av of msg.active_votes) {
+        if (av.voter === voter) {
+          found = av;
+          break;
+        }
+      }
+      if (found) {
+        found.percent = weight;
+      } else {
+        msg.active_votes.push({voter, percent: weight});
+      }
+      //setResponseVote(state, action.payload)
       return Object.assign({}, state, {
         content: content,
+        responses: responses0,
         processing: {
           errors: {},
           votes: completeProcessing(state, action.payload)
@@ -146,7 +168,8 @@ export default function post(state = initialState, action) {
 function setError(state, response) {
   let errors = state.processing.errors,
       id = response.payload.author + '/' + response.payload.permlink
-  errors[id] = response.error.data.stack[0].format.split(": ")[1]
+  console.error(response.error);
+  errors[id] = response.error;
   return errors
 }
 
@@ -167,11 +190,11 @@ function setResponseVote(state, payload) {
     }
   })
   // Update any responses
-  responses.forEach(function(item, key) {
+  /*responses.forEach(function(item, key) {
     if(item._id === id) {
       responses[key].votes[voter] = weight
     }
-  })
+  })*/
   return responses
 }
 

@@ -92,3 +92,14 @@
   width: 100%; }
 
 /*# sourceMappingURL=react-input-range.css.map*/
+
+.VoteList {
+  float: left;
+  height: 38px;
+  min-width: 28px;
+  padding-left: 4px;
+  padding-right: 4px;
+  text-align: center !important;
+  margin-right: 3px;
+  padding-top: 7px;
+}

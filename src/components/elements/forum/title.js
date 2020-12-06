@@ -92,7 +92,7 @@ export default class ForumTitle extends React.Component {
                     )
                     : false
                 }
-                <Menu attached={(this.props.subforums) ? true : 'bottom'} color='blue' size='tiny'>
+                {/*<Menu attached={(this.props.subforums) ? true : 'bottom'} color='blue' size='tiny'>
                     <Menu.Item icon value={false} key={(forum) ? forum._id : 'unknown'} onClick={this.changeFilter} active={(this.props.active === false)}>
                         <Icon name='home' size='large' color='blue' />
                     </Menu.Item>
@@ -109,7 +109,7 @@ export default class ForumTitle extends React.Component {
                             />
                         </Menu.Item>
                     </Menu.Menu>
-                </Menu>
+                </Menu>*/}
                 {this.props.subforums}
             </div>
         )

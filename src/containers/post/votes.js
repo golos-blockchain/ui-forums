@@ -47,12 +47,11 @@ class PostVotes extends React.Component {
           style:{
             minHeight: '100px',
             display: 'block'
-          },
-          content: 'Retrieving current votes...'
+          }
         },
         history = (
           <Dimmer active inverted style={loader.style}>
-            <Loader size='large' content={loader.content}/>
+            <Loader size='large' />
           </Dimmer>
         );
     const votes = allVotes[id]

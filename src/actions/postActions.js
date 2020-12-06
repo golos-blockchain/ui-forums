@@ -19,7 +19,7 @@ export function castVote(payload) {
   return async dispatch => {
     const { author, permlink, weight } = payload,
           { key, name } = payload.account
-    steem.broadcast.vote(key, name, author, permlink, weight, function(err, result) {
+    golos.broadcast.vote(key, name, author, permlink, weight, function(err, result) {
       if(err) {
         dispatch(castVoteResolvedError({
           error: err,
