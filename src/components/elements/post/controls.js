@@ -3,6 +3,7 @@ import React from 'react';
 import { Segment } from 'semantic-ui-react'
 
 import Voting from './button/voting'
+import Donating from './button/donating'
 
 export default class PostControls extends React.Component {
 
@@ -33,12 +34,20 @@ export default class PostControls extends React.Component {
         onVoteCast={this.castVote}
       />
     )
+    const donating = (
+      <Donating
+        account={this.props.account}
+        status={this.props.status}
+        post={post}
+      />
+    )
     if (this.props.onlyButton) {
       return voting
     }
     return (
       <Segment secondary basic clearing attached textAlign='right'>
         {voting}
+        {donating}
         {this.props.editButton}
         {this.props.postButton}
       </Segment>
