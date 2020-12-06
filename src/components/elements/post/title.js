@@ -1,8 +1,9 @@
 import React from 'react';
 
 import { Grid, Header, Icon, List, Popup, Segment } from 'semantic-ui-react'
-import TimeAgo from 'react-timeago'
 import { Link } from 'react-router-dom'
+
+import TimeAgoWrapper from '../../../utils/TimeAgoWrapper'
 import PlatformLink from '../../../utils/link/platform'
 import AccountAvatar from '../account/avatar'
 import AccountLink from '../account/link'
@@ -38,7 +39,7 @@ export default class PostTitle extends React.Component {
                   <AccountLink username={content.author} />
                   <Header.Subheader>
                     {'↳ '}
-                    <TimeAgo date={`${content.created}Z`} />
+                    <TimeAgoWrapper date={`${content.created}Z`} live={false} />
                   </Header.Subheader>
                 </Header>
               </Grid.Column>
