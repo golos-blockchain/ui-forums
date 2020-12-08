@@ -1,10 +1,11 @@
 import * as types from '../actions/actionTypes';
 import update from 'immutability-helper';
 import * as CONFIG from '../../config';
+import ttGetByKey from '../utils/ttGetByKey';
 
 const initialState = {
   trail: [{
-    name: CONFIG.FORUM.title,
+    name: ttGetByKey(CONFIG.FORUM, 'short_title'),
     link: '/'
   }]
 }

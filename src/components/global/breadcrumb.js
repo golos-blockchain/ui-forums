@@ -31,7 +31,7 @@ class BreadcrumbMenu extends Component {
               </Breadcrumb>
             </Grid.Column>
             <Grid.Column width={4}>
-              <SearchBox />
+              <div style={{height: '30px'}}>&nbsp;</div>{/*<SearchBox />*/}
             </Grid.Column>
           </Grid.Row>
         </Grid>

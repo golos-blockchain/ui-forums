@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { goToTop } from 'react-scrollable-anchor'
 import { withRouter } from "react-router-dom";
 import tt from 'counterpart';
-
+import ttGetByKey from '../utils/ttGetByKey';
 
 import { Button, Dimmer, Divider, Loader, Grid, Header, Segment, Popup } from 'semantic-ui-react'
 
@@ -220,9 +220,10 @@ class Forums extends React.Component {
                     icon='users'
                     color='blue'
                     size='huge'
-                    content='Home'
-                    subheader='A curated list of community forums to get you started.'
-                  />
+                  >
+                  <Header.Content dangerouslySetInnerHTML={{__html: ttGetByKey(CONFIG.FORUM, 'title')}}></Header.Content>
+                  <Header.Subheader dangerouslySetInnerHTML={{__html: ttGetByKey(CONFIG.FORUM, 'description')}}></Header.Subheader>
+                  </Header>
                 </Grid.Column>
                 <Grid.Column width={2}>
                     <Popup

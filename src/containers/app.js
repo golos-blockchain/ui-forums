@@ -1,10 +1,17 @@
 import React from 'react'
 import { Helmet } from "react-helmet";
 import { BrowserRouter, browserHistory, Route, Redirect } from 'react-router-dom';
-
 import * as CONFIG from '../../config';
 import steem from 'steem'
 import golos from 'golos-classic-js'
+
+import tt from 'counterpart';
+
+tt.registerTranslations('en', require('../locales/en.json'));
+tt.registerTranslations('ru', require('../locales/ru-RU.json'));
+
+tt.setLocale('ru');
+tt.setFallbackLocale('en');
 
 import { Container } from 'semantic-ui-react'
 

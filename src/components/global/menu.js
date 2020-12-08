@@ -3,6 +3,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import tt from 'counterpart';
+import ttGetByKey from '../../utils/ttGetByKey';
 
 import { Button, Container, Dropdown, Grid, Header, Icon, Menu, Popup } from 'semantic-ui-react'
 
@@ -173,7 +174,7 @@ class HeaderMenu extends Component {
       <Menu color='blue' size='large' inverted style={{borderBottom: '3px solid #767676'}}>
         <Container>
           <Link to='/' className='title active item'>
-            <strong>{CONFIG.FORUM.title}</strong>
+            <strong dangerouslySetInnerHTML={{__html: ttGetByKey(CONFIG.FORUM, 'logo_title')}}></strong>
           </Link>
           {/*
           <Link to='/' className='title item'>General</Link>

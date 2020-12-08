@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import { Container, Grid, Segment } from 'semantic-ui-react'
 // import { Link } from 'react-router-dom'
+import * as CONFIG from '../../../config';
+import ttGetByKey from '../../utils/ttGetByKey';
 
 export default class HeaderMenu extends Component {
   render() {
@@ -29,14 +31,9 @@ export default class HeaderMenu extends Component {
             </Grid.Column>
             */}
             <Grid.Column width={16} textAlign='center'>
-              <h4 className="ui inverted header">chainBB.com</h4>
-              <p>
-                An experimental forum build on top of the
-                <a href='https://steemit.com' target='_new'> Steem </a>
-                blockchain,
-                <br />
-                brought to you by
-                <a href='http://jesta.us' target='_new'> jesta</a>.
+              <h4 className="ui inverted header" dangerouslySetInnerHTML={{__html: ttGetByKey(CONFIG.FORUM, 'footer_title')}}></h4>
+              <p dangerouslySetInnerHTML={{__html: ttGetByKey(CONFIG.FORUM, 'footer_description')}}>
+                
               </p>
             </Grid.Column>
           </Grid>
