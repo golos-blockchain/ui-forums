@@ -84,9 +84,12 @@ router.get('/forum/:slug', async (ctx) => {
 const DEFAULT_VOTE_LIMIT = 10000
 
 router.get('/:category/@:author/:permlink', async (ctx) => {
+    let forums_obj = await getForums();
+    const forum_id = ctx.params.category;
     const data = await golos.api.getContent(ctx.params.author, ctx.params.permlink, DEFAULT_VOTE_LIMIT);
     ctx.body = {
         data: data,
+        forum: forums_obj[forum_id],
         "network": {}, 
         "status": "ok"
     }

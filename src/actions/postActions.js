@@ -2,6 +2,7 @@ import steem from 'steem'
 import golos from 'golos-classic-js'
 import slug from 'slug'
 import _ from 'lodash'
+import tt from 'counterpart';
 
 import * as types from './actionTypes';
 import * as BreadcrumbActions from './breadcrumbActions';
@@ -60,6 +61,10 @@ export function fetchPostResolved(payload = {}) {
   }
 }
 
+function getForumName(forum) {
+    return (tt.getLocale() == 'ru') ? forum.name_ru : forum.name;
+}
+
 export function fetchPost(params) {
   return async dispatch => {
     const { category, author, permlink } = params;
@@ -72,7 +77,7 @@ export function fetchPost(params) {
       }];
       if(result.forum) {
         trail.unshift({
-          name: result.forum.name,
+          name: getForumName(result.forum),
           link: `/f/${result.forum._id}`
         })
       }

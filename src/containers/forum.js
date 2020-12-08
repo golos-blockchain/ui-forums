@@ -197,6 +197,7 @@ class Forum extends React.Component {
           this.props.actions.setStatus({'network': result.network});
           this.setForum(result.forum)
           this.setBreadcrumb(result)
+
           // If a valid forum is found
           if (result.status === 'ok') {
               // and we have data
