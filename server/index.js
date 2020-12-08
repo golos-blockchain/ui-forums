@@ -11,7 +11,8 @@ const app = new koa()
 const router = new koaRouter()
 
 let getForums = async function() {
-    const forums_val = await golos.api.getValue(CONFIG.FORUM.creator, 'g.f.' + CONFIG.FORUM._id);
+    const global_id = CONFIG.FORUM._id.toLowerCase();
+    const forums_val = await golos.api.getValue(CONFIG.FORUM.creator, 'g.f.' + global_id);
     if (forums_val == '') {
         return {};
     }
@@ -29,7 +30,7 @@ let getForums = async function() {
         forum.created_tx = 0;
         forum.expires =  '2022-01-01T10:10:10';
         forum.stats = {'replies' : '0', 'posts' : '0'}
-        forum.tags = ['fm-' + CONFIG.FORUM._id + '-' + _id, 'fm-' + CONFIG.FORUM._id]
+        forum.tags = ['fm-' + global_id + '-' + _id.toLowerCase(), 'fm-' + global_id]
     }
     return forums_obj;
 };
@@ -63,17 +64,19 @@ router.get('/forums', async (ctx) => {
 
 router.get('/forum/:slug', async (ctx) => {
     let forums_obj = await getForums();
+    const global_id = CONFIG.FORUM._id.toLowerCase();
+    const forum_id = ctx.params.slug;
     const data = await golos.api.getAllDiscussionsByActive(
         '', '', 10000000,
-        "fm-" + CONFIG.FORUM._id + "-" + ctx.params.slug,
+        "fm-" + global_id + "-" + forum_id.toLowerCase(),
         0, 20
     );
     ctx.body = {
         data: data, 
         "network": {}, 
         "status": "ok",
-        forum: forums_obj[ctx.params.slug],
-        children: Object.assign({}, forums_obj[ctx.params.slug].children),
+        forum: forums_obj[forum_id],
+        children: Object.assign({}, forums_obj[forum_id].children),
         meta: {'query':{},'sort':{}}
     }
 })

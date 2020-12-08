@@ -168,7 +168,7 @@ class ForumCategoriesForm extends React.Component {
         golos.broadcast.customJson(wif, [account], [], "account_notes",
           JSON.stringify(['set_value', {
             account: account,
-            key: 'g.f.' + CONFIG.FORUM._id,
+            key: 'g.f.' + CONFIG.FORUM._id.toLowerCase(),
             value: values
           }]),
           function (err, result) {
