@@ -18,12 +18,6 @@ export default function chainstate(state = initialState, action) {
       })
       return Object.assign({}, state, { accounts })
     }
-    case types.CHAINSTATE_STATE_RESOLVED:
-      return Object.assign({}, state, {
-        paths: {
-          [action.payload.current_route]: action.payload
-        }
-      })
     default:
       return state
   }

@@ -64,6 +64,9 @@
     "posts": "Посты",
     "responses": "Ответы",
     "replies": "Комментарии",
+    "last_post": "Постил(-а)",
+    "post_count": "Постов",
+    "tip_balance": "TIP-баланс",
     "profile": "Профиль",
     "sign_out": "Выйти"
   },

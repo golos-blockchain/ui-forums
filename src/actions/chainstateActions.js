@@ -1,12 +1,13 @@
 import * as types from './actionTypes';
 import steem from 'steem'
+import golos from 'golos-classic-js'
 
 export function getAccounts(accounts) {
   return dispatch => {
     dispatch({
       type: types.CHAINSTATE_ACCOUNT_LOAD_PROCESSING
     })
-    steem.api.getAccounts(accounts, function(err, data) {
+    golos.api.getAccounts(accounts, function(err, data) {
       if(err) {
         dispatch(getAccountsFailed(err))
       } else {
@@ -43,20 +44,5 @@ export function getDynamicGlobalPropertiesResolved(payload) {
   return {
     type: types.CHAINSTATE_GLOBAL_PROPS_RESOLVED,
     payload
-  }
-}
-
-export function getState(path) {
-  return dispatch => {
-    steem.api.getState(path, function(err, data) {
-      dispatch(getStateResolved(data))
-    })
-  }
-}
-
-export function getStateResolved(payload) {
-  return {
-    type: types.CHAINSTATE_STATE_RESOLVED,
-    payload: payload
   }
 }

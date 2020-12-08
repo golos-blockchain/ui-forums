@@ -104,6 +104,15 @@ router.get('/:category/@:author/:permlink/responses', async (ctx) => {
     }
 })
 
+router.get('/@:author', async (ctx) => {
+    const data = await golos.api.getAccounts([ctx.params.author]);
+    ctx.body = {
+        data: data[0],
+        "network": {}, 
+        "status": "ok"
+    }
+})
+
 app.use(livereload());
 app.use(cors());
 app.use(router.routes());

@@ -80,7 +80,7 @@ const App = () => (
           <Route path="/replies" component={RepliesLayout} />
           <Route path="/topic/:category" component={TopicLayout} />
           <Route path="/:category/@:author/:permlink/:action?" component={ThreadLayout} />
-          <Route exact path="/:section?" component={IndexLayout} />
+          <Route exact path="/" component={IndexLayout} />
         </Container>
         <BreadcrumbMenu />
         <FooterMenu />

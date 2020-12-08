@@ -12,20 +12,20 @@ export default class AccountSidebar extends React.Component {
     super(props)
     const { username } = props.match.params;
     this.state = { username }
-    props.actions.getState("@" + username);
+    props.actions.getAccounts([username]);
   }
   componentWillReceiveProps(nextProps) {
     console.log(nextProps)
     const { username } = nextProps.match.params;
     if(username !== this.state.username) {
       this.setState({username});
-      nextProps.actions.getState("@" + username);
+      nextProps.actions.getAccounts([username]);
     }
   }
   render() {
     const { username } = this.state;
     let sidebar = <Segment padded="very" loading />
-    if(this.props.chainstate && this.props.chainstate.paths && this.props.chainstate.paths['@' + username]) {
+    if(this.props.chainstate && this.props.chainstate.accounts && this.props.chainstate.accounts[username]) {
       sidebar = <AccountSidebarInfo {...this.props} />
     }
     return (
@@ -48,7 +48,6 @@ export default class AccountSidebar extends React.Component {
             {...this.props}
           />
         </Segment>
-        <Divider horizontal>Account Info</Divider>
         <Menu color='blue' inverted fluid vertical>
           <Dropdown color='blue' text={tt('sidebar.view_this_account')} size='small' pointing='left' className='link item'>
             <Dropdown.Menu>

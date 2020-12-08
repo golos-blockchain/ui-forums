@@ -2,6 +2,7 @@ import React from 'react'
 import { Helmet } from "react-helmet";
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux'
+import tt from 'counterpart';
 
 import { Grid } from 'semantic-ui-react'
 import { goToTop } from 'react-scrollable-anchor'
@@ -26,10 +27,6 @@ class Account extends React.Component {
   componentWillMount() {
     const { username } = this.props.match.params;
     this.props.actions.setBreadcrumb([
-      {
-        name: 'Accounts',
-        link: '/'
-      },
       {
         name: `@${username}`,
         link: `/@${username}`
