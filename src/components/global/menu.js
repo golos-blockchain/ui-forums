@@ -54,6 +54,15 @@ class HeaderMenu extends Component {
   vests_to_sp(vests){
     return Math.round(vests / 1e6 * this.props.status.network.steem_per_mvests * 1000) / 1000
   }
+  toggleLocale = (e, { value }) => {
+    if (localStorage.getItem('locale') == 'en') {
+      localStorage.setItem('locale', 'ru');
+    } else {
+      localStorage.setItem('locale', 'en');
+    }
+    tt.setLocale(localStorage.getItem('locale'));
+    window.location.reload();
+  }
   render() {
     const pathname = this.props.location.pathname;
     const { account } = this.props
@@ -63,6 +72,22 @@ class HeaderMenu extends Component {
     let data = {}
     let avatar = false
     let pendingBalance = false
+    let locale = localStorage.getItem('locale')
+    locale = locale ? locale.toUpperCase() : 'RU'
+    const options = [
+      { key: 1, text: 'RU', value: 'RU' },
+      { key: 2, text: 'EN', value: 'EN' },
+    ]
+    let localeSelect = (
+      <Menu.Item>
+        <Dropdown
+          text={locale}
+          onChange={this.toggleLocale}
+          options={options}
+          value={locale}>
+        </Dropdown>
+      </Menu.Item>
+    )
     let userItem = (
       <Menu.Item>
         <Button
@@ -189,6 +214,7 @@ class HeaderMenu extends Component {
           <Link to='/forums/crypto' className='title item'>Crypto</Link>
           */}
           {pathname != '/create_account' ? (<Menu.Menu position='right'>
+            {localeSelect}
             {pendingBalance}
             {userItem}
             <Menu.Item>

@@ -8,6 +8,12 @@
     "posts": "Posts",
     "replies": "Replies",
     "recently_active": "Recently Active",
+    "no_posts": "No Posts Yet!",
+    "no_posts_description": "You can write first post here.",
+    "be_first_button": "New Post",
+    "no_comments": "No Replies Yet!",
+    "no_comments_description": "You can write your first reply here",
+    "comments": "Replies",
 
     "forum_info": "Forum Settings",
     "return_ro_froum": "Return to forum",
@@ -18,13 +24,36 @@
     "only_creator_can_edit": "You do not have access to edit this forum.",
     "submit_changes": "Submit Changes"
   },
+  "post_form": {
+    "title": "Enter title",
+    "body": "Your post text...",
+    "submit": "Post",
+    "cancel": "Close & Remove Draft",
+    "tab_post": "Post",
+    "tab_rewards": "Settings",
+    "submitting": "Creating Post...",
+    "error_submitting": "Cannot create post",
+    "error_submitting_description": "Please contact us and provide the text below in your message.",
+    "draft_loaded": "Draft restored",
+    "draft_loaded_description": "Forum restored your draft text."
+  },
+  "voting": {
+    "vote_changes_exceed": "You exceed your voting limit for this post.",
+    "you_must_be_logged_in_to_vote": "You must be logged in to vote"
+  },
+  "donating": {
+    "donate": "Donate"
+  },
   "categories": {
     "title": "Forum Categories",
     "description": "These settings control the structure of this forum and can be changed at any time. If your want to restore deleted category, just create new one with same tags.",
     "tag": "Tag",
     "name_ru": "Name in Russian",
     "name": "Name in English",
-    "add": "Add Category"
+    "add": "Add Category",
+    "add_sub": "Add Subcategory",
+    "edit": "Edit Category",
+    "move_up": "Move Up"
   },
   "sidebar": {
     "start_your_own_forum": "Start your own community forum!",
@@ -35,6 +64,9 @@
     "posts": "Posts",
     "responses": "Responses",
     "replies": "Replies",
+    "last_post": "Last post",
+    "post_count": "Posts",
+    "tip_balance": "TIP-balance",
     "profile": "Profile",
     "sign_out": "Sign out"
   },
@@ -44,17 +76,50 @@
     "key_warn_description": "As with all Steem powered applications, please be aware of what website you're on and if you trust the organization running it. Make sure you are only using your posting key and your active/owner keys remain safe (preferrably in a wallet or offline). Use active key only if cases when you want transfer some tokens, etc.",
     "account_name": "Account Name",
     "password": "Password (or Posting Private Key)",
+    "password_active": "Password (or Active Private Key)",
+    "active_title": "Please authorize",
+    "active_description": "This operation requires your Active key or password.",
     "no_such_account_name": "No such account name",
     "wrong_password_format": "Invalid format of password/key",
     "wrong_password": "Wrong password/key",
+    "wrong_password_not_active": "This operation requires active-ключ, not posting or owner",
     "wrong_password_active": "Cannot login with active key (even if posting key is same)",
-    "wrong_password_owner": "Cannot login with owner key (even if posting key is same)"
+    "wrong_password_owner": "Cannot login with owner key (even if posting key is same)",
+
+    "sign_up": "Register",
+    "enter_email": "Enter your e-mail",
+    "enter_username": "Enter your name username",
+    "generate_password": "Get your generated password",
+    "enter_password": "Enter your generated password",
+    "warning_password": "Check that you safely saved your password.",
+    "checkbox_password": "I understand that GOLOS cannot restore my password.",
+    "create_account": "Create account"
   },
   "g": {
     "cancel": "Cancel",
     "proceed": "Proceed ",
     "error": "Error",
     "add": "Add",
-    "this_field_required": "This field is required."
+    "edit": "Edit",
+    "remove": "Remove",
+    "reply": "Reply",
+    "continue": "Continue",
+    "this_field_required": "This field is required.",
+    "should_be_email": "E-mail is wrong.",
+    "enter_code": "You received verification code at your e-mail. Enter it below (instead of e-mail):"
+  },
+  "validation": {
+    "account_name_should": "Account name should ",
+    "be_longer": "not be shorter than 3 characters.",
+    "not_be_empty": "not be empty.",
+    "be_shorter": "not be longer that 16 characters.",
+    "each_account_segment_should": "Account name should ",
+    "start_with_a_letter": "start with a letter.",
+    "have_only_letters_digits_or_dashes": "have only letters, digits, or dashes.",
+    "have_only_one_dash_in_a_row": "have only one dash in a row.",
+    "end_with_a_letter_or_digit": "end with a letter or digit.",
+    "end_with_a_letter": "end with a letter.",
+
+    "account_name_used": "Such account already exists."
   }
 }

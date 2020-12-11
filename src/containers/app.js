@@ -11,7 +11,7 @@ import ttGetByKey from '../utils/ttGetByKey';
 tt.registerTranslations('en', require('../locales/en.json'));
 tt.registerTranslations('ru', require('../locales/ru-RU.json'));
 
-tt.setLocale('ru');
+tt.setLocale(localStorage.getItem('locale') || 'ru');
 tt.setFallbackLocale('en');
 
 import { Container } from 'semantic-ui-react'
