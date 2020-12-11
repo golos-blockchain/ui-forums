@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux'
-import { Link } from 'react-router-dom'
+import { Link, withRouter } from 'react-router-dom'
 import tt from 'counterpart';
 import ttGetByKey from '../../utils/ttGetByKey';
 
@@ -55,6 +55,7 @@ class HeaderMenu extends Component {
     return Math.round(vests / 1e6 * this.props.status.network.steem_per_mvests * 1000) / 1000
   }
   render() {
+    const pathname = this.props.location.pathname;
     const { account } = this.props
     const { loading, name } = account
     const { height } = this.props.status.network
@@ -64,6 +65,12 @@ class HeaderMenu extends Component {
     let pendingBalance = false
     let userItem = (
       <Menu.Item>
+        <Button
+            as='a' href='/create_account'
+            content={tt('login.sign_up')}
+            color='blue'
+            inverted/>
+        &nbsp;&nbsp;
         <LoginButton {... this.props}/>
       </Menu.Item>
     )
@@ -181,13 +188,13 @@ class HeaderMenu extends Component {
           <Link to='/forums/steem' className='title item'>Steem</Link>
           <Link to='/forums/crypto' className='title item'>Crypto</Link>
           */}
-          <Menu.Menu position='right'>
+          {pathname != '/create_account' ? (<Menu.Menu position='right'>
             {pendingBalance}
             {userItem}
             <Menu.Item>
               {indicator}
             </Menu.Item>
-          </Menu.Menu>
+          </Menu.Menu>) : null}
         </Container>
       </Menu>
     )
@@ -212,4 +219,4 @@ function mapDispatchToProps(dispatch) {
   }, dispatch)}
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(HeaderMenu);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(HeaderMenu));

@@ -6,6 +6,7 @@ import steem from 'steem'
 import golos from 'golos-classic-js'
 
 import tt from 'counterpart';
+import ttGetByKey from '../utils/ttGetByKey';
 
 tt.registerTranslations('en', require('../locales/en.json'));
 tt.registerTranslations('ru', require('../locales/ru-RU.json'));
@@ -16,6 +17,7 @@ tt.setFallbackLocale('en');
 import { Container } from 'semantic-ui-react'
 
 import Account from '../containers/account'
+import CreateAccount from '../containers/account/create'
 import AccountsLayout from '../components/layouts/accounts'
 import IndexLayout from '../components/layouts/index'
 import FeedLayout from '../components/layouts/feed'
@@ -45,7 +47,7 @@ const App = () => (
     <BrowserRouter history={browserHistory}>
       <div className="AppContainer">
         <Helmet>
-            <title>chainBB</title>
+            <title>{ttGetByKey(CONFIG.FORUM, 'page_title')}</title>
             <meta name="description" content="Blockchain based decentralized forum software powered by the Steem blockchain." />
             <meta name="viewport" content="width=device-width, initial-scale=1" />
             <meta itemprop="name" content="chainBB Forums" />
@@ -71,6 +73,7 @@ const App = () => (
           {/* <Route exact path="/" render={(props) => <Redirect to="/forums"/>}/> */}
           <Route path="/@:username" component={Account} />
           {/*<Route path="/accounts" component={AccountsLayout} />*/}
+          <Route path="/create_account" component={CreateAccount} />
           <Route path="/create/forum" component={ForumCreateLayout} />
           <Route path="/feed" component={FeedLayout} />
           <Route path="/forums" component={ForumsLayout} />
@@ -80,7 +83,7 @@ const App = () => (
           <Route path="/replies" component={RepliesLayout} />
           <Route path="/topic/:category" component={TopicLayout} />
           <Route path="/:category/@:author/:permlink/:action?" component={ThreadLayout} />
-          <Route exact path="/" component={IndexLayout} />
+          <Route exact path="/:section?" component={IndexLayout} />
         </Container>
         <BreadcrumbMenu />
         <FooterMenu />

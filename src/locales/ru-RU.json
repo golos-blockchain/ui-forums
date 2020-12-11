@@ -84,7 +84,16 @@
     "wrong_password": "Неправильный пароль/ключ",
     "wrong_password_not_active": "Для этой операции нужен active-ключ, а не posting или owner",
     "wrong_password_active": "Нельзя входить с active-ключом (даже если такой же ключ служит и posting-ключом)",
-    "wrong_password_owner": "Нельзя входить с owner-ключом (даже если такой же ключ служит и posting-ключом)"
+    "wrong_password_owner": "Нельзя входить с owner-ключом (даже если такой же ключ служит и posting-ключом)",
+
+    "sign_up": "Регистрация",
+    "enter_email": "Введите ваш e-mail",
+    "enter_username": "Введите имя пользователя, которое хотите зарегистрировать",
+    "generate_password": "Получите ваш сгенерированный пароль",
+    "enter_password": "Введите сгенерированный пароль",
+    "warning_password": "Удостоверьтесь, что вы надежно сохранили сгенерированный пароль.",
+    "checkbox_password": "Я понимаю, что GOLOS не сможет восстановить потерянные пароли.",
+    "create_account": "Создать аккаунт"
   },
   "g": {
     "cancel": "Отмена",
@@ -94,6 +103,23 @@
     "edit": "Редактировать",
     "remove": "Удалить",
     "reply": "Ответить",
-    "this_field_required": "Это поле обязательно."
+    "continue": "Продолжить",
+    "this_field_required": "Это поле обязательно.",
+    "should_be_email": "Введен некорректный e-mail.",
+    "enter_code": "Вам на почту был отправлен код подтверждения. Введите его ниже:"
+  },
+  "validation": {
+    "account_name_should": "Имя аккаунта должно ",
+    "be_longer": "быть не короче 3 символов.",
+    "not_be_empty": "быть непустым.",
+    "be_shorter": "быть не длиннее 16 символов.",
+    "each_account_segment_should": "Имя аккаунта должно ",
+    "start_with_a_letter": "начинаться с буквы.",
+    "have_only_letters_digits_or_dashes": "состоять только из букв, цифр или дефисов.",
+    "have_only_one_dash_in_a_row": "иметь только одно тире в строке.",
+    "end_with_a_letter_or_digit": "заканчиваться буквой или цифрой.",
+    "end_with_a_letter": "заканчиваться буквой.",
+
+    "account_name_used": "Такой аккаунт уже существует."
   }
 }

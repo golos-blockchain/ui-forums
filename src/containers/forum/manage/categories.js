@@ -367,7 +367,7 @@ class ForumCategoriesForm extends React.Component {
                                 autoFocus
                                 value={editCat ? editCat.name_ru : undefined}
                                 validationErrors={{
-                                  isDefaultRequiredValue: tt('g.this_field_required')
+                                  isDefaultRequiredValue: tt('g.this_field_required'),
                                 }}
                                 errorLabel={ errorLabel }
                               />

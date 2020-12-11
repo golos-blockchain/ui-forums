@@ -3,7 +3,13 @@ const koaRouter = require('koa-router')
 const cors = require('koa-cors');
 const livereload = require('koa-livereload');
 const golos = require('golos-classic-js');
+const gmailSend = require('gmail-send');
+const fs = require('fs');
+const atob = require('atob');
+const btoa = require('btoa');
+
 const CONFIG = require('../config');
+const CONFIG_SEC = require('../configSecure');
 
 golos.config.set('websocket', CONFIG.GOLOS_NODE);
 
@@ -33,6 +39,14 @@ let getForums = async function() {
         forum.tags = ['fm-' + global_id + '-' + _id.toLowerCase(), 'fm-' + global_id]
     }
     return forums_obj;
+};
+
+const returnError = (ctx, err) => {
+    ctx.body = {
+        "data": err,
+        "network": {}, 
+        "status": "err"
+    }
 };
 
 router.get('/', async (ctx) => {
@@ -112,6 +126,100 @@ router.get('/@:author', async (ctx) => {
         "status": "ok"
     }
 })
+
+getRandomArbitrary = (min, max) => {
+    return parseInt(Math.random() * (max - min) + min);
+}
+
+router.get('/send_email/:email/:locale/:username/:owner/:active/:posting/:memo', async (ctx) => {
+    if (!CONFIG_SEC.gmail_send.user || !CONFIG_SEC.gmail_send.pass)
+        return returnError(ctx, 'Mail service is not configured. Admin should configure it like this:<pre>\
+            {\n\
+                gmail_send: {\n\
+                    user: \'vasya.pupkin\',\n\
+                    pass: \'gmail application password\'\n\
+                }\n\
+            }</pre>');
+
+    const veri_code = getRandomArbitrary(1000, 9999);
+
+    let html = CONFIG_SEC.registrar[ctx.params.locale].email_html;
+    if (!html.includes('{verification_code}')) {
+        return returnError(ctx, 'email_html in config has wrong format. It does not contain <code>{verification_code}</code>. Admin should configure it like this:<pre>email_html: \'Your verification code: <h4>{verification_code}</h4>\'</pre>');
+    }
+    html = html.replace('{verification_code}', veri_code);
+    html = html.replace('{FORUM.logo_title}', CONFIG.FORUM[ctx.params.locale].logo_title);
+
+    let sbj = CONFIG_SEC.registrar[ctx.params.locale].email_subject;
+    sbj = sbj.replace('{FORUM.logo_title}', CONFIG.FORUM[ctx.params.locale].logo_title);
+
+    const {username, owner, active, posting, memo} = ctx.params;
+    let file_obj = {username, owner, active, posting, memo};
+    file_obj.code = veri_code;
+
+    fs.writeFileSync('verification_codes/' + btoa(ctx.params.email) + '.txt', JSON.stringify(file_obj));
+
+    const send = gmailSend({
+      user: CONFIG_SEC.gmail_send.user,
+      pass: CONFIG_SEC.gmail_send.pass,
+      from: CONFIG_SEC.registrar.email_sender,
+      to: ctx.params.email,
+      subject: sbj,
+    });
+
+    try {
+        const res = await send({
+            html
+        });
+        ctx.body = {
+            "data": ctx.params.email,
+            "network": {}, 
+            "status": "ok"
+        }
+    } catch (e) {
+        console.log(e)
+        return returnError(ctx, JSON.stringify(e));
+    }
+})
+
+router.get('/verify_email/:email/:code', async (ctx) => {
+    const path = 'verification_codes/' + btoa(ctx.params.email) + '.txt';
+    let file_obj = null;
+    try {
+        file_obj = JSON.parse(fs.readFileSync(path, 'utf8'));
+    } catch (e) {
+        return returnError(ctx, 'Wrong code');
+    }
+    if (file_obj.code != ctx.params.code) {
+        return returnError(ctx, 'Wrong code');
+    }
+
+    let accs = null;
+    try {
+        await golos.broadcast.accountCreateWithDelegation(CONFIG_SEC.registrar.signing_key,
+          CONFIG_SEC.registrar.fee, CONFIG_SEC.registrar.delegation,
+          CONFIG_SEC.registrar.account, file_obj.username, 
+            {weight_threshold: 1, account_auths: [], key_auths: [[file_obj.owner, 1]]},
+            {weight_threshold: 1, account_auths: [], key_auths: [[file_obj.active, 1]]},
+            {weight_threshold: 1, account_auths: [], key_auths: [[file_obj.posting, 1]]},
+            file_obj.memo,
+          '{}', []);
+        accs = await golos.api.getAccounts([file_obj.username]);
+    } catch (err) {
+        return returnError(err)
+    }
+
+    if (!accs || !accs.length) {
+        return returnError('unknown reason');
+    }
+
+    fs.unlinkSync(path);
+
+    ctx.body = {
+        "network": {}, 
+        "status": "ok"
+    }
+});
 
 app.use(livereload());
 app.use(cors());

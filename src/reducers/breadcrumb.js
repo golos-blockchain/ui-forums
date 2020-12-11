@@ -5,7 +5,7 @@ import ttGetByKey from '../utils/ttGetByKey';
 
 const initialState = {
   trail: [{
-    name: ttGetByKey(CONFIG.FORUM, 'short_title'),
+    name: ttGetByKey(CONFIG.FORUM, 'breadcrumb_title'),
     link: '/'
   }]
 }

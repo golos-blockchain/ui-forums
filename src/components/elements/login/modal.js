@@ -47,80 +47,65 @@ class LoginModal extends React.Component {
 
   handleChange = (e, { name, value }) => this.setState({ [name]: value })
 
-  handleSubmit = e => {
+  handleSubmit = async e => {
     e.preventDefault()
     const { isActive } = this.props
     const { account, key } = this.state,
           t = this
-    let wif = golos.auth.getWif(account, key)
     // Indicate we're loading
     t.setState({
       loading: true,
       error: false
     })
-    if(wif) {
-      golos.api.getAccounts([account], function(err, result) {
-        if(!result.length) {
-          t.setState({
-            loading: false,
-            error: tt('login.no_such_account_name')
-          })
-          return
-        }
-
-        let key_auths = result[0].active.key_auths;
-        for (var i = 0; i < key_auths.length; i++) {
-          if(golos.auth.wifIsValid(wif, key_auths[i][0])) {
-            if (isActive) {
-              t.props.actions.signinAccount(account, wif)
-              t.handleClose()
-              return;
-            }
-            t.setState({
-              loading: false,
-              error: tt('login.wrong_password_active')
-            })
-            return;
-          }
-        }
-        key_auths = result[0].owner.key_auths;
-        for (var i = 0; i < key_auths.length; i++) {
-          if (golos.auth.wifIsValid(wif, key_auths[i][0])) {
-            t.setState({
-              loading: false,
-              error: isActive ? tt('login.wrong_password_not_active') : tt('login.wrong_password_owner')
-            })
-            return;
-          }
-        }
-        key_auths = result[0].posting.key_auths;
-        for (var i = 0; i < key_auths.length; i++) {
-          if (golos.auth.wifIsValid(wif, key_auths[i][0])) {
-            if (isActive) {
-              t.setState({
-                loading: false,
-                error: tt('login.wrong_password_not_active')
-              })
-              return;
-            }
-            t.props.actions.signinAccount(account, wif)
-            t.handleClose()
-            return;
-          }
-        }
+    let res = null;
+    try {
+      res = await golos.auth.login(account, key)
+    } catch (err) {
+      if (err.message === 'No such account'){
         t.setState({
           loading: false,
-          error: tt('login.wrong_password')
+          error: tt('login.no_such_account_name')
         })
-      })
-    } else {
-      t.setState({
-        loading: false,
-        error: tt('login.wrong_password_format')
-      })
+      }
+      return;
     }
-
-
+    if (isActive) {
+      if (res.active) {
+        t.props.actions.signinAccount(account, res.active)
+        t.handleClose()
+        return;
+      } else if (res.posting || res.owner || res.memo) {
+        t.setState({
+          loading: false,
+          error: tt('login.wrong_password_not_active')
+        })
+        return;
+      }
+    } else {
+      if (res.active && !res.password) {
+        t.setState({
+          loading: false,
+          error: tt('login.wrong_password_active')
+        })
+        return;
+      }
+      if (res.owner && !res.password) {
+        t.setState({
+          loading: false,
+          error: tt('login.wrong_password_owner')
+        })
+        return;
+      }
+      if (res.posting) {
+        t.props.actions.signinAccount(account, res.posting)
+        t.handleClose()
+        return;
+      }
+    }
+    t.setState({
+      loading: false,
+      error: tt('login.wrong_password')
+    })
   }
 
   render() {
