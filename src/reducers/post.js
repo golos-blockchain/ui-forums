@@ -2,16 +2,17 @@ import * as types from '../actions/actionTypes';
 import * as ForumReducer from './forum';
 
 const initialState = {
-  forum: false,
-  content: false,
-  authors: {},
-  responses: [],
-  processing: {
-    errors: {},
-    votes: []
-  },
-  votes: {},
-  live: {},
+    forum: false,
+    content: false,
+    authors: {},
+    responses: [],
+    processing: {
+        errors: {},
+        votes: [],
+        donates: [],
+    },
+    votes: {},
+    live: {},
 }
 
 function log10(str) {
@@ -106,7 +107,8 @@ export default function post(state = initialState, action) {
       return Object.assign({}, state, {
         processing: {
           errors: {},
-          votes: [action.payload]
+          votes: [action.payload],
+          donates: state.processing.donates
         }
       })
     case types.POST_VOTE_RESOLVED:
@@ -143,34 +145,114 @@ export default function post(state = initialState, action) {
         responses: responses0,
         processing: {
           errors: {},
-          votes: completeProcessing(state, action.payload)
+          votes: completeProcessing(state.processing.votes, action.payload),
+          donates: state.processing.donates
         }
       })
     case types.POST_VOTE_RESOLVED_ERROR:
       return Object.assign({}, state, {
         processing: {
-          errors: setError(state, action.response),
-          votes: completeProcessing(state, action.response.payload)
+          errors: setError(state, 'vote', action.response),
+          votes: completeProcessing(state.processing.votes, action.response.payload),
+          donates: state.processing.donates
         }
       })
     case types.POST_VOTE_RESOLVED_ERROR_CLEAR:
       return Object.assign({}, state, {
         processing: {
           errors: false,
-          votes: state.processing.votes
+          votes: state.processing.votes,
+          donates: state.processing.donates
         }
       })
-    default:
-      return state
-  }
+        case types.POST_LOAD_DONATES_RESOLVED: {
+            let content = state.content;
+            let responses = state.responses;
+            let { donate_list, donate_uia_list, author, permlink, category } = action.payload;
+            let msg = content;
+            if (content.author !== author || content.permlink !== permlink) {
+                for (let i in responses) {
+                    if (responses[i].author === author && responses[i].permlink === permlink) {
+                        msg = responses[i];
+                        break;
+                    }
+                }
+            }
+            msg.donate_uia_list = donate_uia_list;
+            msg.donate_list = donate_list;
+            return Object.assign({}, state, {
+                content: content,
+                responses: responses,
+                processing: {
+                    errors: state.processing.errors,
+                    votes: state.processing.votes,
+                    donates: state.processing.donates
+                }
+            })
+        } case types.POST_DONATE_PROCESSING: {
+            return Object.assign({}, state, {
+                processing: {
+                    errors: {},
+                    donates: [action.payload],
+                    votes: state.processing.votes
+                }
+            })
+        }
+        case types.POST_DONATE_RESOLVED: {
+            let content = state.content;
+            let responses = state.responses;
+            const { author, permlink, amount } = action.payload;
+            const { name } = action.payload.account;
+            let msg = content;
+            if (content.author !== author || content.permlink !== permlink) {
+                for (let i in responses) {
+                    if (responses[i].author === author && responses[i].permlink === permlink) {
+                        msg = responses[i];
+                        break;
+                    }
+                }
+            }
+            msg.donate_list.push({from: name, amount: amount, app: 'golos-id'});
+            msg.donates = (parseFloat(msg.donates.split(' ')[0]) + parseFloat(amount.split(' ')[0])).toFixed(3) + ' GOLOS';
+            return Object.assign({}, state, {
+                content: content,
+                responses: responses,
+                processing: {
+                    errors: state.processing.errors,
+                    votes: state.processing.votes,
+                    donates: state.processing.donates
+                }
+            });
+        }
+        case types.POST_DONATE_RESOLVED_ERROR: {
+            return Object.assign({}, state, {
+                processing: {
+                    errors: setError(state, 'donate', action.response),
+                    votes: state.processing.votes,
+                    donates: completeProcessing(state.processing.donates, action.response.payload)
+                }
+            })
+        }
+        case types.POST_DONATE_RESOLVED_ERROR_CLEAR: {
+            return Object.assign({}, state, {
+                processing: {
+                    errors: false,
+                    votes: state.processing.votes,
+                    donates: state.processing.donates
+                }
+            })
+        }
+        default:
+            return state
+    }
 }
 
-function setError(state, response) {
-  let errors = state.processing.errors,
-      id = response.payload.author + '/' + response.payload.permlink
-  console.error(response.error);
-  errors[id] = response.error;
-  return errors
+function setError(state, type, response) {
+    let errors = state.processing.errors,
+        id = response.payload.author + '/' + response.payload.permlink
+    console.error(response.error);
+    errors[type + '-' + id] = response.error;
+    return errors
 }
 
 function setResponseVote(state, payload) {
@@ -199,8 +281,8 @@ function setResponseVote(state, payload) {
 }
 
 function completeProcessing(state, payload) {
-  let processing = state.processing.votes,
-      index = processing.indexOf(payload.author + '/' + payload.permlink)
-  processing.splice(index, 1)
-  return processing
+    let processing = state,
+        index = processing.indexOf(payload.author + '/' + payload.permlink)
+    processing.splice(index, 1)
+    return processing
 }

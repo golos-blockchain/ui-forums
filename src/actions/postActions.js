@@ -54,6 +54,59 @@ export function castVoteResolvedError(response) {
   }
 }
 
+export function setDonateProcessing(id) {
+    return {
+        type: types.POST_DONATE_PROCESSING,
+        payload: id
+    }
+}
+
+export function castDonate(payload) {
+    return async dispatch => {
+        const { author, permlink, amount, note } = payload;
+        const { key, name } = payload.account;
+        let donate_memo = {};
+        donate_memo.app = 'golos-id';
+        donate_memo.version = 1;
+        donate_memo.comment = note;
+        donate_memo.target = {
+            author: author,
+            permlink: permlink
+        };
+        golos.broadcast.donate(key, name, author, amount, donate_memo, [], function(err, result) {
+            if (err) {
+                dispatch(donateResolvedError({
+                    error: err,
+                    payload: payload
+                }))
+            } else {
+                dispatch(donateResolved(payload))
+            }
+        });
+    }
+}
+
+export function clearDonateError(response) {
+    return {
+        type: types.POST_DONATE_RESOLVED_ERROR_CLEAR,
+        response: response
+    }
+}
+
+export function donateResolved(payload) {
+    return {
+        type: types.POST_DONATE_RESOLVED,
+        payload: payload
+    }
+}
+
+export function donateResolvedError(response) {
+    return {
+        type: types.POST_DONATE_RESOLVED_ERROR,
+        response: response
+    }
+}
+
 export function fetchPostResolved(payload = {}) {
   return {
     type: types.POST_LOAD_RESOLVED,
@@ -282,6 +335,39 @@ export function fetchPostVotesResolved(payload = {}) {
     type: types.POST_LOAD_VOTES_RESOLVED,
     payload: payload
   }
+}
+
+export function fetchPostDonates(params) {
+    return async dispatch => {
+        const { category, author, permlink } = params;
+        const response = await fetch(`${ CONFIG.REST_API }/${ category }/@${ author }/${ permlink }/donates`);
+        if (response.ok) {
+            const result = await response.json();
+            dispatch(fetchPostDonatesResolved({
+                donate_list: result.data.donate_list,
+                donate_uia_list: result.data.donate_uia_list,
+                author,
+                permlink,
+                category
+            }));
+        } else {
+            console.error(response.status);
+            dispatch(fetchPostDonatesResolved({
+                donate_list: [],
+                donate_uia_list: [],
+                author,
+                permlink,
+                category
+            }));
+        }
+    }
+}
+
+export function fetchPostDonatesResolved(payload = {}) {
+    return {
+        type: types.POST_LOAD_DONATES_RESOLVED,
+        payload: payload
+    }
 }
 
 export function resetPostState() {

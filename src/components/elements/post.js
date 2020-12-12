@@ -3,6 +3,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux'
 
 import * as accountActions from '../../actions/accountActions'
+import * as chainstateActions from '../../actions/chainstateActions'
 import * as postActions from '../../actions/postActions'
 import * as preferenceActions from '../../actions/preferenceActions'
 
@@ -55,6 +56,7 @@ function mapStateToProps(state, ownProps) {
 function mapDispatchToProps(dispatch) {
   return {actions: bindActionCreators({
     ...accountActions,
+    ...chainstateActions,
     ...postActions,
     ...preferenceActions
   }, dispatch)}

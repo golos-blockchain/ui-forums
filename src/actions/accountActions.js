@@ -1,5 +1,6 @@
 import * as types from './actionTypes';
 import steem from 'steem'
+import golos from 'golos-classic-js';
 import store from 'store'
 import Noty from 'noty'
 
@@ -51,7 +52,7 @@ export function fetchAccount(account) {
     })
     if(payload.isUser) {
       setTimeout(function() {
-        steem.api.getAccounts([payload.name], function(err, data) {
+        golos.api.getAccounts([payload.name], function(err, data) {
           dispatch(fetchAccountResolved(Object.assign({}, payload, {
             data: data[0],
             loading: false
@@ -65,7 +66,7 @@ export function fetchAccount(account) {
 
 export function fetchAccountFollowing(name, start="", limit=100) {
   return dispatch => {
-    steem.api.getFollowing(name, start, "blog", limit, function(err, result) {
+    golos.api.getFollowing(name, start, "blog", limit, function(err, result) {
       if(!result) return
       const accounts = result.map((c) => { return c.following })
       if(result.length === limit) {

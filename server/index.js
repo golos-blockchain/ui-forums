@@ -100,7 +100,9 @@ const DEFAULT_VOTE_LIMIT = 10000
 router.get('/:category/@:author/:permlink', async (ctx) => {
     let forums_obj = await getForums();
     const forum_id = ctx.params.category;
-    const data = await golos.api.getContent(ctx.params.author, ctx.params.permlink, DEFAULT_VOTE_LIMIT);
+    let data = await golos.api.getContent(ctx.params.author, ctx.params.permlink, DEFAULT_VOTE_LIMIT);
+    data.donate_list = [];
+    data.donate_uia_list = [];
     ctx.body = {
         data: data,
         forum: forums_obj[forum_id],
@@ -110,9 +112,23 @@ router.get('/:category/@:author/:permlink', async (ctx) => {
 })
 
 router.get('/:category/@:author/:permlink/responses', async (ctx) => {
-    const data = await golos.api.getAllContentReplies(ctx.params.author, ctx.params.permlink, DEFAULT_VOTE_LIMIT);
+    let data = await golos.api.getAllContentReplies(ctx.params.author, ctx.params.permlink, DEFAULT_VOTE_LIMIT);
+    for (let item of data) {
+        item.donate_list = [];
+        item.donate_uia_list = [];
+    }
     ctx.body = {
         data: data,
+        "network": {}, 
+        "status": "ok"
+    }
+})
+
+router.get('/:category/@:author/:permlink/donates', async (ctx) => {
+    const donate_list = await golos.api.getDonates(false, {author: ctx.params.author, permlink: ctx.params.permlink}, '', '', 200, 0, false);
+    const donate_uia_list = await golos.api.getDonates(true, {author: ctx.params.author, permlink: ctx.params.permlink}, '', '', 200, 0, false);
+    ctx.body = {
+        data: {donate_list, donate_uia_list},
         "network": {}, 
         "status": "ok"
     }
