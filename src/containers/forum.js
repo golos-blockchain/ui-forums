@@ -130,10 +130,12 @@ class Forum extends React.Component {
       return (tt.getLocale() == 'ru') ? forum.name_ru : forum.name;
   }
 
-  setForum = (forum) => {
-      this.setState({forum})
-      this.props.actions.setForum(forum)
+  setForum = (forumRaw, moders, supers, hidden) => {
+      let forum = Object.assign({moders, supers, hidden}, forumRaw);
+      this.setState({forum});
+      this.props.actions.setForum(forum);
   }
+
   setBreadcrumb = (result) => {
       if (result.forum) {
           const trail = [
@@ -195,7 +197,7 @@ class Forum extends React.Component {
       if (response.ok) {
           const result = await response.json()
           this.props.actions.setStatus({'network': result.network});
-          this.setForum(result.forum)
+          this.setForum(result.forum, result.moders, result.supers, result.hidden)
           this.setBreadcrumb(result)
 
           // If a valid forum is found

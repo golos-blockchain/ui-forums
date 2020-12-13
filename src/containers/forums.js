@@ -28,7 +28,10 @@ class Forums extends React.Component {
         group: false,
         minimized: props.preferences.forums_minimized || [],
         forums: null,
-        showConfig: (['overview', 'categories', 'permissions', 'configuration'].indexOf(props.section) >= 0) ? true : false,
+        moders: [],
+        supers: [],
+        admins: [],
+        showConfig: (['categories', 'permissions'].indexOf(props.section) >= 0) ? true : false,
       };
       this.getForums = this.getForums.bind(this);
       this.getForums()
@@ -75,6 +78,9 @@ class Forums extends React.Component {
           const result = await response.json();
           this.setState({
             forums: result.data.forums,
+            moders: result.data.moders,
+            supers: result.data.supers,
+            admins: result.data.admins,
             users: result.data.users,
             group: this.props.forums.group
           });
@@ -90,7 +96,7 @@ class Forums extends React.Component {
   showConfig = () => {
       if(!this.state.showConfig) {
           this.setState({showConfig: true})
-          this.props.history.push(`/overview`);
+          this.props.history.push(`/categories`);
       }
   }
   hideConfig = () => {
@@ -158,6 +164,9 @@ class Forums extends React.Component {
                   target={CONFIG.FORUM}
                   forum={forum4}
                   categories={this.state.forums}
+                  moders={this.state.moders}
+                  supers={this.state.supers}
+                  admins={this.state.admins}
                   hideConfig={this.hideConfig.bind(this)}
               />
           )

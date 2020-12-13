@@ -63,7 +63,7 @@ export default class ForumPostThumbnail extends React.Component {
         </Grid.Column>
       )
     }
-    if(this.props.state.isModerator && (this.props.state.hovering || this.props.state.moderating)) {
+    if(this.props.state.isModerator) {
       control = (
         <ForumPostModeration
           account={account}

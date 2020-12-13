@@ -1,70 +1,72 @@
 import * as types from './actionTypes';
-import steem from 'steem'
+import golos from 'golos-classic-js';
 
-export function moderatorRemoveTopicForum(moderator, topic, forum) {
-  return (dispatch: () => void) => {
-    const { key, name } = moderator
-    const id = 'chainbb'
-    let json = ['moderate_post']
-    json.push({
-      forum: forum['_id'],
-      topic: topic['_id'],
-      remove: true,
-    })
-    dispatch({
-      type: types.MODERATION_REMOVE_PROCESSING,
-      payload: json,
-      loading: true
-    })
-    steem.broadcast.customJson(key, [], [name], id, JSON.stringify(json), function(err, result) {
-      if(result) {
+import * as CONFIG from '../../config';
+
+export function moderatorHidePostForum(wif, moderator, post, forum, why = '', time = '') {
+    return (dispatch: () => void) => {
+        const { name } = moderator;
+        let obj = {};
+        obj[post.id] = why + '|' + name + '|' + time;
         dispatch({
-          type: types.MODERATION_REMOVE_RESOLVED,
-          payload: json,
-          loading: false
+            type: types.MODERATION_HIDE_PROCESSING,
+            payload: {moderator, post},
+            loading: true
         })
-      }
-      if(err) {
-        dispatch({
-          type: types.MODERATION_REMOVE_RESOLVED_ERROR,
-          payload: json,
-          loading: false
-        })
-      }
-    });
-  };
+        golos.broadcast.customJson(wif, [name], [], "account_notes",
+          JSON.stringify(['set_value', {
+              account: name,
+              key: 'g.f.' + CONFIG.FORUM._id.toLowerCase() + '.hidmsg.lst',
+              value: JSON.stringify(obj)
+          }]),
+          (err, result) =>  {
+              if (err) {
+                  dispatch({
+                      type: types.MODERATION_HIDE_RESOLVED_ERROR,
+                      payload: {moderator, post, err},
+                      loading: false
+                  })
+              } else {
+                  dispatch({
+                      type: types.MODERATION_HIDE_RESOLVED,
+                      payload: {moderator, post},
+                      loading: false
+                  })
+              }
+          });
+    };
 }
 
-export function moderatorRestoreTopicForum(moderator, topic, forum) {
-  return (dispatch: () => void) => {
-    const { key, name } = moderator
-    const id = 'chainbb'
-    let json = ['modpost']
-    json.push({
-      forum: forum['_id'],
-      topic: topic['_id'],
-      remove: false,
-    })
-    dispatch({
-      type: types.MODERATION_RESTORE_PROCESSING,
-      payload: json,
-      loading: true
-    })
-    steem.broadcast.customJson(key, [], [name], id, JSON.stringify(json), function(err, result) {
-      if(result) {
+export function moderatorRevealPostForum(wif, moderator, post, forum) {
+    return (dispatch: () => void) => {
+        const { name } = moderator;
+        let obj = {};
+        obj[post.id] = null;
         dispatch({
-          type: types.MODERATION_RESTORE_RESOLVED,
-          payload: json,
-          loading: false
+            type: types.MODERATION_REVEAL_PROCESSING,
+            payload: {moderator, post},
+            loading: true
         })
-      }
-      if(err) {
-        dispatch({
-          type: types.MODERATION_RESTORE_RESOLVED_ERROR,
-          payload: json,
-          loading: false
-        })
-      }
-    });
-  };
+        golos.broadcast.customJson(wif, [name], [], "account_notes",
+          JSON.stringify(['set_value', {
+              account: name,
+              key: 'g.f.' + CONFIG.FORUM._id.toLowerCase() + '.hidmsg.lst',
+              value: JSON.stringify(obj)
+          }]),
+          (err, result) =>  {
+              if (err) {
+                  dispatch({
+                      type: types.MODERATION_REVEAL_RESOLVED_ERROR,
+                      payload: {moderator, post, err},
+                      loading: false
+                  })
+              } else {
+                  dispatch({
+                      type: types.MODERATION_REVEAL_RESOLVED,
+                      payload: {moderator, post},
+                      loading: false
+                  })
+              }
+          });
+    };
 }

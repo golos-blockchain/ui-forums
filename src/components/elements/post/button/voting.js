@@ -8,63 +8,58 @@ import translateError from '../../../../utils/translateError'
 import './voting.css'
 
 export default class Voting extends React.Component {
-  castVote = (e, data) => {
-    let voter = this.props.account.name,
-        author = this.props.post.author,
-        permlink = this.props.post.permlink,
-        weight = data.weight * 100;
-    let myVote = null;
-    if (this.props.post && this.props.post.active_votes) {
-        for (let av of this.props.post.active_votes) {
-          if (av.voter === voter && av.percent == weight) {
-            myVote = av;
-            break;
-          }
+    castVote = (e, data) => {
+        let voter = this.props.account.name;
+        let { author, permlink } = this.props.post;
+        let weight = data.weight * 100;
+        let myVote = null;
+        if (this.props.post && this.props.post.active_votes) {
+            for (let av of this.props.post.active_votes) {
+                if (av.voter === voter && av.percent == weight) {
+                    myVote = av;
+                    break;
+                }
+            }
+        }
+        if (myVote) {
+            this.props.onVoteCast({
+                account: this.props.account,
+                author: author,
+                permlink: permlink,
+                weight: 0
+            })
+        } else {
+            this.props.onVoteCast({
+                account: this.props.account,
+                author: author,
+                permlink: permlink,
+                weight: weight
+            })
         }
     }
-    if (myVote) {
-      this.props.onVoteCast({
-        account: this.props.account,
-        author: author,
-        permlink: permlink,
-        weight: 0
-      })
-    } else {
-      this.props.onVoteCast({
-        account: this.props.account,
-        author: author,
-        permlink: permlink,
-        weight: weight
-      })
-    }
-  }
 
-  openVoter = (e, data) => {
-    let win = window.open('/@' + data.text, '_blank');
-    win.focus();
-  }
-
-  render() {
-    if (this.props.error) {
-      alert(translateError('vote', this.props.error));
-      this.props.clearVoteError();
+    openVoter = (e, data) => {
+        let win = window.open('/@' + data.text, '_blank');
+        win.focus();
     }
-    let // The loaded data
-        account = this.props.account,
-        post = this.props.post,
-        weight = this.props.weight;
+
+    render() {
+        if (this.props.error) {
+            alert(translateError('vote', this.props.error));
+            this.props.clearVoteError();
+        }
+        let { account, post, weight } = this.props;
         // Is there an active vote by this account?
         let myVote = null;
-        let voteCount = 0;
+        let netVotes = post.net_votes;
         let votes = [];
         if (post && post.active_votes) {
             for (let av of post.active_votes) {
-              if (av.percent == 0) continue;
-              voteCount++;
-              if (av.voter === account.name) {
-                myVote = av;
-              }
-              votes.push(<Dropdown.Item key={av.voter} text={av.voter} description={(av.percent/100) + '%'} onClick={this.openVoter}/>);
+                if (av.percent == 0) continue;
+                if (av.voter === account.name) {
+                    myVote = av;
+                }
+                votes.push(<Dropdown.Item key={av.voter} text={av.voter} description={(av.percent/100) + '%'} onClick={this.openVoter}/>);
             }
         }
         const iUpvoted = myVote && myVote.percent > 0;
@@ -87,7 +82,7 @@ export default class Voting extends React.Component {
           <Dropdown
             floating
             className="VoteList"
-            text={voteCount.toString()}
+            text={netVotes.toString()}
             icon={null}>
             <Dropdown.Menu>
             {votes}
@@ -138,7 +133,7 @@ export default class Voting extends React.Component {
             floating
             className="VoteList"
             loading={this.props.loading}
-            text={this.props.loading ? '' : voteCount.toString()}
+            text={this.props.loading ? '' : netVotes.toString()}
             icon={this.props.loading ? '' : null}>
             <Dropdown.Menu>
             {votes}

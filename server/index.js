@@ -16,18 +16,35 @@ golos.config.set('websocket', CONFIG.GOLOS_NODE);
 const app = new koa()
 const router = new koaRouter()
 
+const returnError = (ctx, err) => {
+    ctx.body = {
+        "data": err,
+        "network": {}, 
+        "status": "err"
+    }
+};
+
+let _getValueJson = async function(key, fallback) {
+    const val = await golos.api.getValue(CONFIG.FORUM.creator, key);
+    if (val == '') return fallback;
+    try {
+        return JSON.parse(val);
+    } catch (ex) {
+        return fallback;
+    }
+};
+
+let getValueArray = async function(key) {
+    return await _getValueJson(key, []);
+};
+
+let getValueList = async function(key) {
+    return await _getValueJson(key, {});
+};
+
 let getForums = async function() {
     const global_id = CONFIG.FORUM._id.toLowerCase();
-    const forums_val = await golos.api.getValue(CONFIG.FORUM.creator, 'g.f.' + global_id);
-    if (forums_val == '') {
-        return {};
-    }
-    let forums_obj = {};
-    try {
-        forums_obj = JSON.parse(forums_val);
-    } catch (ex) {
-        return {};
-    }
+    const forums_obj = await getValueList('g.f.' + global_id);
     for (let [_id, forum] of Object.entries(forums_obj)) {
         forum._id = _id;
         forum.creator = CONFIG.FORUM.creator;
@@ -41,18 +58,30 @@ let getForums = async function() {
     return forums_obj;
 };
 
-const returnError = (ctx, err) => {
-    ctx.body = {
-        "data": err,
-        "network": {}, 
-        "status": "err"
-    }
+let getModers = async function() {
+    return await getValueArray('g.f.' + CONFIG.FORUM._id.toLowerCase() + '.hidmsg.lst.accs');
+};
+
+let getSupers = async function() {
+    return await getValueArray('g.f.' + CONFIG.FORUM._id.toLowerCase() + '.hidacc.lst.accs');
+};
+
+let getAdmins = async function() {
+    return await getValueArray('g.f.' + CONFIG.FORUM._id.toLowerCase() + '.banacc.lst.accs');
+};
+
+let getHiddenPosts = async function() {
+    return await getValueList('g.f.' + CONFIG.FORUM._id.toLowerCase() + '.hidmsg.lst');
 };
 
 router.get('/', async (ctx) => {
     ctx.body = {
         data: {
             'forums': await getForums(),
+            'moders': await getModers(),
+            'hhh': await getHiddenPosts(),
+            'supers': await getSupers(),
+            'admins': [],
             'users': {
                 'stats': {
                     'total': 1,
@@ -85,12 +114,20 @@ router.get('/forum/:slug', async (ctx) => {
         "fm-" + global_id + "-" + forum_id.toLowerCase(),
         0, 20
     );
+    const hidden = await getHiddenPosts();
+    for (let post of data) {
+        post.hidden = !!hidden[post.id];
+    }
     ctx.body = {
         data: data, 
         "network": {}, 
         "status": "ok",
         forum: forums_obj[forum_id],
         children: Object.assign({}, forums_obj[forum_id].children),
+        moders: await getModers(),
+        supers: await getSupers(),
+        admins: [],
+        hidden: hidden,
         meta: {'query':{},'sort':{}}
     }
 })

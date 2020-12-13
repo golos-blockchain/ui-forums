@@ -2,10 +2,11 @@ import React from 'react'
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux'
 import TimeAgo from 'react-timeago'
-import * as CONFIG from '../../../config';
+import tt from 'counterpart';
 
 import { Button, Dimmer, Divider, Grid, Header, Icon, Label, Loader, Segment } from 'semantic-ui-react'
 
+import * as CONFIG from '../../../config';
 import * as accountActions from '../../actions/accountActions'
 import * as breadcrumbActions from '../../actions/breadcrumbActions'
 import * as postActions from '../../actions/postActions'
@@ -73,7 +74,6 @@ class Response extends React.Component {
           let hidden = (post.net_votes < 0),
               parent_post = this.getParent(post),
               quote = ''
-          const isBot = CONFIG.BOTS.indexOf(post.author) >= 0
           if(parent_post['_id']) {
             quote = (
               <div>
@@ -103,20 +103,6 @@ class Response extends React.Component {
               </div>
             )
           }
-          if(isBot && this.state.revealed.indexOf(post._id) === -1) {
-            return (
-              <Grid.Row key={index} id={post._id}>
-                <Grid.Column className='mobile hidden' width={4}></Grid.Column>
-                <Grid.Column mobile={16} tablet={12} computer={12}>
-                  <Divider horizontal>
-                    <Button basic size='tiny' onClick={this.handleReveal} value={post._id}>
-                      Bot Post (@{post.author}) hidden - click to show
-                    </Button>
-                  </Divider>
-                </Grid.Column>
-              </Grid.Row>
-            )
-          }
           if(hidden && this.state.revealed.indexOf(post._id) === -1) {
             return (
               <Grid.Row key={index} id={post._id}>
@@ -124,7 +110,7 @@ class Response extends React.Component {
                 <Grid.Column mobile={16} tablet={12} computer={12}>
                   <Divider horizontal>
                     <Button basic size='tiny' onClick={this.handleReveal} value={post._id}>
-                      Post by @{post.author} hidden (low ratings) - click to show
+                      {tt('forum_controls.reply_hidden_AUTHOR', {AUTHOR: post.author})}
                     </Button>
                   </Divider>
                 </Grid.Column>

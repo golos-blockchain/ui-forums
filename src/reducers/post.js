@@ -103,68 +103,71 @@ export default function post(state = initialState, action) {
       return Object.assign({}, state, {
         submitted: action.payload
       })
-    case types.POST_VOTE_PROCESSING:
-      return Object.assign({}, state, {
-        processing: {
-          errors: {},
-          votes: [action.payload],
-          donates: state.processing.donates
-        }
-      })
-    case types.POST_VOTE_RESOLVED:
-      let content = state.content,
-          responses0 = state.responses,
-          author0 = action.payload.author,
-          permlink0 = action.payload.permlink,
-          voter = action.payload.account.name,
-          weight = action.payload.weight
-      let msg = content;
-      if (content.author !== author0 || content.permlink !== permlink0) {
-        for (let i in responses0) {
-          if (responses0[i].author === author0 && responses0[i].permlink === permlink0) {
-            msg = responses0[i];
-            break;
+        case types.POST_VOTE_PROCESSING: {
+            return Object.assign({}, state, {
+                processing: {
+                  errors: {},
+                  votes: [action.payload],
+                  donates: state.processing.donates
+                }
+            })
+        } case types.POST_VOTE_RESOLVED: {
+          let { content, responses } = state;
+          let { author, permlink, weight, account } = action.payload;
+          let voter = account.name;
+          let msg = content;
+          if (content.author !== author || content.permlink !== permlink) {
+              for (let i in responses) {
+                  if (responses[i].author === author && responses[i].permlink === permlink) {
+                      msg = responses[i];
+                      break;
+                  }
+              }
           }
+          let found = null;
+          for (let i in msg.active_votes) {
+              if (msg.active_votes[i].voter === voter) {
+                  found = msg.active_votes[i];
+                  break;
+              }
+          }
+          if (found) {
+              msg.net_votes -= Math.sign(found.percent);
+              msg.net_votes += Math.sign(weight);
+              found.percent = weight;
+          } else {
+              msg.net_votes += Math.sign(weight);
+              msg.active_votes.push({voter, percent: weight});
+          }
+          //setResponseVote(state, action.payload)
+          return Object.assign({}, state, {
+              content: content,
+              responses: responses,
+              processing: {
+                  errors: {},
+                  votes: completeProcessing(state.processing.votes, action.payload),
+                  donates: state.processing.donates
+              }
+          })
         }
-      }
-      let found = null;
-      for (let av of msg.active_votes) {
-        if (av.voter === voter) {
-          found = av;
-          break;
+        case types.POST_VOTE_RESOLVED_ERROR: {
+            return Object.assign({}, state, {
+                processing: {
+                    errors: setError(state, 'vote', action.response),
+                    votes: completeProcessing(state.processing.votes, action.response.payload),
+                    donates: state.processing.donates
+                }
+            })
         }
-      }
-      if (found) {
-        found.percent = weight;
-      } else {
-        msg.active_votes.push({voter, percent: weight});
-      }
-      //setResponseVote(state, action.payload)
-      return Object.assign({}, state, {
-        content: content,
-        responses: responses0,
-        processing: {
-          errors: {},
-          votes: completeProcessing(state.processing.votes, action.payload),
-          donates: state.processing.donates
+        case types.POST_VOTE_RESOLVED_ERROR_CLEAR: {
+            return Object.assign({}, state, {
+                processing: {
+                    errors: false,
+                    votes: state.processing.votes,
+                    donates: state.processing.donates
+                }
+            })
         }
-      })
-    case types.POST_VOTE_RESOLVED_ERROR:
-      return Object.assign({}, state, {
-        processing: {
-          errors: setError(state, 'vote', action.response),
-          votes: completeProcessing(state.processing.votes, action.response.payload),
-          donates: state.processing.donates
-        }
-      })
-    case types.POST_VOTE_RESOLVED_ERROR_CLEAR:
-      return Object.assign({}, state, {
-        processing: {
-          errors: false,
-          votes: state.processing.votes,
-          donates: state.processing.donates
-        }
-      })
         case types.POST_LOAD_DONATES_RESOLVED: {
             let content = state.content;
             let responses = state.responses;
@@ -189,7 +192,8 @@ export default function post(state = initialState, action) {
                     donates: state.processing.donates
                 }
             })
-        } case types.POST_DONATE_PROCESSING: {
+        }
+        case types.POST_DONATE_PROCESSING: {
             return Object.assign({}, state, {
                 processing: {
                     errors: {},

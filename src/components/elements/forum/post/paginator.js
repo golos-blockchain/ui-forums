@@ -62,7 +62,7 @@ export default class Paginator extends Component {
     return (
       <List horizontal size='small' style={{margin: '0 0 0 0.35em'}}>
         <List.Item style={{margin: '0'}}>
-          • Page
+          • 
         </List.Item>
         {elements}
       </List>

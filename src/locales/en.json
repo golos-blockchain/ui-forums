@@ -14,6 +14,13 @@
     "no_comments": "No Replies Yet!",
     "no_comments_description": "You can write your first reply here",
     "comments": "Replies",
+    "post_hidden_AUTHOR": "Post by @%(AUTHOR)s hidden (low ratings) - click to show",
+    "reply_hidden_AUTHOR": "Reply by @%(AUTHOR)s hidden (low ratings) - click to show",
+    "hide_confirm": "Are you sure you want to hide this post?",
+    "hide_btn": "Hide Post",
+    "keep_btn": "Keep Post",
+    "reveal_confirm": "Are you sure you want to reveal this post?",
+    "reveal_btn": "Reveal Post",
 
     "forum_info": "Forum Settings",
     "return_ro_froum": "Return to forum",
@@ -64,6 +71,17 @@
     "add_sub": "Add Subcategory",
     "edit": "Edit Category",
     "move_up": "Move Up"
+  },
+  "permissions": {
+    "title": "Forum Permissions",
+    "description": "The permissions of different Golos Blockchain users within this forum.",
+    "moderators": "Moderators",
+    "moderators_desc": "Can mute the messages.",
+    "super_moderators": "Super-moderators",
+    "super_moderators_desc": "Have all moderator permissions and can mute the users.",
+    "admins": "Administrators",
+    "admins_desc": "Have all super-moderator permissions and can block the users.",
+    "placeholder": "Names separated by Enter"
   },
   "sidebar": {
     "start_your_own_forum": "Start your own community forum!",

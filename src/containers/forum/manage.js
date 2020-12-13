@@ -11,7 +11,7 @@ import ForumConfigForm from './manage/config'
 import ForumCategoriesForm from './manage/categories'
 //import ForumUpgrade from '../../components/elements/forum/manage/upgrade'
 import ForumOverview from '../../components/elements/forum/manage/overview'
-import ForumPermissions from '../../components/elements/forum/manage/permissions'
+import ForumPermissions from './manage/permissions'
 import ForumReservation from '../../components/elements/forum/reservation'
 
 import * as accountActions from '../../actions/accountActions'
@@ -52,15 +52,15 @@ class ForumManage extends React.Component {
         return indexes.indexOf(key)
     }
     render() {
-        const { account, forum, reservation, target, categories } = this.props
+        const { account, forum, reservation, target, categories, moders, supers, admins } = this.props
         if (reservation) {
             return <ForumReservation status={this.props.status} reservation={reservation} />
         }
         let panes = [
-            { menuItem: { key: 'overview', icon: 'cubes', color: 'black', content: tt('forum_controls.overview') }, render: () => <ForumOverview forum={forum} /> },
+            //{ menuItem: { key: 'overview', icon: 'cubes', color: 'black', content: tt('forum_controls.overview') }, render: () => <ForumOverview forum={forum} /> },
             { menuItem: { key: 'categories', icon: 'indent', color: 'red', content: tt('forum_controls.categories') }, render: () => <ForumCategoriesForm newForum={this.props.newForum} categories={categories} hideConfig={this.props.hideConfig}/> },
-            { menuItem: { key: 'permissions', icon: 'protect', color: 'purple', content: tt('forum_controls.permissions') }, render: () => <ForumPermissions forum={forum} /> },
-            { menuItem: { key: 'configuration', icon: 'settings', color: 'orange', content: tt('forum_controls.configuration') }, render: () => <ForumConfigForm newForum={this.props.newForum} hideConfig={this.props.hideConfig}/> },
+            { menuItem: { key: 'permissions', icon: 'protect', color: 'purple', content: tt('forum_controls.permissions') }, render: () => <ForumPermissions account={account} moders={moders} supers={supers} admins={admins} /> },
+            //{ menuItem: { key: 'configuration', icon: 'settings', color: 'orange', content: tt('forum_controls.configuration') }, render: () => <ForumConfigForm newForum={this.props.newForum} hideConfig={this.props.hideConfig}/> },
             //{ menuItem: { key: 'upgrades', icon: 'arrow circle up', color: 'blue', content: 'Upgrades' }, render: () => <ForumUpgrade account={account} forum={forum} target={target} /> },
             { menuItem: { key: 'close', icon: 'window close', color: 'black', position: 'right' } },
         ]

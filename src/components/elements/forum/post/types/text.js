@@ -64,19 +64,19 @@ export default class ForumPostText extends React.Component {
         </Grid.Column>
       )
     }
-    if(this.props.state.isModerator && (this.props.state.hovering || this.props.state.moderating)) {
-      control = (
-        <ForumPostModeration
-          account={account}
-          actions={this.props.actions}
-          forum={forum}
-          moderation={moderation}
-          topic={topic}
-          onOpen={this.props.onOpen}
-          onClose={this.props.onClose}
-          removeTopic={this.props.removeTopic}
-        />
-      )
+    if (this.props.state.isModerator) {
+        control = (
+            <ForumPostModeration
+              account={account}
+              actions={this.props.actions}
+              forum={forum}
+              moderation={moderation}
+              topic={topic}
+              onOpen={this.props.onOpen}
+              onClose={this.props.onClose}
+              removeTopic={this.props.removeTopic}
+            />
+        );
     }
     const forum_url_prefix = '/fm-' + CONFIG.FORUM._id + '-';
     return (
