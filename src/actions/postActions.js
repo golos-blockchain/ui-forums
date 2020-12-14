@@ -476,7 +476,6 @@ export function submit(account, data, parent, action = 'post') {
     //     }
     //   })
     // }, 6000)
-    alert(JSON.stringify(ops))
     golos.broadcast.send({ operations: ops, extensions: [] }, { posting: account.key }, function(err, result) {
       if(err) {
         dispatch({

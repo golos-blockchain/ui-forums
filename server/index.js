@@ -13,74 +13,59 @@ const CONFIG_SEC = require('../configSecure');
 
 golos.config.set('websocket', CONFIG.GOLOS_NODE);
 
-const app = new koa()
-const router = new koaRouter()
+const app = new koa();
+const router = new koaRouter();
 
 const returnError = (ctx, err) => {
     ctx.body = {
         "data": err,
         "network": {}, 
         "status": "err"
+    };
+};
+
+const PREFIX = 'g.f.';
+const PREFIX_PST = 'g.pst.f.';
+
+const LST = '.lst';
+const ACCS = '.accs';
+
+const GLOBAL_ID = CONFIG.FORUM._id.toLowerCase();
+const NOTE_     = PREFIX + GLOBAL_ID;
+const NOTE_PST_ = PREFIX_PST + GLOBAL_ID;
+const NOTE_PST_HIDMSG_LST      = NOTE_PST_ + '.hidmsg' + LST;
+const NOTE_PST_HIDMSG_LST_ACCS = NOTE_PST_ + '.hidmsg' + LST + ACCS;
+const NOTE_PST_HIDACC_LST      = NOTE_PST_ + '.hidacc' + LST;
+const NOTE_PST_HIDACC_LST_ACCS = NOTE_PST_ + '.hidacc' + LST + ACCS;
+
+let getValues = async (keys) => {
+    let vals = await golos.api.getValues(CONFIG.FORUM.creator, Object.keys(keys));
+    for (let [key, type] of Object.entries(keys)) {
+        const fallback = (type == Object) ? {} : [];
+        if (!vals[key]) {
+            vals[key] = fallback;
+            continue;
+        }
+        try {
+            vals[key] = JSON.parse(vals[key]);
+        } catch (ex) {
+            vals[key] = fallback;
+        }
     }
-};
-
-let _getValueJson = async function(key, fallback) {
-    const val = await golos.api.getValue(CONFIG.FORUM.creator, key);
-    if (val == '') return fallback;
-    try {
-        return JSON.parse(val);
-    } catch (ex) {
-        return fallback;
-    }
-};
-
-let getValueArray = async function(key) {
-    return await _getValueJson(key, []);
-};
-
-let getValueList = async function(key) {
-    return await _getValueJson(key, {});
-};
-
-let getForums = async function() {
-    const global_id = CONFIG.FORUM._id.toLowerCase();
-    const forums_obj = await getValueList('g.f.' + global_id);
-    for (let [_id, forum] of Object.entries(forums_obj)) {
-        forum._id = _id;
-        forum.creator = CONFIG.FORUM.creator;
-        forum.created = '2020-01-01T10:10:10';
-        forum.created_height = 0;
-        forum.created_tx = 0;
-        forum.expires =  '2022-01-01T10:10:10';
-        forum.stats = {'replies' : '0', 'posts' : '0'}
-        forum.tags = ['fm-' + global_id + '-' + _id.toLowerCase(), 'fm-' + global_id]
-    }
-    return forums_obj;
-};
-
-let getModers = async function() {
-    return await getValueArray('g.f.' + CONFIG.FORUM._id.toLowerCase() + '.hidmsg.lst.accs');
-};
-
-let getSupers = async function() {
-    return await getValueArray('g.f.' + CONFIG.FORUM._id.toLowerCase() + '.hidacc.lst.accs');
-};
-
-let getAdmins = async function() {
-    return await getValueArray('g.f.' + CONFIG.FORUM._id.toLowerCase() + '.banacc.lst.accs');
-};
-
-let getHiddenPosts = async function() {
-    return await getValueList('g.f.' + CONFIG.FORUM._id.toLowerCase() + '.hidmsg.lst');
+    return vals;
 };
 
 router.get('/', async (ctx) => {
+    let keys = {};
+    keys[NOTE_] = Object;
+    keys[NOTE_PST_HIDMSG_LST_ACCS] = Array;
+    keys[NOTE_PST_HIDACC_LST_ACCS] = Array;
+    const vals = await getValues(keys);
     ctx.body = {
         data: {
-            'forums': await getForums(),
-            'moders': await getModers(),
-            'hhh': await getHiddenPosts(),
-            'supers': await getSupers(),
+            'forums': vals[NOTE_],
+            'moders': vals[NOTE_PST_HIDMSG_LST_ACCS],
+            'supers': vals[NOTE_PST_HIDACC_LST_ACCS],
             'admins': [],
             'users': {
                 'stats': {
@@ -93,39 +78,65 @@ router.get('/', async (ctx) => {
         "network": {}, 
         "status": "ok"
     }
-})
+});
 
 router.get('/forums', async (ctx) => {
+    let keys = {};
+    keys[NOTE_] = Object;
+    const vals = await getValues(keys);
     ctx.body = {
         data: {
-            'forums': await getForums(),
+            'forums': vals[NOTE_],
         }, 
         "network": {}, 
         "status": "ok"
     }
 })
 
+function findForum(vals, forum_id) {
+    for (let [_id, item] of Object.entries(vals)) {
+        if (_id === forum_id) {
+            item.creator = 'cyberfounder';
+            item.tags = ['fm-' + GLOBAL_ID + '-' + _id.toLowerCase(), 'fm-' + GLOBAL_ID];
+            return {_id, item};
+        }
+        if (!item.children) continue;
+        let inChild = findForum(item.children, forum_id);
+        if (inChild) return inChild;
+    }
+    return null;
+}
+
 router.get('/forum/:slug', async (ctx) => {
-    let forums_obj = await getForums();
-    const global_id = CONFIG.FORUM._id.toLowerCase();
+    let keys = {};
+    keys[NOTE_] = Object;
+    keys[NOTE_PST_HIDMSG_LST] = Array;
+    keys[NOTE_PST_HIDMSG_LST_ACCS] = Array;
+    keys[NOTE_PST_HIDACC_LST_ACCS] = Array;
+    const vals = await getValues(keys);
+
     const forum_id = ctx.params.slug;
+    let forum = findForum(vals[NOTE_], forum_id);
+
     const data = await golos.api.getAllDiscussionsByActive(
         '', '', 10000000,
-        "fm-" + global_id + "-" + forum_id.toLowerCase(),
+        "fm-" + GLOBAL_ID + "-" + forum._id.toLowerCase(),
         0, 20
     );
-    const hidden = await getHiddenPosts();
+
+    const hidden = vals[NOTE_PST_HIDMSG_LST];
     for (let post of data) {
         post.hidden = !!hidden[post.id];
     }
+
     ctx.body = {
         data: data, 
         "network": {}, 
         "status": "ok",
-        forum: forums_obj[forum_id],
-        children: Object.assign({}, forums_obj[forum_id].children),
-        moders: await getModers(),
-        supers: await getSupers(),
+        forum: forum ? forum.item : null,
+        children: forum ? Object.assign({}, forum.item.children) : null,
+        moders: vals[NOTE_PST_HIDMSG_LST_ACCS],
+        supers: vals[NOTE_PST_HIDACC_LST_ACCS],
         admins: [],
         hidden: hidden,
         meta: {'query':{},'sort':{}}
@@ -135,14 +146,16 @@ router.get('/forum/:slug', async (ctx) => {
 const DEFAULT_VOTE_LIMIT = 10000
 
 router.get('/:category/@:author/:permlink', async (ctx) => {
-    let forums_obj = await getForums();
-    const forum_id = ctx.params.category;
+    let keys = {};
+    keys[NOTE_] = Object;
+    const vals = await getValues(keys);
+
     let data = await golos.api.getContent(ctx.params.author, ctx.params.permlink, DEFAULT_VOTE_LIMIT);
     data.donate_list = [];
     data.donate_uia_list = [];
     ctx.body = {
         data: data,
-        forum: forums_obj[forum_id],
+        forum: vals[NOTE_][ctx.params.category],
         "network": {}, 
         "status": "ok"
     }

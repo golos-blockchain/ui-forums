@@ -13,10 +13,10 @@ export function moderatorHidePostForum(wif, moderator, post, forum, why = '', ti
             payload: {moderator, post},
             loading: true
         })
-        golos.broadcast.customJson(wif, [name], [], "account_notes",
+        golos.broadcast.customJson(wif, [], [name], "account_notes",
           JSON.stringify(['set_value', {
               account: name,
-              key: 'g.f.' + CONFIG.FORUM._id.toLowerCase() + '.hidmsg.lst',
+              key: 'g.pst.f.' + CONFIG.FORUM._id.toLowerCase() + '.hidmsg.lst',
               value: JSON.stringify(obj)
           }]),
           (err, result) =>  {
@@ -47,10 +47,10 @@ export function moderatorRevealPostForum(wif, moderator, post, forum) {
             payload: {moderator, post},
             loading: true
         })
-        golos.broadcast.customJson(wif, [name], [], "account_notes",
+        golos.broadcast.customJson(wif, [], [name], "account_notes",
           JSON.stringify(['set_value', {
               account: name,
-              key: 'g.f.' + CONFIG.FORUM._id.toLowerCase() + '.hidmsg.lst',
+              key: 'g.pst.f.' + CONFIG.FORUM._id.toLowerCase() + '.hidmsg.lst',
               value: JSON.stringify(obj)
           }]),
           (err, result) =>  {

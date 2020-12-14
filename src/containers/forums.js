@@ -176,7 +176,7 @@ class Forums extends React.Component {
             let groupings = [];
             for (let [_id, forum] of Object.entries(forums)) {
               if (forum.group !== group) continue;
-              groupings.push(<ForumIndex key={_id} forum={forum} isMinimized={isMinimized} />);
+              groupings.push(<ForumIndex key={_id} _id={_id} forum={forum} isMinimized={isMinimized} />);
             }
             return  <div key={group} style={{marginBottom: "10px"}}>
                       <Segment secondary attached>

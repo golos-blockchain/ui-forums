@@ -45,7 +45,7 @@ class Forum extends React.Component {
       showConfig: (['overview', 'upgrades', 'permissions', 'configuration'].indexOf(props.section) >= 0) ? true : false,
       showNewPost: false,
       showModerated: false,
-      showSubforums: false,
+      showSubforums: true,
       forum: {
         name: this.props.forumid
       }
@@ -252,7 +252,7 @@ class Forum extends React.Component {
     let account = this.props.account,
         forum = this.state.forum,
         reservation = this.state.reservation,
-        children = this.state.children,
+        children = this.state.children || {},
         controls = false,
         display = false,
         subforums = false,
@@ -265,7 +265,7 @@ class Forum extends React.Component {
     if(children_cnt > 0) {
         let childs = [];
         for (let [_id, forum] of Object.entries(children)) {
-          childs.push(<ForumIndex forum={forum} key={_id} />);
+            childs.push(<ForumIndex _id={_id} forum={forum} key={_id} />);
         }
         const panels = [
             {
@@ -315,7 +315,7 @@ class Forum extends React.Component {
           )
     }
     if(!this.state.loadingPosts) {
-      if(forum && forum._id) {
+      if(forum) {
           if(this.state.showConfig) {
             controls = false
             display = (

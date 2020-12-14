@@ -10,7 +10,7 @@ import ForumLink from '../../../utils/forumlink'
 
 export default class ForumIndex extends React.Component {
   render() {
-    const { forum, isMinimized } = this.props
+    const { _id, forum, isMinimized } = this.props
     let lastPost = (forum.last_post) ? (new Date(forum.last_post['created']).getTime()) : 0,
         lastReply = (forum.last_reply) ? (new Date(forum.last_reply['created']).getTime()) : 0,
         highlight = (forum.highlight),
@@ -53,12 +53,12 @@ export default class ForumIndex extends React.Component {
     let childs = [];
     if (forum.children)
       for (let [_id, f] of Object.entries(forum.children)) {
-        childs.push(<span key={_id}>{" • "}<ForumLink forum={f}/></span>);
+        childs.push(<span key={_id}>{" • "}<ForumLink _id={_id} forum={f}/></span>);
       }
     return (
       <Segment
         attached
-        key={forum._id}
+        key={_id}
         style={{
             background: highlight ? "#ececec" : "",
             display: isMinimized ? "none" : ""
@@ -72,7 +72,7 @@ export default class ForumIndex extends React.Component {
               <Header size='medium'>
                 <Icon color='blue' name={highlight ? 'pin' : 'list'} />
                 <Header.Content>
-                  <ForumLink forum={forum}/>
+                  <ForumLink _id={_id} forum={forum}/>
                   <Header.Subheader style={{marginTop: '0.1rem'}}>
                     {
                       (forum.description)

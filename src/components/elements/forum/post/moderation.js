@@ -52,17 +52,20 @@ export default class ForumPostModeration extends React.Component {
         this.setState({showConfirm: false});
     }
 
-    handleHidePost = (account, wif) => {
-        this.props.actions.moderatorHidePostForum(wif, this.props.account, this.props.topic, this.props.forum);
+    handleHidePost = () => {
+        const moderator = this.props.account;
+        this.props.actions.moderatorHidePostForum(moderator.key, moderator, this.props.topic, this.props.forum);
         setTimeout(() => {
-          window.location.reload();},
+          window.location.reload();
+        },
         500);
     }
 
-    handleRevealPost = (account, wif) => {
-        this.props.actions.moderatorRevealPostForum(wif, this.props.account, this.props.topic, this.props.forum);
+    handleRevealPost = () => {
+        const moderator = this.props.account;
+        this.props.actions.moderatorRevealPostForum(moderator.key, moderator, this.props.topic, this.props.forum);
         setTimeout(() => {
-          //window.location.reload();
+          window.location.reload();
         },
         500);
     }
@@ -111,18 +114,10 @@ export default class ForumPostModeration extends React.Component {
                 <Button size='small'
                     color={isHidden ? 'red' : 'blue'}
                     icon={isHidden ? 'eye' : 'low vision'}
-                    onClick={this.showConfirm} />
+                    onClick={actions.signinAccount} />
                 <LoginModal authType="active" noButton={true}
                     open={this.state.showConfirm}
                     actions={actions} />
-                {/*<Confirm
-                  confirmButton={tt('forum_controls.reveal_btn')}
-                  cancelButton={tt('g.cancel')}
-                  content={tt('forum_controls.reveal_confirm')}
-                  open={this.state.promptRevealPost}
-                  onCancel={this.handleRevealCancel}
-                  onConfirm={this.handleRevealPost}
-                />*/}
             </span>
         );
     }

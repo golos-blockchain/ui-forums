@@ -69,24 +69,25 @@ export default class ForumPermissions extends React.Component {
     }
     hideConfirm = () => this.setState({showConfirm: false})
 
-    broadcast = async (account, wif) => {
+    broadcast = async (account, wifActive) => {
         try {
-            await golos.broadcast.customJson(wif, [account], [], "account_notes",
+            const wif = this.props.account.key;
+            await golos.broadcast.customJson(wif, [], [account], "account_notes",
                 JSON.stringify(['set_value', {
                     account: account,
-                    key: 'g.f.' + CONFIG.FORUM._id.toLowerCase() + '.hidmsg.lst.accs',
+                    key: 'g.pst.f.' + CONFIG.FORUM._id.toLowerCase() + '.hidmsg.lst.accs',
                     value: JSON.stringify(this.state.moders)
                 }]));
-            await golos.broadcast.customJson(wif, [account], [], "account_notes",
+            await golos.broadcast.customJson(wif, [], [account], "account_notes",
                 JSON.stringify(['set_value', {
                     account: account,
-                    key: 'g.f.' + CONFIG.FORUM._id.toLowerCase() + '.hidacc.lst.accs',
+                    key: 'g.pst.f.' + CONFIG.FORUM._id.toLowerCase() + '.hidacc.lst.accs',
                     value: JSON.stringify(this.state.supers)
                 }]));
-            /*await golos.broadcast.customJson(wif, [account], [], "account_notes",
+            /*await golos.broadcast.customJson(wif, [], [account], "account_notes",
                 JSON.stringify(['set_value', {
                     account: account,
-                    key: 'g.f.' + CONFIG.FORUM._id.toLowerCase() + '.banacc.lst.accs',
+                    key: 'g.pst.f.' + CONFIG.FORUM._id.toLowerCase() + '.banacc.lst.accs',
                     value: JSON.stringify(this.state.admins)
                 }]));*/
         } catch (err) {
