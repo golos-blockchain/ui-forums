@@ -74,7 +74,12 @@ router.get('/', async (ctx) => {
             "fm-" + GLOBAL_ID + "-" + _id.toLowerCase(),
             0, 0
         );
-        vals[NOTE_][_id].last_post = data.length ? data[0] : null;
+        if (data.length) {
+            vals[NOTE_][_id].last_post = data.length ? data[0] : null;
+            const replies = await golos.api.getContentReplies(data[0].author, data[0].permlink, 0, 0);
+            if (replies.length)
+                vals[NOTE_][_id].last_reply = replies[replies.length - 1];
+        }
     }
 
     ctx.body = {
@@ -147,7 +152,12 @@ router.get('/forum/:slug', async (ctx) => {
             "fm-" + GLOBAL_ID + "-" + _id.toLowerCase(),
             0, 0
         );
-        forum.item.children[_id].last_post = data.length ? data[0] : null;
+        if (data.length) {
+            forum.item.children[_id].last_post = data[0];
+            const replies = await golos.api.getContentReplies(data[0].author, data[0].permlink, 0, 0);
+            if (replies.length)
+                forum.item.children[_id].last_reply = replies[replies.length - 1];
+        }
     }
 
     const data = await golos.api.getAllDiscussionsByActive(
@@ -159,6 +169,18 @@ router.get('/forum/:slug', async (ctx) => {
     const hidden = vals[NOTE_PST_HIDMSG_LST];
     for (let post of data) {
         post.hidden = !!hidden[post.id];
+
+        const replies = await golos.api.getContentReplies(post.author, post.permlink, 0, 0);
+        if (replies.length) {
+            const reply = replies[replies.length - 1];
+            post.last_reply = reply.created;
+            post.last_reply_by = reply.author;
+            post.last_reply_url = reply.url;
+        } else {
+            post.last_reply = post.created;
+            post.last_reply_by = post.author;
+            post.last_reply_url = post.url;
+        }
     }
 
     ctx.body = {

@@ -1,22 +1,25 @@
 import React from 'react';
 
 import { Grid, Header, Icon, Segment } from 'semantic-ui-react'
-import TimeAgo from 'react-timeago'
 import { Link } from 'react-router-dom'
 
+import TimeAgoWrapper from '../../../utils/TimeAgoWrapper'
 import UserAvatar from '../account/avatar'
 import NumericLabel from '../../../utils/NumericLabel'
 import ForumLink from '../../../utils/forumlink'
 
 export default class ForumIndex extends React.Component {
   render() {
-    const { _id, forum, isMinimized } = this.props
+    const { _id, forum, isMinimized } = this.props;
     let lastPost = (forum.last_post) ? (new Date(forum.last_post['created']).getTime()) : 0,
         lastReply = (forum.last_reply) ? (new Date(forum.last_reply['created']).getTime()) : 0,
         highlight = (forum.highlight),
         newest = (lastPost > lastReply) ? 'last_post' : 'last_reply',
-        { author, url, created, title } = (typeof forum[newest] === 'object') ? forum[newest] : {},
-        latest_post = null,
+        { author, url, created, title } = (typeof forum[newest] === 'object') ? forum[newest] : {};
+        if (newest == 'last_reply' && author) {
+            title = forum['last_post'].title;
+        }
+    let latest_post = null,
         numberFormat = {
           shortFormat: true,
           shortFormatMinValue: 1000
@@ -43,9 +46,9 @@ export default class ForumIndex extends React.Component {
                         {title}
                       </Link>
                       <Header.Subheader textAlign='right'>
-                        {'↳ '}
+                        {newest == 'last_reply' ? '↳ ' : '- '}
                         <Link to={`${url}`}>
-                          <TimeAgo date={`${created}Z`} />
+                          <TimeAgoWrapper date={`${created}Z`} />
                         </Link>
                       </Header.Subheader>
                     </Header>
@@ -89,12 +92,12 @@ export default class ForumIndex extends React.Component {
             </Grid.Column>
             <Grid.Column width={2} className='tablet or lower hidden' textAlign='center'>
               <Header size='medium'>
-                <NumericLabel params={numberFormat}>{(forum.stats) ? forum.stats.posts : '?'}</NumericLabel>
+                <NumericLabel params={numberFormat}>{(forum.stats) ? forum.stats.top_posts : '?'}</NumericLabel>
               </Header>
             </Grid.Column>
             <Grid.Column width={2} className='tablet or lower hidden' textAlign='center'>
               <Header size='medium'>
-                <NumericLabel params={numberFormat}>{(forum.stats) ? forum.stats.replies : '?'}</NumericLabel>
+                <NumericLabel params={numberFormat}>{(forum.stats) ? forum.stats.comments : '?'}</NumericLabel>
               </Header>
             </Grid.Column>
             <Grid.Column computer={5} tablet={6} mobile={8}>

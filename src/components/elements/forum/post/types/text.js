@@ -115,6 +115,7 @@ export default class ForumPostText extends React.Component {
                 {topic.children}
               </Header>
             </Grid.Column>
+            {last_reply}
           </Grid.Row>
         </Grid>
       </Segment>
