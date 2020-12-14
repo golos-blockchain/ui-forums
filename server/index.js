@@ -60,7 +60,23 @@ router.get('/', async (ctx) => {
     keys[NOTE_] = Object;
     keys[NOTE_PST_HIDMSG_LST_ACCS] = Array;
     keys[NOTE_PST_HIDACC_LST_ACCS] = Array;
-    const vals = await getValues(keys);
+
+    let vals = await getValues(keys);
+    let tags = [];
+    for (let _id in vals[NOTE_]) {
+        tags.push(vals[NOTE_][_id].tags[0]);
+    }
+    tags = await golos.api.getTags(tags);
+    for (let _id in vals[NOTE_]) {
+        vals[NOTE_][_id].stats = tags[vals[NOTE_][_id].tags[0]] || {top_posts: 0, comments: 0};
+        const data = await golos.api.getAllDiscussionsByActive(
+            '', '', 1,
+            "fm-" + GLOBAL_ID + "-" + _id.toLowerCase(),
+            0, 0
+        );
+        vals[NOTE_][_id].last_post = data.length ? data[0] : null;
+    }
+
     ctx.body = {
         data: {
             'forums': vals[NOTE_],
@@ -117,6 +133,22 @@ router.get('/forum/:slug', async (ctx) => {
 
     const forum_id = ctx.params.slug;
     let forum = findForum(vals[NOTE_], forum_id);
+
+    let tags = [];
+    for (let _id in forum.item.children) {
+        forum.item.children[_id].tags = ['fm-' + GLOBAL_ID + '-' + _id.toLowerCase(), 'fm-' + GLOBAL_ID];
+        tags.push(forum.item.children[_id].tags[0]);
+    }
+    tags = await golos.api.getTags(tags);
+    for (let _id in forum.item.children) {
+        forum.item.children[_id].stats = tags[forum.item.children[_id].tags[0]] || {top_posts: 0, comments: 0};
+        const data = await golos.api.getAllDiscussionsByActive(
+            '', '', 1,
+            "fm-" + GLOBAL_ID + "-" + _id.toLowerCase(),
+            0, 0
+        );
+        forum.item.children[_id].last_post = data.length ? data[0] : null;
+    }
 
     const data = await golos.api.getAllDiscussionsByActive(
         '', '', 10000000,
