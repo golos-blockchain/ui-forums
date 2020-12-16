@@ -124,16 +124,16 @@ export function fetchPost(params) {
     const response = await fetch(`${ CONFIG.REST_API }/${ category }/@${ author }/${ permlink }`);
     if (response.ok) {
       const result = await response.json();
-      const trail = [{
+      let trail = result.forum.trail.map(item => {
+          return {
+              name: getForumName(item),
+              link: `/f/${item._id}`
+          };
+      });
+      trail.push({
         name: result.data.title,
         link: result.data.url
-      }];
-      if(result.forum) {
-        trail.unshift({
-          name: getForumName(result.forum),
-          link: `/f/${result.forum._id}`
-        })
-      }
+      });
       dispatch(BreadcrumbActions.setBreadcrumb(trail));
       dispatch({
         type: types.SET_STATUS,

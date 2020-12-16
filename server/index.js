@@ -114,15 +114,21 @@ router.get('/forums', async (ctx) => {
     }
 })
 
-function findForum(vals, forum_id) {
-    for (let [_id, item] of Object.entries(vals)) {
-        if (_id === forum_id) {
-            item.creator = 'cyberfounder';
-            item.tags = ['fm-' + GLOBAL_ID + '-' + _id.toLowerCase(), 'fm-' + GLOBAL_ID];
-            return {_id, item};
+function findForum(vals, forum_id, trail = []) {
+    for (let [_id, forum] of Object.entries(vals)) {
+        trail.push({
+            _id,
+            name: forum.name,
+            name_ru: forum.name_ru
+        });
+        if (_id.toLowerCase() === forum_id.toLowerCase()) {
+            forum.creator = 'cyberfounder';
+            forum.tags = ['fm-' + GLOBAL_ID + '-' + _id.toLowerCase(), 'fm-' + GLOBAL_ID];
+            forum.trail = trail;
+            return {_id, forum};
         }
-        if (!item.children) continue;
-        let inChild = findForum(item.children, forum_id);
+        if (!forum.children) continue;
+        let inChild = findForum(forum.children, forum_id, trail);
         if (inChild) return inChild;
     }
     return null;
@@ -137,32 +143,32 @@ router.get('/forum/:slug', async (ctx) => {
     const vals = await getValues(keys);
 
     const forum_id = ctx.params.slug;
-    let forum = findForum(vals[NOTE_], forum_id);
+    let {_id, forum} = findForum(vals[NOTE_], forum_id);
 
     let tags = [];
-    for (let _id in forum.item.children) {
-        forum.item.children[_id].tags = ['fm-' + GLOBAL_ID + '-' + _id.toLowerCase(), 'fm-' + GLOBAL_ID];
-        tags.push(forum.item.children[_id].tags[0]);
+    for (let _id in forum.children) {
+        forum.children[_id].tags = ['fm-' + GLOBAL_ID + '-' + _id.toLowerCase(), 'fm-' + GLOBAL_ID];
+        tags.push(forum.children[_id].tags[0]);
     }
     tags = await golos.api.getTags(tags);
-    for (let _id in forum.item.children) {
-        forum.item.children[_id].stats = tags[forum.item.children[_id].tags[0]] || {top_posts: 0, comments: 0};
+    for (let _id in forum.children) {
+        forum.children[_id].stats = tags[forum.children[_id].tags[0]] || {top_posts: 0, comments: 0};
         const data = await golos.api.getAllDiscussionsByActive(
             '', '', 1,
             "fm-" + GLOBAL_ID + "-" + _id.toLowerCase(),
             0, 0
         );
         if (data.length) {
-            forum.item.children[_id].last_post = data[0];
+            forum.children[_id].last_post = data[0];
             const replies = await golos.api.getContentReplies(data[0].author, data[0].permlink, 0, 0);
             if (replies.length)
-                forum.item.children[_id].last_reply = replies[replies.length - 1];
+                forum.children[_id].last_reply = replies[replies.length - 1];
         }
     }
 
     const data = await golos.api.getAllDiscussionsByActive(
         '', '', 10000000,
-        "fm-" + GLOBAL_ID + "-" + forum._id.toLowerCase(),
+        "fm-" + GLOBAL_ID + "-" + _id.toLowerCase(),
         0, 20
     );
 
@@ -187,8 +193,8 @@ router.get('/forum/:slug', async (ctx) => {
         data: data, 
         "network": {}, 
         "status": "ok",
-        forum: forum ? forum.item : null,
-        children: forum ? Object.assign({}, forum.item.children) : null,
+        forum: forum,
+        children: forum ? Object.assign({}, forum.children) : null,
         moders: vals[NOTE_PST_HIDMSG_LST_ACCS],
         supers: vals[NOTE_PST_HIDACC_LST_ACCS],
         admins: [],
@@ -209,7 +215,7 @@ router.get('/:category/@:author/:permlink', async (ctx) => {
     data.donate_uia_list = [];
     ctx.body = {
         data: data,
-        forum: vals[NOTE_][ctx.params.category],
+        forum: findForum(vals[NOTE_], ctx.params.category).forum,
         "network": {}, 
         "status": "ok"
     }

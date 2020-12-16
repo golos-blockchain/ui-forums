@@ -138,18 +138,12 @@ class Forum extends React.Component {
 
   setBreadcrumb = (result) => {
       if (result.forum) {
-          const trail = [
-            {
-              name: this.getForumName(result.forum),
-              link: `/f/${result.forum._id}`
-            }
-          ];
-          if(result.forum.parent) {
-            trail.unshift({
-              name: result.forum.parent_name,
-              link: `/f/${result.forum.parent}`
-            });
-          }
+          let trail = result.forum.trail.map(item => {
+              return {
+                  name: this.getForumName(item),
+                  link: `/f/${item._id}`
+              };
+          })
           this.props.actions.setBreadcrumb(trail)
       }
   }
