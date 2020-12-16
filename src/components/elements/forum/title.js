@@ -60,6 +60,7 @@ export default class ForumTitle extends React.Component {
                                                 {tt('forum_controls.created_by')}
                                                 {' '}
                                                 <AccountLink username={(forum) ? forum.creator || 'chainbb' : 'unknown'} color='white' />
+                                                <div dangerouslySetInnerHTML={{__html: tt.getLocale() == 'ru' ? forum.desc_ru : forum.desc}}></div>
                                             </small>
                                         </Header.Subheader>
                                     </Header.Content>

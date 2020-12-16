@@ -64,11 +64,13 @@ router.get('/', async (ctx) => {
     let vals = await getValues(keys);
     let tags = [];
     for (let _id in vals[NOTE_]) {
-        tags.push(vals[NOTE_][_id].tags[0]);
+        const tag = "fm-" + GLOBAL_ID + "-" + _id.toLowerCase();
+        tags.push(tag);
     }
     tags = await golos.api.getTags(tags);
     for (let _id in vals[NOTE_]) {
-        vals[NOTE_][_id].stats = tags[vals[NOTE_][_id].tags[0]] || {top_posts: 0, comments: 0};
+        const tag = "fm-" + GLOBAL_ID + "-" + _id.toLowerCase();
+        vals[NOTE_][_id].stats = tags[tag] || {top_posts: 0, comments: 0};
         const data = await golos.api.getAllDiscussionsByActive(
             '', '', 1,
             "fm-" + GLOBAL_ID + "-" + _id.toLowerCase(),
@@ -116,19 +118,22 @@ router.get('/forums', async (ctx) => {
 
 function findForum(vals, forum_id, trail = []) {
     for (let [_id, forum] of Object.entries(vals)) {
-        trail.push({
-            _id,
-            name: forum.name,
-            name_ru: forum.name_ru
-        });
         if (_id.toLowerCase() === forum_id.toLowerCase()) {
             forum.creator = 'cyberfounder';
             forum.tags = ['fm-' + GLOBAL_ID + '-' + _id.toLowerCase(), 'fm-' + GLOBAL_ID];
-            forum.trail = trail;
+            forum.trail = [...trail, {
+                _id,
+                name: forum.name,
+                name_ru: forum.name_ru
+            }];
             return {_id, forum};
         }
         if (!forum.children) continue;
-        let inChild = findForum(forum.children, forum_id, trail);
+        let inChild = findForum(forum.children, forum_id, [...trail, {
+            _id,
+            name: forum.name,
+            name_ru: forum.name_ru
+        }]);
         if (inChild) return inChild;
     }
     return null;

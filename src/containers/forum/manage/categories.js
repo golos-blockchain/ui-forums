@@ -21,7 +21,7 @@ import LoginModal from '../../../components/elements/login/modal'
 
 class ForumCategoriesForm extends React.Component {
     constructor(props) {
-        super(props)
+        super(props);
         this.state = {
             name: '',
             description: '',
@@ -33,8 +33,20 @@ class ForumCategoriesForm extends React.Component {
             addEditParentIds: null,
             editCatId: null,
             tags_detected: [],
+        };
+        this.state.categories = props.categories;
+        this.sanitizeCategories(this.state.categories);
+    }
+
+    sanitizeCategories(categories) {
+        for (const [_id, cat] of Object.entries(categories)) {
+            for (const field in cat) {
+                if (!['name_ru', 'name', 'desc_ru', 'desc', 'children'].includes(field)) {
+                    delete cat[field];
+                }
+            }
+            if (cat.children) this.sanitizeCategories(cat.children);
         }
-        this.state.categories = props.categories
     }
 
     componentWillReceiveProps(nextProps) {
@@ -84,188 +96,236 @@ class ForumCategoriesForm extends React.Component {
     }
     handleChange = (e, data) => {
         if (data.value && data.value.constructor === Array) {
-            data.value = data.value.join(",")
+            data.value = data.value.join(",");
         }
         if (typeof this.state[data.name] !== 'undefined') {
             if (data.name === 'tags' && data.value) {
                 const detected = data.value.split(',').filter((tag) => {
-                    return !!tag && tag.trim() !== ''
+                    return !!tag && tag.trim() !== '';
                 }).map((tag) => {
                     return slug(tag, {
                         replacement: '-',
                         remove: /[._]/g,
                         lower: true
-                    })
+                    });
                 })
-                this.setState({'tags_detected': detected})
+                this.setState({'tags_detected': detected});
             }
-            this.setState({[data.name]: data.value})
+            this.setState({[data.name]: data.value});
         }
-    }
+    };
     toggleExclusivity = (e, data) => {
-        this.setState({exclusive: data.checked})
-    }
+        this.setState({exclusive: data.checked});
+    };
 
     getParentCat = (categories, parentIds) => {
-      let subcats = categories;
-      let parent = {children: subcats};
-      for (let parentId of parentIds) {
-        parent = subcats[parentId];
-        subcats = parent.children;
-      }
-      return parent;
-    }
+        let subcats = categories;
+        let parent = {children: subcats};
+        for (let parentId of parentIds) {
+            parent = subcats[parentId];
+            subcats = parent.children;
+        }
+        return parent;
+    };
 
     addEditCategory = (e, data) => {
-      e.preventDefault()
-      this.setState({
-        addEditParentIds: data.parentIds,
-        editCatId: data.editCatId ? data.editCatId : null
-      })
-      return false
-    }
+        e.preventDefault();
+        this.setState({
+            addEditParentIds: data.parentIds,
+            editCatId: data.editCatId ? data.editCatId : null
+        });
+        return false;
+    };
     onAddEditCancel = (e) => {
-      e.preventDefault();
-      this.setState({addEditParentIds: null, editCatId: null});
-      return false;
-    }
+        e.preventDefault();
+        this.setState({addEditParentIds: null, editCatId: null});
+        return false;
+    };
     onAddEdit = (formData) => {
-      let categories = Object.assign({}, this.state.categories);
-      let parentCat = this.getParentCat(categories, this.state.addEditParentIds)
-      if (!parentCat.children) parentCat.children = {}; // There are no guarantee what category has children - account_notes not stores empty children to reduce HDD usage 
-      let cats = parentCat.children;
+        let categories = Object.assign({}, this.state.categories);
+        let parentCat = this.getParentCat(categories, this.state.addEditParentIds);
+        if (!parentCat.children) parentCat.children = {}; // There are no guarantee what category has children - account_notes not stores empty children to reduce HDD usage 
+        let cats = parentCat.children;
 
-      if (!this.state.editCatId) {
-        cats[formData.tag] = {name: formData.name, name_ru: formData.name_ru};
-      } else {
-        let cat = cats[this.state.editCatId];
+        let cat = null;
+        if (!this.state.editCatId) {
+            cats[formData.tag] = {};
+            cat = cats[formData.tag];
+        } else {
+            cat = cats[this.state.editCatId];
+        }
         cat.name = formData.name;
         cat.name_ru = formData.name_ru;
-      }
-      this.setState({
-        addEditParentIds: null,
-        editCatId: null,
-        categories
-      });
-    }
+        cat.desc = formData.desc;
+        cat.desc_ru = formData.desc_ru;
+        this.setState({
+            addEditParentIds: null,
+            editCatId: null,
+            categories
+        });
+    };
 
     removeCategory = (e, data) => {
-      e.preventDefault();
-      let categories = Object.assign({}, this.state.categories);
-      let subcats = this.getParentCat(categories, data.parentIds).children // There IS guarantee what parent category has children
-      delete subcats[data.catId]; 
-      this.setState({categories});
-      return false;
-    }
+        e.preventDefault();
+        let categories = Object.assign({}, this.state.categories);
+        let subcats = this.getParentCat(categories, data.parentIds).children // There IS guarantee what parent category has children
+        delete subcats[data.catId]; 
+        this.setState({categories});
+        return false;
+    };
+
+    moveUpCategory = (e, data) => {
+        e.preventDefault()
+        let categories = Object.assign({}, this.state.categories);
+        let parentCat = this.getParentCat(categories, data.parentIds);
+
+        let prevChild = null;
+        for (let [_id, cat] of Object.entries(parentCat.children)) {
+            if (_id === data.editCatId) {
+                break;
+            }
+            prevChild = {_id, cat};
+        }
+
+        let childrenNew = {};
+        let pasteMeNext = null;
+        for (let [_id, cat] of Object.entries(parentCat.children)) {
+            if (_id === prevChild._id) {
+                pasteMeNext = prevChild;
+                continue;
+            }
+            childrenNew[_id] = cat;
+            if (pasteMeNext) {
+                childrenNew[pasteMeNext._id] = pasteMeNext.cat;
+                pasteMeNext = null;
+            }
+        }
+        parentCat.children = childrenNew;
+        this.setState({categories: parentCat.name ? categories : childrenNew});
+        return false
+    };
 
     handleSubmit = (data) => {
         this.setState({showConfirm: true})
-    }
-    hideConfirm = () => this.setState({showConfirm: false})
+    };
+    hideConfirm = () => this.setState({showConfirm: false});
     broadcast = (account, wif) => {
         let values = JSON.stringify(this.state.categories);
 
         golos.broadcast.customJson(wif, [account], [], "account_notes",
-          JSON.stringify(['set_value', {
-            account: account,
-            key: 'g.f.' + CONFIG.FORUM._id.toLowerCase(),
-            value: values
-          }]),
-          function (err, result) {
-            if (err) {
-                alert(err);
-                return;
-            }
-          });
-    }
+            JSON.stringify(['set_value', {
+                account: account,
+                key: 'g.f.' + CONFIG.FORUM._id.toLowerCase(),
+                value: values
+            }]),
+            function (err, result) {
+                if (err) {
+                    alert(err);
+                    return;
+                }
+            });
+    };
+
     render() {
         const { account } = this.props
         const { name, description, tags, categories, addEditParentIds, editCatId, showConfirm } = this.state
 
         let catsToItems = (cats, parentIds=[]) => {
-          let listItems = [];
-          for (let [_id, forum] of Object.entries(cats)) {
-            let innerList = null;
-            if (forum.children && Object.keys(forum.children).length) {
-              innerList = (
-                <List.List>
-                  {catsToItems(forum.children, parentIds.concat(_id))}
-                </List.List>
-              );
+            let listItems = [];
+            for (let [_id, forum] of Object.entries(cats)) {
+                let innerList = null;
+                if (forum.children && Object.keys(forum.children).length) {
+                    innerList = (
+                        <List.List>
+                            {catsToItems(forum.children, parentIds.concat(_id))}
+                        </List.List>
+                    );
+                }
+                listItems.push(
+                    <List.Item>
+                        <List.Icon name={innerList ? 'folder' : 'file'} />
+                        <List.Content>
+                            <table>
+                            <tbody><tr><td>
+                                <List.Header>
+                                    <Popup
+                                        content={tt.getLocale() == 'ru' ? (forum.desc_ru || forum.desc || tt('categories.no_desc')) : (forum.desc || forum.desc_ru || tt('categories.no_desc'))}
+                                        mouseEnterDelay={500}
+                                        trigger={<span>{forum.name_ru}</span>} />
+                                </List.Header>
+                                <List.Description>
+                                    {forum.name}
+                                </List.Description>
+                            </td><td>&nbsp;&nbsp;&nbsp;</td><td>
+                                <Popup
+                                    mouseEnterDelay={500}
+                                    trigger={
+                                        <Button
+                                            icon='add'
+                                            size='mini'
+                                            color='green'
+                                            parentIds={parentIds.concat(_id)}
+                                            onClick={this.addEditCategory}
+                                        />
+                                    }
+                                    content={tt('categories.add_sub')}
+                                    inverted
+                                />
+                                {listItems.length ? <Popup
+                                    mouseEnterDelay={500}
+                                    trigger={
+                                        <Button
+                                            basic
+                                            icon='chevron up'
+                                            size='mini'
+                                            color='blue'
+                                            parentIds={parentIds}
+                                            editCatId={_id}
+                                            onClick={this.moveUpCategory}
+                                        />
+                                    }
+                                    content={tt('categories.move_up')}
+                                    inverted
+                                /> : null}
+                                <Popup
+                                    mouseEnterDelay={500}
+                                    trigger={
+                                        <Button
+                                            basic
+                                            icon='pencil'
+                                            size='mini'
+                                            color='orange'
+                                            parentIds={parentIds}
+                                            editCatId={_id}
+                                            onClick={this.addEditCategory}
+                                        />
+                                    }
+                                    content={tt('g.edit')}
+                                    inverted
+                                />
+                                <Popup
+                                    mouseEnterDelay={500}
+                                    trigger={
+                                        <Button
+                                            basic
+                                            icon='cancel'
+                                            size='mini'
+                                            color='red'
+                                            catId={_id}
+                                            parentIds={parentIds}
+                                            onClick={this.removeCategory}
+                                        />
+                                    }
+                                    content={tt('g.remove')}
+                                    inverted
+                                />
+                            </td></tr></tbody></table>
+                            {innerList}
+                        </List.Content>
+                    </List.Item>
+                );
             }
-            listItems.push(
-                <List.Item>
-                  <List.Icon name={innerList ? 'folder' : 'file'} />
-                  <List.Content>
-                    <table>
-                    <tbody><tr><td>
-                      <List.Header>{forum.name_ru}</List.Header>
-                      <List.Description>
-                        {forum.name}
-                      </List.Description>
-                    </td><td>&nbsp;&nbsp;&nbsp;</td><td>
-                      <Popup
-                        trigger={
-                          <Button
-                            icon='add'
-                            size='mini'
-                            color='green'
-                            parentIds={parentIds.concat(_id)}
-                            onClick={this.addEditCategory}
-                          />
-                        }
-                        content={tt('categories.add_sub')}
-                        inverted
-                      />
-                      {/*<Popup
-                        trigger={
-                          <Button
-                            basic
-                            icon='chevron up'
-                            size='mini'
-                            color='blue'
-                          />
-                        }
-                        content={tt('categories.move_up')}
-                        inverted
-                      />*/}
-                      <Popup
-                        trigger={
-                          <Button
-                            basic
-                            icon='pencil'
-                            size='mini'
-                            color='orange'
-                            parentIds={parentIds}
-                            editCatId={_id}
-                            onClick={this.addEditCategory}
-                          />
-                        }
-                        content={tt('g.edit')}
-                        inverted
-                      />
-                      <Popup
-                        trigger={
-                          <Button
-                            basic
-                            icon='cancel'
-                            size='mini'
-                            color='red'
-                            catId={_id}
-                            parentIds={parentIds}
-                            onClick={this.removeCategory}
-                          />
-                        }
-                        content={tt('g.remove')}
-                        inverted
-                      />
-                    </td></tr></tbody></table>
-                    {innerList}
-                  </List.Content>
-                </List.Item>
-            );
-          }
-          return listItems;
+            return listItems;
         };
         let listItems = catsToItems(categories);
 
@@ -274,13 +334,13 @@ class ForumCategoriesForm extends React.Component {
                 <Icon name='tag' />
                 {tag}
             </Label>
-        )) : []
-        const errorLabel = <Label color="red" pointing/>
+        )) : [];
+        const errorLabel = (<Label color="red" pointing/>);
         let submit = (
             <Button fluid disabled>
                 {tt('forum_controls.only_creator_can_edit')}
             </Button>
-        )
+        );
         if (account.name === CONFIG.FORUM.creator) {
             submit = (
                 <Button fluid color='blue' type='submit'>
@@ -338,75 +398,97 @@ class ForumCategoriesForm extends React.Component {
                         </Header>
                     </Segment>
                     <Segment attached>
-                          <Button
+                        <Button
                             color='purple'
                             parentIds={[]}
                             onClick={this.addEditCategory}
-                          >
+                        >
                             {tt('g.add')}
-                          </Button>
-                            <List>
+                        </Button>
+                        <List>
                             {listItems}
-                            </List>
+                        </List>
                         <Divider section />
                         {submit}
                     </Segment>
-                      <Modal size='small' open={addEditParentIds != null}>
+                    <Modal size='small' open={addEditParentIds != null}>
                         <Modal.Header>{(addEditParentIds == null || !addEditParentIds.length) ? tt('categories.add') : tt('categories.add_sub') + ' ' + this.getParentCat(categories, addEditParentIds).name_ru}</Modal.Header>
                         <Modal.Content>
-                          <Modal.Description>
-                            <Form
-                              ref={ref => this.form = ref }
-                              onValidSubmit={this.onAddEdit}
-                            >
-                              <Form.Input
-                                name="name_ru"
-                                label={tt('categories.name_ru')}
-                                required
-                                focus
-                                autoFocus
-                                value={editCat ? editCat.name_ru : undefined}
-                                validationErrors={{
-                                  isDefaultRequiredValue: tt('g.this_field_required'),
-                                }}
-                                errorLabel={ errorLabel }
-                              />
-                              <Form.Input
-                                name="name"
-                                label={tt('categories.name')}
-                                required
-                                focus
-                                value={editCat ? editCat.name : undefined}
-                                validationErrors={{
-                                  isDefaultRequiredValue: tt('g.this_field_required')
-                                }}
-                                errorLabel={ errorLabel }
-                              />
-                              <Form.Input
-                                name="tag"
-                                label={tt('categories.tag')}
-                                required
-                                focus
-                                value={editCat ? editCatId : undefined}
-                                disabled={editCat != null}
-                                placeholder={tt('categories.tag')}
-                                validationErrors={{
-                                  isDefaultRequiredValue: tt('g.this_field_required')
-                                }}
-                                errorLabel={ errorLabel }
-                              />
-                              <Divider hidden />
-                              <Button floated='right' primary>{editCat ? tt('categories.edit') : tt('categories.add')}</Button>
-                              <Button color='orange' 
-                                onClick={this.onAddEditCancel}>{tt('g.cancel')}</Button>
-                            </Form>
-                          </Modal.Description>
+                            <Modal.Description>
+                                <Form
+                                    ref={ref => this.form = ref }
+                                    onValidSubmit={this.onAddEdit}
+                                >
+                                    <Form.Input
+                                        name="name_ru"
+                                        label={tt('categories.name_ru')}
+                                        required
+                                        focus
+                                        autoFocus
+                                        value={editCat ? editCat.name_ru : undefined}
+                                        validationErrors={{
+                                            isDefaultRequiredValue: tt('g.this_field_required'),
+                                        }}
+                                        errorLabel={ errorLabel }
+                                    />
+                                    <Form.Input
+                                        name="name"
+                                        label={tt('categories.name')}
+                                        required
+                                        focus
+                                        value={editCat ? editCat.name : undefined}
+                                        validationErrors={{
+                                            isDefaultRequiredValue: tt('g.this_field_required')
+                                        }}
+                                        errorLabel={ errorLabel }
+                                    />
+                                    <Form.Input
+                                        name="desc_ru"
+                                        label={tt('categories.desc_ru')}
+                                        focus
+                                        value={editCat ? editCat.desc_ru : undefined}
+                                        placeholder={tt('categories.desc_ru')}
+                                        validationErrors={{
+                                            isDefaultRequiredValue: tt('g.this_field_required')
+                                        }}
+                                        errorLabel={ errorLabel }
+                                    />
+                                    <Form.Input
+                                        name="desc"
+                                        label={tt('categories.desc')}
+                                        focus
+                                        value={editCat ? editCat.desc : undefined}
+                                        placeholder={tt('categories.desc')}
+                                        validationErrors={{
+                                            isDefaultRequiredValue: tt('g.this_field_required')
+                                        }}
+                                        errorLabel={ errorLabel }
+                                    />
+                                    <Form.Input
+                                        name="tag"
+                                        label={tt('categories.tag')}
+                                        required
+                                        focus
+                                        value={editCat ? editCatId : undefined}
+                                        disabled={editCat != null}
+                                        placeholder={tt('categories.tag')}
+                                        validationErrors={{
+                                            isDefaultRequiredValue: tt('g.this_field_required')
+                                        }}
+                                        errorLabel={ errorLabel }
+                                    />
+                                    <Divider hidden />
+                                    <Button floated='right' primary>{editCat ? tt('categories.edit') : tt('categories.add')}</Button>
+                                    <Button color='orange' 
+                                        onClick={this.onAddEditCancel}>{tt('g.cancel')}</Button>
+                                </Form>
+                            </Modal.Description>
                         </Modal.Content>
-                      </Modal>
+                    </Modal>
                 </Form>
             </div>
         )
-    }
+    };
 }
 
 function mapStateToProps(state, ownProps) {
@@ -414,13 +496,13 @@ function mapStateToProps(state, ownProps) {
         account: state.account,
         preferences: state.preferences,
         status: state.status
-    }
+    };
 }
 
 function mapDispatchToProps(dispatch) {
     return {actions: bindActionCreators({
         ...forumActions
-    }, dispatch)}
+    }, dispatch)};
 }
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ForumCategoriesForm));
