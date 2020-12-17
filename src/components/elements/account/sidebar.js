@@ -2,7 +2,7 @@ import React from 'react';
 
 import { Divider, Dropdown, Header, Icon, Menu, Segment } from 'semantic-ui-react'
 import AccountAvatar from './avatar'
-import AccountFollow from './follow'
+//import AccountFollow from './follow'
 import AccountLink from './link'
 import AccountSidebarInfo from './sidebar/info'
 import tt from 'counterpart';
@@ -43,10 +43,10 @@ export default class AccountSidebar extends React.Component {
               username={username}
             />
           </Header>
-          <AccountFollow
+          {/*<AccountFollow
             who={this.props.match.params.username}
             {...this.props}
-          />
+          />*/}
         </Segment>
         <Menu color='blue' inverted fluid vertical>
           <Dropdown color='blue' text={tt('sidebar.view_this_account')} size='small' pointing='left' className='link item'>

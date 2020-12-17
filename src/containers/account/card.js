@@ -8,7 +8,7 @@ import * as accountActions from '../../actions/accountActions'
 import * as statusActions from '../../actions/statusActions'
 
 import AccountAvatar from '../../components/elements/account/avatar'
-import AccountFollow from '../../components/elements/account/follow'
+//import AccountFollow from '../../components/elements/account/follow'
 import AccountLink from '../../components/elements/account/link'
 
 class AccountCard extends React.Component {
@@ -37,11 +37,11 @@ class AccountCard extends React.Component {
                 />
               </Card.Header>
             </Card.Content>
-            <Card.Content extra>
+            {/*<Card.Content extra>
               <div className='ui two buttons'>
                 <AccountFollow who={username} {...this.props}/>
               </div>
-            </Card.Content>
+            </Card.Content>*/}
           </Card>
         }
         style={{
