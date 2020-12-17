@@ -161,15 +161,15 @@ class HeaderMenu extends Component {
                     <Grid.Row columns={1}>
                         <Grid.Column>
                             <Header>
-                              Pending Rewards
+                              {tt('account.tip_balance')}
                               <Header.Subheader>
-                                Rewards from your posting and voting activity.
+                                {tt('account.tip_balance_desc')}
                               </Header.Subheader>
                             </Header>
                         </Grid.Column>
                     </Grid.Row>
                     <Grid.Row columns={2}>
-                        {hasBalance.map((field) => {
+                        {/*hasBalance.map((field) => {
                           if(data[field]) {
                             const kind = field.split("_")[1]
                             const amount = data[field].split(" ")[0]
@@ -183,12 +183,17 @@ class HeaderMenu extends Component {
                                 </Grid.Column>
                             )
                           }
-                        })}
+                        })*/}
+                        <Grid.Column key={'GOLOS'} textAlign='center'>
+                              <Header color='green'>
+                                  {data.tip_balance.split(' ')[0]}&nbsp;&nbsp;<small>GOLOS</small>
+                              </Header>
+                        </Grid.Column>
                     </Grid.Row>
                     <Grid.Row columns={1}>
                         <Grid.Column>
-                            <Button color='purple' fluid size='small' onClick={this.handleClaim} loading={isClaiming}>
-                              Claim Rewards
+                            <Button as='a' href={'https://golos.id/@' + name + '/transfers'} color='purple' fluid size='small'>
+                              {tt('account.open_wallet')}
                             </Button>
                         </Grid.Column>
                     </Grid.Row>

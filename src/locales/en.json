@@ -98,6 +98,8 @@
     "last_post": "Last post",
     "post_count": "Posts",
     "tip_balance": "TIP-balance",
+    "tip_balance_desc": "Your donate balance.",
+    "open_wallet": "Go to wallet",
     "profile": "Profile",
     "sign_out": "Sign out"
   },

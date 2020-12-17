@@ -98,6 +98,8 @@
     "last_post": "Постил(-а)",
     "post_count": "Постов",
     "tip_balance": "TIP-баланс",
+    "tip_balance_desc": "Ваш баланс донатов.",
+    "open_wallet": "Перейти в кошелек",
     "profile": "Профиль",
     "sign_out": "Выйти"
   },
