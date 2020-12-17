@@ -51,7 +51,9 @@
   "donating": {
     "donate": "Donate",
     "thanks": "Thank you!",
-    "not_enough": "Insufficient TIP-balance."
+    "not_enough": "Insufficient TIP-balance.",
+    "over_precision_PREC": " Use only %(PREC)s digit(s) of precision",
+    "you_must_be_logged_in_to_donate": "You must be logged in to donate"
   },
   "transfer": {
     "transfer": "Transfer",

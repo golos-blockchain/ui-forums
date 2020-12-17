@@ -1,11 +1,11 @@
 import React from 'react';
 import tt from 'counterpart';
 
-import { Button, Popup, Dropdown } from 'semantic-ui-react'
-//import VoteButtonOptions from './vote/options'
-import translateError from '../../../../utils/translateError'
+import { Button, Popup, Dropdown } from 'semantic-ui-react';
+//import VoteButtonOptions from './vote/options';
+import translateError from '../../../../utils/translateError';
 
-import './voting.css'
+import './voting.css';
 
 export default class Voting extends React.Component {
     castVote = (e, data) => {
@@ -27,14 +27,14 @@ export default class Voting extends React.Component {
                 author: author,
                 permlink: permlink,
                 weight: 0
-            })
+            });
         } else {
             this.props.onVoteCast({
                 account: this.props.account,
                 author: author,
                 permlink: permlink,
                 weight: weight
-            })
+            });
         }
     }
 
@@ -66,94 +66,95 @@ export default class Voting extends React.Component {
         const iDownvoted = myVote && myVote.percent < 0;
         // -----------------------------
         // Button Properties
-    let onClick = this.castVote,
+        let onClick = this.castVote;
         // Placeholder button until user is recognized / logged in
-        display = (<div>
-          <Popup
-            trigger={
-              <Button floated='left' basic='true' icon='thumbs up'>
-              </Button>
-            }
-            position='bottom center'
-            inverted
-            content={tt('voting.you_must_be_logged_in_to_vote')}
-            basic
-          />
-          <Dropdown
-            floating
-            className="VoteList"
-            text={netVotes.toString()}
-            icon={null}>
-            <Dropdown.Menu>
-            {votes}
-            </Dropdown.Menu>
-          </Dropdown>
-          <Popup
-            trigger={
-              <Button floated='left' basic='true' icon='thumbs down'>
-              </Button>
-            }
-            position='bottom center'
-            inverted
-            content={tt('voting.you_must_be_logged_in_to_vote')}
-            basic
-          />
-          </div>
-        )
-    // If an error has occured, change text/tooltip and set active
-    if(this.props.error) {
-      myVote = null
+        let display = (
+            <div>
+                <Popup
+                    trigger={
+                        <Button floated='left' basic='true' icon='thumbs up'>
+                        </Button>
+                    }
+                    position='bottom center'
+                    inverted
+                    content={tt('voting.you_must_be_logged_in_to_vote')}
+                    basic
+                />
+                <Dropdown
+                    floating
+                    className="VoteList"
+                    text={netVotes.toString()}
+                    icon={null}>
+                    <Dropdown.Menu>
+                        {votes}
+                    </Dropdown.Menu>
+                </Dropdown>
+                <Popup
+                    trigger={
+                        <Button floated='left' basic='true' icon='thumbs down'>
+                        </Button>
+                    }
+                    position='bottom center'
+                    inverted
+                    content={tt('voting.you_must_be_logged_in_to_vote')}
+                    basic
+                />
+            </div>
+        );
+        // If an error has occured, change text/tooltip and set active
+        if (this.props.error) {
+            myVote = null;
+        }
+        // If an account exists, setup the actual button
+        if (this.props.account.isUser) {
+            //const { voting_power } = this.props.account.data || 10000;
+            /*adjuster = (
+                <VoteButtonOptions
+                    account={this.props.account}
+                    status={this.props.status}
+                    effectiveness={`${voting_power / 100}%`}
+                    onWeightChange={this.props.onWeightChange}
+                    weight={weight}/>
+            )*/
+            // Set the display
+            display = (<div>
+                <span>
+                    <Button
+                        onClick={onClick}
+                        weight={100}
+                        disabled={this.props.loading}
+                        basic={!iUpvoted}
+                        icon='thumbs up'
+                        color={'green'}
+                        floated='left'
+                    />
+                </span>
+                <span>
+                    <Dropdown
+                        floating
+                        className="VoteList"
+                        loading={this.props.loading}
+                        text={this.props.loading ? '' : netVotes.toString()}
+                        icon={this.props.loading ? '' : null}>
+                        <Dropdown.Menu>
+                          {votes}
+                        </Dropdown.Menu>
+                    </Dropdown>
+                </span>
+                <span>
+                    <Button
+                        onClick={onClick}
+                        weight={-100}
+                        disabled={this.props.loading}
+                        basic={!iDownvoted}
+                        icon='thumbs down'
+                        color={'red'}
+                        floated='left'
+                    />
+                </span>
+                </div>
+            );
+        };
+        return display;
     }
-    // If an account exists, setup the actual button
-    if(this.props.account.isUser) {
-      //const { voting_power } = this.props.account.data || 10000
-      /*adjuster = (
-        <VoteButtonOptions
-          account={this.props.account}
-          status={this.props.status}
-          effectiveness={`${voting_power / 100}%`}
-          onWeightChange={this.props.onWeightChange}
-          weight={weight}/>
-      )*/
-      // Set the display
-      display = (<div>
-        <span>
-          <Button
-            onClick={onClick}
-            weight={100}
-            disabled={this.props.loading}
-            basic={!iUpvoted}
-            icon='thumbs up'
-            color={'green'}
-            floated='left'
-          />
-        </span>
-        <span>
-          <Dropdown
-            floating
-            className="VoteList"
-            loading={this.props.loading}
-            text={this.props.loading ? '' : netVotes.toString()}
-            icon={this.props.loading ? '' : null}>
-            <Dropdown.Menu>
-            {votes}
-            </Dropdown.Menu>
-          </Dropdown>
-        </span>
-        <span>
-          <Button
-            onClick={onClick}
-            weight={-100}
-            disabled={this.props.loading}
-            basic={!iDownvoted}
-            icon='thumbs down'
-            color={'red'}
-            floated='left'
-          />
-        </span>
-        </div>
-      )
-    }
-    return display
-  }
 }

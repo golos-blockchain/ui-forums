@@ -1,37 +1,51 @@
 import React from 'react';
 import tt from 'counterpart';
+import { Asset } from 'golos-classic-js/lib/utils';
 
-import { Button, Popup, Dropdown, Icon, Label, Modal, Divider } from 'semantic-ui-react'
-import { Form } from 'formsy-semantic-ui-react'
-//import VoteButtonOptions from './vote/options'
-import translateError from '../../../../utils/translateError'
+import { Button, Popup, Dropdown, Icon, Label, Modal, Divider } from 'semantic-ui-react';
+import { Form } from 'formsy-semantic-ui-react';
+
+//import VoteButtonOptions from './vote/options';
+import translateError from '../../../../utils/translateError';
 
 export default class Donating extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             modalOpen: false,
-            amount: parseFloat(0).toFixed(3)
+            amount: parseFloat(0).toFixed(3),
+            symbol: 'GOLOS',
+            prec: 3,
+            valid: false
         };
         const { category, author, permlink } = this.props.post;
         this.props.fetchPostDonates({category, author, permlink});
     }
 
+    onValid = () => {
+        this.setState({valid: true});
+    };
+
+    onInvalid = () => {
+        this.setState({valid: false});
+    };
+
     onHandleSubmit = (formData) => {
         setTimeout(() => {
-            const {author, permlink, category} = this.props.post;
+            const { author, permlink, category } = this.props.post;
+            const { symbol, prec } = this.state;
             this.props.onDonateCast({
                 account: this.props.account,
                 author: author,
                 permlink: permlink,
-                amount: parseFloat(formData.amount).toFixed(3) + ' GOLOS'
+                amount: parseFloat(formData.amount).toFixed(prec) + ' ' + symbol
             });
             this.props.fetchAccount(this.props.account.name);
             this.setState({
                 modalOpen: false
             });
         }, 500);
-    }
+    };
 
     showModal = (e) => {
         e.preventDefault();
@@ -39,30 +53,68 @@ export default class Donating extends React.Component {
             modalOpen: true
         });
         return false;
-    }
+    };
     hideModal = (e) => {
         e.preventDefault();
         this.setState({
             modalOpen: false
         });
         return false;
-    }
+    };
 
     onAmountChange = (e) => {
         if (e.key != '.' && (e.key < '0' || e.key > '9')) {
             e.preventDefault();
         }
-    }
+    };
 
     onPresetClick = (e, data) => {
         this.setState({
-          amount: data.amount
+            amount: data.amount
         });
-    }
+    };
 
     openVoter = (e, data) => {
         let win = window.open('/@' + data.text, '_blank');
         win.focus();
+    };
+
+    changeSym = (e, data) => {
+        this.setState({
+            symbol: data.sym,
+            prec: parseInt(data.prec)
+        });
+    };
+
+    renderDonateList(donate_list) {
+        let donates = [];
+        let donatesJoined = {};
+        for (let item of donate_list) {
+            if (item.app != 'golos-id') continue;
+            const asset = Asset(item.amount);
+            if (donatesJoined[item.from]) {
+                let fromList = donatesJoined[item.from];
+                if (fromList[asset.symbol]) {
+                    fromList[asset.symbol].amount += asset.amount;
+                    continue;
+                }
+            } else {
+                donatesJoined[item.from] = {};
+            }
+            donatesJoined[item.from][asset.symbol] = asset;
+        }
+        let i = 0;
+        for (let [id, assetList] of Object.entries(donatesJoined)) {
+            for (let [sym, asset] of Object.entries(assetList)) {
+                donates.push(<Dropdown.Item
+                    text={id}
+                    description={asset.toString(0)}
+                    key={i}
+                    onClick={this.openVoter} />);
+                i++;
+            }
+        }
+        return donates;
     }
 
     render() {
@@ -73,32 +125,17 @@ export default class Donating extends React.Component {
         let post = this.props.post;
 
         // for Dropdown
-        let donate_sum = parseInt(parseFloat(post.donates.split(' ')[0])) + ' GOLOS';
-        if (post.donates_uia != 0) {
-            donate_sum += ' (+' + post.donates_uia + ')';
-        }
-        let donates = [];
-        let donatesJoined = {};
-        for (let item of post.donate_list) {
-            if (item.app != 'golos-id') continue;
-            if (!donatesJoined[item.from]) {
-                donatesJoined[item.from] = {amount: parseFloat(item.amount.split(' ')[0])};
-                continue;
-            }
-            donatesJoined[item.from].amount += parseFloat(item.amount.split(' ')[0]);
-        }
-        let i = 0;
-        for (let [from, item] of Object.entries(donatesJoined)) {
-            donates.push(<Dropdown.Item
-                text={from}
-                description={parseInt(item.amount) + ' GOLOS'}
-                key={i}
-                onClick={this.openVoter} />);
-            i++;
-        }
 
+        let donate_uia_sum = null;
+        let donate_sum = Asset(post.donates).toString(0);
+        if (post.donates_uia != 0) {
+            donate_uia_sum =  '  +' + post.donates_uia + ' UIA';
+        }
+        let donates = this.renderDonateList(post.donate_list);
+        let donates_uia = this.renderDonateList(post.donate_uia_list);
 
         // for Modal
+
         let presets = [5, 10, 25, 50, 100];
         for (const i in presets) {
             presets[i] = (<Button color='blue' animated='fade' amount={presets[i]} onClick={this.onPresetClick}>
@@ -106,27 +143,74 @@ export default class Donating extends React.Component {
                 <Button.Content hidden>+{presets[i]}</Button.Content>
             </Button>);
         }
+
+        const {symbol} = this.state;
+        let balances = [];
+
         let tip_balance = 0.0;
         let tip_balance_str = '0 GOLOS';
         if (this.props.account.data) {
-            tip_balance = parseFloat(this.props.account.data.tip_balance.split(' ')[0]);
-            tip_balance_str = <span>{tt('account.tip_balance')}: &nbsp;<b>{parseInt(tip_balance) + ' GOLOS'}</b></span>;
+            tip_balance = Asset(this.props.account.data.tip_balance).amountFloat;
+
+            balances.push(<Dropdown.Item
+                text={Asset(this.props.account.data.tip_balance).toString(0)}
+                key='GOLOS'
+                sym='GOLOS'
+                prec='3'
+                onClick={this.changeSym} />);
+
+            for (let [sym, obj] of Object.entries(this.props.account.data.uia_balances)) {
+                const asset = Asset(obj.tip_balance);
+                const asset_str = asset.toString(0);
+                if (asset_str.startsWith('0 ')) continue;
+                balances.push(<Dropdown.Item
+                    text={asset_str}
+                    key={asset.symbol}
+                    sym={asset.symbol}
+                    prec={asset.precision}
+                    onClick={this.changeSym} />);
+
+                if (sym === symbol) {
+                    tip_balance = asset.amountFloat;
+                }
+            }
+
+            tip_balance_str = (<span>{tt('account.tip_balance')}: &nbsp;<b>{parseInt(tip_balance) + ' ' + symbol}</b></span>);
+        }
+
+        let button = (<Button color='blue' onClick={this.showModal}>
+            <Icon name='dollar' />
+            {tt('donating.donate')}
+        </Button>);
+
+        if (!this.props.account.isUser) {
+            button = (
+                <Popup
+                    trigger={button}
+                    position='bottom center'
+                    inverted
+                    content={tt('donating.you_must_be_logged_in_to_donate')}
+                    basic
+                />
+            );
         }
 
         const errorLabel = <Label color="red" pointing/>
         return (<div style={{float: 'left'}}>
             &nbsp;&nbsp;&nbsp;
             <Button as='div' labelPosition='right'>
-                <Button color='blue' onClick={this.showModal}>
-                    <Icon name='dollar' />
-                    {tt('donating.donate')}
-                </Button>
+                {button}
                 <Label as='a' basic color='blue' pointing='left'>
-                    <Dropdown text={donate_sum}>
+                    <Dropdown text={donate_sum} icon={donate_sum == '0 GOLOS' ? null : undefined}>
                         <Dropdown.Menu>
                             {donates}
                         </Dropdown.Menu>
                     </Dropdown>
+                    {donate_uia_sum != null ? <span>&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<Dropdown text={donate_uia_sum}>
+                        <Dropdown.Menu>
+                            {donates_uia}
+                        </Dropdown.Menu>
+                    </Dropdown></span> : null}
                 </Label>
             </Button>
 
@@ -139,11 +223,15 @@ export default class Donating extends React.Component {
                         </Button.Group>
                         &nbsp;&nbsp;&nbsp;&nbsp;
                         <Dropdown floating trigger={tip_balance_str}>
-          
+                            <Dropdown.Menu>
+                                {balances}
+                            </Dropdown.Menu>
                         </Dropdown><br/><br/>
                         <Form
                             ref={ref => this.form = ref }
                             onValidSubmit={this.onHandleSubmit}
+                            onValid={this.onValid}
+                            onInvalid={this.onInvalid}
                         >
                             <Form.Input
                                 name="amount"
@@ -157,10 +245,19 @@ export default class Donating extends React.Component {
                                 validations={{
                                     isFloat: true,
                                     isGood: (values, value) => {
-                                        let v = parseFloat(value);
-                                        //if (isNaN(v)) return true; // it is isFloat case
+                                        const v = parseFloat(value);
                                         if (v <= 0) return tt('g.this_field_required');
                                         if (v > tip_balance) return tt('donating.not_enough');
+
+                                        const { prec } = this.state;
+                                        let valuePrec = null;
+                                        try {
+                                            valuePrec = Asset(value.toString()).precision;   
+                                        } catch (ex) {}
+                                        if (valuePrec && valuePrec > prec) {
+                                            return tt('donating.over_precision_PREC', {PREC: prec});
+                                        }
+
                                         return true;
                                     } 
                                 }}
@@ -178,9 +275,9 @@ export default class Donating extends React.Component {
                                 errorLabel={ errorLabel }
                             />
                             <Divider hidden />
-                            <Button floated='right' animated primary>
+                            <Button floated='right' animated={this.state.valid} primary={this.state.valid}>
                                 <Button.Content visible>{tt('transfer.transfer_btn')}</Button.Content>
-                                <Button.Content hidden>{tt('donating.thanks')}</Button.Content>
+                                {this.state.valid ? <Button.Content hidden>{tt('donating.thanks')}</Button.Content> : null}
                             </Button>
                             <Button color='orange' onClick={this.hideModal}>{tt('g.cancel')}</Button>
                         </Form>

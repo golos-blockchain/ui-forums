@@ -1,3 +1,5 @@
+import { Asset } from 'golos-classic-js/lib/utils';
+
 import * as types from '../actions/actionTypes';
 import * as ForumReducer from './forum';
 
@@ -216,8 +218,15 @@ export default function post(state = initialState, action) {
                     }
                 }
             }
-            msg.donate_list.push({from: name, amount: amount, app: 'golos-id'});
-            msg.donates = (parseFloat(msg.donates.split(' ')[0]) + parseFloat(amount.split(' ')[0])).toFixed(3) + ' GOLOS';
+            let asset = Asset(amount);
+            let list = asset.isUIA ? msg.donate_uia_list : msg.donate_list;
+            list.push({from: name, amount: amount, app: 'golos-id'});
+            if (asset.isUIA) {
+              msg.donates_uia += parseInt(asset.amountFloat);
+            } else {
+              asset.amount += Asset(msg.donates).amount;
+              msg.donates = asset.toString();
+            }
             return Object.assign({}, state, {
                 content: content,
                 responses: responses,

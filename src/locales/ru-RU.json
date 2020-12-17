@@ -51,7 +51,9 @@
   "donating": {
     "donate": "Отблагодарить",
     "thanks": "Спасибо!",
-    "not_enough": "Не хватает средств на TIP-балансе."
+    "not_enough": "Не хватает средств на TIP-балансе.",
+    "over_precision_PREC": "Используйте только %(PREC)s знак. точности",
+    "you_must_be_logged_in_to_donate": "Войдите, чтобы благодарить"
   },
   "transfer": {
     "transfer": "Передать пользователю",
