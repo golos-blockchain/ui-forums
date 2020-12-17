@@ -92,6 +92,8 @@
     "view_this_account": "View this account on..."
   },
   "account": {
+    "about": "Profile",
+    "website": "Web-site: ",
     "posts": "Posts",
     "responses": "Responses",
     "replies": "Replies",

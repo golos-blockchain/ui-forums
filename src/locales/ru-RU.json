@@ -92,6 +92,8 @@
     "view_this_account": "Этот аккаунт на..."
   },
   "account": {
+    "about": "Профиль",
+    "website": "Веб-сайт: ",
     "posts": "Посты",
     "responses": "Ответы",
     "replies": "Комментарии",
