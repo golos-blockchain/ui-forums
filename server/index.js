@@ -325,6 +325,30 @@ router.get('/verify_email/:email/:code', async (ctx) => {
         return returnError(ctx, 'Wrong code');
     }
 
+    let aro = null;
+    if (CONFIG_SEC.registrar.referer) {
+        let max_referral_interest_rate;
+        let max_referral_term_sec;
+        let max_referral_break_fee;
+        try {
+            const chain_properties = await golos.api.getChainPropertiesAsync();
+            max_referral_interest_rate = chain_properties.max_referral_interest_rate;
+            max_referral_term_sec = chain_properties.max_referral_term_sec;
+            max_referral_break_fee = chain_properties.max_referral_break_fee;
+        } catch (error) {
+            console.error('Error in verify_email get_chain_properties', error);
+        }
+
+        const dgp = await golos.api.getDynamicGlobalPropertiesAsync();
+        aro = [
+            0, {
+                referrer: CONFIG_SEC.registrar.referer,
+                interest_rate: max_referral_interest_rate,
+                end_date: new Date(Date.parse(dgp.time) + max_referral_term_sec*1000).toISOString().split(".")[0],
+                break_fee: max_referral_break_fee
+            }
+        ];
+    }
     let accs = null;
     try {
         await golos.broadcast.accountCreateWithDelegation(CONFIG_SEC.registrar.signing_key,
@@ -334,14 +358,15 @@ router.get('/verify_email/:email/:code', async (ctx) => {
             {weight_threshold: 1, account_auths: [], key_auths: [[file_obj.active, 1]]},
             {weight_threshold: 1, account_auths: [], key_auths: [[file_obj.posting, 1]]},
             file_obj.memo,
-          '{}', []);
+          '{}', [aro]);
+        await new Promise(resolve => setTimeout(resolve, 1000));
         accs = await golos.api.getAccounts([file_obj.username]);
     } catch (err) {
-        return returnError(err)
+        return returnError(ctx, err)
     }
 
     if (!accs || !accs.length) {
-        return returnError('unknown reason');
+        return returnError(ctx, 'unknown reason');
     }
 
     fs.unlinkSync(path);

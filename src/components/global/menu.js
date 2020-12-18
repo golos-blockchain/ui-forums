@@ -210,14 +210,14 @@ class HeaderMenu extends Component {
                     <Link to='/forums/steem' className='title item'>Steem</Link>
                     <Link to='/forums/crypto' className='title item'>Crypto</Link>
                     */}
-                    {pathname != '/create_account' ? (<Menu.Menu position='right'>
+                    {<Menu.Menu position='right'>
                         {localeSelect}
                         {pendingBalance}
                         {userItem}
                         <Menu.Item>
                             {indicator}
                         </Menu.Item>
-                    </Menu.Menu>) : null}
+                    </Menu.Menu>}
                 </Container>
             </Menu>
         )

@@ -133,6 +133,18 @@
     "checkbox_password": "I understand that GOLOS cannot restore my password.",
     "create_account": "Create account"
   },
+  "validation": {
+    "account_name_should_be_shorter": "Account name should not be longer that 16 characters.",
+    "account_name_should_be_longer": "Account name should not be shorter than 3 characters.",
+    "account_name_should_not_be_empty": "Account name should not be empty.",
+    "each_account_segment_should_start_with_a_letter": "Account name should start with a letter.",
+    "each_account_segment_should_have_only_letters_digits_or_dashes": "Account name should have only letters, digits, or dashes.",
+    "each_account_segment_should_have_only_one_dash_in_a_row": "Account name should have only one dash in a row.",
+    "each_account_segment_should_end_with_a_letter_or_digit": "Account name should end with a letter or digit.",
+    "each_account_segment_should_be_longer": "Account name should not be shorter than 3 characters.",
+
+    "account_name_used": "Such account already exists."
+  },
   "g": {
     "cancel": "Cancel",
     "proceed": "Proceed ",
@@ -145,19 +157,5 @@
     "this_field_required": "This field is required.",
     "should_be_email": "E-mail is wrong.",
     "enter_code": "You received verification code at your e-mail. Enter it below (instead of e-mail):"
-  },
-  "validation": {
-    "account_name_should": "Account name should ",
-    "be_longer": "not be shorter than 3 characters.",
-    "not_be_empty": "not be empty.",
-    "be_shorter": "not be longer that 16 characters.",
-    "each_account_segment_should": "Account name should ",
-    "start_with_a_letter": "start with a letter.",
-    "have_only_letters_digits_or_dashes": "have only letters, digits, or dashes.",
-    "have_only_one_dash_in_a_row": "have only one dash in a row.",
-    "end_with_a_letter_or_digit": "end with a letter or digit.",
-    "end_with_a_letter": "end with a letter.",
-
-    "account_name_used": "Such account already exists."
   }
 }

@@ -133,6 +133,18 @@
     "checkbox_password": "Я понимаю, что GOLOS не сможет восстановить потерянные пароли.",
     "create_account": "Создать аккаунт"
   },
+  "validation": {
+    "account_name_should_not_be_empty": "Имя аккаунта должно быть непустым.",
+    "account_name_should_be_longer": "Имя аккаунта должно быть не короче 3 символов.",
+    "account_name_should_be_shorter": "Имя аккаунта должно быть не длиннее 16 символов.",
+    "each_account_segment_should_start_with_a_letter": "Имя аккаунта должно начинаться с буквы.",
+    "each_account_segment_should_have_only_letters_digits_or_dashes": "Имя аккаунта должно состоять только из букв, цифр или дефисов.",
+    "each_account_segment_should_have_only_one_dash_in_a_row": "Имя аккаунта должно иметь только одно тире в строке.",
+    "each_account_segment_should_end_with_a_letter_or_digit": "Имя аккаунта должно заканчиваться буквой или цифрой.",
+    "each_account_segment_should_be_longer": "Имя аккаунта должно быть не короче 3 символов.",
+
+    "account_name_used": "Такой аккаунт уже существует."
+  },
   "g": {
     "cancel": "Отмена",
     "proceed": "Далее ",
@@ -145,19 +157,5 @@
     "this_field_required": "Это поле обязательно.",
     "should_be_email": "Введен некорректный e-mail.",
     "enter_code": "Вам на почту был отправлен код подтверждения. Введите его ниже (вместо почты):"
-  },
-  "validation": {
-    "account_name_should": "Имя аккаунта должно ",
-    "be_longer": "быть не короче 3 символов.",
-    "not_be_empty": "быть непустым.",
-    "be_shorter": "быть не длиннее 16 символов.",
-    "each_account_segment_should": "Имя аккаунта должно ",
-    "start_with_a_letter": "начинаться с буквы.",
-    "have_only_letters_digits_or_dashes": "состоять только из букв, цифр или дефисов.",
-    "have_only_one_dash_in_a_row": "иметь только одно тире в строке.",
-    "end_with_a_letter_or_digit": "заканчиваться буквой или цифрой.",
-    "end_with_a_letter": "заканчиваться буквой.",
-
-    "account_name_used": "Такой аккаунт уже существует."
   }
 }
