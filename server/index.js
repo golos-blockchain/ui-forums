@@ -55,6 +55,57 @@ let getValues = async (keys) => {
     return vals;
 };
 
+function idToTag(_id) {
+    return 'fm-' + GLOBAL_ID + '-' + _id.toLowerCase();
+}
+
+function findForum(vals, forum_id, trail = []) {
+    for (let [_id, forum] of Object.entries(vals)) {
+        if (_id.toLowerCase() === forum_id.toLowerCase()) {
+            forum.creator = 'cyberfounder';
+            forum.tags = [idToTag(_id), 'fm-' + GLOBAL_ID];
+            forum.trail = [...trail, {
+                _id,
+                name: forum.name,
+                name_ru: forum.name_ru
+            }];
+            return {_id, forum};
+        }
+        if (!forum.children) continue;
+        let inChild = findForum(forum.children, forum_id, [...trail, {
+            _id,
+            name: forum.name,
+            name_ru: forum.name_ru
+        }]);
+        if (inChild) return inChild;
+    }
+    return null;
+}
+
+function getUrl(urlRaw, _id) {
+    return '/' + _id + urlRaw.substring(('/' + idToTag(_id)).length);
+}
+
+async function setForumStats(_id, forum, tags) {
+    const tag = idToTag(_id);
+    forum.stats = tags[tag] || {top_posts: 0, comments: 0};
+
+    const data = await golos.api.getAllDiscussionsByActive(
+        '', '', 1,
+        tag,
+        0, 0
+    );
+    if (data.length) {
+        forum.last_post = data.length ? data[0] : null;
+        forum.last_post.url = getUrl(forum.last_post.url, _id);
+        const replies = await golos.api.getContentReplies(data[0].author, data[0].permlink, 0, 0);
+        if (replies.length) {
+            forum.last_reply = replies[replies.length - 1];
+            forum.last_reply.url = getUrl(forum.last_reply.url, _id);
+        }
+    }
+}
+
 router.get('/', async (ctx) => {
     let keys = {};
     keys[NOTE_] = Object;
@@ -64,24 +115,12 @@ router.get('/', async (ctx) => {
     let vals = await getValues(keys);
     let tags = [];
     for (let _id in vals[NOTE_]) {
-        const tag = "fm-" + GLOBAL_ID + "-" + _id.toLowerCase();
+        const tag = idToTag(_id);
         tags.push(tag);
     }
     tags = await golos.api.getTags(tags);
     for (let _id in vals[NOTE_]) {
-        const tag = "fm-" + GLOBAL_ID + "-" + _id.toLowerCase();
-        vals[NOTE_][_id].stats = tags[tag] || {top_posts: 0, comments: 0};
-        const data = await golos.api.getAllDiscussionsByActive(
-            '', '', 1,
-            "fm-" + GLOBAL_ID + "-" + _id.toLowerCase(),
-            0, 0
-        );
-        if (data.length) {
-            vals[NOTE_][_id].last_post = data.length ? data[0] : null;
-            const replies = await golos.api.getContentReplies(data[0].author, data[0].permlink, 0, 0);
-            if (replies.length)
-                vals[NOTE_][_id].last_reply = replies[replies.length - 1];
-        }
+        await setForumStats(_id, vals[NOTE_][_id], tags);
     }
 
     ctx.body = {
@@ -114,30 +153,7 @@ router.get('/forums', async (ctx) => {
         "network": {}, 
         "status": "ok"
     }
-})
-
-function findForum(vals, forum_id, trail = []) {
-    for (let [_id, forum] of Object.entries(vals)) {
-        if (_id.toLowerCase() === forum_id.toLowerCase()) {
-            forum.creator = 'cyberfounder';
-            forum.tags = ['fm-' + GLOBAL_ID + '-' + _id.toLowerCase(), 'fm-' + GLOBAL_ID];
-            forum.trail = [...trail, {
-                _id,
-                name: forum.name,
-                name_ru: forum.name_ru
-            }];
-            return {_id, forum};
-        }
-        if (!forum.children) continue;
-        let inChild = findForum(forum.children, forum_id, [...trail, {
-            _id,
-            name: forum.name,
-            name_ru: forum.name_ru
-        }]);
-        if (inChild) return inChild;
-    }
-    return null;
-}
+});
 
 router.get('/forum/:slug', async (ctx) => {
     let keys = {};
@@ -150,43 +166,35 @@ router.get('/forum/:slug', async (ctx) => {
     const forum_id = ctx.params.slug;
     let {_id, forum} = findForum(vals[NOTE_], forum_id);
 
+    const tag = idToTag(_id);
+
     let tags = [];
     for (let _id in forum.children) {
-        forum.children[_id].tags = ['fm-' + GLOBAL_ID + '-' + _id.toLowerCase(), 'fm-' + GLOBAL_ID];
+        forum.children[_id].tags = [tag, 'fm-' + GLOBAL_ID];
         tags.push(forum.children[_id].tags[0]);
     }
     tags = await golos.api.getTags(tags);
     for (let _id in forum.children) {
-        forum.children[_id].stats = tags[forum.children[_id].tags[0]] || {top_posts: 0, comments: 0};
-        const data = await golos.api.getAllDiscussionsByActive(
-            '', '', 1,
-            "fm-" + GLOBAL_ID + "-" + _id.toLowerCase(),
-            0, 0
-        );
-        if (data.length) {
-            forum.children[_id].last_post = data[0];
-            const replies = await golos.api.getContentReplies(data[0].author, data[0].permlink, 0, 0);
-            if (replies.length)
-                forum.children[_id].last_reply = replies[replies.length - 1];
-        }
+        await setForumStats(_id, forum.children[_id], tags);
     }
 
     const data = await golos.api.getAllDiscussionsByActive(
         '', '', 10000000,
-        "fm-" + GLOBAL_ID + "-" + _id.toLowerCase(),
+        tag,
         0, 20
     );
 
     const hidden = vals[NOTE_PST_HIDMSG_LST];
     for (let post of data) {
         post.hidden = !!hidden[post.id];
+        post.url = getUrl(post.url, _id);
 
         const replies = await golos.api.getContentReplies(post.author, post.permlink, 0, 0);
         if (replies.length) {
             const reply = replies[replies.length - 1];
             post.last_reply = reply.created;
             post.last_reply_by = reply.author;
-            post.last_reply_url = reply.url;
+            post.last_reply_url = getUrl(reply.url, _id);
         } else {
             post.last_reply = post.created;
             post.last_reply_by = post.author;
@@ -227,7 +235,7 @@ router.get('/:category/@:author/:permlink', async (ctx) => {
 })
 
 router.get('/:category/@:author/:permlink/responses', async (ctx) => {
-    let data = await golos.api.getAllContentReplies(ctx.params.author, ctx.params.permlink, DEFAULT_VOTE_LIMIT);
+    let data = await golos.api.getContentReplies(ctx.params.author, ctx.params.permlink, DEFAULT_VOTE_LIMIT, 0);
     for (let item of data) {
         item.donate_list = [];
         item.donate_uia_list = [];
@@ -325,7 +333,7 @@ router.get('/verify_email/:email/:code', async (ctx) => {
         return returnError(ctx, 'Wrong code');
     }
 
-    let aro = null;
+    let aro = undefined;
     if (CONFIG_SEC.registrar.referer) {
         let max_referral_interest_rate;
         let max_referral_term_sec;
@@ -340,14 +348,14 @@ router.get('/verify_email/:email/:code', async (ctx) => {
         }
 
         const dgp = await golos.api.getDynamicGlobalPropertiesAsync();
-        aro = [
+        aro = [[
             0, {
                 referrer: CONFIG_SEC.registrar.referer,
                 interest_rate: max_referral_interest_rate,
                 end_date: new Date(Date.parse(dgp.time) + max_referral_term_sec*1000).toISOString().split(".")[0],
                 break_fee: max_referral_break_fee
             }
-        ];
+        ]];
     }
     let accs = null;
     try {
@@ -358,7 +366,7 @@ router.get('/verify_email/:email/:code', async (ctx) => {
             {weight_threshold: 1, account_auths: [], key_auths: [[file_obj.active, 1]]},
             {weight_threshold: 1, account_auths: [], key_auths: [[file_obj.posting, 1]]},
             file_obj.memo,
-          '{}', [aro]);
+          '{}', aro);
         await new Promise(resolve => setTimeout(resolve, 1000));
         accs = await golos.api.getAccounts([file_obj.username]);
     } catch (err) {
