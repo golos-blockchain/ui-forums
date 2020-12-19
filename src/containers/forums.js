@@ -207,7 +207,7 @@ class Forums extends React.Component {
                               </Header>
                             </Grid.Column>
                             <Grid.Column computer={5} tablet={6} mobile={6} style={{ display: isMinimized ? "none" : "" }}>
-                              <Header size='tiny' textAlign='right'>
+                              <Header size='tiny' textAlign='center'>
                                 {tt('forum_controls.recently_active')}
                               </Header>
                             </Grid.Column>

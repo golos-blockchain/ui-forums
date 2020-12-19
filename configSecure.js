@@ -1,6 +1,7 @@
 module.exports = {
     registrar: {
         account: 'lex',
+        referer: 'lex',
         fee: '1.000 GOLOS',
         signing_key: '5JFZC7AtEe1wF2ce6vPAUxDeevzYkPgmtR14z9ZVgvCCtrFAaLw',
         delegation: '33060.000000 GESTS',
