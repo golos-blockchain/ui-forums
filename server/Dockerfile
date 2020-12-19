@@ -7,10 +7,10 @@ WORKDIR /src
 RUN npm install --global gulp-cli
 
 # Bundle app source
+COPY ../config.js /
 COPY . /src
 WORKDIR /src
-RUN npm install fsevents@latest -f --save-optional
 RUN npm install
 
-EXPOSE 3000
-CMD [ "npm", "start" ]
+EXPOSE 5000
+CMD [ "node", "index.js" ]
