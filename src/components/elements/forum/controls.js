@@ -5,7 +5,7 @@ import { Button, Checkbox, Menu, Popup } from 'semantic-ui-react'
 
 import Paginator from '../../global/paginator'
 
-export default class ForumIndex extends React.Component {
+export default class ForumControls extends React.Component {
     render() {
         const { isUser, page, perPage, posts } = this.props
         let newPostButton = (

@@ -16,7 +16,7 @@ export default class ForumTitle extends React.Component {
         this.props.hideConfig()
     }
     render() {
-        let { forum } = this.props
+        let { _id, forum } = this.props
         let tags = false
         let parent = false
         if(forum) {
@@ -47,14 +47,14 @@ export default class ForumTitle extends React.Component {
                     <Grid stackable>
                         <Grid.Row>
                             <Grid.Column width={14}>
-                                <Header size='huge' key={(forum) ? forum._id : 'unknown'} style={{color: 'white'}}>
+                                <Header size='huge' key={(forum) ? _id : 'unknown'} style={{color: 'white'}}>
                                     <Icon name='list' />
                                     <Header.Content>
                                         {(forum) ? ((tt.getLocale() == 'ru') ? forum.name_ru : forum.name) : 'unknown'}
                                         <Header.Subheader style={{color: 'white'}}>
                                             <small>
-                                                <Link to={`/f/${(forum) ? forum._id : 'unknown'}`} style={{color: 'white'}}>
-                                                    /f/{(forum) ? forum._id : 'unknown'}
+                                                <Link to={`/f/${(forum) ? _id : 'unknown'}`} style={{color: 'white'}}>
+                                                    /f/{(forum) ? _id : 'unknown'}
                                                 </Link>
                                                 {' • '}
                                                 {tt('forum_controls.created_by')}
@@ -94,7 +94,7 @@ export default class ForumTitle extends React.Component {
                     : false
                 }
                 {/*<Menu attached={(this.props.subforums) ? true : 'bottom'} color='blue' size='tiny'>
-                    <Menu.Item icon value={false} key={(forum) ? forum._id : 'unknown'} onClick={this.changeFilter} active={(this.props.active === false)}>
+                    <Menu.Item icon value={false} key={(forum) ? _id : 'unknown'} onClick={this.changeFilter} active={(this.props.active === false)}>
                         <Icon name='home' size='large' color='blue' />
                     </Menu.Item>
                     {parent}

@@ -78,7 +78,6 @@ export default class ForumPostText extends React.Component {
             />
         );
     }
-    const forum_url_prefix = '/fm-' + CONFIG.FORUM._id + '-';
     return (
       <Segment
         attached
@@ -97,7 +96,7 @@ export default class ForumPostText extends React.Component {
             <Grid.Column mobile={10} tablet={10} computer={9} largeScreen={9}>
               <Header size='small'>
                 <Header.Content>
-                  <Link to={'/' + topic.url.substring(forum_url_prefix.length)}>
+                  <Link to={topic.url}>
                     {topic.title}
                   <Header.Subheader>
                     {'↳ '}

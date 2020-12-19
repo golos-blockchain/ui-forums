@@ -30,7 +30,7 @@ class PostForm extends React.Component {
 
   constructor(props) {
     super(props)
-    const { action, filter, forum, existingPost } = props;
+    const { action, filter, forum, existingPost, replyQuote } = props;
     let tags = (filter) ? [filter] : (forum && forum.tags) ? forum.tags : [];
     if (action === 'edit') {
       if (existingPost.json_metadata && existingPost.json_metadata.tags && existingPost.json_metadata.tags.length) {
@@ -251,7 +251,7 @@ class PostForm extends React.Component {
 
   render() {
     const { activeItem } = this.state
-    const { account } = this.props
+    const { action, account, replyQuote, noCancelButton } = this.props
     const identifier = this.getIdentifier(),
           draft = this.drafts[identifier] || {}
     const disableAutoFocus = this.props.disableAutoFocus || false
@@ -350,7 +350,7 @@ class PostForm extends React.Component {
         <PostFormFieldBody
           disableAutoFocus={disableAutoFocus}
           handleChange={this.handleChange}
-          value={ (draft.body) ? draft.body : (existingPost) ? existingPost.body : '' }
+          value={ (draft.body) ? draft.body : (existingPost) ? existingPost.body : (replyQuote || '') }
         />
         </div>
       )
@@ -384,7 +384,7 @@ class PostForm extends React.Component {
           {menu}
           {menuDisplay}
           <Divider hidden />
-          <Button color='orange' onClick={this.handleCancel}>{tt('post_form.cancel')}</Button>
+          <Button color='orange' style={{opacity: (action !== 'threadReply' ? 1 : 0)}} onClick={this.handleCancel}>{tt('post_form.cancel')}</Button>
           <Button
             ref={ref => this.formSubmit = ref}
             floated='right'

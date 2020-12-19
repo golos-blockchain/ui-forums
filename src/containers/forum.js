@@ -47,7 +47,6 @@ class Forum extends React.Component {
       showModerated: false,
       showSubforums: true,
       forum: {
-        name: this.props.forumid
       }
     };
     this.getForum = this.getForum.bind(this);
@@ -244,6 +243,7 @@ class Forum extends React.Component {
   }
   render() {
     let account = this.props.account,
+        forumid = this.props.forumid,
         forum = this.state.forum,
         reservation = this.state.reservation,
         children = this.state.children || {},
@@ -292,7 +292,7 @@ class Forum extends React.Component {
             </Segment>
         )
     }
-    if(forum && forum._id) {
+    if (forum) {
         controls = (
             <Segment basic vertical>
                 <ForumControls
@@ -402,19 +402,19 @@ class Forum extends React.Component {
       )
     }
     let meta = false
-    if(forum && forum._id) {
+    if(forum && forumid) {
         meta = (
             <Helmet>
-                <title>{`/f/${forum._id} - ${this.getForumName(forum)}`}</title>
+                <title>{`/f/${forumid} - ${this.getForumName(forum)}`}</title>
                 <meta name="description" content={forum.description} />
-                <meta itemprop="name" content={`${forum._id} - ${this.getForumName(forum)}`} />
+                <meta itemprop="name" content={`${forumid} - ${this.getForumName(forum)}`} />
                 <meta itemprop="description" content={forum.description} />
                 <meta itemprop="image" content="https://steemit-production-imageproxy-upload.s3.amazonaws.com/DQmckc76UaBZSicePvDG9dKwrgyS5GoZRxAnBZ8AzxtVwH8" />
-                <meta name="twitter:title" content={`${forum._id} - ${this.getForumName(forum)}`} />
+                <meta name="twitter:title" content={`${forumid} - ${this.getForumName(forum)}`} />
                 <meta name="twitter:description" content={forum.description} />
                 <meta name="twitter:image:src" content="https://steemit-production-imageproxy-upload.s3.amazonaws.com/DQmckc76UaBZSicePvDG9dKwrgyS5GoZRxAnBZ8AzxtVwH8" />
-                <meta property="og:title" content={`${forum._id} - ${this.getForumName(forum)}`} />
-                <meta property="og:url" content={`http://netify.chainbb.com/f/${forum._id}`} />
+                <meta property="og:title" content={`${forumid} - ${this.getForumName(forum)}`} />
+                <meta property="og:url" content={`http://netify.chainbb.com/f/${forumid}`} />
                 <meta property="og:description" content={forum.description} />
             </Helmet>
         )
@@ -424,6 +424,7 @@ class Forum extends React.Component {
         {meta}
         <ForumTitle
           active={this.state.filter}
+          _id={forumid}
           forum={forum || reservation}
           account={account}
           attached={(subforums) ? 'top' : false}

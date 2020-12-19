@@ -14,6 +14,8 @@
     "no_comments": "No Replies Yet!",
     "no_comments_description": "You can write your first reply here",
     "comments": "Replies",
+    "write_your_reply": "Write your reply",
+    "edit_your_post": "Edit your post",
     "post_hidden_AUTHOR": "Post by @%(AUTHOR)s hidden (low ratings) - click to show",
     "reply_hidden_AUTHOR": "Reply by @%(AUTHOR)s hidden (low ratings) - click to show",
     "hide_confirm": "Are you sure you want to hide this post?",
