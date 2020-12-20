@@ -79,7 +79,7 @@ class Thread extends React.Component {
             position = false;
         for (var i = 0; i < collection.length; i++) {
             const { author, permlink } = collection[i];
-            if (author + '/' + permlink === id) {
+            if ('@' + author + '/' + permlink === id) {
                 position = i;
             }
         }
@@ -138,7 +138,7 @@ class Thread extends React.Component {
         if (matchesPost) {
             let anchor = matchesPost[1] + '/' + matchesPost[2];
             this.setState({
-                scrollToWhenReady: anchor
+                scrollToWhenReady: '@' + anchor
             });
         }
     }
@@ -163,7 +163,7 @@ class Thread extends React.Component {
             type: 'success',
             timeout: 8000
         }).show();
-        let anchor = submitted.post.author + '/' + submitted.post.permlink;
+        let anchor = '@' + submitted.post.author + '/' + submitted.post.permlink;
         this.setState({
             submitted: new Date(),
             scrollToWhenReady: anchor

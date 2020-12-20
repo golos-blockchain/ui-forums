@@ -211,7 +211,7 @@ export default class PostContent extends React.Component {
         }
         return (
             <div>
-                <a name={!this.props.op ? (post.author + '/' + post.permlink) : ''}></a>
+                <a name={!this.props.op ? ('@' + post.author + '/' + post.permlink) : ''}></a>
                 {(editForm)
                     ? (editForm)
                     : (
