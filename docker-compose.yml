@@ -1,0 +1,20 @@
+version: '3'
+services:
+    chainbb-rest:
+        restart: always
+        build:
+            dockerfile: server/Dockerfile
+            context: .
+        image: local/chainbb-rest
+        ports:
+            - 5000:5000
+    chainbb:
+        restart: always
+        build:
+            dockerfile: Dockerfile
+            context: .
+        image: local/chainbb
+        ports:
+            - 3000:3000
+        depends_on:
+            - chainbb-rest
