@@ -14,11 +14,11 @@ export default class PostFormFieldBody extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if(nextProps && nextProps.value && nextProps.value != this.props.value) {
-    this.setState({
-      rteState: HtmlEditor.getStateFromHtml(nextProps.value)
-    });
-  }
+    if (!this.props.rootUsage && nextProps && nextProps.value && nextProps.value != this.props.value) {
+      this.setState({
+        rteState: HtmlEditor.getStateFromHtml(nextProps.value)
+      });
+    }
   }
 
   _onHtmlEditorChange = state => {

@@ -15,7 +15,7 @@ import PostTitle from './title';
 export default class PostContent extends React.Component {
 
     handleResponding = (e) => {
-        this.props.goReply('<a href="' + this.props.content.url.split('#')[0] +'#' + this.props.content.author + '/' + this.props.content.permlink + '">@' + this.props.content.author + '</a>, ');
+        this.props.goReply('<a href="' + this.props.content.url + '">@' + this.props.content.author + '</a>, ');
         /*this.setState({
             responding: (this.state && this.state.responding) ? !this.state.responding : true,
         });*/
@@ -211,7 +211,7 @@ export default class PostContent extends React.Component {
         }
         return (
             <div>
-                <a name={!this.props.op ? ('@' + post.author + '/' + post.permlink) : ''}></a>
+                <a name={'#@' + post.author + '/' + post.permlink}></a>
                 {(editForm)
                     ? (editForm)
                     : (

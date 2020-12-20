@@ -21,6 +21,9 @@ import PostFormHeader from '../components/elements/post/form/header';
 import Response from '../components/elements/response';
 import Paginator from '../components/global/paginator';
 
+const regexPage = /#comments-page-(\d+)+$/;
+const regexPost = /#@?([A-Za-z0-9\-_]+)\/([A-Za-z0-9\-_]+)$/;
+
 class Thread extends React.Component {
 
     constructor(props) {
@@ -47,17 +50,23 @@ class Thread extends React.Component {
 
     componentWillReceiveProps(nextProps) {
         const { hash } = location;
-        const regexPage = /#comments-page-(\d+)+$/;
         if (!hash && this.state.page && this.state.page > 1) {
             this.setState({page: 1});
         }
         if (hash) {
             let matchesPage = hash.match(regexPage);
+            let matchesPost = hash.match(regexPost);
             if (matchesPage) {
                 let page = parseInt(matchesPage[1], 10)
                 if(page !== this.state.page) {
                     this.changePage(page);
                 }
+            }
+            if (matchesPost) {
+                let anchor = matchesPost[1] + '/' + matchesPost[2];
+                this.setState({
+                    scrollToWhenReady: '@' + anchor
+                });
             }
         }
         if (nextProps.params.permlink !== this.state.permlink) {
@@ -126,8 +135,6 @@ class Thread extends React.Component {
 
     componentDidMount() {
         const { hash } = location;
-        const regexPage = /#comments-page-(\d+)+$/;
-        const regexPost = /#@?([A-Za-z0-9\-_]+)\/([A-Za-z0-9\-_]+)$/;
         let matchesPage = hash.match(regexPage);
         let matchesPost = hash.match(regexPost);
         if (matchesPage) {

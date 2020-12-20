@@ -253,7 +253,7 @@ class PostForm extends React.Component {
 
   render() {
     const { activeItem } = this.state
-    const { action, account, replyQuote, noCancelButton } = this.props
+    const { action, account, replyQuote } = this.props
     const identifier = this.getIdentifier(),
           draft = this.drafts[identifier] || {}
     const disableAutoFocus = this.props.disableAutoFocus || false
@@ -332,6 +332,7 @@ class PostForm extends React.Component {
             <PostFormFieldBody
               disableAutoFocus={disableAutoFocus}
               handleChange={this.handleChange}
+              rootUsage={action !== 'threadReply'}
               value={ (draft.body) ? draft.body : (existingPost) ? existingPost.body : '' }
             />
           </Segment>
@@ -352,6 +353,7 @@ class PostForm extends React.Component {
         <PostFormFieldBody
           disableAutoFocus={disableAutoFocus}
           handleChange={this.handleChange}
+          rootUsage={action !== 'threadReply'}
           value={ (draft.body) ? draft.body : (existingPost) ? existingPost.body : (replyQuote || '') }
         />
         </div>
