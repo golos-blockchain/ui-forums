@@ -107,7 +107,7 @@ class Response extends React.Component {
             return (
               <Grid.Row key={index} id={post._id}>
                 <Grid.Column className='mobile hidden' width={4}></Grid.Column>
-                <Grid.Column mobile={16} tablet={12} computer={12}>
+                <Grid.Column mobile={16} tablet={16} computer={16}>
                   <Divider horizontal>
                     <Button basic size='tiny' onClick={this.handleReveal} value={post._id}>
                       {tt('forum_controls.reply_hidden_AUTHOR', {AUTHOR: post.author})}

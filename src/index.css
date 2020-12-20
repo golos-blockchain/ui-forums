@@ -80,11 +80,13 @@
 }
 
 .thread-post .Markdown {
-  font-size: 18px;
+  font-size: 16px;
   overflow-x: auto;
 }
 .thread-post img {
-  max-width: 100%;
+  max-width: 90%;
+  display: block;
+  margin: auto;
 }
 
 .thread-post h1,
@@ -123,6 +125,8 @@
   border-left: 0.25em solid #d4d4d5;
   margin: 0;
   padding-left: 1em;
+  font-size: 0.8em;
+  color: #999999;
 }
 
 

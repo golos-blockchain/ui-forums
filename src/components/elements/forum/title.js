@@ -53,13 +53,14 @@ export default class ForumTitle extends React.Component {
                                         {(forum) ? ((tt.getLocale() == 'ru') ? forum.name_ru : forum.name) : 'unknown'}
                                         <Header.Subheader style={{color: 'white'}}>
                                             <small>
+                                                {' • '}
                                                 <Link to={`/f/${(forum) ? _id : 'unknown'}`} style={{color: 'white'}}>
                                                     /f/{(forum) ? _id : 'unknown'}
                                                 </Link>
-                                                {' • '}
+                                                {/*{' • '}
                                                 {tt('forum_controls.created_by')}
                                                 {' '}
-                                                <AccountLink username={(forum) ? forum.creator || 'chainbb' : 'unknown'} color='white' />
+                                                <AccountLink username={(forum) ? forum.creator || 'chainbb' : 'unknown'} color='white' />*/}
                                                 <div dangerouslySetInnerHTML={{__html: tt.getLocale() == 'ru' ? forum.desc_ru : forum.desc}}></div>
                                             </small>
                                         </Header.Subheader>

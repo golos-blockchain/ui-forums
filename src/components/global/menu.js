@@ -188,7 +188,7 @@ class HeaderMenu extends Component {
                                 </Grid.Row>
                                 <Grid.Row columns={1}>
                                     <Grid.Column>
-                                        <Button as='a' href={'https://golos.id/@' + name + '/transfers'} color='purple' fluid size='small'>
+                                        <Button as='a' target='_blank' href={'https://golos.id/@' + name + '/transfers'} color='purple' fluid size='small'>
                                             {tt('account.open_wallet')}
                                         </Button>
                                     </Grid.Column>

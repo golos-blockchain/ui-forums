@@ -55,6 +55,22 @@ export default class AccountSidebar extends React.Component {
                 <Icon name='external' />
                 golos.id
               </a>
+              <a href={`https://golos.in/@${username}`} target='_blank' className='item'>
+                <Icon name='external' />
+                golos.in
+              </a>
+              <a href={`https://explorer.golos.id/#account/${username}`} target='_blank' className='item'>
+                <Icon name='external' />
+                explorer.golos.id
+              </a>
+              <a href={`https://dpos.space/golos/profiles/${username}`} target='_blank' className='item'>
+                <Icon name='external' />
+                dpos.space
+              </a>
+              <a href={`https://golos.cf/@${username}`} target='_blank' className='item'>
+                <Icon name='external' />
+                golos.cf
+              </a>
             </Dropdown.Menu>
           </Dropdown>
         </Menu>
