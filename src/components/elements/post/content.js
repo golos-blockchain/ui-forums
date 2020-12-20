@@ -15,7 +15,7 @@ import PostTitle from './title';
 export default class PostContent extends React.Component {
 
     handleResponding = (e) => {
-        this.props.goReply('<a href="#' + this.props.content.author + '/' + this.props.content.permlink + '">@' + this.props.content.author + '</a>, ');
+        this.props.goReply('<a href="' + this.props.content.url.split('#')[0] +'#' + this.props.content.author + '/' + this.props.content.permlink + '">@' + this.props.content.author + '</a>, ');
         /*this.setState({
             responding: (this.state && this.state.responding) ? !this.state.responding : true,
         });*/
@@ -29,9 +29,9 @@ export default class PostContent extends React.Component {
             theme: 'semanticui',
             text: ReactDOMServer.renderToString(
                 <Header>
-                    Your post has been submitted!
+                    {tt('forum_controls.submitted')}
                     <Header.Subheader>
-                        It may take a few moments to appear on chainBB.com, and will appear at the end of this thread.
+                        {tt('forum_controls.submitted_desc')}
                     </Header.Subheader>
                 </Header>
             ),

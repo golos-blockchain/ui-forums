@@ -23,6 +23,8 @@
     "keep_btn": "Keep Post",
     "reveal_confirm": "Are you sure you want to reveal this post?",
     "reveal_btn": "Reveal Post",
+    "submitted": "Your post has been submitted!",
+    "submitted_desc": "It may take a few moments to appear on forum.",
 
     "forum_info": "Forum Settings",
     "return_ro_froum": "Return to forum",

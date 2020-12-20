@@ -115,7 +115,7 @@ export function fetchPostResolved(payload = {}) {
 }
 
 function getForumName(forum) {
-    return (tt.getLocale() == 'ru') ? forum.name_ru : forum.name;
+    return ((tt.getLocale() == 'ru') ? (forum.name_ru || forum.name) : (forum.name || forum.name_ru)) || '';
 }
 
 export function fetchPost(params) {

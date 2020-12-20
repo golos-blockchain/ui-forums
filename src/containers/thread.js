@@ -6,6 +6,7 @@ import { goToTop, goToAnchor } from 'react-scrollable-anchor';
 import ReactDOMServer from 'react-dom/server';
 import Noty from 'noty';
 import tt from 'counterpart';
+import { getPageTitle } from '../utils/text';
 
 import { Divider, Grid, Header, Segment } from 'semantic-ui-react';
 
@@ -67,7 +68,9 @@ class Thread extends React.Component {
 
     scrollToPost = (id) => {
         let page = this.getPageForPost(id)
+        if (page === false) return false;
         this.changePage(page, id)
+        return true;
     };
 
     getPageForPost = (id) => {
@@ -113,10 +116,11 @@ class Thread extends React.Component {
             }, 50);
         }
         if (this.state && this.state.scrollToWhenReady) {
-            this.scrollToPost(this.state.scrollToWhenReady);
-            this.setState({
-                scrollToWhenReady: false
-            });
+            if (this.scrollToPost(this.state.scrollToWhenReady)) {
+                this.setState({
+                    scrollToWhenReady: false
+                });
+            } // and if not scrolled - not reset flag, try again until responses be fetched
         }
     }
 
@@ -142,24 +146,28 @@ class Thread extends React.Component {
     handleCancel = () => {
     };
 
-    handleResponse = () => {
+    handleResponse = (submitted) => {
         new Noty({
             closeWith: ['click', 'button'],
             layout: 'topRight',
             progressBar: true,
             theme: 'semanticui',
             text: ReactDOMServer.renderToString(
-                <Header>
-                    Your post has been submitted!
+                 <Header>
+                    {tt('forum_controls.submitted')}
                     <Header.Subheader>
-                        It may take a few moments to appear on chainBB.com, and will appear at the end of this thread.
+                        {tt('forum_controls.submitted_desc')}
                     </Header.Subheader>
                 </Header>
             ),
             type: 'success',
             timeout: 8000
         }).show();
-        this.setState({ submitted: new Date() });
+        let anchor = submitted.post.author + '/' + submitted.post.permlink;
+        this.setState({
+            submitted: new Date(),
+            scrollToWhenReady: anchor
+        });
     };
 
     render() {
@@ -234,18 +242,19 @@ class Thread extends React.Component {
         if (content && content.json_metadata && content.json_metadata.image && content.json_metadata.image.length > 0) {
             image = content.json_metadata.image[0];
         }
+        const title = getPageTitle(content.title);
         return (
             <div>
                 <Helmet>
-                    <title>{content.title}</title>
+                    <title>{title}</title>
                     <meta name='description' content={`Posted by ${content.author} on ${content.created} UTC.`} />
-                    <meta itemprop='name' content={content.title} />
+                    <meta itemprop='name' content={title} />
                     <meta itemprop='description' content={`Posted by ${content.author} on ${content.created} UTC.`} />
                     <meta itemprop='image' content={image} />
-                    <meta name='twitter:title' content={content.title} />
+                    <meta name='twitter:title' content={title} />
                     <meta name='twitter:description' content={`Posted by ${content.author} on ${content.created} UTC.`} />
                     <meta name='twitter:image:src' content={image} />
-                    <meta property='og:title' content={content.title} />
+                    <meta property='og:title' content={title} />
                     <meta property='og:url' content={`http://chainbb.com/${(content.post && content.post.forum) ? content.post.forum._id : content.category}/@${content.author}/${content.permlink}`} />
                     <meta property='og:description' content={`Posted by ${content.author} on ${content.created} UTC.`} />
                 </Helmet>

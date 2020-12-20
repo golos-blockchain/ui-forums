@@ -159,9 +159,11 @@ class PostForm extends React.Component {
     this.setState({ [name]: value }, () => {
       const drafts = this.drafts || store.get('drafts') || {}
       const identifier = this.getIdentifier();
-      drafts[identifier][name] = value;
-      store.set('drafts', drafts)
-      this.drafts = drafts;
+      try {
+        drafts[identifier][name] = value;
+        store.set('drafts', drafts)
+        this.drafts = drafts;
+      } catch (e) {}
     });
   }
 

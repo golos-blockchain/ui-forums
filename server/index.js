@@ -223,12 +223,15 @@ router.get('/:category/@:author/:permlink', async (ctx) => {
     keys[NOTE_] = Object;
     const vals = await getValues(keys);
 
+    const { _id, forum } = findForum(vals[NOTE_], ctx.params.category);
+
     let data = await golos.api.getContent(ctx.params.author, ctx.params.permlink, DEFAULT_VOTE_LIMIT);
+    data.url = getUrl(data.url, _id);
     data.donate_list = [];
     data.donate_uia_list = [];
     ctx.body = {
         data: data,
-        forum: findForum(vals[NOTE_], ctx.params.category).forum,
+        forum: forum,
         "network": {}, 
         "status": "ok"
     }
@@ -239,6 +242,7 @@ router.get('/:category/@:author/:permlink/responses', async (ctx) => {
     for (let item of data) {
         item.donate_list = [];
         item.donate_uia_list = [];
+        item.url = getUrl(item.url, ctx.params.category);
     }
     ctx.body = {
         data: data,

@@ -93,7 +93,7 @@ class HeaderMenu extends Component {
         let userItem = (
             <Menu.Item>
                 <Button
-                    as='a' href='/create_account'
+                    as={Link} to='/create_account'
                     content={tt('login.sign_up')}
                     color='blue'
                     inverted/>
@@ -101,14 +101,14 @@ class HeaderMenu extends Component {
                 <LoginButton {... this.props}/>
             </Menu.Item>
         );
-        const indicator = (!loading) ? (
+        /*const indicator = (!loading) ? (
             <Popup
                 trigger={
                     <Icon name='checkmark' />
                 }
                 position='bottom center'
                 inverted
-                content={`Current Blockchain Height: #${height}`}
+                content={`Golos Blockchain - OK`}
                 basic
             />
         ) : (
@@ -118,86 +118,86 @@ class HeaderMenu extends Component {
                 }
                 position='bottom center'
                 inverted
-                content={`Connecting to the Steem blockchain`}
+                content={`Connecting to the Golos blockchain`}
                 basic
             />
-        );
+        );*/
         if (name) {
-          if (account) {
-              data = account.data
-          }
-          avatar = (
-              <AccountAvatar
-                  className=""
-                  noLink={true}
-                  size={35}
-                  style={{margin: 0}}
-                  username={name}
-              />
-          )
-          /*userItem = (
-              <Dropdown style={{padding: '0 1.1em'}} item trigger={avatar} pointing='top right' icon={null} className='icon'>
-                  <Dropdown.Menu>
-                      <Dropdown.Item as="a" href={`/@${name}`} icon="user" content={tt('account.profile')} />
-                      <Dropdown.Item as="a" href={`/accounts`} icon="users" content="Accounts" />
-                      <LogoutItem {...this.props} />
-                  </Dropdown.Menu>
-              </Dropdown>
-          )*/
-          userItem = (
-              <Dropdown style={{padding: '0 1.1em'}} item trigger={avatar} pointing='top right' icon={null} className='icon'>
-                  <Dropdown.Menu>
-                      <Dropdown.Item as="a" href={`/@${name}`} icon="user" content={tt('account.profile')} />
-                      <LogoutItem {...this.props} />
-                  </Dropdown.Menu>
-              </Dropdown>
-          )
-          if (data) {
-              if (hasBalance.length > 0) {
-                  pendingBalance = (
-                      <Popup
-                          trigger={
-                              <Menu.Item style={{padding: '0 1.1em'}}>
-                                  <Icon name='gift' size='big' style={{margin: 0}} />
-                              </Menu.Item>
-                          }
-                          hoverable
-                      >
-                          <Grid>
-                              <Grid.Row columns={1}>
-                                  <Grid.Column>
-                                      <Header>
-                                          {tt('account.tip_balance')}
-                                          <Header.Subheader>
-                                              {tt('account.tip_balance_desc')}
-                                          </Header.Subheader>
-                                      </Header>
-                                  </Grid.Column>
-                              </Grid.Row>
-                              <Grid.Row columns={1}>
-                                  {hasBalance.map((field) => {
-                                      const asset = Asset(field);
-                                      return (
-                                          <Grid.Column key={asset.symbol} textAlign='right'>
-                                                <Header color={asset.symbol === 'GOLOS' ? 'green' : 'yellow'}>
-                                                    {asset.toString().split(' ')[0]}{' '}<small>{asset.symbol}</small>
-                                                </Header>
-                                          </Grid.Column>
-                                      );
-                                  })}
-                              </Grid.Row>
-                              <Grid.Row columns={1}>
-                                  <Grid.Column>
-                                      <Button as='a' href={'https://golos.id/@' + name + '/transfers'} color='purple' fluid size='small'>
-                                          {tt('account.open_wallet')}
-                                      </Button>
-                                  </Grid.Column>
-                              </Grid.Row>
-                          </Grid>
-                      </Popup>
-                  );
-              }
-          }
+            if (account) {
+                data = account.data;
+            }
+            avatar = (
+                <AccountAvatar
+                    className=''
+                    noLink={true}
+                    size={35}
+                    style={{margin: 0}}
+                    username={name}
+                />
+            );
+            /*userItem = (
+                <Dropdown style={{padding: '0 1.1em'}} item trigger={avatar} pointing='top right' icon={null} className='icon'>
+                    <Dropdown.Menu>
+                        <Dropdown.Item as={Link} to={`/@${name}`} icon='user' content={tt('account.profile')} />
+                        <Dropdown.Item as={Link} to={`/accounts`} icon='users' content='Accounts' />
+                        <LogoutItem {...this.props} />
+                    </Dropdown.Menu>
+                </Dropdown>
+            );*/
+            userItem = (
+                <Dropdown style={{padding: '0 1.1em'}} item trigger={avatar} pointing='top right' icon={null} className='icon'>
+                    <Dropdown.Menu>
+                        <Dropdown.Item as={Link} to={`/@${name}`} icon='user' content={tt('account.profile')} />
+                        <LogoutItem {...this.props} />
+                    </Dropdown.Menu>
+                </Dropdown>
+            );
+            if (data) {
+                if (hasBalance.length > 0) {
+                    pendingBalance = (
+                        <Popup
+                            trigger={
+                                <Menu.Item style={{padding: '0 1.1em'}}>
+                                    <Icon name='gift' size='big' style={{margin: 0}} />
+                                </Menu.Item>
+                            }
+                            hoverable
+                        >
+                            <Grid>
+                                <Grid.Row columns={1}>
+                                    <Grid.Column>
+                                        <Header>
+                                            {tt('account.tip_balance')}
+                                            <Header.Subheader>
+                                                {tt('account.tip_balance_desc')}
+                                            </Header.Subheader>
+                                        </Header>
+                                    </Grid.Column>
+                                </Grid.Row>
+                                <Grid.Row columns={1}>
+                                    {hasBalance.map((field) => {
+                                        const asset = Asset(field);
+                                        return (
+                                            <Grid.Column key={asset.symbol} textAlign='right'>
+                                                  <Header color={asset.symbol === 'GOLOS' ? 'green' : 'yellow'}>
+                                                      {asset.toString().split(' ')[0]}{' '}<small>{asset.symbol}</small>
+                                                  </Header>
+                                            </Grid.Column>
+                                        );
+                                    })}
+                                </Grid.Row>
+                                <Grid.Row columns={1}>
+                                    <Grid.Column>
+                                        <Button as='a' href={'https://golos.id/@' + name + '/transfers'} color='purple' fluid size='small'>
+                                            {tt('account.open_wallet')}
+                                        </Button>
+                                    </Grid.Column>
+                                </Grid.Row>
+                            </Grid>
+                        </Popup>
+                    );
+                }
+            }
         }
         return (
             <Menu color='blue' size='large' inverted style={{borderBottom: '3px solid #767676'}}>
@@ -214,13 +214,13 @@ class HeaderMenu extends Component {
                         {localeSelect}
                         {pendingBalance}
                         {userItem}
-                        <Menu.Item>
+                        {/*<Menu.Item>
                             {indicator}
-                        </Menu.Item>
+                        </Menu.Item>*/}
                     </Menu.Menu>}
                 </Container>
             </Menu>
-        )
+        );
     }
 }
 
