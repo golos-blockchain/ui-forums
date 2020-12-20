@@ -71,7 +71,7 @@ class Response extends React.Component {
       let formId = 0
       if(count > 0) {
         display = responses.map((post, index) => {
-          let hidden = (post.net_votes < 0),
+          let hidden = (post.net_rshares < -9999999999),
               parent_post = this.getParent(post),
               quote = ''
           if(parent_post['_id']) {
