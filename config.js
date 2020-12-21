@@ -7,6 +7,8 @@ module.exports = {
         creator: 'cyberfounder',
         // html is supported in all fields excl. breadcrumb_title, page_title
         ru: {
+            meta_title: 'GolosTalk - форум на базе блокчейна Голос',
+            meta_description: 'Форум с вознаграждениями токенами, работающий на базе децентрализованного блокчейна.',
             title: 'Форум на блокчейне Голос',
             description: 'Пишите, общайтесь, получайте вознаграждения и награждайте других :)',
             breadcrumb_title: 'GolosTalk',
@@ -16,6 +18,8 @@ module.exports = {
             footer_description: 'GolosTalk — форум на платформе <a href="https://golos.id" target="_new">блокчейна Голос</a> (разработан <a href="https://golos.id/@id-raccoon-hater" target="_new">@id-raccoon-hater</a>)'
         },
         en: {
+            meta_title: 'GolosTalk - forum based on the Golos blockchain',
+            meta_description: 'Forum with token rewards that operates on the basis of a decentralized blockchain.',
             title: 'Forum on Golos Blockchain',
             description: 'On this forum <b>you</b> can post, donate and receive others donates :)',
             breadcrumb_title: 'GolosTalk',

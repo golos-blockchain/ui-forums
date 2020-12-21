@@ -22,8 +22,8 @@ export default class ForumPostModeration extends React.Component {
                 const processing = moderation.last.loading;
                 if (!processing) {
                     switch (moderation.last.type) {
-                        case "MODERATION_REMOVE_RESOLVED":
-                        case "MODERATION_RESTORE_RESOLVED":
+                        case 'MODERATION_REMOVE_RESOLVED':
+                        case 'MODERATION_RESTORE_RESOLVED':
                             new Noty({
                                 closeWith: ['click', 'button'],
                                 layout: 'topRight',
@@ -46,29 +46,29 @@ export default class ForumPostModeration extends React.Component {
 
     showConfirm = () => {
         this.setState({showConfirm: true});
-    }
+    };
 
     hideConfirm = () => {
         this.setState({showConfirm: false});
-    }
+    };
 
     handleHidePost = () => {
         const moderator = this.props.account;
         this.props.actions.moderatorHidePostForum(moderator.key, moderator, this.props.topic, this.props.forum);
         setTimeout(() => {
-          window.location.reload();
+            window.location.reload();
         },
         500);
-    }
+    };
 
     handleRevealPost = () => {
         const moderator = this.props.account;
         this.props.actions.moderatorRevealPostForum(moderator.key, moderator, this.props.topic, this.props.forum);
         setTimeout(() => {
-          window.location.reload();
+            window.location.reload();
         },
         500);
-    }
+    };
 
     render() {
         const { account, forum, moderation, topic } = this.props;
@@ -79,43 +79,43 @@ export default class ForumPostModeration extends React.Component {
         let lastResult = false;
         const isHidden = !!forum.hidden[topic.id];
         /*if (moderation.last) {
-          const last_topic = moderation.last.payload[1].topic
-          if(last_topic === topic._id) {
-            processing = moderation.last.loading
-            if(!processing) {
-              let requestType = ''
-              switch(moderation.last.type) {
-                case "MODERATION_REMOVE_RESOLVED":
-                  requestType = 'removal'
-                  break;
-                case "MODERATION_RESTORE_RESOLVED":
-                  requestType = 'restore'
-                  break;
-                default:
-                  requestType = 'unknown'
-                  break;
-              }
-              lastResult = (
-                <Message icon color='yellow'>
-                  <Icon name='circle notched' loading />
-                  <Message.Content>
-                    <Message.Header>Your {requestType} request has been broadcast to the blockchain.</Message.Header>
-                    Please wait up to 5 minutes for your changes to show on chainBB.
-                  </Message.Content>
-                </Message>
-              )
+            const last_topic = moderation.last.payload[1].topic;
+            if (last_topic === topic._id) {
+                processing = moderation.last.loading;
+                if (!processing) {
+                    let requestType = '';
+                    switch (moderation.last.type) {
+                        case 'MODERATION_REMOVE_RESOLVED':
+                            requestType = 'removal'
+                            break;
+                        case 'MODERATION_RESTORE_RESOLVED':
+                            requestType = 'restore'
+                            break;
+                        default:
+                            requestType = 'unknown'
+                            break;
+                    }
+                    lastResult = (
+                        <Message icon color='yellow'>
+                            <Icon name='circle notched' loading />
+                            <Message.Content>
+                                <Message.Header>Your {requestType} request has been broadcast to the blockchain.</Message.Header>
+                                Please wait up to 5 minutes for your changes to show on chainBB.
+                            </Message.Content>
+                        </Message>
+                    );
+                }
             }
-          }
         }*/
         let actions = {signinAccount: isHidden ? this.handleRevealPost : this.handleHidePost,
-          onClose: this.hideConfirm};
+            onClose: this.hideConfirm};
         return (
             <span>
                 <Button size='small'
                     color={isHidden ? 'red' : 'blue'}
                     icon={isHidden ? 'eye' : 'low vision'}
                     onClick={actions.signinAccount} />
-                <LoginModal authType="active" noButton={true}
+                <LoginModal authType='active' noButton={true}
                     open={this.state.showConfirm}
                     actions={actions} />
             </span>

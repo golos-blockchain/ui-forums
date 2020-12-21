@@ -109,7 +109,9 @@ async function setForumStats(_id, forum, tags) {
 router.get('/', async (ctx) => {
     let keys = {};
     keys[NOTE_] = Object;
+    keys[NOTE_PST_HIDMSG_LST] = Object;
     keys[NOTE_PST_HIDMSG_LST_ACCS] = Array;
+    keys[NOTE_PST_HIDACC_LST] = Object;
     keys[NOTE_PST_HIDACC_LST_ACCS] = Array;
 
     let vals = await getValues(keys);
@@ -158,8 +160,9 @@ router.get('/forums', async (ctx) => {
 router.get('/forum/:slug', async (ctx) => {
     let keys = {};
     keys[NOTE_] = Object;
-    keys[NOTE_PST_HIDMSG_LST] = Array;
+    keys[NOTE_PST_HIDMSG_LST] = Object;
     keys[NOTE_PST_HIDMSG_LST_ACCS] = Array;
+    keys[NOTE_PST_HIDACC_LST] = Object;
     keys[NOTE_PST_HIDACC_LST_ACCS] = Array;
     const vals = await getValues(keys);
 
@@ -221,6 +224,9 @@ const DEFAULT_VOTE_LIMIT = 10000
 router.get('/:category/@:author/:permlink', async (ctx) => {
     let keys = {};
     keys[NOTE_] = Object;
+    keys[NOTE_PST_HIDACC_LST] = Object;
+    keys[NOTE_PST_HIDACC_LST_ACCS] = Array;
+    keys[NOTE_PST_HIDMSG_LST_ACCS] = Array;
     const vals = await getValues(keys);
 
     const { _id, forum } = findForum(vals[NOTE_], ctx.params.category);
@@ -238,6 +244,10 @@ router.get('/:category/@:author/:permlink', async (ctx) => {
 })
 
 router.get('/:category/@:author/:permlink/responses', async (ctx) => {
+    let keys = {};
+    keys[NOTE_PST_HIDACC_LST] = Object;
+    const vals = await getValues(keys);
+
     let data = await golos.api.getContentReplies(ctx.params.author, ctx.params.permlink, DEFAULT_VOTE_LIMIT, 0);
     for (let item of data) {
         item.donate_list = [];
@@ -252,6 +262,10 @@ router.get('/:category/@:author/:permlink/responses', async (ctx) => {
 })
 
 router.get('/:category/@:author/:permlink/donates', async (ctx) => {
+    let keys = {};
+    keys[NOTE_PST_HIDACC_LST] = Object;
+    const vals = await getValues(keys);
+
     const donate_list = await golos.api.getDonates(false, {author: ctx.params.author, permlink: ctx.params.permlink}, '', '', 200, 0, false);
     const donate_uia_list = await golos.api.getDonates(true, {author: ctx.params.author, permlink: ctx.params.permlink}, '', '', 200, 0, false);
     ctx.body = {
@@ -262,9 +276,18 @@ router.get('/:category/@:author/:permlink/donates', async (ctx) => {
 })
 
 router.get('/@:author', async (ctx) => {
-    const data = await golos.api.getAccounts([ctx.params.author]);
+    let keys = {};
+    keys[NOTE_PST_HIDACC_LST] = Object;
+    keys[NOTE_PST_HIDACC_LST_ACCS] = Array;
+    keys[NOTE_PST_HIDMSG_LST_ACCS] = Array;
+    const vals = await getValues(keys);
+
+    let data = await golos.api.getAccounts([ctx.params.author]);
     ctx.body = {
         data: data[0],
+        moders: vals[NOTE_PST_HIDMSG_LST_ACCS],
+        supers: vals[NOTE_PST_HIDACC_LST_ACCS],
+        banned: vals[NOTE_PST_HIDACC_LST],
         "network": {}, 
         "status": "ok"
     }

@@ -8,10 +8,10 @@ import AccountCard from '../../../containers/account/card';
 
 export default class AccountLink extends React.Component {
     render() {
-        const { color, username, reputation, noPopup } = this.props;
+        const { color, username, reputation, noPopup, isBanned } = this.props;
         const content = this.props.content || `@${username}`;
         const link = (
-            <Link to={`/@${username}`} style={{color}}>
+            <Link to={`/@${username}`} style={{color, textDecoration: isBanned ? 'line-through' : undefined}}>
                 {content}
             </Link>
         );

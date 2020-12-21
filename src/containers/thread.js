@@ -245,7 +245,7 @@ class Thread extends React.Component {
                   </Segment>
             );
         }
-        let image = 'https://steemit-production-imageproxy-upload.s3.amazonaws.com/DQmckc76UaBZSicePvDG9dKwrgyS5GoZRxAnBZ8AzxtVwH8';
+        let image = 'https://i.imgur.com/0AeZtdV.png';
         if (content && content.json_metadata && content.json_metadata.image && content.json_metadata.image.length > 0) {
             image = content.json_metadata.image[0];
         }
@@ -253,17 +253,14 @@ class Thread extends React.Component {
         return (
             <div>
                 <Helmet>
-                    <title>{title}</title>
+                    <title>{title}</title>                    
                     <meta name='description' content={`Posted by ${content.author} on ${content.created} UTC.`} />
-                    <meta itemprop='name' content={title} />
-                    <meta itemprop='description' content={`Posted by ${content.author} on ${content.created} UTC.`} />
-                    <meta itemprop='image' content={image} />
                     <meta name='twitter:title' content={title} />
                     <meta name='twitter:description' content={`Posted by ${content.author} on ${content.created} UTC.`} />
                     <meta name='twitter:image:src' content={image} />
                     <meta property='og:title' content={title} />
-                    <meta property='og:url' content={`http://chainbb.com/${(content.post && content.post.forum) ? content.post.forum._id : content.category}/@${content.author}/${content.permlink}`} />
                     <meta property='og:description' content={`Posted by ${content.author} on ${content.created} UTC.`} />
+                    <meta property='og:image' content={image} />
                 </Helmet>
                 <Post
                     action={this.state.action}

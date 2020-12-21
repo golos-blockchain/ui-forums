@@ -16,6 +16,9 @@
     "comments": "Replies",
     "write_your_reply": "Write your reply",
     "edit_your_post": "Edit your post",
+    "submitted": "Your post has been submitted!",
+    "submitted_edit": "Your post has been edited!",
+    "submitted_desc": "It may take a few moments to appear on forum.",
     "post_hidden_AUTHOR": "Post by @%(AUTHOR)s hidden (low ratings) - click to show",
     "reply_hidden_AUTHOR": "Reply by @%(AUTHOR)s hidden (low ratings) - click to show",
     "hide_confirm": "Are you sure you want to hide this post?",
@@ -23,8 +26,8 @@
     "keep_btn": "Keep Post",
     "reveal_confirm": "Are you sure you want to reveal this post?",
     "reveal_btn": "Reveal Post",
-    "submitted": "Your post has been submitted!",
-    "submitted_desc": "It may take a few moments to appear on forum.",
+    "ban": "Block User",
+    "unban": "UNblock User",
 
     "forum_info": "Forum Settings",
     "return_ro_froum": "Return to forum",
@@ -127,7 +130,6 @@
     "wrong_password_not_active": "This operation requires active-ключ, not posting or owner",
     "wrong_password_active": "Cannot login with active key (even if posting key is same)",
     "wrong_password_owner": "Cannot login with owner key (even if posting key is same)",
-
     "sign_up": "Register",
     "enter_email": "Enter your e-mail",
     "enter_username": "Enter your name username",
@@ -146,7 +148,6 @@
     "each_account_segment_should_have_only_one_dash_in_a_row": "Account name should have only one dash in a row.",
     "each_account_segment_should_end_with_a_letter_or_digit": "Account name should end with a letter or digit.",
     "each_account_segment_should_be_longer": "Account name should not be shorter than 3 characters.",
-
     "account_name_used": "Such account already exists."
   },
   "g": {

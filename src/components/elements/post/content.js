@@ -61,9 +61,9 @@ export default class PostContent extends React.Component {
             theme: 'semanticui',
             text: ReactDOMServer.renderToString(
                 <Header>
-                    Your post has been edited
+                    {tt('forum_controls.submitted_edit')}
                     <Header.Subheader>
-                        It may take a few moments to update throughout chainBB.com.
+                        {tt('forum_controls.submitted_desc')}
                     </Header.Subheader>
                 </Header>
             ),

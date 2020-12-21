@@ -405,16 +405,13 @@ class Forum extends React.Component {
           meta = (
               <Helmet>
                   <title>{title}</title>
-                  <meta name='description' content={forum.description} />
-                  <meta itemprop='name' content={title} />
-                  <meta itemprop='description' content={forum.description} />
-                  <meta itemprop='image' content='https://steemit-production-imageproxy-upload.s3.amazonaws.com/DQmckc76UaBZSicePvDG9dKwrgyS5GoZRxAnBZ8AzxtVwH8' />
+                  <meta name='description' content={forum.desc_ru} />
                   <meta name='twitter:title' content={title} />
-                  <meta name='twitter:description' content={forum.description} />
-                  <meta name='twitter:image:src' content='https://steemit-production-imageproxy-upload.s3.amazonaws.com/DQmckc76UaBZSicePvDG9dKwrgyS5GoZRxAnBZ8AzxtVwH8' />
+                  <meta name='twitter:description' content={forum.desc_ru} />
+                  <meta name='twitter:image:src' content='https://i.imgur.com/0AeZtdV.png' />
                   <meta property='og:title' content={title} />
-                  <meta property='og:url' content={`http://netify.chainbb.com/f/${forumid}`} />
-                  <meta property='og:description' content={forum.description} />
+                  <meta property='og:description' content={forum.desc_ru} />
+                  <meta property='og:image' content='https://i.imgur.com/0AeZtdV.png' />
               </Helmet>
           );
       }
