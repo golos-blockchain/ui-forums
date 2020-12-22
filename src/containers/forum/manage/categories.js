@@ -256,7 +256,7 @@ class ForumCategoriesForm extends React.Component {
                                 <List.Description>
                                     {forum.name}
                                 </List.Description>
-                            </td><td>&nbsp;&nbsp;&nbsp;</td><td>
+                            </td><td>&nbsp;&nbsp;&nbsp;</td>{account.name === CONFIG.FORUM.creator ? (<td>
                                 <Popup
                                     mouseEnterDelay={500}
                                     trigger={
@@ -319,7 +319,7 @@ class ForumCategoriesForm extends React.Component {
                                     content={tt('g.remove')}
                                     inverted
                                 />
-                            </td></tr></tbody></table>
+                            </td>) : null}</tr></tbody></table>
                             {innerList}
                         </List.Content>
                     </List.Item>
@@ -398,13 +398,13 @@ class ForumCategoriesForm extends React.Component {
                         </Header>
                     </Segment>
                     <Segment attached>
-                        <Button
+                        {account.name === CONFIG.FORUM.creator ? (<Button
                             color='purple'
                             parentIds={[]}
                             onClick={this.addEditCategory}
                         >
                             {tt('g.add')}
-                        </Button>
+                        </Button>) : null}
                         <List>
                             {listItems}
                         </List>
