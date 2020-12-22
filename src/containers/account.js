@@ -2,11 +2,10 @@ import React from 'react';
 import { Helmet } from 'react-helmet';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { goToTop } from 'react-scrollable-anchor';
 import tt from 'counterpart';
-import { getPageTitle } from '../utils/text';
 
 import { Grid, Button } from 'semantic-ui-react';
-import { goToTop } from 'react-scrollable-anchor';
 
 import * as CONFIG from '../../config';
 import * as accountActions from '../actions/accountActions';
@@ -19,6 +18,7 @@ import * as statusActions from '../actions/statusActions';
 
 import AccountSidebar from '../components/elements/account/sidebar';
 import AccountTabs from '../components/elements/account/tabs';
+import { getPageTitle } from '../utils/text';
 
 class Account extends React.Component {
 

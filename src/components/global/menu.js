@@ -41,7 +41,7 @@ class HeaderMenu extends Component {
             for (let [sym, obj] of Object.entries(data.uia_balances)) {
                 hasBalance.push(obj.tip_balance);
             }
-            this.setState({hasBalance, isClaiming: false});
+            this.setState({ hasBalance, isClaiming: false });
         }
     }
 
@@ -51,7 +51,7 @@ class HeaderMenu extends Component {
         const reward_sbd = data.reward_sbd_balance;
         const reward_steem = data.reward_steem_balance;
         const reward_vests = data.reward_vesting_balance;
-        this.setState({isClaiming: true});
+        this.setState({ isClaiming: true });
         this.props.actions.claimRewards({ account, reward_sbd, reward_steem, reward_vests });
     };
 

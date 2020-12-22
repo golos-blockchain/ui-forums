@@ -1,9 +1,8 @@
-import * as types from './actionTypes';
-import steem from 'steem';
 import golos from 'golos-classic-js';
 import store from 'store';
 import Noty from 'noty';
 
+import * as types from './actionTypes';
 import * as AccountsActions from './accountsActions';
 import * as chainstateActions from './chainstateActions';
 
@@ -19,7 +18,7 @@ export function claimRewards(params) {
                 reward_vests
             }]
         ];
-        steem.broadcast.send({
+        golos.broadcast.send({
             operations: ops,
             extensions: []
         }, {
@@ -52,8 +51,8 @@ export function fetchAccount(account) {
         });
         if (payload.isUser) {
             setTimeout(function() {
-                golos.api.getAccounts([payload.name], function(err, data) {
-                    golos.api.getAccountsBalances([payload.name], function(err2, data2) {
+                golos.api.getAccounts([payload.name], (err, data) => {
+                    golos.api.getAccountsBalances([payload.name], (err2, data2) => {
                         data[0].uia_balances = data2[0];
                         dispatch(fetchAccountResolved(Object.assign({}, payload, {
                             data: data[0],
@@ -69,7 +68,7 @@ export function fetchAccount(account) {
 
 export function fetchAccountFollowing(name, start="", limit=100) {
     return dispatch => {
-        golos.api.getFollowing(name, start, "blog", limit, function(err, result) {
+        golos.api.getFollowing(name, start, "blog", limit, (err, result) => {
             if (!result) return;
             const accounts = result.map((c) => { return c.following });
             if (result.length === limit) {
@@ -124,7 +123,7 @@ export function follow(payload) {
         const who = payload.who;
         const what = (payload.action === 'follow') ? ['blog'] : [];
         const json = JSON.stringify(['follow', {follower: account, following: who, what: what}]);
-        steem.broadcast.customJsonAsync(wif, [], [account], 'follow', json, function(err, result) {
+        golos.broadcast.customJsonAsync(wif, [], [account], 'follow', json, (err, result) => {
             if (payload.action === 'follow') {
                 dispatch({
                     type: types.ACCOUNT_FOLLOWING_APPEND,

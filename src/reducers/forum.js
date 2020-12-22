@@ -1,6 +1,7 @@
+import _ from 'lodash';
+
 import * as types from '../actions/actionTypes';
 import * as CONFIG from '../../config';
-import _ from 'lodash'
 
 export default function forum(state = {last: null}, action) {
   switch(action.type) {

@@ -2,9 +2,9 @@ import React from 'react'
 import { Helmet } from "react-helmet";
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux'
+import { goToTop } from 'react-scrollable-anchor';
 
 import { Grid } from 'semantic-ui-react'
-import { goToTop } from 'react-scrollable-anchor'
 
 import * as accountActions from '../../actions/accountActions'
 import * as breadcrumbActions from '../../actions/breadcrumbActions'

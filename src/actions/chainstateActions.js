@@ -1,12 +1,13 @@
-import * as types from './actionTypes';
 import golos from 'golos-classic-js';
+
+import * as types from './actionTypes';
 
 export function getAccounts(accounts) {
     return dispatch => {
         dispatch({
             type: types.CHAINSTATE_ACCOUNT_LOAD_PROCESSING
         });
-        golos.api.getAccounts(accounts, function(err, data) {
+        golos.api.getAccounts(accounts, (err, data) => {
             if (err) {
                 dispatch(getAccountsFailed(err));
             } else {
@@ -28,13 +29,13 @@ export function getAccountsResolved(payload) {
         type: types.CHAINSTATE_ACCOUNT_LOAD_RESOLVED,
         ts: +new Date,
         payload: payload
-    }
+    };
 }
 
 export function getDynamicGlobalProperties() {
     return dispatch => {
-        golos.api.getDynamicGlobalProperties(function(err, data) {
-            dispatch(getDynamicGlobalPropertiesResolved(data))
+        golos.api.getDynamicGlobalProperties((err, data) => {
+            dispatch(getDynamicGlobalPropertiesResolved(data));
         });
     };
 }

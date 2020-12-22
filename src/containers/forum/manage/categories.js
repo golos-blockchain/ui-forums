@@ -218,7 +218,7 @@ class ForumCategoriesForm extends React.Component {
                 key: 'g.f.' + CONFIG.FORUM._id.toLowerCase(),
                 value: values
             }]),
-            function (err, result) {
+            (err, result) => {
                 if (err) {
                     alert(err);
                     return;

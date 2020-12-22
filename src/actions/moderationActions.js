@@ -1,6 +1,6 @@
-import * as types from './actionTypes';
 import golos from 'golos-classic-js';
 
+import * as types from './actionTypes';
 import * as CONFIG from '../../config';
 
 function setValue(wif, isPosting, account, key, value, callback) {

@@ -1,7 +1,8 @@
 import React from 'react'
 import { Helmet } from "react-helmet";
 import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux'
+import { connect } from 'react-redux';
+import { goToTop } from 'react-scrollable-anchor';
 import tt from 'counterpart';
 import ttGetByKey from '../../utils/ttGetByKey';
 import golos from 'golos-classic-js';
@@ -9,7 +10,6 @@ import { key_utils } from 'golos-classic-js/lib/auth/ecc';
 import { validateAccountName } from 'golos-classic-js/lib/utils';
 
 import { Grid, Header, Label } from 'semantic-ui-react';
-import { goToTop } from 'react-scrollable-anchor';
 import { Form } from 'formsy-semantic-ui-react';
 
 import * as CONFIG from '../../../config';

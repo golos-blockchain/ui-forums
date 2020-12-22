@@ -1,7 +1,8 @@
 import React from 'react';
+import { goToTop } from 'react-scrollable-anchor';
 
-import { Grid, Header, Segment } from 'semantic-ui-react'
-import { goToTop } from 'react-scrollable-anchor'
+import { Grid, Header, Segment } from 'semantic-ui-react';
+
 import AccountLink from '../link'
 import ForumPostReply from '../../forum/post/reply'
 import Paginator from '../../../global/paginator'

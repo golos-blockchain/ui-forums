@@ -2,7 +2,6 @@ import React from 'react';
 import { Helmet } from 'react-helmet';
 import { BrowserRouter, browserHistory, Route, Switch, Redirect } from 'react-router-dom';
 import * as CONFIG from '../../config';
-import steem from 'steem';
 import golos from 'golos-classic-js';
 
 import tt from 'counterpart';
@@ -35,8 +34,6 @@ import GlobalNotice from '../components/global/notice';
 
 import './app.css';
 import '../../node_modules/noty/lib/noty.css';
-
-steem.api.setOptions({ url: CONFIG.GOLOS_NODE });
 
 golos.config.set('websocket', CONFIG.GOLOS_NODE);
 if (CONFIG.GOLOS_CHAIN_ID && CONFIG.GOLOS_CHAIN_ID.length) {

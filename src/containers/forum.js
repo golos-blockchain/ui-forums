@@ -8,7 +8,6 @@ import ReactDOMServer from 'react-dom/server';
 import Noty from 'noty';
 import slug from 'slug';
 import tt from 'counterpart';
-import { getForumName, getPageTitle } from '../utils/text';
 
 import { Accordion, Dimmer, Grid, Header, Icon, Loader, Message, Segment } from 'semantic-ui-react';
 
@@ -28,6 +27,7 @@ import Forum404 from '../components/elements/forum/404';
 import ForumPosts from '../components/elements/forum/posts';
 import PostForm from './post/form';
 import PostFormHeader from '../components/elements/post/form/header';
+import { getForumName, getPageTitle } from '../utils/text';
 
 const configSections = ['overview', 'upgrades', 'permissions', 'configuration'];
 

@@ -1,8 +1,7 @@
 import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux'
-import { goToTop } from 'react-scrollable-anchor'
-
+import { goToTop } from 'react-scrollable-anchor';
 
 import { Dimmer, Loader, Grid, Header, Segment  } from 'semantic-ui-react'
 

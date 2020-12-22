@@ -1,5 +1,6 @@
+import store from 'store';
+
 import * as types from '../actions/actionTypes';
-import store from 'store'
 
 const initialPreferences = {
   votePowerPost: 100,

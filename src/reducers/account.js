@@ -1,6 +1,7 @@
-import * as types from '../actions/actionTypes';
 import store from 'store'
 import _ from 'lodash'
+
+import * as types from '../actions/actionTypes';
 
 export default function account(state = false, action) {
   switch(action.type) {

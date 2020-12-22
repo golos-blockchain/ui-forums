@@ -1,5 +1,6 @@
+import _ from 'lodash';
+
 import * as types from '../actions/actionTypes';
-import _ from 'lodash'
 
 export default function moderation(state = {last: null}, action) {
   switch(action.type) {
