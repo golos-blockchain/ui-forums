@@ -7,7 +7,7 @@ import Paginator from '../../global/paginator'
 
 export default class ForumControls extends React.Component {
     render() {
-        const { isUser, page, perPage, posts } = this.props
+        const { isUser, isBanned, page, perPage, posts } = this.props;
         let newPostButton = (
                 <Popup
                     trigger={
@@ -18,17 +18,19 @@ export default class ForumControls extends React.Component {
                     }
                     position='bottom center'
                     inverted
-                    content={tt('forum_controls.you_must_be_logged_in_to_post')}
+                    content={isBanned ? 
+                        tt('forum_controls.you_are_blocked') :
+                        tt('forum_controls.you_must_be_logged_in_to_post')}
                     basic
                 />
             )
-        if(isUser) {
+        if (isUser && !isBanned) {
             newPostButton = (
                 <Button floated='left' color='green' size='tiny' onClick={this.props.showNewPost}>
                     <i className='pencil icon'></i>
                     {tt('forum_controls.new_post')}
                 </Button>
-            )
+            );
         }
         return (
             <Menu fluid style={{border: 'none', boxShadow: 'none'}} attached size='small'>

@@ -205,13 +205,14 @@ class Thread extends React.Component {
                 </Grid>
             </Segment>
         );
+        const isBanned = this.props.post.forum && !!this.props.post.forum.banned[this.props.account.name];
         let nav = (
             <Segment basic>
                 <Grid id={(page ? `comments-page-${page}` : '')}>
                     <Grid.Row verticalAlign='middle'>
                         <Grid.Column className='mobile hidden' width={8}>
                             <Header>
-                                <a name='reply' style={{ color: 'black' }}>{tt('forum_controls.write_your_reply')}</a>
+                                <a name='reply' style={{ color: 'black' }}>{!isBanned && tt('forum_controls.write_your_reply')}</a>
                             </Header>
                         </Grid.Column>
                         <Grid.Column mobile={16} tablet={8} computer={8}>
@@ -226,7 +227,7 @@ class Thread extends React.Component {
                 </Grid>
             </Segment>
         );
-        if (this.props.post && this.props.post.content && this.props.account && this.props.account.isUser) {
+        if (this.props.post && this.props.post.content && this.props.account && this.props.account.isUser && !isBanned) {
             postForm = (
                 <Segment secondary>
                     <PostForm

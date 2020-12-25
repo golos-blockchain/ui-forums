@@ -33,6 +33,7 @@ class ForumCategoriesForm extends React.Component {
             addEditParentIds: null,
             editCatId: null,
             tags_detected: [],
+            loading: false,
         };
         this.state.categories = props.categories;
         this.sanitizeCategories(this.state.categories);
@@ -210,6 +211,9 @@ class ForumCategoriesForm extends React.Component {
     };
     hideConfirm = () => this.setState({showConfirm: false});
     broadcast = (account, wif) => {
+        this.setState({ loading: true });
+        let tasks = 0;
+
         let values = JSON.stringify(this.state.categories);
 
         golos.broadcast.customJson(wif, [account], [], "account_notes",
@@ -219,6 +223,23 @@ class ForumCategoriesForm extends React.Component {
                 value: values
             }]),
             (err, result) => {
+                ++tasks;
+                if (tasks == 2) this.setState({ loading: false });
+                if (err) {
+                    alert(err);
+                    return;
+                }
+            });
+
+        golos.broadcast.customJson(this.props.account.key, [], [account], "account_notes",
+            JSON.stringify(['set_value', {
+                account: account,
+                key: 'g.pst.f.' + CONFIG.FORUM._id.toLowerCase() + '.stats.lst.accs',
+                value: '[".all"]'
+            }]),
+            (err, result) => {
+                ++tasks;
+                if (tasks == 2) this.setState({ loading: false });
                 if (err) {
                     alert(err);
                     return;
@@ -228,7 +249,7 @@ class ForumCategoriesForm extends React.Component {
 
     render() {
         const { account } = this.props
-        const { name, description, tags, categories, addEditParentIds, editCatId, showConfirm } = this.state
+        const { name, description, tags, categories, addEditParentIds, editCatId, showConfirm, loading } = this.state
 
         let catsToItems = (cats, parentIds=[]) => {
             let listItems = [];
@@ -383,6 +404,9 @@ class ForumCategoriesForm extends React.Component {
         let actions = {signinAccount: this.broadcast, onClose: this.hideConfirm};
         return (
             <div>
+                {loading ? <Dimmer>
+                        <Loader size='large' />
+                </Dimmer> : null}
                 <LoginModal authType="active" noButton={true} open={showConfirm} actions={actions}/>
                 {newForumDisplay}
                 <Form

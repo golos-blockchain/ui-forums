@@ -98,3 +98,25 @@ export function fetchForumDetails(ns) {
             })*/
     };
 }
+
+export async function updateForumStats(wif, account, _id, addPosts, addComments) {
+    try {
+        const key = 'g.pst.f.' + CONFIG.FORUM._id.toLowerCase() + '.stats.lst';
+        let vals = await golos.api.getValues(CONFIG.FORUM.creator, [key]);
+        vals[key] = vals[key] ? JSON.parse(vals[key]) : {};
+        let stat = vals[key][_id] || {posts: 0, comments: 0};
+        stat.posts += addPosts;
+        stat.comments += addComments;
+        vals[key][_id] = stat;
+        await golos.broadcast.customJson(wif, [], [account], 'account_notes',
+            JSON.stringify(['set_value', {
+                account,
+                key,
+                value: JSON.stringify({[_id]: stat})
+            }]));
+        return true;
+    } catch (err) {
+        console.log(err);
+        return false;
+    }
+}

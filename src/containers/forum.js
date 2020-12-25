@@ -48,6 +48,7 @@ class Forum extends React.Component {
           showModerated: false,
           showSubforums: true,
           forum: {
+              banned: {}
           }
       };
       this.getForum = this.getForum.bind(this);
@@ -126,8 +127,8 @@ class Forum extends React.Component {
       this.getForum();
   }
 
-  setForum = (forumRaw, moders, supers, hidden) => {
-      let forum = Object.assign({moders, supers, hidden}, forumRaw);
+  setForum = (forumRaw, moders, supers, hidden, banned) => {
+      let forum = Object.assign({moders, supers, hidden, banned}, forumRaw);
       this.setState({forum});
       this.props.actions.setForum(forum);
   };
@@ -187,7 +188,7 @@ class Forum extends React.Component {
           if (response.ok) {
               const result = await response.json()
               this.props.actions.setStatus({'network': result.network});
-              this.setForum(result.forum, result.moders, result.supers, result.hidden)
+              this.setForum(result.forum, result.moders, result.supers, result.hidden, result.banned)
               this.setBreadcrumb(result)
 
               // If a valid forum is found
@@ -297,6 +298,7 @@ class Forum extends React.Component {
                       changePage={this.changePage.bind(this)}
                       changeVisibility={this.changeVisibility.bind(this)}
                       isUser={isUser}
+                      isBanned={!!forum.banned[account.name]}
                       page={page}
                       perPage={perPage}
                       posts={posts}

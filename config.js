@@ -34,6 +34,10 @@ module.exports = {
         ipfs_prefix: false,
         upload_image: 'https://steemitimages.com',
     },
+    MODERATION: {
+        // if post/comment has lesser net_rshares, it will be hidden
+        hide_threshold: -9999999999
+    },
     PROGRESSION: {
         increment: 25,
         steps: [

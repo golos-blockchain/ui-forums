@@ -19,7 +19,6 @@
     "submitted": "Your post has been submitted!",
     "submitted_edit": "Your post has been edited!",
     "submitted_desc": "It may take a few moments to appear on forum.",
-    "post_hidden_AUTHOR": "Post by @%(AUTHOR)s hidden (low ratings) - click to show",
     "reply_hidden_AUTHOR": "Reply by @%(AUTHOR)s hidden (low ratings) - click to show",
     "hide_confirm": "Are you sure you want to hide this post?",
     "hide_btn": "Hide Post",
@@ -28,6 +27,7 @@
     "reveal_btn": "Reveal Post",
     "ban": "Block User",
     "unban": "UNblock User",
+    "you_are_blocked": "You are Blocked",
 
     "forum_info": "Forum Settings",
     "return_ro_froum": "Return to forum",

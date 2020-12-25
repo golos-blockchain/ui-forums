@@ -92,7 +92,7 @@ export default class ForumIndex extends React.Component {
             </Grid.Column>
             <Grid.Column width={2} className='tablet or lower hidden' textAlign='center'>
               <Header size='medium'>
-                <NumericLabel params={numberFormat}>{(forum.stats) ? forum.stats.top_posts : '?'}</NumericLabel>
+                <NumericLabel params={numberFormat}>{(forum.stats) ? forum.stats.posts : '?'}</NumericLabel>
               </Header>
             </Grid.Column>
             <Grid.Column width={2} className='tablet or lower hidden' textAlign='center'>

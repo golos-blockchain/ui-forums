@@ -1,8 +1,7 @@
 import React from 'react';
-import slug from 'slug'
+import slug from 'slug';
 
-import ForumPostText from './post/types/text'
-// import ForumPostThumbnail from './post/types/thumbnail'
+import ForumPostText from './post/types/text';
 
 export default class ForumPost extends React.Component {
     constructor(props) {
@@ -31,7 +30,7 @@ export default class ForumPost extends React.Component {
     }
 
     render() {
-        return ((this.props.topic.hidden && !this.state.isModerator) ? null :
+        return (((this.props.topic.post_hidden || this.props.topic.author_banned) && !this.state.isModerator) ? null :
             <ForumPostText
                 onMouseEnter={this.onMouseEnter.bind(this)}
                 onMouseLeave={this.onMouseLeave.bind(this)}
@@ -40,10 +39,6 @@ export default class ForumPost extends React.Component {
                 state={this.state}
                 {... this.props}
             />
-            // <ForumPostThumbnail
-            //   state={this.state}
-            //   {... this.props}
-            // />
-        )
+        );
     }
 }

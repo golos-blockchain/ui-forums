@@ -37,6 +37,7 @@ const NOTE_PST_HIDMSG_LST      = NOTE_PST_ + '.hidmsg' + LST;
 const NOTE_PST_HIDMSG_LST_ACCS = NOTE_PST_ + '.hidmsg' + LST + ACCS;
 const NOTE_PST_HIDACC_LST      = NOTE_PST_ + '.hidacc' + LST;
 const NOTE_PST_HIDACC_LST_ACCS = NOTE_PST_ + '.hidacc' + LST + ACCS;
+const NOTE_PST_STATS_LST       = NOTE_PST_ + '.stats' + LST;
 
 let getValues = async (keys) => {
     let vals = await golos.api.getValues(CONFIG.FORUM.creator, Object.keys(keys));
@@ -62,6 +63,7 @@ function idToTag(_id) {
 function findForum(vals, forum_id, trail = []) {
     for (let [_id, forum] of Object.entries(vals)) {
         if (_id.toLowerCase() === forum_id.toLowerCase()) {
+            forum._id = _id; // for moderation, etc
             forum.creator = 'cyberfounder';
             forum.tags = [idToTag(_id), 'fm-' + GLOBAL_ID];
             forum.trail = [...trail, {
@@ -86,10 +88,11 @@ function getUrl(urlRaw, _id) {
     return '/' + _id + urlRaw.substring(('/' + idToTag(_id)).length);
 }
 
-async function setForumStats(_id, forum, tags) {
-    const tag = idToTag(_id);
-    forum.stats = tags[tag] || {top_posts: 0, comments: 0};
+async function setForumStats(_id, forum, stats) {
+    if (!stats) return;
+    forum.stats = stats[_id] || {posts: 0, comments: 0};
 
+    const tag = idToTag(_id);
     const data = await golos.api.getAllDiscussionsByActive(
         '', '', 1,
         tag,
@@ -113,16 +116,12 @@ router.get('/', async (ctx) => {
     keys[NOTE_PST_HIDMSG_LST_ACCS] = Array;
     keys[NOTE_PST_HIDACC_LST] = Object;
     keys[NOTE_PST_HIDACC_LST_ACCS] = Array;
+    keys[NOTE_PST_STATS_LST] = Object;
 
     let vals = await getValues(keys);
-    let tags = [];
+
     for (let _id in vals[NOTE_]) {
-        const tag = idToTag(_id);
-        tags.push(tag);
-    }
-    tags = await golos.api.getTags(tags);
-    for (let _id in vals[NOTE_]) {
-        await setForumStats(_id, vals[NOTE_][_id], tags);
+        await setForumStats(_id, vals[NOTE_][_id], vals[NOTE_PST_STATS_LST]);
     }
 
     ctx.body = {
@@ -131,6 +130,7 @@ router.get('/', async (ctx) => {
             'moders': vals[NOTE_PST_HIDMSG_LST_ACCS],
             'supers': vals[NOTE_PST_HIDACC_LST_ACCS],
             'admins': [],
+            'stats': vals[NOTE_PST_STATS_LST],
             'users': {
                 'stats': {
                     'total': 1,
@@ -164,32 +164,31 @@ router.get('/forum/:slug', async (ctx) => {
     keys[NOTE_PST_HIDMSG_LST_ACCS] = Array;
     keys[NOTE_PST_HIDACC_LST] = Object;
     keys[NOTE_PST_HIDACC_LST_ACCS] = Array;
+    keys[NOTE_PST_STATS_LST] = Object;
+
     const vals = await getValues(keys);
 
     const forum_id = ctx.params.slug;
     let {_id, forum} = findForum(vals[NOTE_], forum_id);
 
+    for (let _id in forum.children) {
+        await setForumStats(_id, forum.children[_id], vals[NOTE_PST_STATS_LST]);
+    }
+
     const tag = idToTag(_id);
-
-    let tags = [];
-    for (let _id in forum.children) {
-        forum.children[_id].tags = [tag, 'fm-' + GLOBAL_ID];
-        tags.push(forum.children[_id].tags[0]);
-    }
-    tags = await golos.api.getTags(tags);
-    for (let _id in forum.children) {
-        await setForumStats(_id, forum.children[_id], tags);
-    }
-
     const data = await golos.api.getAllDiscussionsByActive(
         '', '', 10000000,
         tag,
         0, 20
     );
 
+    let filteredData = [];
     const hidden = vals[NOTE_PST_HIDMSG_LST];
+    const banned = vals[NOTE_PST_HIDACC_LST];
     for (let post of data) {
-        post.hidden = !!hidden[post.id];
+        if (ctx.query.filter !== 'all' && post.net_rshares < CONFIG.MODERATION.hide_threshold) continue;
+        post.post_hidden = !!hidden[post.id];
+        post.author_banned = !!banned[post.author];
         post.url = getUrl(post.url, _id);
 
         const replies = await golos.api.getContentReplies(post.author, post.permlink, 0, 0);
@@ -203,10 +202,11 @@ router.get('/forum/:slug', async (ctx) => {
             post.last_reply_by = post.author;
             post.last_reply_url = post.url;
         }
+        filteredData.push(post);
     }
 
     ctx.body = {
-        data: data, 
+        data: filteredData, 
         "network": {}, 
         "status": "ok",
         forum: forum,
@@ -215,6 +215,7 @@ router.get('/forum/:slug', async (ctx) => {
         supers: vals[NOTE_PST_HIDACC_LST_ACCS],
         admins: [],
         hidden: hidden,
+        banned: banned,
         meta: {'query':{},'sort':{}}
     }
 })
@@ -229,12 +230,17 @@ router.get('/:category/@:author/:permlink', async (ctx) => {
     keys[NOTE_PST_HIDMSG_LST_ACCS] = Array;
     const vals = await getValues(keys);
 
-    const { _id, forum } = findForum(vals[NOTE_], ctx.params.category);
+    let { _id, forum } = findForum(vals[NOTE_], ctx.params.category);
 
     let data = await golos.api.getContent(ctx.params.author, ctx.params.permlink, DEFAULT_VOTE_LIMIT);
     data.url = getUrl(data.url, _id);
     data.donate_list = [];
+    data.author_banned = !!vals[NOTE_PST_HIDACC_LST][data.author];
     data.donate_uia_list = [];
+    forum.moders = vals[NOTE_PST_HIDMSG_LST_ACCS];
+    forum.supers = vals[NOTE_PST_HIDACC_LST_ACCS];
+    forum.admins = [];
+    forum.banned = vals[NOTE_PST_HIDACC_LST];
     ctx.body = {
         data: data,
         forum: forum,
@@ -253,6 +259,7 @@ router.get('/:category/@:author/:permlink/responses', async (ctx) => {
         item.donate_list = [];
         item.donate_uia_list = [];
         item.url = getUrl(item.url, ctx.params.category);
+        item.author_banned = !!vals[NOTE_PST_HIDACC_LST][item.author];
     }
     ctx.body = {
         data: data,
@@ -266,8 +273,14 @@ router.get('/:category/@:author/:permlink/donates', async (ctx) => {
     keys[NOTE_PST_HIDACC_LST] = Object;
     const vals = await getValues(keys);
 
-    const donate_list = await golos.api.getDonates(false, {author: ctx.params.author, permlink: ctx.params.permlink}, '', '', 200, 0, false);
-    const donate_uia_list = await golos.api.getDonates(true, {author: ctx.params.author, permlink: ctx.params.permlink}, '', '', 200, 0, false);
+    let donate_list = await golos.api.getDonates(false, {author: ctx.params.author, permlink: ctx.params.permlink}, '', '', 200, 0, false);
+    for (let item of donate_list) {
+        item.from_banned = !!vals[NOTE_PST_HIDACC_LST][item.from];
+    }
+    let donate_uia_list = await golos.api.getDonates(true, {author: ctx.params.author, permlink: ctx.params.permlink}, '', '', 200, 0, false);
+    for (let item of donate_uia_list) {
+        item.from_banned = !!vals[NOTE_PST_HIDACC_LST][item.from];
+    }
     ctx.body = {
         data: {donate_list, donate_uia_list},
         "network": {}, 

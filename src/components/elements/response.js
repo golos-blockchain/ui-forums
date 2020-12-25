@@ -70,8 +70,11 @@ class Response extends React.Component {
       let high_quality_post = true
       let formId = 0
       if(count > 0) {
+        const isModerator = this.props.account && this.props.account.isUser && 
+            (this.props.post.forum.moders.includes(this.props.account.name) 
+            || this.props.post.forum.supers.includes(this.props.account.name));
         display = responses.map((post, index) => {
-          let hidden = (post.net_rshares < -9999999999),
+          let hidden = (post.net_rshares < CONFIG.MODERATION.hide_threshold),
               parent_post = this.getParent(post),
               quote = ''
           if(parent_post['_id']) {
@@ -102,6 +105,9 @@ class Response extends React.Component {
                 </Segment>
               </div>
             )
+          }
+          if (post.author_banned && !isModerator) {
+              return null;
           }
           if(hidden && this.state.revealed.indexOf(post._id) === -1) {
             return (

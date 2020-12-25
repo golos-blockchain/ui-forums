@@ -1,6 +1,7 @@
 import golos from 'golos-classic-js';
 
 import * as types from './actionTypes';
+import * as ForumActions from './forumActions';
 import * as CONFIG from '../../config';
 
 function setValue(wif, isPosting, account, key, value, callback) {
@@ -26,11 +27,11 @@ function hidacc(wif, account, objWithAcc, callback) {
         objWithAcc, callback);
 }
 
-export function moderatorHidePostForum(wif, moderator, post, forum, why = '', time = '') {
+export function moderatorHidePostForum(wif, moderator, post, _id, forum, why = '') {
     return (dispatch: () => void) => {
         const { name } = moderator;
         let obj = {};
-        obj[post.id] = why + '|' + name + '|' + time;
+        obj[post.id] = why + '|' + name + '|' + parseInt(Date.now() / 1000);
         dispatch({
             type: types.MODERATION_HIDE_PROCESSING,
             payload: {moderator, post},
@@ -44,6 +45,9 @@ export function moderatorHidePostForum(wif, moderator, post, forum, why = '', ti
                     loading: false
                 });
             } else {
+                ForumActions.updateForumStats(wif, name, _id,
+                    -1,
+                    0);
                 dispatch({
                     type: types.MODERATION_HIDE_RESOLVED,
                     payload: {moderator, post},
@@ -54,7 +58,7 @@ export function moderatorHidePostForum(wif, moderator, post, forum, why = '', ti
     };
 }
 
-export function moderatorRevealPostForum(wif, moderator, post, forum) {
+export function moderatorRevealPostForum(wif, moderator, post, _id, forum) {
     return (dispatch: () => void) => {
         const { name } = moderator;
         let obj = {};
@@ -72,6 +76,9 @@ export function moderatorRevealPostForum(wif, moderator, post, forum) {
                     loading: false
                 });
             } else {
+                ForumActions.updateForumStats(wif, name, _id,
+                    1,
+                    0);
                 dispatch({
                     type: types.MODERATION_REVEAL_RESOLVED,
                     payload: {moderator, post},
@@ -82,11 +89,11 @@ export function moderatorRevealPostForum(wif, moderator, post, forum) {
     };
 }
 
-export function moderatorBanAccount(wif, moderator, accountName, why = '', time = '') {
+export function moderatorBanAccount(wif, moderator, accountName, why = '') {
     return (dispatch: () => void) => {
         const { name } = moderator;
         let obj = {};
-        obj[accountName] = why + '|' + name + '|' + time;
+        obj[accountName] = why + '|' + name + '|' + parseInt(Date.now() / 1000);
         dispatch({
             type: types.MODERATION_BAN_PROCESSING,
             payload: {moderator, accountName},

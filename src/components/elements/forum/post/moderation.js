@@ -54,20 +54,20 @@ export default class ForumPostModeration extends React.Component {
 
     handleHidePost = () => {
         const moderator = this.props.account;
-        this.props.actions.moderatorHidePostForum(moderator.key, moderator, this.props.topic, this.props.forum);
+        this.props.actions.moderatorHidePostForum(moderator.key, moderator, this.props.topic, this.props.forum._id, this.props.forum);
         setTimeout(() => {
             window.location.reload();
         },
-        500);
+        1000);
     };
 
     handleRevealPost = () => {
         const moderator = this.props.account;
-        this.props.actions.moderatorRevealPostForum(moderator.key, moderator, this.props.topic, this.props.forum);
+        this.props.actions.moderatorRevealPostForum(moderator.key, moderator, this.props.topic, this.props.forum._id, this.props.forum);
         setTimeout(() => {
-            window.location.reload();
+           window.location.reload();
         },
-        500);
+        1000);
     };
 
     render() {
@@ -113,6 +113,7 @@ export default class ForumPostModeration extends React.Component {
             <span>
                 <Button size='small'
                     color={isHidden ? 'red' : 'blue'}
+                    disabled={topic.author_banned}
                     icon={isHidden ? 'eye' : 'low vision'}
                     onClick={actions.signinAccount} />
                 <LoginModal authType='active' noButton={true}

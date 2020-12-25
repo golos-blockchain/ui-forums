@@ -93,23 +93,24 @@ export default class Donating extends React.Component {
             if (item.app != 'golos-id') continue;
             const asset = Asset(item.amount);
             if (donatesJoined[item.from]) {
-                let fromList = donatesJoined[item.from];
+                let fromList = donatesJoined[item.from].assets;
                 if (fromList[asset.symbol]) {
                     fromList[asset.symbol].amount += asset.amount;
                     continue;
                 }
             } else {
-                donatesJoined[item.from] = {};
+                donatesJoined[item.from] = {banned: item.from_banned, assets: {}};
             }
-            donatesJoined[item.from][asset.symbol] = asset;
+            donatesJoined[item.from].assets[asset.symbol] = asset;
         }
         let i = 0;
-        for (let [id, assetList] of Object.entries(donatesJoined)) {
-            for (let [sym, asset] of Object.entries(assetList)) {
+        for (let [from, item] of Object.entries(donatesJoined)) {
+            for (let [sym, asset] of Object.entries(item.assets)) {
                 donates.push(<Dropdown.Item
-                    text={id}
+                    text={from}
                     description={asset.toString(0)}
                     key={i}
+                    style={{textDecoration: donatesJoined[from].banned ? 'line-through' : undefined}}
                     onClick={this.openVoter} />);
                 i++;
             }

@@ -2,7 +2,7 @@ import React from 'react';
 import golos from 'golos-classic-js';
 import tt from 'counterpart';
 
-import { Header, Icon, Segment, Table, Dropdown, Button } from 'semantic-ui-react';
+import { Header, Icon, Segment, Table, Dropdown, Button, Dimmer, Loader } from 'semantic-ui-react';
 
 import * as CONFIG from '../../../../config';
 
@@ -20,7 +20,8 @@ export default class ForumPermissions extends React.Component {
             moders_edit: this.arrToEdit(moders),
             supers_edit: this.arrToEdit(supers),
             admins_edit: this.arrToEdit(admins),
-            showConfirm: false
+            showConfirm: false,
+            loading: false
         };
     }
 
@@ -70,6 +71,7 @@ export default class ForumPermissions extends React.Component {
     hideConfirm = () => this.setState({showConfirm: false})
 
     broadcast = async (account, wifActive) => {
+        setTimeout(() => this.setState({ loading: true }), 1);
         try {
             const wif = this.props.account.key;
             await golos.broadcast.customJson(wif, [], [account], "account_notes",
@@ -90,15 +92,22 @@ export default class ForumPermissions extends React.Component {
                     key: 'g.pst.f.' + CONFIG.FORUM._id.toLowerCase() + '.banacc.lst.accs',
                     value: JSON.stringify(this.state.admins)
                 }]));*/
+            await golos.broadcast.customJson(wif, [], [account], "account_notes",
+                JSON.stringify(['set_value', {
+                    account: account,
+                    key: 'g.pst.f.' + CONFIG.FORUM._id.toLowerCase() + '.stats.lst.accs',
+                    value: '[".all"]'
+                }]));
         } catch (err) {
             console.log(err);
             alert(err);
         }
+        setTimeout(() => this.setState({ loading: false }), 500);
     }
 
     render() {
         const { account } = this.props;
-        const { moders, supers, admins, moders_edit, supers_edit, admins_edit, showConfirm } = this.state;
+        const { moders, supers, admins, moders_edit, supers_edit, admins_edit, showConfirm, loading } = this.state;
         let moder_list = null;
         let super_list = null;
         let admin_list = null;
@@ -162,6 +171,9 @@ export default class ForumPermissions extends React.Component {
         let actions = {signinAccount: this.broadcast, onClose: this.hideConfirm};
         return(
             <div>
+                {loading ? <Dimmer>
+                        <Loader size='large' />
+                </Dimmer> : null}
                 <LoginModal authType="active" noButton={true} open={showConfirm} actions={actions}/>
                 <Segment padded attached='top' secondary color='purple'>
                     <Header size='large'>

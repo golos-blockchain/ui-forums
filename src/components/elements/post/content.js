@@ -98,8 +98,9 @@ export default class PostContent extends React.Component {
             responding = (this.state && this.state.responding) ? this.state.responding : false,
             editing = (this.state && this.state.editing) ? this.state.editing : false,
             editButton = false,
-            editForm = false,
-            postButton = (
+            editForm = false;
+        const isBanned = !!this.props.post.forum.banned[this.props.account.name];
+        let postButton = (
                 <Popup
                     trigger={
                         <Button floated='right'>
@@ -109,11 +110,11 @@ export default class PostContent extends React.Component {
                     }
                     position='bottom center'
                     inverted
-                    content={tt('forum_controls.you_must_be_logged_in_to_post')}
+                    content={isBanned ? tt('forum_controls.you_are_blocked') : tt('forum_controls.you_must_be_logged_in_to_post')}
                     basic
                 />
-            ),
-            postForm = false;
+            );
+        let postForm = false;
         if (this.state && this.state.updatedPost) {
             const { updatedPost } = this.state;
             post.title = updatedPost.title;
@@ -122,7 +123,7 @@ export default class PostContent extends React.Component {
                 post.json_metadata.tags = updatedPost.json_metadata.tags;
             }
         }
-        if (this.props.account && this.props.account.isUser) {
+        if (this.props.account && this.props.account.isUser && !isBanned) {
             postButton = (
                 <Button
                     onClick={this.handleResponding}

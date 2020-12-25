@@ -102,7 +102,7 @@ export default class ForumPostText extends React.Component {
                     {'↳ '}
                     <TimeAgoWrapper date={`${topic.created}Z`} live={false} />
                     {' • '}
-                    <AccountLink username={topic.author} />
+                    <AccountLink username={topic.author} isBanned={topic.author_banned} />
                     {paginator}
                   </Header.Subheader>
                   </Link>
