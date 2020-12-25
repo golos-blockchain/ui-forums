@@ -1,9 +1,11 @@
 import React from 'react';
 import tt from 'counterpart';
+import { EditorState } from 'draft-js';
 
 import { Label } from 'semantic-ui-react'
 import { Form } from 'formsy-semantic-ui-react'
-import HtmlEditor from '../HtmlEditor/HtmlEditor'
+
+import HtmlEditor from '../HtmlEditor/HtmlEditor';
 
 export default class PostFormFieldBody extends React.Component {
   constructor(props) {
@@ -15,9 +17,11 @@ export default class PostFormFieldBody extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     if (!this.props.rootUsage && nextProps && nextProps.value && nextProps.value != this.props.value) {
-      this.setState({
-        rteState: HtmlEditor.getStateFromHtml(nextProps.value)
-      });
+        let es = HtmlEditor.getStateFromHtml(nextProps.value).getEditorState();
+        es = EditorState.moveFocusToEnd(es);
+        this.setState({
+            rteState: this.state.rteState.setEditorState(es)
+        });
     }
   }
 
@@ -34,8 +38,6 @@ export default class PostFormFieldBody extends React.Component {
   };
 
   render() {
-    const { disableAutoFocus, value } = this.props
-    const errorLabel = <Label color="red" pointing />
     return (
       <HtmlEditor
         name="body"

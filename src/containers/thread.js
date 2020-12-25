@@ -30,12 +30,48 @@ class Thread extends React.Component {
         super(props);
         this.state = Object.assign({}, props.params, {
             page: 1,
-            replyQuote: ''
+            replyQuote: '',
+            scrollTo2: '',
         });
     }
 
     componentWillMount() {
         this.fetchPost(this.state);
+    }
+
+    componentDidMount() {
+        const { hash } = location;
+        let matchesPage = hash.match(regexPage);
+        if (matchesPage) {
+            this.setState({
+                page: parseInt(matchesPage[1], 10)
+            });
+        }
+    }
+
+    componentDidUpdate() {
+        const { hash } = location;
+        let matchesPost = hash.match(regexPost);
+        if (matchesPost) {
+            const anchor = '@' + matchesPost[1] + '/' + matchesPost[2];
+            if (this.state.scrollTo2 != '+' + anchor && this.state.scrollTo2 != anchor) {
+                this.setState({
+                    scrollTo2: anchor
+                });
+            }
+            if (this.state.scrollTo2.startsWith('@')) {
+                const anc = this.state.scrollTo2
+                const page = this.getPageForPost(anc);
+                if (!page) return;
+                setTimeout(() => {
+                    goToAnchor(anc)
+                }, 50);
+                this.setState({
+                    scrollTo2: '+' + this.state.scrollTo2,
+                    page: this.getPageForPost(anc)
+                });
+            }
+        }
     }
 
     fetchPost(params) {
@@ -45,33 +81,6 @@ class Thread extends React.Component {
         this.props.actions.fetchPostResponses(params);
         if (!this.props.account) {
             this.props.actions.fetchAccount();
-        }
-    }
-
-    componentWillReceiveProps(nextProps) {
-        const { hash } = location;
-        if (!hash && this.state.page && this.state.page > 1) {
-            this.setState({page: 1});
-        }
-        if (hash) {
-            let matchesPage = hash.match(regexPage);
-            let matchesPost = hash.match(regexPost);
-            if (matchesPage) {
-                let page = parseInt(matchesPage[1], 10)
-                if(page !== this.state.page) {
-                    this.changePage(page);
-                }
-            }
-            if (matchesPost) {
-                let anchor = matchesPost[1] + '/' + matchesPost[2];
-                this.setState({
-                    scrollToWhenReady: '@' + anchor
-                });
-            }
-        }
-        if (nextProps.params.permlink !== this.state.permlink) {
-            this.state = Object.assign({}, nextProps.params, { page: 1 });
-            this.fetchPost(nextProps.params);
         }
     }
 
@@ -107,48 +116,15 @@ class Thread extends React.Component {
             goToTop();
         }
         this.setState(state);
+        if (page) location.hash = page > 1 ? 'comments-page-' + page : '';
     };
 
     goReply = (replyQuote) => {
+        goToAnchor('reply')
         this.setState({
             replyQuote,
-            scrollTo: 'reply'
         });
     };
-
-    componentDidUpdate() {
-        const anchor = (this.state) ? this.state.scrollTo : false;
-        if (this.state && this.state.scrollTo) {
-            this.setState({scrollTo: false});
-            setTimeout(function() {
-                goToAnchor(anchor)
-            }, 50);
-        }
-        if (this.state && this.state.scrollToWhenReady) {
-            if (this.scrollToPost(this.state.scrollToWhenReady)) {
-                this.setState({
-                    scrollToWhenReady: false
-                });
-            } // and if not scrolled - not reset flag, try again until responses be fetched
-        }
-    }
-
-    componentDidMount() {
-        const { hash } = location;
-        let matchesPage = hash.match(regexPage);
-        let matchesPost = hash.match(regexPost);
-        if (matchesPage) {
-            this.setState({
-                page: parseInt(matchesPage[1], 10)
-            });
-        }
-        if (matchesPost) {
-            let anchor = matchesPost[1] + '/' + matchesPost[2];
-            this.setState({
-                scrollToWhenReady: '@' + anchor
-            });
-        }
-    }
 
     handleCancel = () => {
     };
@@ -173,8 +149,9 @@ class Thread extends React.Component {
         let anchor = '@' + submitted.post.author + '/' + submitted.post.permlink;
         this.setState({
             submitted: new Date(),
-            scrollToWhenReady: anchor
+            scrollTo2: anchor
         });
+        location.hash = anchor;
     };
 
     render() {

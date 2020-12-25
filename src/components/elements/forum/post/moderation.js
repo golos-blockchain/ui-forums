@@ -114,7 +114,7 @@ export default class ForumPostModeration extends React.Component {
                 <Button size='small'
                     color={isHidden ? 'red' : 'blue'}
                     disabled={topic.author_banned}
-                    icon={isHidden ? 'eye' : 'low vision'}
+                    icon={isHidden ? 'low vision' : 'eye'}
                     onClick={actions.signinAccount} />
                 <LoginModal authType='active' noButton={true}
                     open={this.state.showConfirm}
