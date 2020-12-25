@@ -148,7 +148,8 @@
     "each_account_segment_should_have_only_one_dash_in_a_row": "Имя аккаунта должно иметь только одно тире в строке.",
     "each_account_segment_should_end_with_a_letter_or_digit": "Имя аккаунта должно заканчиваться буквой или цифрой.",
     "each_account_segment_should_be_longer": "Имя аккаунта должно быть не короче 3 символов.",
-    "account_name_used": "Такой аккаунт уже существует."
+    "account_name_used": "Такой аккаунт уже существует.",
+    "only_letters_digits_dashes": "Разрешены только латинские буквы, цифры и дефисы."
   },
   "g": {
     "cancel": "Отмена",

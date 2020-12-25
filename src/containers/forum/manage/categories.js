@@ -499,6 +499,11 @@ class ForumCategoriesForm extends React.Component {
                                         validationErrors={{
                                             isDefaultRequiredValue: tt('g.this_field_required')
                                         }}
+                                        validations={{
+                                            isAlphanumericWithDashes: function(values, value) {
+                                                return (!value || /^[0-9A-Za-z\s\-]+$/.test(value)) ? true : tt('validation.only_letters_digits_dashes');
+                                            }
+                                        }}
                                         errorLabel={ errorLabel }
                                     />
                                     <Divider hidden />

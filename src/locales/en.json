@@ -148,7 +148,8 @@
     "each_account_segment_should_have_only_one_dash_in_a_row": "Account name should have only one dash in a row.",
     "each_account_segment_should_end_with_a_letter_or_digit": "Account name should end with a letter or digit.",
     "each_account_segment_should_be_longer": "Account name should not be shorter than 3 characters.",
-    "account_name_used": "Such account already exists."
+    "account_name_used": "Such account already exists.",
+    "only_letters_digits_dashes": "Only latinic letters, digits and dashes."
   },
   "g": {
     "cancel": "Cancel",
