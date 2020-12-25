@@ -26,8 +26,8 @@ import ForumsLayout from '../components/layouts/forums';
 import RepliesLayout from '../components/layouts/replies';
 import ThreadLayout from '../components/layouts/thread';
 import TopicLayout from '../components/layouts/topic';
-
 import BreadcrumbMenu from '../components/global/breadcrumb';
+import BannerMenu from '../components/global/banner';
 import FooterMenu from '../components/global/footer';
 import HeaderMenu from '../components/global/menu';
 import GlobalNotice from '../components/global/notice';
@@ -78,6 +78,7 @@ const App = () => (
                 </Switch>
             </Container>
             <BreadcrumbMenu />
+            <BannerMenu />
             <FooterMenu />
         </div>
     </BrowserRouter>

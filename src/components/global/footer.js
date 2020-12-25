@@ -7,7 +7,7 @@ import ttGetByKey from '../../utils/ttGetByKey';
 export default class HeaderMenu extends Component {
   render() {
     return (
-      <Segment inverted vertical className="footer" style={{marginTop: "2em"}}>
+      <Segment inverted vertical className="footer" style={{marginTop: "1.5em"}}>
         <Container>
           <Grid stackable className="divided equal height stackable">
             {/*
@@ -30,11 +30,9 @@ export default class HeaderMenu extends Component {
               </List>
             </Grid.Column>
             */}
-            <Grid.Column width={16} textAlign='center'>
+            <Grid.Column width={16} textAlign='center' style={{margin: "0.5em 0 0.5em 0"}}>
               <h4 className="ui inverted header" dangerouslySetInnerHTML={{__html: ttGetByKey(CONFIG.FORUM, 'footer_title')}}></h4>
-              <p dangerouslySetInnerHTML={{__html: ttGetByKey(CONFIG.FORUM, 'footer_description')}}>
-                
-              </p>
+              <p dangerouslySetInnerHTML={{__html: ttGetByKey(CONFIG.FORUM, 'footer_description')}}></p>
             </Grid.Column>
           </Grid>
         </Container>

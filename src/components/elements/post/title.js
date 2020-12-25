@@ -43,9 +43,7 @@ export default class PostTitle extends React.Component {
                     <Header size='large'>
                         <Icon name='comments' />
                         <Header.Content as='h1'>
-                            <Link to={`/${(content.namespace) ? content.namespace : content.category}/@${content._id}`} style={{color: '#ececec'}}>
                                 {content.title}
-                            </Link>
                         </Header.Content>
                     </Header>
                 </Segment>
