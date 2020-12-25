@@ -13,7 +13,7 @@ module.exports = {
           email_html: 'Ваш код подтверждения: <h4>{verification_code}</h4>'
         },
         en: {
-          email_subject: 'Verify FORUM.logo_title sign up',
+          email_subject: 'Verify {FORUM.logo_title} sign up',
           email_html: 'Your verification code: <h4>{verification_code}</h4>'
         }
     },

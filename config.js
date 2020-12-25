@@ -5,6 +5,7 @@ module.exports = {
     FORUM: {
         _id: 'golostalks',
         creator: 'cyberfounder',
+        footer_banner: '<a href="https://golos.id" target="_new"><img src="https://i.imgur.com/6mxuwsE.jpg" /></a>', // 700x90 px
         // html is supported in all fields excl. breadcrumb_title, page_title
         ru: {
             meta_title: 'GolosTalk - форум на базе блокчейна Голос',

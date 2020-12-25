@@ -202,7 +202,7 @@ class HeaderMenu extends Component {
         return (
             <Menu color='blue' size='large' inverted style={{borderBottom: '3px solid #767676'}}>
                 <Container>
-                    <Link to='/' className='title active item'>
+                    <Link to='/' className='title active item mobile hidden'>
                         <strong dangerouslySetInnerHTML={{__html: ttGetByKey(CONFIG.FORUM, 'logo_title')}}></strong>
                     </Link>
                     {/*

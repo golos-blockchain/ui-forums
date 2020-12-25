@@ -37,7 +37,7 @@ export default class ForumControls extends React.Component {
                 <Menu.Item>
                     {newPostButton}
                 </Menu.Item>
-                <Menu.Item>
+                <Menu.Item className='mobile hidden'>
                     <Checkbox
                         label={tt('forum_controls.show_hidden')}
                         name='moderatedVisible'
