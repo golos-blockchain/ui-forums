@@ -113,7 +113,7 @@ class PostForm extends React.Component {
             setTimeout(() => {
               t.props.actions.fetchPostResponses({
                 author: parent_author,
-                category: parent_category,
+                category: this.props.forum._id,
                 permlink: parent_permlink
               })
             }, 5000)

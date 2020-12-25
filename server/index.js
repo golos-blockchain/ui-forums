@@ -63,7 +63,7 @@ function idToTag(_id) {
 function findForum(vals, forum_id, trail = []) {
     for (let [_id, forum] of Object.entries(vals)) {
         if (_id.toLowerCase() === forum_id.toLowerCase()) {
-            forum._id = _id; // for moderation, etc
+            forum._id = _id; // for moderation, PostForm
             forum.creator = 'cyberfounder';
             forum.tags = [idToTag(_id), 'fm-' + GLOBAL_ID];
             forum.trail = [...trail, {
