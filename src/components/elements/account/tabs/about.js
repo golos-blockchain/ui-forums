@@ -32,6 +32,7 @@ export default class AccountAbout extends React.Component {
         } catch (ex) {
         }
         meta.profile = meta.profile || {};
+        meta.profile.profile_image = formData.profile_image;
         meta.profile.about = formData.about;
         meta.profile.website = formData.website;
         meta.profile.location = formData.location;
@@ -57,6 +58,7 @@ export default class AccountAbout extends React.Component {
                 let about = '';
                 let website = '';
                 let location = '';
+                let profile_image = '';
                 let meta = null;
                 try {
                     meta = JSON.parse(acc.json_metadata);
@@ -66,6 +68,7 @@ export default class AccountAbout extends React.Component {
                     website = meta.profile.website || '';
                     about = meta.profile.about || '';
                     location = meta.profile.location || '';
+                    profile_image = meta.profile.profile_image || '';
                 }
                 if (this.props.account.name === username) {
                     const errorLabel = (<Label color="red" pointing/>);
@@ -76,6 +79,17 @@ export default class AccountAbout extends React.Component {
                                 onValid={this.onValid}
                                 onInvalid={this.onInvalid}
                                 onValidSubmit={this.onValidSubmit}>
+                                <Form.Input
+                                    name='profile_image'
+                                    label={tt('account.avatar')}
+                                    value={profile_image}
+                                    validations='maxLength:512'
+                                    validationErrors={{
+                                        maxLength: tt('validation.should_not_be_longer_THAN', {THAN: 512})
+                                    }}
+                                    focus
+                                    errorLabel={ errorLabel }
+                                />
                                 <Form.Input
                                     name='location'
                                     label={tt('account.location')}

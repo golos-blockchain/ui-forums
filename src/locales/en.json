@@ -106,6 +106,7 @@
   },
   "account": {
     "about": "Profile",
+    "avatar": "Avatar (direct JPG-file link, or empty to delete avatar): ",
     "location": "Location: ",
     "website": "Web-site: ",
     "about_yourself": "About: ",
