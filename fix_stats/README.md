@@ -1,4 +1,4 @@
-Tool to fix post/comment count statistics in forum categories.
+## Tool to fix post/comment count statistics in forum categories
 
 For UNIX (Linux or macOS).
 
