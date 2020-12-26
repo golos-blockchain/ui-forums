@@ -6,5 +6,5 @@ Requires [Node.js 10 or newer](https://github.com/nodesource/distributions/blob/
 
 Usage:
 ```
-./run.sh
+./fix.sh
 ```
