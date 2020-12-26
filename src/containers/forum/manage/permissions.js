@@ -13,11 +13,12 @@ export default class ForumPermissions extends React.Component {
     constructor(props, state) {
         super(props);
         const { moders, supers, admins } = props;
+        const moders2 = moders.filter(moder => !supers.includes(moder));
         this.state = {
-            moders,
+            moders: moders2,
             supers,
             admins,
-            moders_edit: this.arrToEdit(moders),
+            moders_edit: this.arrToEdit(moders2),
             supers_edit: this.arrToEdit(supers),
             admins_edit: this.arrToEdit(admins),
             showConfirm: false,
@@ -78,7 +79,7 @@ export default class ForumPermissions extends React.Component {
                 JSON.stringify(['set_value', {
                     account: account,
                     key: 'g.pst.f.' + CONFIG.FORUM._id.toLowerCase() + '.hidmsg.lst.accs',
-                    value: JSON.stringify(this.state.moders)
+                    value: JSON.stringify([...this.state.moders, ...this.state.supers])
                 }]));
             await golos.broadcast.customJson(wif, [], [account], "account_notes",
                 JSON.stringify(['set_value', {
