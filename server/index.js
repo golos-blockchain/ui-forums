@@ -88,9 +88,11 @@ function getUrl(urlRaw, _id) {
     return '/' + _id + urlRaw.substring(('/' + idToTag(_id)).length);
 }
 
-async function setForumStats(_id, forum, stats) {
+async function setForumStats(_id, forum, stats, lastPostNeed = true) {
     if (!stats) return;
-    forum.stats = stats[_id] || {posts: 0, comments: 0};
+    forum.stats = stats[_id] || {posts: 0, total_posts: 0, comments: 0, total_comments: 0};
+
+    if (!lastPostNeed) return;
 
     const tag = idToTag(_id);
     const data = await golos.api.getAllDiscussionsByActive(
@@ -171,13 +173,14 @@ router.get('/forum/:slug', async (ctx) => {
     const forum_id = ctx.params.slug;
     let {_id, forum} = findForum(vals[NOTE_], forum_id);
 
+    await setForumStats(_id, forum, vals[NOTE_PST_STATS_LST], false);
     for (let _id in forum.children) {
         await setForumStats(_id, forum.children[_id], vals[NOTE_PST_STATS_LST]);
     }
 
     const tag = idToTag(_id);
     const data = await golos.api.getAllDiscussionsByActive(
-        '', '', 10000000,
+        '', '', ctx.query.page ? (ctx.query.page - 1) * CONFIG.FORUM.posts_per_page : 0, CONFIG.FORUM.posts_per_page,
         tag,
         0, 20
     );

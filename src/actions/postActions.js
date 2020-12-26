@@ -496,6 +496,8 @@ export function submit(account, data, parent, action = 'post') {
                 if (action !== 'edit') {
                     ForumActions.updateForumStats(account.key, account.name, namespace,
                         !parent_author.length,
+                        !!parent_author.length,
+                        !parent_author.length,
                         !!parent_author.length);
                 }
                 dispatch({

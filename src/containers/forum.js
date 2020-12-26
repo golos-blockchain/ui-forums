@@ -251,7 +251,7 @@ class Forum extends React.Component {
           subforums = false,
           page = this.state.page,
           isUser = this.props.account.isUser,
-          perPage = 20,
+          perPage = CONFIG.FORUM.posts_per_page,
           posts = (forum && forum.stats) ? forum.stats.posts : 0,
           topics = this.state.topics;
       const children_cnt = Object.keys(children).length;

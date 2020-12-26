@@ -12,7 +12,7 @@
     "atob": "^2.1.2",
     "btoa": "^1.2.1",
     "gmail-send": "^1.8.10",
-    "golos-classic-js": "0.7.71",
+    "golos-classic-js": "0.7.75",
     "koa": "^2.13.0",
     "koa-cors": "0.0.16",
     "koa-livereload": "^0.2.0",

@@ -99,14 +99,16 @@ export function fetchForumDetails(ns) {
     };
 }
 
-export async function updateForumStats(wif, account, _id, addPosts, addComments) {
+export async function updateForumStats(wif, account, _id, addPosts, addComments, addTotalPosts = 0, addTotalComments = 0) {
     try {
         const key = 'g.pst.f.' + CONFIG.FORUM._id.toLowerCase() + '.stats.lst';
         let vals = await golos.api.getValues(CONFIG.FORUM.creator, [key]);
         vals[key] = vals[key] ? JSON.parse(vals[key]) : {};
-        let stat = vals[key][_id] || {posts: 0, comments: 0};
+        let stat = vals[key][_id] || {posts: 0, total_posts: 0, comments: 0, total_comments: 0};
         stat.posts += addPosts;
         stat.comments += addComments;
+        stat.total_posts += addTotalPosts;
+        stat.total_comments += addTotalComments;
         vals[key][_id] = stat;
         await golos.broadcast.customJson(wif, [], [account], 'account_notes',
             JSON.stringify(['set_value', {
