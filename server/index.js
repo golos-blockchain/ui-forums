@@ -96,7 +96,7 @@ async function setForumStats(_id, forum, stats, lastPostNeed = true) {
 
     const tag = idToTag(_id);
     const data = await golos.api.getAllDiscussionsByActive(
-        '', '', 1,
+        '', '', 0, 1,
         tag,
         0, 0
     );
