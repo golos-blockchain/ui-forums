@@ -61,3 +61,9 @@ npm install fsevents@latest -f --save-optional
 npm install
 npm start
 ```
+
+# Troobleshooting
+
+## Wrong statistics of top/comments in categories
+
+Use [fix_stats](fix_stats) tool.
