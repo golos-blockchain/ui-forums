@@ -53,14 +53,16 @@
   },
   "voting": {
     "vote_changes_exceed": "Вы исчерпали лимит и больше не можете изменять ваш голос за этот пост.",
-    "you_must_be_logged_in_to_vote": "Войдите, чтобы голосовать"
+    "you_must_be_logged_in_to_vote": "Войдите, чтобы голосовать",
+    "has_more_VOTES": "...и ещё %(VOTES)s голосов"
   },
   "donating": {
     "donate": "Отблагодарить",
     "thanks": "Спасибо!",
     "not_enough": "Не хватает средств на TIP-балансе.",
     "over_precision_PREC": "Используйте только %(PREC)s знак. точности",
-    "you_must_be_logged_in_to_donate": "Войдите, чтобы благодарить"
+    "you_must_be_logged_in_to_donate": "Войдите, чтобы благодарить",
+    "has_more_DONATES": "...и ещё %(DONATES)s донатов"
   },
   "transfer": {
     "transfer": "Передать пользователю",

@@ -10,6 +10,7 @@ import { getPageTitle } from '../utils/text';
 
 import { Divider, Grid, Header, Segment } from 'semantic-ui-react';
 
+import * as CONFIG from '../../config';
 import * as accountActions from '../actions/accountActions';
 import * as postActions from '../actions/postActions';
 import * as preferenceActions from '../actions/preferenceActions';
@@ -93,7 +94,7 @@ class Thread extends React.Component {
 
     getPageForPost = (id) => {
         let collection = this.props.post.responses,
-            perPage = this.props.preferences.threadPostsPerPage || 10,
+            perPage = CONFIG.FORUM.replies_per_page || 10,
             position = false;
         for (var i = 0; i < collection.length; i++) {
             const { author, permlink } = collection[i];
@@ -156,7 +157,7 @@ class Thread extends React.Component {
 
     render() {
         let page = (this.state) ? this.state.page : 1,
-            perPage = this.props.preferences.threadPostsPerPage || 10,
+            perPage = CONFIG.FORUM.replies_per_page || 10,
             responses = (this.props.post) ? this.props.post.responses : 0,
             content = (this.props.post) ? this.props.post.content : false,
             pages = Math.ceil(responses.length / perPage),

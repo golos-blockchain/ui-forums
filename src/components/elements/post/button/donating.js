@@ -5,6 +5,8 @@ import { Asset } from 'golos-classic-js/lib/utils';
 import { Button, Popup, Dropdown, Icon, Label, Modal, Divider } from 'semantic-ui-react';
 import { Form } from 'formsy-semantic-ui-react';
 
+import * as CONFIG from '../../../../../config';
+
 //import VoteButtonOptions from './vote/options';
 import translateError from '../../../../utils/translateError';
 
@@ -89,8 +91,10 @@ export default class Donating extends React.Component {
     renderDonateList(donate_list) {
         let donates = [];
         let donatesJoined = {};
+        let donate_count = 0;
         for (let item of donate_list) {
             if (item.app != 'golos-id') continue;
+            if (donate_count == CONFIG.FORUM.donates_per_page) break;
             const asset = Asset(item.amount);
             if (donatesJoined[item.from]) {
                 let fromList = donatesJoined[item.from].assets;
@@ -102,6 +106,7 @@ export default class Donating extends React.Component {
                 donatesJoined[item.from] = {banned: item.from_banned, assets: {}};
             }
             donatesJoined[item.from].assets[asset.symbol] = asset;
+            ++donate_count;
         }
         let i = 0;
         for (let [from, item] of Object.entries(donatesJoined)) {
@@ -114,6 +119,9 @@ export default class Donating extends React.Component {
                     onClick={this.openVoter} />);
                 i++;
             }
+        }
+        if (donate_count < donate_list.length) {
+            donates.push(<Dropdown.Header content={tt('donating.has_more_DONATES', {DONATES: donate_list.length - donate_count})} />);
         }
         return donates;
     }

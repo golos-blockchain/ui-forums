@@ -182,7 +182,7 @@ router.get('/forum/:slug', async (ctx) => {
     const data = await golos.api.getAllDiscussionsByActive(
         '', '', ctx.query.page ? (ctx.query.page - 1) * CONFIG.FORUM.posts_per_page : 0, CONFIG.FORUM.posts_per_page,
         tag,
-        0, 20
+        0, 0
     );
 
     let filteredData = [];
@@ -235,7 +235,7 @@ router.get('/:category/@:author/:permlink', async (ctx) => {
 
     let { _id, forum } = findForum(vals[NOTE_], ctx.params.category);
 
-    let data = await golos.api.getContent(ctx.params.author, ctx.params.permlink, DEFAULT_VOTE_LIMIT);
+    let data = await golos.api.getContent(ctx.params.author, ctx.params.permlink, CONFIG.FORUM.votes_per_page, 0);
     data.url = getUrl(data.url, _id);
     data.donate_list = [];
     data.author_banned = !!vals[NOTE_PST_HIDACC_LST][data.author];

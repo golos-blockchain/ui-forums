@@ -4,8 +4,7 @@ import * as types from '../actions/actionTypes';
 
 const initialPreferences = {
   votePowerPost: 100,
-  votePowerComment: 100,
-  threadPostsPerPage: 10
+  votePowerComment: 100
 }
 
 export default function preferences(state = false, action) {

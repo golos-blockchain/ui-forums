@@ -53,14 +53,16 @@
   },
   "voting": {
     "vote_changes_exceed": "You exceed your voting limit for this post.",
-    "you_must_be_logged_in_to_vote": "You must be logged in to vote"
+    "you_must_be_logged_in_to_vote": "You must be logged in to vote",
+    "has_more_VOTES": "...and %(VOTES)s votes more"
   },
   "donating": {
     "donate": "Donate",
     "thanks": "Thank you!",
     "not_enough": "Insufficient TIP-balance.",
     "over_precision_PREC": " Use only %(PREC)s digit(s) of precision",
-    "you_must_be_logged_in_to_donate": "You must be logged in to donate"
+    "you_must_be_logged_in_to_donate": "You must be logged in to donate",
+    "has_more_DONATES": "...and %(DONATES)s donates more"
   },
   "transfer": {
     "transfer": "Transfer",

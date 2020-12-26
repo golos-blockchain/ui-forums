@@ -2,6 +2,7 @@ import React from 'react';
 import tt from 'counterpart';
 
 import { Button, Popup, Dropdown } from 'semantic-ui-react';
+
 //import VoteButtonOptions from './vote/options';
 import translateError from '../../../../utils/translateError';
 
@@ -62,6 +63,10 @@ export default class Voting extends React.Component {
                 votes.push(<Dropdown.Item key={av.voter} text={av.voter} description={(av.percent/100) + '%'} onClick={this.openVoter}/>);
             }
         }
+        if (votes.length && votes.length < post.active_votes_count) {
+            votes.push(<Dropdown.Header content={tt('voting.has_more_VOTES', {VOTES: post.active_votes_count - votes.length})} />);
+        }
+
         const iUpvoted = myVote && myVote.percent > 0;
         const iDownvoted = myVote && myVote.percent < 0;
         // -----------------------------
