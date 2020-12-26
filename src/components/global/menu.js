@@ -75,6 +75,7 @@ class HeaderMenu extends Component {
         let data = {};
         let avatar = false;
         let pendingBalance = false;
+        let pendingBalanceStr = false;
         let locale = localStorage.getItem('locale') || 'ru';
         const options = [
             { key: 1, text: 'RU', value: 'ru' },
@@ -196,6 +197,15 @@ class HeaderMenu extends Component {
                             </Grid>
                         </Popup>
                     );
+                    pendingBalanceStr = (<Popup
+                            content={tt('account.tip_balance')}
+                            trigger={
+                                <Menu.Item style={{padding: '0 1.1em'}}>
+                                    <b>{hasBalance[0]}</b>
+                                </Menu.Item>
+                            }
+                            hoverable
+                        />);
                 }
             }
         }
@@ -213,6 +223,7 @@ class HeaderMenu extends Component {
                     {<Menu.Menu position='right'>
                         {localeSelect}
                         {pendingBalance}
+                        {pendingBalanceStr}
                         {userItem}
                         {/*<Menu.Item>
                             {indicator}
