@@ -25,11 +25,11 @@ export default class Donating extends React.Component {
     }
 
     onValid = () => {
-        this.setState({valid: true});
+        this.setState({ valid: true });
     };
 
     onInvalid = () => {
-        this.setState({valid: false});
+        this.setState({ valid: false });
     };
 
     onHandleSubmit = (formData) => {

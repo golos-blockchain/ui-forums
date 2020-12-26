@@ -106,7 +106,9 @@
   },
   "account": {
     "about": "Профиль",
+    "location": "Откуда: ",
     "website": "Веб-сайт: ",
+    "about_yourself": "О себе: ",
     "posts": "Посты",
     "responses": "Ответы",
     "replies": "Комментарии",
@@ -153,7 +155,8 @@
     "each_account_segment_should_end_with_a_letter_or_digit": "Имя аккаунта должно заканчиваться буквой или цифрой.",
     "each_account_segment_should_be_longer": "Имя аккаунта должно быть не короче 3 символов.",
     "account_name_used": "Такой аккаунт уже существует.",
-    "only_letters_digits_dashes": "Разрешены только латинские буквы, цифры и дефисы."
+    "only_letters_digits_dashes": "Разрешены только латинские буквы, цифры и дефисы.",
+    "should_not_be_longer_THAN": "Должно быть не более %(THAN)s симв."
   },
   "g": {
     "cancel": "Отмена",
@@ -164,6 +167,7 @@
     "remove": "Удалить",
     "reply": "Ответить",
     "continue": "Продолжить",
+    "update": "Обновить",
     "this_field_required": "Это поле обязательно.",
     "should_be_email": "Введен некорректный e-mail.",
     "enter_code": "Вам на почту был отправлен код подтверждения. Введите его ниже (вместо почты):"
