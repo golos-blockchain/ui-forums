@@ -1,7 +1,7 @@
 import React from 'react';
 import tt from 'counterpart';
 
-import { Grid, Header, Message, Segment } from 'semantic-ui-react'
+import { Grid, Header, Message, Segment } from 'semantic-ui-react';
 
 export default class Response404 extends React.Component {
   render() {

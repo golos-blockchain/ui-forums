@@ -1,8 +1,8 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import tt from 'counterpart';
 
-import { Button, Divider, List, Header, Popup, Segment } from 'semantic-ui-react'
-import { Link } from 'react-router-dom'
+import { Button, Divider, List, Header, Popup, Segment } from 'semantic-ui-react';
 
 export default class Forum404 extends React.Component {
 

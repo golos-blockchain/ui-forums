@@ -19,6 +19,7 @@ import * as statusActions from '../actions/statusActions';
 import Post from '../components/elements/post';
 import PostForm from './post/form';
 import PostFormHeader from '../components/elements/post/form/header';
+import Post404 from '../components/elements/post/404';
 import Response from '../components/elements/response';
 import Paginator from '../components/global/paginator';
 
@@ -162,6 +163,12 @@ class Thread extends React.Component {
             content = (this.props.post) ? this.props.post.content : false,
             pages = Math.ceil(responses.length / perPage),
             postForm = false;
+        if (content.author === '' || content.post_hidden || content.author_banned) {
+            const isModerator = this.props && this.props.account && this.props.account.isUser && 
+                (this.props.post.forum.moders.includes(this.props.account.name) 
+                || this.props.post.forum.supers.includes(this.props.account.name));
+            if (!isModerator) return (<Post404/>);
+        }
         let comments_nav = (
             <Segment basic>
                 <Grid id={(page ? `comments-page-${page}` : '')}>
