@@ -106,10 +106,11 @@
   },
   "account": {
     "about": "Profile",
-    "avatar": "Avatar (direct JPG-file link, or empty to delete avatar): ",
+    "avatar": "Avatar (empty field to remove): ",
     "location": "Location: ",
     "website": "Web-site: ",
     "about_yourself": "About: ",
+    "cannot_load_image_try_again": "Cannot upload image. Try again or another one.",
     "posts": "Posts",
     "responses": "Responses",
     "replies": "Replies",
@@ -179,6 +180,8 @@
     "continue": "Continue",
     "update": "Update",
     "go_link": "Go to link anyway",
+    "upload": "Upload",
+    "too_big_file": "Too big file.",
     "this_field_required": "This field is required.",
     "should_be_email": "E-mail is wrong.",
     "enter_code": "You received verification code at your e-mail. Enter it below (instead of e-mail):"

@@ -1,10 +1,12 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+import TimeAgo from 'react-timeago';
 
-import { Breadcrumb, Dimmer, Loader, Grid, Header, Segment } from 'semantic-ui-react'
-import { Link } from 'react-router-dom'
+import { Breadcrumb, Dimmer, Loader, Grid, Header, Segment } from 'semantic-ui-react';
+
 import * as CONFIG from '../../../config';
-import AccountLink from './account/link'
-import TimeAgo from 'react-timeago'
+
+import AccountLink from './account/link';
 
 export default class Forum extends React.Component {
 

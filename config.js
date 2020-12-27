@@ -39,7 +39,9 @@ module.exports = {
     STM_Config: {
         img_proxy_prefix: 'https://steemitimages.com/',
         ipfs_prefix: false,
-        upload_image: 'https://steemitimages.com',
+        upload_image: 'https://api.imgur.com/3/image',
+        max_upload_file_bytes: 1 * 1024 * 1024,
+        client_id: 'b4d78455f0d5fca'
     },
     MODERATION: {
         // if post/comment has lesser net_rshares, it will be hidden
