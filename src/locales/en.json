@@ -30,7 +30,6 @@
     "ban": "Block User",
     "unban": "UNblock User",
     "you_are_blocked": "You are Blocked",
-
     "forum_info": "Forum Settings",
     "return_ro_froum": "Return to forum",
     "overview": "Overview",
@@ -106,6 +105,7 @@
   },
   "account": {
     "about": "Profile",
+    "blogs": "Blogs",
     "avatar": "Avatar (empty field to remove): ",
     "location": "Location: ",
     "website": "Web-site: ",
