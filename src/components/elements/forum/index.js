@@ -1,7 +1,7 @@
 import React from 'react';
+import { Link } from 'react-router-dom'
 
 import { Grid, Header, Icon, Segment } from 'semantic-ui-react'
-import { Link } from 'react-router-dom'
 
 import TimeAgoWrapper from '../../../utils/TimeAgoWrapper'
 import UserAvatar from '../account/avatar'

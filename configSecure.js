@@ -20,5 +20,29 @@ module.exports = {
     gmail_send: {
         user: 'halfyearforwhat@gmail.com',
         pass: 'yforlmawttbbczrv',
+    },
+    anti_phishing: {
+        enabled: true,
+        white_list: [
+            'golos.id',
+            'golos.in',
+            'golos.today',
+            'golos.live',
+            'golostalk.com',
+            'golos.cf',
+            'dpos.space',
+            'rudex.org',
+            'livecoin.net',
+            'steem-engine.com',
+            'github.com',
+            't.me',
+            'twitter.com',
+            'vk.com',
+            'coinmarketcap.com',
+            'sharpay.io',
+            'coins.black',
+            'golos.chatbro.com',
+            'accounts.google.com'
+        ]
     }
 };

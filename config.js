@@ -15,6 +15,7 @@ module.exports = {
             breadcrumb_title: 'GolosTalk',
             logo_title: 'GolosTalk.com',
             page_title: 'Форум на ГОЛОС',
+            link_title: 'GolosTalk',
             footer_title: 'Возникли вопросы?<br/>Напишите в телеграм-группу <a href="https://t.me/goloshelp" target="_new">@goloshelp</a>',
             footer_description: 'GolosTalk — форум на платформе <a href="https://golos.id" target="_new">блокчейна Голос</a> (разработан <a href="https://golos.id/@id-raccoon-hater" target="_new">@id-raccoon-hater</a>)'
         },
@@ -26,9 +27,14 @@ module.exports = {
             breadcrumb_title: 'GolosTalk',
             logo_title: 'GolosTalk.com',
             page_title: 'Forum on GOLOS',
+            link_title: 'GolosTalk',
             footer_title: 'GolosTalk.com',
             footer_description: 'An experimental forum built on top of the <a href="https://golos.id" target="_new">Golos Blockchain</a>.<br/>Brought to you by <a href="https://golos.id/@id-raccoon-hater" target="_new">id-raccoon-hater</a>.'
-        }
+        },
+        posts_per_page: 20,
+        replies_per_page: 10,
+        votes_per_page: 10,
+        donates_per_page: 10
     },
     STM_Config: {
         img_proxy_prefix: 'https://steemitimages.com/',
