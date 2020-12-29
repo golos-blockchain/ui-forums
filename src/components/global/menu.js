@@ -73,7 +73,6 @@ class HeaderMenu extends Component {
         let data = {};
         let avatar = false;
         let pendingBalance = false;
-        let pendingBalanceStr = false;
         let locale = localStorage.getItem('locale') || 'ru';
         const options = [
             { key: 1, text: 'RU', value: 'ru' },
@@ -147,6 +146,7 @@ class HeaderMenu extends Component {
                 <Dropdown style={{padding: '0 1.1em'}} item trigger={avatar} pointing='top right' icon={null} className='icon'>
                     <Dropdown.Menu>
                         <Dropdown.Item as={Link} to={`/@${name}`} icon='user' content={tt('account.profile')} />
+                        <Dropdown.Item as={Link} target='_blank' to={`https://golos.id/@${name}`} icon='users' content={tt('account.blogs')} />
                         <LogoutItem {...this.props} />
                     </Dropdown.Menu>
                 </Dropdown>
@@ -158,6 +158,7 @@ class HeaderMenu extends Component {
                             trigger={
                                 <Menu.Item style={{padding: '0 1.1em'}}>
                                     <Icon name='gift' size='big' style={{margin: 0}} />
+                                    &nbsp;{hasBalance[0]}
                                 </Menu.Item>
                             }
                             hoverable
@@ -195,15 +196,6 @@ class HeaderMenu extends Component {
                             </Grid>
                         </Popup>
                     );
-                    pendingBalanceStr = (<Popup
-                            content={tt('account.tip_balance')}
-                            trigger={
-                                <Menu.Item style={{padding: '0 1.1em'}}>
-                                    <b>{hasBalance[0]}</b>
-                                </Menu.Item>
-                            }
-                            hoverable
-                        />);
                 }
             }
         }
@@ -221,7 +213,6 @@ class HeaderMenu extends Component {
                     {<Menu.Menu position='right'>
                         {localeSelect}
                         {pendingBalance}
-                        {pendingBalanceStr}
                         {userItem}
                         {/*<Menu.Item>
                             {indicator}
