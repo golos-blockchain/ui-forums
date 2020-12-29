@@ -1,5 +1,4 @@
 import React from 'react';
-import { Button, Container, Dropdown, Grid, Header, Icon, Menu, Popup } from 'semantic-ui-react';
 
 export default class AccountVotingPower extends React.Component {
 

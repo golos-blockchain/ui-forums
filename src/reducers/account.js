@@ -1,4 +1,3 @@
-import store from 'store'
 import _ from 'lodash'
 
 import * as types from '../actions/actionTypes';
@@ -23,7 +22,7 @@ export default function account(state = false, action) {
         data: action.payload.data
       })
     }
-    case types.ACCOUNT_SIGNOUT: {}
+    case types.ACCOUNT_SIGNOUT:
       return {
         isUser: false,
         name: '',

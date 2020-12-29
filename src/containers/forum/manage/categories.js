@@ -1,22 +1,19 @@
 import React from 'react';
 import { withRouter } from "react-router-dom";
 import { bindActionCreators } from 'redux';
-import ReactDOMServer from 'react-dom/server';
 import { connect } from 'react-redux'
 import _ from 'lodash'
 import slug from 'slug'
-import Noty from 'noty'
 import tt from 'counterpart';
 import golos from 'golos-classic-js'
 
-import { Button, Dimmer, Divider, Header, Icon, Label, Loader, Modal, Segment, Table, List, Popup } from 'semantic-ui-react'
+import { Button, Dimmer, Divider, Header, Icon, Label, Loader, Modal, Segment, List, Popup } from 'semantic-ui-react'
 import { Form } from 'formsy-semantic-ui-react'
 
-import * as types from '../../../actions/actionTypes';
+//import * as types from '../../../actions/actionTypes';
 import * as forumActions from '../../../actions/forumActions'
 import * as CONFIG from '../../../../config';
 
-import AccountLink from '../../../components/elements/account/link'
 import LoginModal from '../../../components/elements/login/modal'
 
 class ForumCategoriesForm extends React.Component {
@@ -224,7 +221,7 @@ class ForumCategoriesForm extends React.Component {
             }]),
             (err, result) => {
                 ++tasks;
-                if (tasks == 2) this.setState({ loading: false });
+                if (tasks === 2) this.setState({ loading: false });
                 if (err) {
                     alert(err);
                     return;
@@ -239,7 +236,7 @@ class ForumCategoriesForm extends React.Component {
             }]),
             (err, result) => {
                 ++tasks;
-                if (tasks == 2) this.setState({ loading: false });
+                if (tasks === 2) this.setState({ loading: false });
                 if (err) {
                     alert(err);
                     return;
@@ -249,7 +246,7 @@ class ForumCategoriesForm extends React.Component {
 
     render() {
         const { account } = this.props
-        const { name, description, tags, categories, addEditParentIds, editCatId, showConfirm, loading } = this.state
+        const { categories, addEditParentIds, editCatId, showConfirm, loading } = this.state
 
         let catsToItems = (cats, parentIds=[]) => {
             let listItems = [];
@@ -263,14 +260,14 @@ class ForumCategoriesForm extends React.Component {
                     );
                 }
                 listItems.push(
-                    <List.Item>
+                    <List.Item key={_id}>
                         <List.Icon name={innerList ? 'folder' : 'file'} />
                         <List.Content>
                             <table>
                             <tbody><tr><td>
                                 <List.Header>
                                     <Popup
-                                        content={tt.getLocale() == 'ru' ? (forum.desc_ru || forum.desc || tt('categories.no_desc')) : (forum.desc || forum.desc_ru || tt('categories.no_desc'))}
+                                        content={tt.getLocale() === 'ru' ? (forum.desc_ru || forum.desc || tt('categories.no_desc')) : (forum.desc || forum.desc_ru || tt('categories.no_desc'))}
                                         mouseEnterDelay={500}
                                         trigger={<span>{forum.name_ru}</span>} />
                                 </List.Header>
@@ -350,12 +347,12 @@ class ForumCategoriesForm extends React.Component {
         };
         let listItems = catsToItems(categories);
 
-        const tag_labels = (this.state.tags) ? this.state.tags_detected.map((tag) => (
+        if (this.state.tags) this.state.tags_detected.map((tag) => (
             <Label as='a' color='blue' key={tag}>
                 <Icon name='tag' />
                 {tag}
             </Label>
-        )) : [];
+        ))
         const errorLabel = (<Label color="red" pointing/>);
         let submit = (
             <Button fluid disabled>
@@ -501,7 +498,7 @@ class ForumCategoriesForm extends React.Component {
                                         }}
                                         validations={{
                                             isAlphanumericWithDashes: function(values, value) {
-                                                return (!value || /^[0-9A-Za-z\s\-]+$/.test(value)) ? true : tt('validation.only_letters_digits_dashes');
+                                                return (!value || /^[0-9A-Za-z\s-]+$/.test(value)) ? true : tt('validation.only_letters_digits_dashes');
                                             }
                                         }}
                                         errorLabel={ errorLabel }

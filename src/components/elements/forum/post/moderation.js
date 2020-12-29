@@ -1,9 +1,7 @@
 import React from 'react';
-import { Button, Dimmer, Divider, Grid, Header, Icon, Loader, Message, Modal, Segment } from 'semantic-ui-react';
+import { Button } from 'semantic-ui-react';
 import Noty from 'noty';
-import tt from 'counterpart';
 
-import ForumPostModerationStatus from './moderation/status';
 import LoginModal from '../../login/modal';
 
 export default class ForumPostModeration extends React.Component {
@@ -65,18 +63,18 @@ export default class ForumPostModeration extends React.Component {
         const moderator = this.props.account;
         this.props.actions.moderatorRevealPostForum(moderator.key, moderator, this.props.topic, this.props.forum._id, this.props.forum);
         setTimeout(() => {
-           window.location.reload();
+            window.location.reload();
         },
         1000);
     };
 
     render() {
-        const { account, forum, moderation, topic } = this.props;
+        const { forum, topic } = this.props; // account, moderation
         const moderatorRemoved = (topic._removedFrom && topic._removedFrom.indexOf(forum['_id']) >= 0);
         if (moderatorRemoved) {
         }
-        let processing = false;
-        let lastResult = false;
+        //let processing = false;
+        //let lastResult = false;
         const isHidden = !!forum.hidden[topic.id];
         /*if (moderation.last) {
             const last_topic = moderation.last.payload[1].topic;

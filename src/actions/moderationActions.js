@@ -45,7 +45,7 @@ export function moderatorHidePostForum(wif, moderator, post, _id, forum, why = '
                     loading: false
                 });
             } else {
-                ForumActions.updateForumStats(wif, name, _id,
+                ForumActions.updateForumStats(wif, name, _id, forum,
                     -1,
                     0);
                 dispatch({
@@ -76,7 +76,7 @@ export function moderatorRevealPostForum(wif, moderator, post, _id, forum) {
                     loading: false
                 });
             } else {
-                ForumActions.updateForumStats(wif, name, _id,
+                ForumActions.updateForumStats(wif, name, _id, forum,
                     1,
                     0);
                 dispatch({

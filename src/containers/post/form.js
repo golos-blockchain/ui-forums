@@ -219,7 +219,7 @@ class PostForm extends React.Component {
         namespace: _id,
     }
     const { action, account, parent } = this.props
-    this.props.actions.submit(account, data, parent, action)
+    this.props.actions.submit(account, data, parent, this.props.forum, action)
     this.setState({
       submitting: true
     })

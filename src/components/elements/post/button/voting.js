@@ -16,7 +16,7 @@ export default class Voting extends React.Component {
         let myVote = null;
         if (this.props.post && this.props.post.active_votes) {
             for (let av of this.props.post.active_votes) {
-                if (av.voter === voter && av.percent == weight) {
+                if (av.voter === voter && av.percent === weight) {
                     myVote = av;
                     break;
                 }
@@ -49,14 +49,14 @@ export default class Voting extends React.Component {
             alert(translateError('vote', this.props.error));
             this.props.clearVoteError();
         }
-        let { account, post, weight } = this.props;
+        let { account, post } = this.props;
         // Is there an active vote by this account?
         let myVote = null;
         let netVotes = post.net_votes;
         let votes = [];
         if (post && post.active_votes) {
             for (let av of post.active_votes) {
-                if (av.percent == 0) continue;
+                if (av.percent === 0) continue;
                 if (av.voter === account.name) {
                     myVote = av;
                 }
@@ -77,7 +77,7 @@ export default class Voting extends React.Component {
             <div>
                 <Popup
                     trigger={
-                        <Button floated='left' basic='true' icon='thumbs up'>
+                        <Button floated='left' basic icon='thumbs up'>
                         </Button>
                     }
                     position='bottom center'
@@ -96,7 +96,7 @@ export default class Voting extends React.Component {
                 </Dropdown>
                 <Popup
                     trigger={
-                        <Button floated='left' basic='true' icon='thumbs down'>
+                        <Button floated='left' basic icon='thumbs down'>
                         </Button>
                     }
                     position='bottom center'

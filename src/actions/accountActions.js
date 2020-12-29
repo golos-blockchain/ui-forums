@@ -49,7 +49,7 @@ export function fetchAccount(account) {
             payload: payload,
             loading: true
         });
-        if (payload.isUser) {
+        if (payload.isUser && payload.name) {
             setTimeout(function() {
                 golos.api.getAccounts([payload.name], (err, data) => {
                     golos.api.getAccountsBalances([payload.name], (err2, data2) => {

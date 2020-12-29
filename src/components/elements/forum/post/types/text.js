@@ -98,14 +98,16 @@ export default class ForumPostText extends React.Component {
                 <Header.Content>
                   <Link to={topic.url}>
                     {topic.title}
+                  </Link>
                   <Header.Subheader>
-                    {'↳ '}
-                    <TimeAgoWrapper date={`${topic.created}Z`} live={false} />
-                    {' • '}
+                    <Link to={topic.url} style={{color: 'gray'}}>
+                      {'↳ '}
+                      <TimeAgoWrapper date={`${topic.created}Z`} live={false} />
+                      {' • '}
+                    </Link>
                     <AccountLink username={topic.author} isBanned={topic.author_banned} />
                     {paginator}
                   </Header.Subheader>
-                  </Link>
                 </Header.Content>
               </Header>
             </Grid.Column>

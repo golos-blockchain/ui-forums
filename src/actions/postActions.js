@@ -419,7 +419,7 @@ export function processError(err) {
     };
 }
 
-export function submit(account, data, parent, action = 'post') {
+export function submit(account, data, parent, forum, action = 'post') {
     return async dispatch => {
         const ops = [];
 
@@ -494,7 +494,7 @@ export function submit(account, data, parent, action = 'post') {
                 });
             } else {
                 if (action !== 'edit') {
-                    ForumActions.updateForumStats(account.key, account.name, namespace,
+                    ForumActions.updateForumStats(account.key, account.name, namespace, forum,
                         !parent_author.length,
                         !!parent_author.length,
                         !parent_author.length,

@@ -1,8 +1,6 @@
 import React from 'react';
 import golos from 'golos-classic-js';
 
-import { Button, Container, Dropdown, Grid, Header, Icon, Menu, Popup } from 'semantic-ui-react';
-
 import NumericLabel from '../../../utils/NumericLabel';
 
 export default class AccountSteemPower extends React.Component {

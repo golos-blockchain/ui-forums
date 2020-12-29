@@ -34,7 +34,7 @@ export default class Donating extends React.Component {
 
     onHandleSubmit = (formData) => {
         setTimeout(() => {
-            const { author, permlink, category } = this.props.post;
+            const { author, permlink } = this.props.post;
             const { symbol, prec } = this.state;
             this.props.onDonateCast({
                 account: this.props.account,
@@ -65,7 +65,7 @@ export default class Donating extends React.Component {
     };
 
     onAmountChange = (e) => {
-        if (e.key != '.' && (e.key < '0' || e.key > '9')) {
+        if (e.key !== '.' && (e.key < '0' || e.key > '9')) {
             e.preventDefault();
         }
     };
@@ -84,7 +84,7 @@ export default class Donating extends React.Component {
     changeSym = (e, data) => {
         this.setState({
             symbol: data.sym,
-            prec: parseInt(data.prec)
+            prec: parseInt(data.prec, 10)
         });
     };
 
@@ -93,8 +93,8 @@ export default class Donating extends React.Component {
         let donatesJoined = {};
         let donate_count = 0;
         for (let item of donate_list) {
-            if (item.app != 'golos-id') continue;
-            if (donate_count == CONFIG.FORUM.donates_per_page) break;
+            if (item.app !== 'golos-id') continue;
+            if (donate_count === CONFIG.FORUM.donates_per_page) break;
             const asset = Asset(item.amount);
             if (donatesJoined[item.from]) {
                 let fromList = donatesJoined[item.from].assets;
@@ -137,7 +137,7 @@ export default class Donating extends React.Component {
 
         let donate_uia_sum = null;
         let donate_sum = Asset(post.donates).toString(0);
-        if (post.donates_uia != 0) {
+        if (post.donates_uia !== 0) {
             donate_uia_sum =  '  +' + post.donates_uia + ' UIA';
         }
         let donates = this.renderDonateList(post.donate_list);
@@ -147,7 +147,7 @@ export default class Donating extends React.Component {
 
         let presets = [5, 10, 25, 50, 100];
         for (const i in presets) {
-            presets[i] = (<Button color='blue' animated='fade' amount={presets[i]} onClick={this.onPresetClick}>
+            presets[i] = (<Button key={i} color='blue' animated='fade' amount={presets[i]} onClick={this.onPresetClick}>
                 <Button.Content visible>{presets[i]}</Button.Content>
                 <Button.Content hidden>+{presets[i]}</Button.Content>
             </Button>);
@@ -184,7 +184,7 @@ export default class Donating extends React.Component {
                 }
             }
 
-            tip_balance_str = (<span>{tt('account.tip_balance')}: &nbsp;<b>{parseInt(tip_balance) + ' ' + symbol}</b></span>);
+            tip_balance_str = (<span>{tt('account.tip_balance')}: &nbsp;<b>{parseInt(tip_balance, 10) + ' ' + symbol}</b></span>);
         }
 
         let button = (<Button color='blue' onClick={this.showModal}>
@@ -210,7 +210,7 @@ export default class Donating extends React.Component {
             <Button as='div' labelPosition='right'>
                 {button}
                 <Label as='a' basic color='blue' pointing='left'>
-                    <Dropdown text={donate_sum} icon={donate_sum == '0 GOLOS' ? null : undefined}>
+                    <Dropdown text={donate_sum} icon={donate_sum === '0 GOLOS' ? null : undefined}>
                         <Dropdown.Menu>
                             {donates}
                         </Dropdown.Menu>
@@ -249,7 +249,6 @@ export default class Donating extends React.Component {
                                 focus
                                 autoFocus
                                 onKeyPress={this.onAmountChange}
-                                label={tt('transfer.amount')}
                                 value={this.state.amount}
                                 validations={{
                                     isFloat: true,

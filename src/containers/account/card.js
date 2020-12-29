@@ -2,14 +2,14 @@ import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import { Card, Popup } from 'semantic-ui-react';
+//import { Card, Popup } from 'semantic-ui-react';
 
 import * as accountActions from '../../actions/accountActions';
 import * as statusActions from '../../actions/statusActions';
 
-import AccountAvatar from '../../components/elements/account/avatar';
+//import AccountAvatar from '../../components/elements/account/avatar';
 //import AccountFollow from '../../components/elements/account/follow';
-import AccountLink from '../../components/elements/account/link';
+//import AccountLink from '../../components/elements/account/link';
 
 class AccountCard extends React.Component {
     render() {

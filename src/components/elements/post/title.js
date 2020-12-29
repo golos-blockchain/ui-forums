@@ -1,14 +1,10 @@
 import React from 'react';
 
-import { Grid, Header, Icon, List, Popup, Segment } from 'semantic-ui-react';
-import { Link } from 'react-router-dom';
+import { Grid, Header, Icon, Segment } from 'semantic-ui-react';
 
 import TimeAgoWrapper from '../../../utils/TimeAgoWrapper';
-import PlatformLink from '../../../utils/link/platform';
 import AccountAvatar from '../account/avatar';
 import AccountLink from '../account/link';
-import PostVotes from '../../../containers/post/votes';
-import repLog10 from '../../../reducers/post';
 
 export default class PostTitle extends React.Component {
     log10(str) {

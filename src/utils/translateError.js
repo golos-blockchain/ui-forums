@@ -9,15 +9,12 @@ export default function (op, error) {
                 return tt('voting.vote_changes_exceed');
             }
             return errorStr;
-        break;
         case 'donate':
             if (errorStr.includes('insufficient_funds')) {
                 return tt('donating.not_enough');
             }
             return errorStr;
-        break;
         default:
-            return errorStr; 
-        break;
+            return errorStr;
     }
 }

@@ -3,10 +3,6 @@ import React from 'react';
 let RichTextEditor = require('react-rte-image').default;
 
 export default class HtmlEditor extends React.PureComponent {
-    constructor(props) {
-        super(props);
-    }
-
     static createValueFromString(htmlString) {
         return RichTextEditor.createValueFromString(htmlString, 'html');
     }

@@ -67,11 +67,9 @@ class HeaderMenu extends Component {
     };
 
     render() {
-        const pathname = this.props.location.pathname;
         const { account } = this.props;
-        const { loading, name } = account;
-        const { height } = this.props.status.network;
-        const { isClaiming, hasBalance } = this.state;
+        const { name } = account;
+        const { hasBalance } = this.state;
         let data = {};
         let avatar = false;
         let pendingBalance = false;

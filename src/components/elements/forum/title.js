@@ -2,11 +2,9 @@
 import React from 'react';
 import slug from 'slug'
 import { Link } from 'react-router-dom'
-import { Button, Grid, Header, Icon, Menu, Popup, Segment } from 'semantic-ui-react'
+import { Grid, Header, Icon, Menu, Popup, Segment } from 'semantic-ui-react'
 import tt from 'counterpart';
 
-import AccountLink from '../account/link'
-import ForumSubscribe from './subscribe'
 
 export default class ForumTitle extends React.Component {
     changeFilter = (e, data) => {
@@ -50,7 +48,7 @@ export default class ForumTitle extends React.Component {
                                 <Header size='huge' key={(forum) ? _id : 'unknown'} style={{color: 'white'}}>
                                     <Icon name='list' />
                                     <Header.Content>
-                                        {(forum) ? ((tt.getLocale() == 'ru') ? forum.name_ru : forum.name) : 'unknown'}
+                                        {(forum) ? ((tt.getLocale() === 'ru') ? forum.name_ru : forum.name) : 'unknown'}
                                         <Header.Subheader style={{color: 'white'}}>
                                             <small>
                                                 {' • '}
@@ -61,7 +59,7 @@ export default class ForumTitle extends React.Component {
                                                 {tt('forum_controls.created_by')}
                                                 {' '}
                                                 <AccountLink username={(forum) ? forum.creator || 'chainbb' : 'unknown'} color='white' />*/}
-                                                <div dangerouslySetInnerHTML={{__html: tt.getLocale() == 'ru' ? forum.desc_ru : forum.desc}}></div>
+                                                <div dangerouslySetInnerHTML={{__html: tt.getLocale() === 'ru' ? forum.desc_ru : forum.desc}}></div>
                                             </small>
                                         </Header.Subheader>
                                     </Header.Content>

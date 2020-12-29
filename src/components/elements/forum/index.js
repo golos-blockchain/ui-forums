@@ -16,7 +16,7 @@ export default class ForumIndex extends React.Component {
         highlight = (forum.highlight),
         newest = (lastPost > lastReply) ? 'last_post' : 'last_reply',
         { author, url, created, title } = (typeof forum[newest] === 'object') ? forum[newest] : {};
-        if (newest == 'last_reply' && author) {
+        if (newest === 'last_reply' && author) {
             title = forum['last_post'].title;
         }
     let latest_post = null,
@@ -46,7 +46,7 @@ export default class ForumIndex extends React.Component {
                         {title}
                       </Link>
                       <Header.Subheader textAlign='right'>
-                        {newest == 'last_reply' ? '↳ ' : '- '}
+                        {newest === 'last_reply' ? '↳ ' : '- '}
                         <Link to={`${url}`}>
                           <TimeAgoWrapper date={`${created}Z`} />
                         </Link>
@@ -97,7 +97,7 @@ export default class ForumIndex extends React.Component {
             </Grid.Column>
             <Grid.Column width={2} className='tablet or lower hidden' textAlign='center'>
               <Header size='medium'>
-                <NumericLabel params={numberFormat}>{(forum.stats) ? forum.stats.comments : '?'}</NumericLabel>
+                <NumericLabel params={numberFormat}>{(forum.stats) ? (!forum.stats.posts ? 0 : forum.stats.comments) : '?'}</NumericLabel>
               </Header>
             </Grid.Column>
             <Grid.Column computer={5} tablet={6} mobile={8}>

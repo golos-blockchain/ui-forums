@@ -38,6 +38,13 @@ import GlobalNotice from '../components/global/notice';
 import './app.css';
 import '../../node_modules/noty/lib/noty.css';
 
+var _errorOrig = console.error;
+function _logError(...parameters) {
+    if ([...parameters].toString().includes('Warning: Unknown prop')) return;
+    _errorOrig(...parameters);
+}
+console.error = _logError;
+
 golos.config.set('websocket', CONFIG.GOLOS_NODE);
 if (CONFIG.GOLOS_CHAIN_ID && CONFIG.GOLOS_CHAIN_ID.length) {
     golos.config.set('chain_id', CONFIG.GOLOS_CHAIN_ID);

@@ -9,7 +9,7 @@ import golos from 'golos-classic-js';
 import { key_utils } from 'golos-classic-js/lib/auth/ecc';
 import { validateAccountName } from 'golos-classic-js/lib/utils';
 
-import { Grid, Header, Label } from 'semantic-ui-react';
+import { Header, Label } from 'semantic-ui-react';
 import { Form } from 'formsy-semantic-ui-react';
 
 import * as CONFIG from '../../../config';
@@ -55,7 +55,7 @@ class CreateAccount extends React.Component {
           const response = await fetch(uri);
           if (response.ok) {
               const result = await response.json();
-              if (result.data == data.email) {
+              if (result.data === data.email) {
                   this.setState({
                       code: true,
                       email: data.email
@@ -77,10 +77,10 @@ class CreateAccount extends React.Component {
           const response = await fetch(uri);
           if (response.ok) {
               const result = await response.json();
-              if (result.status == 'ok') {
+              if (result.status === 'ok') {
                   alert('Поздравляем! Вы успешно зарегистрировались');
                   window.location.href = '/';
-              } else if (result.data == 'Wrong code') {
+              } else if (result.data === 'Wrong code') {
                   alert('Неверный код подтверждения!');
               } else {
                   this.handleFetchError(result.data);

@@ -178,7 +178,7 @@ class Forums extends React.Component {
               if (forum.group !== group) continue;
               groupings.push(<ForumIndex key={_id} _id={_id} forum={forum} isMinimized={isMinimized} />);
             }
-            return  <div key={group} style={{marginBottom: "10px"}}>
+            return (<div key={group || 'main'} style={{marginBottom: "10px"}}>
                       <Segment secondary attached>
                         <Grid>
                           <Grid.Row verticalAlign="middle">
@@ -215,7 +215,7 @@ class Forums extends React.Component {
                         </Grid>
                       </Segment>
                       {groupings}
-                    </div>
+                    </div>);
           })
         }
       }
@@ -226,7 +226,6 @@ class Forums extends React.Component {
               <Grid.Row>
                 <Grid.Column width={14}>
                   <Header
-                    icon='users'
                     color='blue'
                     size='huge'
                   >
@@ -238,7 +237,6 @@ class Forums extends React.Component {
                     <Popup
                       trigger={
                           <Button
-                              rounded
                               size='large'
                               floated='right'
                               icon='cogs'
