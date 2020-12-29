@@ -125,7 +125,7 @@ class CreateAccount extends React.Component {
                               return error ? tt('validation.' + error) : true;
                           },
                           isNoSuchAccount: (values, value) => {
-                              golos.api.getAccountsAsync([value], (err, res) => {
+                              golos.api.getAccounts([value], (err, res) => {
                                   this.setState({
                                       alreadyExists: res.length > 0
                                   });

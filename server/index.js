@@ -40,7 +40,7 @@ const NOTE_PST_HIDACC_LST_ACCS = NOTE_PST_ + '.hidacc' + LST + ACCS;
 const NOTE_PST_STATS_LST       = NOTE_PST_ + '.stats' + LST;
 
 let getValues = async (keys) => {
-    let vals = await golos.api.getValues(CONFIG.FORUM.creator, Object.keys(keys));
+    let vals = await golos.api.getValuesAsync(CONFIG.FORUM.creator, Object.keys(keys));
     for (let [key, type] of Object.entries(keys)) {
         const fallback = (type == Object) ? {} : [];
         if (!vals[key]) {
@@ -88,27 +88,46 @@ function getUrl(urlRaw, _id) {
     return '/' + _id + urlRaw.substring(('/' + idToTag(_id)).length);
 }
 
+async function getLastActivity(lastPosts, lastReplies, _id, forum, isRootCall = true) {
+    const tag = idToTag(_id);
+    const data = await golos.api.getAllDiscussionsByActiveAsync(
+        '', '', 0, 1,
+        tag,
+        0, 0
+    );
+    if (data.length) {
+        let lastPost = data.length ? data[0] : null;
+        lastPost.url = getUrl(lastPost.url, _id);
+        lastPosts.push(lastPost);
+        const replies = await golos.api.getContentRepliesAsync(data[0].author, data[0].permlink, 0, 0);
+        if (replies.length) {
+            let lastReply = replies[replies.length - 1];
+            lastReply.url = getUrl(lastReply.url, _id);
+            lastReplies.push(lastReply);
+        }
+    }
+    if (forum.children) {
+        for (let [_id2, forum2] of Object.entries(forum.children)) {
+            await getLastActivity(lastPosts, lastReplies, _id2, forum2, false);
+        }
+    }
+    if (isRootCall) {
+        lastPosts.sort((a, b) => a.created < b.created);
+        lastReplies.sort((a, b) => a.created < b.created);
+    }
+}
+
 async function setForumStats(_id, forum, stats, lastPostNeed = true) {
     if (!stats) return;
     forum.stats = stats[_id] || {posts: 0, total_posts: 0, comments: 0, total_comments: 0};
 
     if (!lastPostNeed) return;
 
-    const tag = idToTag(_id);
-    const data = await golos.api.getAllDiscussionsByActive(
-        '', '', 0, 1,
-        tag,
-        0, 0
-    );
-    if (data.length) {
-        forum.last_post = data.length ? data[0] : null;
-        forum.last_post.url = getUrl(forum.last_post.url, _id);
-        const replies = await golos.api.getContentReplies(data[0].author, data[0].permlink, 0, 0);
-        if (replies.length) {
-            forum.last_reply = replies[replies.length - 1];
-            forum.last_reply.url = getUrl(forum.last_reply.url, _id);
-        }
-    }
+    let lastPosts = [];
+    let lastReplies = [];
+    await getLastActivity(lastPosts, lastReplies, _id, forum);
+    forum.last_post = lastPosts[0];
+    forum.last_reply = lastReplies[0];
 }
 
 router.get('/', async (ctx) => {
@@ -179,7 +198,7 @@ router.get('/forum/:slug', async (ctx) => {
     }
 
     const tag = idToTag(_id);
-    const data = await golos.api.getAllDiscussionsByActive(
+    const data = await golos.api.getAllDiscussionsByActiveAsync(
         '', '', ctx.query.page ? (ctx.query.page - 1) * CONFIG.FORUM.posts_per_page : 0, CONFIG.FORUM.posts_per_page,
         tag,
         0, 0
@@ -194,7 +213,7 @@ router.get('/forum/:slug', async (ctx) => {
         post.author_banned = !!banned[post.author];
         post.url = getUrl(post.url, _id);
 
-        const replies = await golos.api.getContentReplies(post.author, post.permlink, 0, 0);
+        const replies = await golos.api.getContentRepliesAsync(post.author, post.permlink, 0, 0);
         if (replies.length) {
             const reply = replies[replies.length - 1];
             post.last_reply = reply.created;
@@ -236,7 +255,7 @@ router.get('/:category/@:author/:permlink', async (ctx) => {
 
     let { _id, forum } = findForum(vals[NOTE_], ctx.params.category);
 
-    let data = await golos.api.getContent(ctx.params.author, ctx.params.permlink, CONFIG.FORUM.votes_per_page, 0);
+    let data = await golos.api.getContentAsync(ctx.params.author, ctx.params.permlink, CONFIG.FORUM.votes_per_page, 0);
     data.url = getUrl(data.url, _id);
     data.donate_list = [];
     data.author_banned = !!vals[NOTE_PST_HIDACC_LST][data.author];
@@ -259,7 +278,7 @@ router.get('/:category/@:author/:permlink/responses', async (ctx) => {
     keys[NOTE_PST_HIDACC_LST] = Object;
     const vals = await getValues(keys);
 
-    let data = await golos.api.getContentReplies(ctx.params.author, ctx.params.permlink, DEFAULT_VOTE_LIMIT, 0);
+    let data = await golos.api.getContentRepliesAsync(ctx.params.author, ctx.params.permlink, DEFAULT_VOTE_LIMIT, 0);
     for (let item of data) {
         item.donate_list = [];
         item.donate_uia_list = [];
@@ -278,11 +297,11 @@ router.get('/:category/@:author/:permlink/donates', async (ctx) => {
     keys[NOTE_PST_HIDACC_LST] = Object;
     const vals = await getValues(keys);
 
-    let donate_list = await golos.api.getDonates(false, {author: ctx.params.author, permlink: ctx.params.permlink}, '', '', 200, 0, false);
+    let donate_list = await golos.api.getDonatesAsync(false, {author: ctx.params.author, permlink: ctx.params.permlink}, '', '', 200, 0, false);
     for (let item of donate_list) {
         item.from_banned = !!vals[NOTE_PST_HIDACC_LST][item.from];
     }
-    let donate_uia_list = await golos.api.getDonates(true, {author: ctx.params.author, permlink: ctx.params.permlink}, '', '', 200, 0, false);
+    let donate_uia_list = await golos.api.getDonatesAsync(true, {author: ctx.params.author, permlink: ctx.params.permlink}, '', '', 200, 0, false);
     for (let item of donate_uia_list) {
         item.from_banned = !!vals[NOTE_PST_HIDACC_LST][item.from];
     }
@@ -300,7 +319,7 @@ router.get('/@:author', async (ctx) => {
     keys[NOTE_PST_HIDMSG_LST_ACCS] = Array;
     const vals = await getValues(keys);
 
-    let data = await golos.api.getAccounts([ctx.params.author]);
+    let data = await golos.api.getAccountsAsync([ctx.params.author]);
     ctx.body = {
         data: data[0],
         moders: vals[NOTE_PST_HIDMSG_LST_ACCS],
@@ -404,7 +423,7 @@ router.get('/verify_email/:email/:code', async (ctx) => {
     }
     let accs = null;
     try {
-        await golos.broadcast.accountCreateWithDelegation(CONFIG_SEC.registrar.signing_key,
+        await golos.broadcast.accountCreateWithDelegationAsync(CONFIG_SEC.registrar.signing_key,
           CONFIG_SEC.registrar.fee, CONFIG_SEC.registrar.delegation,
           CONFIG_SEC.registrar.account, file_obj.username, 
             {weight_threshold: 1, account_auths: [], key_auths: [[file_obj.owner, 1]]},
@@ -413,7 +432,7 @@ router.get('/verify_email/:email/:code', async (ctx) => {
             file_obj.memo,
           '{}', aro);
         await new Promise(resolve => setTimeout(resolve, 1000));
-        accs = await golos.api.getAccounts([file_obj.username]);
+        accs = await golos.api.getAccountsAsync([file_obj.username]);
     } catch (err) {
         return returnError(ctx, err)
     }

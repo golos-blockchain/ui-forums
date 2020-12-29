@@ -103,7 +103,7 @@ export async function updateForumStats(wif, account, _id, forum, addPosts, addCo
     try {
         const key = 'g.pst.f.' + CONFIG.FORUM._id.toLowerCase() + '.stats.lst';
 
-        let vals = await golos.api.getValues(CONFIG.FORUM.creator, [key]);
+        let vals = await golos.api.getValuesAsync(CONFIG.FORUM.creator, [key]);
         vals[key] = vals[key] ? JSON.parse(vals[key]) : {};
 
         let operations = [];

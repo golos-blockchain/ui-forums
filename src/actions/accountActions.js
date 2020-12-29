@@ -123,7 +123,7 @@ export function follow(payload) {
         const who = payload.who;
         const what = (payload.action === 'follow') ? ['blog'] : [];
         const json = JSON.stringify(['follow', {follower: account, following: who, what: what}]);
-        golos.broadcast.customJsonAsync(wif, [], [account], 'follow', json, (err, result) => {
+        golos.broadcast.customJson(wif, [], [account], 'follow', json, (err, result) => {
             if (payload.action === 'follow') {
                 dispatch({
                     type: types.ACCOUNT_FOLLOWING_APPEND,

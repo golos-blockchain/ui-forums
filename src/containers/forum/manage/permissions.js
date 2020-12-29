@@ -75,25 +75,25 @@ export default class ForumPermissions extends React.Component {
         setTimeout(() => this.setState({ loading: true }), 1);
         try {
             const wif = this.props.account.key;
-            await golos.broadcast.customJson(wif, [], [account], "account_notes",
+            await golos.broadcast.customJsonAsync(wif, [], [account], "account_notes",
                 JSON.stringify(['set_value', {
                     account: account,
                     key: 'g.pst.f.' + CONFIG.FORUM._id.toLowerCase() + '.hidmsg.lst.accs',
                     value: JSON.stringify([...this.state.moders, ...this.state.supers])
                 }]));
-            await golos.broadcast.customJson(wif, [], [account], "account_notes",
+            await golos.broadcast.customJsonAsync(wif, [], [account], "account_notes",
                 JSON.stringify(['set_value', {
                     account: account,
                     key: 'g.pst.f.' + CONFIG.FORUM._id.toLowerCase() + '.hidacc.lst.accs',
                     value: JSON.stringify(this.state.supers)
                 }]));
-            /*await golos.broadcast.customJson(wif, [], [account], "account_notes",
+            /*await golos.broadcast.customJsonAsync(wif, [], [account], "account_notes",
                 JSON.stringify(['set_value', {
                     account: account,
                     key: 'g.pst.f.' + CONFIG.FORUM._id.toLowerCase() + '.banacc.lst.accs',
                     value: JSON.stringify(this.state.admins)
                 }]));*/
-            await golos.broadcast.customJson(wif, [], [account], "account_notes",
+            await golos.broadcast.customJsonAsync(wif, [], [account], "account_notes",
                 JSON.stringify(['set_value', {
                     account: account,
                     key: 'g.pst.f.' + CONFIG.FORUM._id.toLowerCase() + '.stats.lst.accs',
