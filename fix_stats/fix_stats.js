@@ -19,73 +19,89 @@ const NOTE_PST_HIDMSG_LST      = NOTE_PST_ + '.hidmsg' + LST;
 const NOTE_PST_HIDACC_LST      = NOTE_PST_ + '.hidacc' + LST;
 const NOTE_PST_STATS_LST       = NOTE_PST_ + '.stats' + LST;
 
-function categoriesIdsArr(cats, idsArr) {
-    for (let cat of Object.keys(cats)) {
-        idsArr.push(cat);
-        if (cats[cat].children) {
-            categoriesIdsArr(cats[cat].children, idsArr);
-        }
-    }
-}
-
 function idToTag(_id) {
     return 'fm-' + GLOBAL_ID + '-' + _id.toLowerCase();
 }
 
-console.log('WELCOME TO FIX_STATS!');
-console.log('Forum _id: ' + GLOBAL_ID);
-console.log('Forum creator: ' + CONFIG.FORUM.creator);
-console.log('');
-const wif = reader.question('@' + CONFIG.FORUM.creator + ', enter your posting private key: ');
-
-console.log('Obtaining all information...');
-golos.api.getValues(CONFIG.FORUM.creator, [NOTE_, NOTE_PST_HIDMSG_LST, NOTE_PST_HIDACC_LST],
-    async (err, result) => {
-    if (err) {
-        console.error(err);
-        return;
-    }
-
-    console.log(result);
-
-    const cats = JSON.parse(result[NOTE_]);
-    console.log('Categories tree:', JSON.stringify(cats));
-    const idsArr = [];
-    categoriesIdsArr(cats, idsArr);
-    console.log('Categories _id list:', JSON.stringify(idsArr));
-
-    const hidden = JSON.parse(result[NOTE_PST_HIDMSG_LST] || '{}');
-    console.log('Hidden posts:', JSON.stringify(hidden));
-
-    const banned = JSON.parse(result[NOTE_PST_HIDACC_LST] || '{}');
-    console.log('Banned accs:', JSON.stringify(banned));
-
-    let stats = {};
-    for (let _id of idsArr) {
+async function fillStats(stats, cats, hidden, banned, parentStats = []) {
+    if (!cats) return;
+    for (let _id in cats) {
         const tag = idToTag(_id);
         console.log('Getting posts in category:', _id, '(' + tag + ')');
 
         let stat = {posts: 0, total_posts: 0, comments: 0, total_comments: 0};
-        const posts = await golos.api.getAllDiscussionsByActive(
+        const posts = await golos.api.getAllDiscussionsByActiveAsync(
             '', '', 0, 1000000,
             tag,
             0, 0);
 
         for (let post of posts) {
+            const good = !banned[post.author] && !hidden[post.id];
+
             ++stat.total_posts;
-            if (!banned[post.author] && !hidden[post.id]) {
+            if (good) {
                 ++stat.posts;
                 stat.total_comments += post.children;
                 stat.comments += post.children;
             }
+
+            for (const parentStat of parentStats) {
+                ++parentStat.total_posts;
+                if (good) {
+                    ++parentStat.posts;
+                    parentStat.total_comments += post.children;
+                    parentStat.comments += post.children;
+                }
+            }
         }
 
-        console.log('Collected stat:', stat);
+        await fillStats(stats, cats[_id].children, hidden, banned, [...parentStats, stat]);
+
+        console.log('Collected stat:', _id, stat);
         stats[_id] = stat;
     }
+}
+
+(async () => {
+    console.log('WELCOME TO FIX_STATS!');
+    console.log('Forum _id: ' + GLOBAL_ID);
+    console.log('Forum creator: ' + CONFIG.FORUM.creator);
+    console.log('');
+
+    let wif = null;
+    while (!wif) {
+        wif = reader.question('@' + CONFIG.FORUM.creator + ', enter your posting private key: ');
+        const auth = await golos.auth.login(CONFIG.FORUM.creator, wif);
+        if (auth.active && !auth.password) {
+            console.error('Login failed! Use posting, not active key.');
+            wif = null;
+            continue;
+        }
+        if (!auth.posting) {
+            console.log('Login failed! Incorrect key.');
+            wif = null;
+        }
+    }
+
+    console.log('Obtaining all information...');
+    const vals = await golos.api.getValuesAsync(CONFIG.FORUM.creator,
+        [NOTE_, NOTE_PST_HIDMSG_LST, NOTE_PST_HIDACC_LST]);
+    console.log(vals);
+
+    const cats = JSON.parse(vals[NOTE_]);
+    console.log('Categories tree:', JSON.stringify(cats));
+
+    const hidden = JSON.parse(vals[NOTE_PST_HIDMSG_LST] || '{}');
+    console.log('Hidden posts:', JSON.stringify(hidden));
+
+    const banned = JSON.parse(vals[NOTE_PST_HIDACC_LST] || '{}');
+    console.log('Banned accs:', JSON.stringify(banned));
+
+    let stats = {};
+    await fillStats(stats, cats, hidden, banned);
 
     console.log('Setting stat: ', JSON.stringify(stats));
-    await golos.broadcast.customJson(wif, [], [CONFIG.FORUM.creator], 'account_notes',
+    await golos.broadcast.customJsonAsync(wif, [], [CONFIG.FORUM.creator], 'account_notes',
         JSON.stringify(['set_value', {
             account: CONFIG.FORUM.creator,
             key: NOTE_PST_STATS_LST,
@@ -93,4 +109,4 @@ golos.api.getValues(CONFIG.FORUM.creator, [NOTE_, NOTE_PST_HIDMSG_LST, NOTE_PST_
         }]));
     console.log('SUCCESSFULL!');
     console.log('Press Ctrl+C to exit');
-});
+})();
