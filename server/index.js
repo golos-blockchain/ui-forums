@@ -103,6 +103,7 @@ async function getLastActivity(lastPosts, lastReplies, _id, forum, isRootCall = 
         if (replies.length) {
             let lastReply = Object.assign({}, replies[replies.length - 1]);
             lastReply.url = getUrl(lastReply.url, _id);
+            lastReply.title = data[0].title;
             lastReplies.push(lastReply);
         }
     }

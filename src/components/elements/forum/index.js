@@ -16,10 +16,6 @@ export default class ForumIndex extends React.Component {
         highlight = (forum.highlight),
         newest = (lastPost > lastReply) ? 'last_post' : 'last_reply',
         { author, url, created, title } = (typeof forum[newest] === 'object') ? forum[newest] : {};
-        if (newest === 'last_reply' && author) {
-            title = forum['last_reply'].title;
-            url = forum['last_reply'].url;
-        }
     let latest_post = null,
         numberFormat = {
           shortFormat: true,
