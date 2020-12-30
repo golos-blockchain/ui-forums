@@ -10,9 +10,13 @@ import HtmlEditor from '../HtmlEditor/HtmlEditor';
 export default class PostFormFieldBody extends React.Component {
   constructor(props) {
     super(props);
+    const st = HtmlEditor.getStateFromHtml(props.value);
     this.state = {
-      rteState: HtmlEditor.getStateFromHtml(props.value)
+      rteState: st
     };
+    if (this.props.handleChange) {
+      this.props.handleChange(this, {name: 'body', value: st.toString('html')});
+    }
   }
 
   componentWillReceiveProps(nextProps) {
