@@ -33,10 +33,10 @@ export default class ForumPostText extends React.Component {
             No Replies
           </Grid.Column>
         )
-    if(topic.children > 10) {
+    if(topic.children > CONFIG.FORUM.replies_per_page) {
       paginator = (
         <Paginator
-          perPage={10}
+          perPage={CONFIG.FORUM.replies_per_page}
           total={topic.children}
           url={topic.url}
         />
