@@ -59,10 +59,10 @@ class Response extends React.Component {
         ),
         post = this.props.post,
         count = (post && post.responses) ? post.responses.length : false
-    if(post.content && post.content.children === 0) {
+    if (post.content && !count) {
       display = <Response404 {...this.props} />
     }
-    if(count && count > 0 && post.content.children > 0) {
+    if(count && count > 0) {
       let start = (this.props.page - 1) * this.props.perPage,
           end = start + this.props.perPage,
           responses = this.props.post.responses.slice(start, end)
