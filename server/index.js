@@ -99,13 +99,9 @@ async function getLastActivity(lastPosts, lastReplies, _id, forum, isRootCall = 
         let lastPost = data.length ? Object.assign({}, data[0]) : null;
         lastPost.url = getUrl(lastPost.url, _id);
         lastPosts.push(lastPost);
-        const replies = await golos.api.getContentRepliesAsync(data[0].author, data[0].permlink, 0, 0);
-        if (replies.length) {
-            let lastReply = Object.assign({}, replies[replies.length - 1]);
-            lastReply.url = getUrl(lastReply.url, _id);
-            lastReply.title = data[0].title;
-            lastReplies.push(lastReply);
-        }
+        lastPost.last_reply.title = lastPost.title;
+        lastPost.last_reply.url = _id + '/@' + lastPost.author + '/' + lastPost.permlink + '#@' + lastPost.last_reply.author + '/' + lastPost.last_reply.permlink;
+        if (lastPost.last_reply.author) lastReplies.push(lastPost.last_reply);
     }
     if (forum.children) {
         for (let [_id2, forum2] of Object.entries(forum.children)) {
