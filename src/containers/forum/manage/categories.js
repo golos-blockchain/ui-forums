@@ -7,7 +7,7 @@ import slug from 'slug'
 import tt from 'counterpart';
 import golos from 'golos-classic-js'
 
-import { Button, Dimmer, Divider, Header, Icon, Label, Loader, Modal, Segment, List, Popup } from 'semantic-ui-react'
+import { Button, Divider, Header, Icon, Label, Modal, Segment, List, Popup } from 'semantic-ui-react'
 import { Form } from 'formsy-semantic-ui-react'
 
 //import * as types from '../../../actions/actionTypes';
@@ -401,13 +401,10 @@ class ForumCategoriesForm extends React.Component {
         let actions = {signinAccount: this.broadcast, onClose: this.hideConfirm};
         return (
             <div>
-                {loading ? <Dimmer>
-                        <Loader size='large' />
-                </Dimmer> : null}
                 <LoginModal authType="active" noButton={true} open={showConfirm} actions={actions}/>
                 {newForumDisplay}
                 <Form
-                    loading={this.state.loading}
+                    loading={loading}
                     onValidSubmit={this.handleSubmit}
                     >
                     <Segment padded attached='top' secondary color='orange'>

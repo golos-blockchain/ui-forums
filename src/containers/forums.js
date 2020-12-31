@@ -46,12 +46,10 @@ class Forums extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-      // console.log(nextProps, this.state)
-      // if(nextProps.forums.group !== this.state.group) {
-      //   console.log(nextProps.forums.group, this.state.group)
-      //   this.props.actions.resetPostState()
-      //   this.getForums()
-      // }
+      this.setState({
+        showConfig: (['categories', 'permissions'].indexOf(nextProps.section) >= 0) ? true : false
+      });
+      this.getForums();
     }
 
     toggleVisibility = (e, props) => {

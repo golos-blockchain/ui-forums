@@ -2,7 +2,8 @@ import React from 'react';
 import golos from 'golos-classic-js';
 import tt from 'counterpart';
 
-import { Header, Icon, Segment, Table, Dropdown, Button, Dimmer, Loader } from 'semantic-ui-react';
+import { Header, Icon, Segment, Table, Dropdown, Button } from 'semantic-ui-react';
+import { Form } from 'formsy-semantic-ui-react';
 
 import * as CONFIG from '../../../../config';
 
@@ -172,73 +173,72 @@ export default class ForumPermissions extends React.Component {
         let actions = {signinAccount: this.broadcast, onClose: this.hideConfirm};
         return(
             <div>
-                {loading ? <Dimmer>
-                        <Loader size='large' />
-                </Dimmer> : null}
                 <LoginModal authType="active" noButton={true} open={showConfirm} actions={actions}/>
-                <Segment padded attached='top' secondary color='purple'>
-                    <Header size='large'>
-                        {tt('permissions.title')}
+                <Form loading={loading}>
+                    <Segment padded attached='top' secondary color='purple'>
+                        <Header size='large'>
+                            {tt('permissions.title')}
+                            <Header.Subheader>
+                                {tt('permissions.description')}
+                            </Header.Subheader>
+                        </Header>
+                    </Segment>
+                    <Header attached>
+                    {tt('permissions.moderators')}
                         <Header.Subheader>
-                            {tt('permissions.description')}
+                            {tt('permissions.moderators_desc')}
                         </Header.Subheader>
                     </Header>
-                </Segment>
-                <Header attached>
-                {tt('permissions.moderators')}
-                    <Header.Subheader>
-                        {tt('permissions.moderators_desc')}
-                    </Header.Subheader>
-                </Header>
-                <Table attached size='large'>
-                    <Table.Body>
-                        <Table.Row>
-                            <Table.Cell collapsing>
-                                <Icon color='green' name='checkmark' />
-                            </Table.Cell>
-                            <Table.Cell>
-                                {moder_list}
-                            </Table.Cell>
-                        </Table.Row>
-                    </Table.Body>
-                </Table>
-                <Header attached>
-                {tt('permissions.super_moderators')}
-                    <Header.Subheader>
-                        {tt('permissions.super_moderators_desc')}
-                    </Header.Subheader>
-                </Header>
-                <Table attached size='large'>
-                    <Table.Body>
-                        <Table.Row>
-                            <Table.Cell collapsing>
-                                <Icon color='green' name='checkmark' />
-                            </Table.Cell>
-                            <Table.Cell>
-                                {super_list}
-                            </Table.Cell>
-                        </Table.Row>
-                    </Table.Body>
-                </Table>
-                {/*<Header attached>
-                    {tt('permissions.admins')}
-                    <Header.Subheader>
-                        {tt('permissions.admins_desc')}
-                    </Header.Subheader>
-                </Header>
-                <Table attached size='large'>
-                    <Table.Body>
-                        <Table.Row>
-                            <Table.Cell collapsing>
-                                <Icon color='green' name='checkmark' />
-                            </Table.Cell>
-                            <Table.Cell>
-                                {admin_list}
-                            </Table.Cell>
-                        </Table.Row>
-                    </Table.Body>
-                </Table>*/}
-                {submit}
+                    <Table attached size='large'>
+                        <Table.Body>
+                            <Table.Row>
+                                <Table.Cell collapsing>
+                                    <Icon color='green' name='checkmark' />
+                                </Table.Cell>
+                                <Table.Cell>
+                                    {moder_list}
+                                </Table.Cell>
+                            </Table.Row>
+                        </Table.Body>
+                    </Table>
+                    <Header attached>
+                    {tt('permissions.super_moderators')}
+                        <Header.Subheader>
+                            {tt('permissions.super_moderators_desc')}
+                        </Header.Subheader>
+                    </Header>
+                    <Table attached size='large'>
+                        <Table.Body>
+                            <Table.Row>
+                                <Table.Cell collapsing>
+                                    <Icon color='green' name='checkmark' />
+                                </Table.Cell>
+                                <Table.Cell>
+                                    {super_list}
+                                </Table.Cell>
+                            </Table.Row>
+                        </Table.Body>
+                    </Table>
+                    {/*<Header attached>
+                        {tt('permissions.admins')}
+                        <Header.Subheader>
+                            {tt('permissions.admins_desc')}
+                        </Header.Subheader>
+                    </Header>
+                    <Table attached size='large'>
+                        <Table.Body>
+                            <Table.Row>
+                                <Table.Cell collapsing>
+                                    <Icon color='green' name='checkmark' />
+                                </Table.Cell>
+                                <Table.Cell>
+                                    {admin_list}
+                                </Table.Cell>
+                            </Table.Row>
+                        </Table.Body>
+                    </Table>*/}
+                    {submit}
+                </Form>
             </div>
         );
     }
