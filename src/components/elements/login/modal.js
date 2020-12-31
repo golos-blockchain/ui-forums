@@ -25,6 +25,11 @@ class LoginModal extends React.Component {
                 loginOpen : nextProps.open ? true : false
             });
         }
+        if (nextProps.account != this.state.account) {
+            this.setState({
+                account : nextProps.account
+            });
+        }
     }
 
     handleOpen = (e) => this.setState({
