@@ -46,6 +46,7 @@ class Forums extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
+      if (nextProps.section === this.props.section) return;
       this.setState({
         showConfig: (['categories', 'permissions'].indexOf(nextProps.section) >= 0) ? true : false
       });

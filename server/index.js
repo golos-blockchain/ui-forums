@@ -88,15 +88,10 @@ function getUrl(urlRaw, _id) {
     return '/' + _id + urlRaw.substring(('/' + idToTag(_id)).length);
 }
 
-async function getLastActivity(lastPosts, lastReplies, _id, forum, isRootCall = true) {
+async function getLastActivity(data, lastPosts, lastReplies, _id, forum, isRootCall = true) {
     const tag = idToTag(_id);
-    const data = await golos.api.getAllDiscussionsByActiveAsync(
-        '', '', 0, 1,
-        tag,
-        0, 0
-    );
-    if (data.length) {
-        let lastPost = data.length ? Object.assign({}, data[0]) : null;
+    if (data[tag] && data[tag].length) {
+        let lastPost = data[tag][0];
         lastPost.url = getUrl(lastPost.url, _id);
         lastPosts.push(lastPost);
         lastPost.last_reply.title = lastPost.title;
@@ -105,7 +100,7 @@ async function getLastActivity(lastPosts, lastReplies, _id, forum, isRootCall = 
     }
     if (forum.children) {
         for (let [_id2, forum2] of Object.entries(forum.children)) {
-            await getLastActivity(lastPosts, lastReplies, _id2, forum2, false);
+            await getLastActivity(data, lastPosts, lastReplies, _id2, forum2, false);
         }
     }
     if (isRootCall) {
@@ -114,17 +109,37 @@ async function getLastActivity(lastPosts, lastReplies, _id, forum, isRootCall = 
     }
 }
 
-async function setForumStats(_id, forum, stats, lastPostNeed = true) {
+function getAllTags(tags, forums) {
+    if (forums)
+    for (let _id in forums) {
+        tags.push(idToTag(_id));
+        getAllTags(tags, forums[_id].children);
+    }
+}
+
+async function setForumStats(forums, stats, lastPostNeed = true) {
     if (!stats) return;
-    forum.stats = stats[_id] || {posts: 0, total_posts: 0, comments: 0, total_comments: 0};
 
-    if (!lastPostNeed) return;
+    let tags = [];
+    getAllTags(tags, forums);
+    const data = await golos.api.getAllDiscussionsByActiveAsync(
+        '', '', 0, 1,
+        tags,
+        0, 0
+    );
 
-    let lastPosts = [];
-    let lastReplies = [];
-    await getLastActivity(lastPosts, lastReplies, _id, forum);
-    forum.last_post = lastPosts[0];
-    forum.last_reply = lastReplies[0];
+    if (forums)
+    for (let [_id, forum] of Object.entries(forums)) {
+        forum.stats = stats[_id] || {posts: 0, total_posts: 0, comments: 0, total_comments: 0};
+
+        if (!lastPostNeed) continue;
+
+        let lastPosts = [];
+        let lastReplies = [];
+        await getLastActivity(data, lastPosts, lastReplies, _id, forum);
+        forum.last_post = lastPosts[0];
+        forum.last_reply = lastReplies[0];
+    }
 }
 
 router.get('/', async (ctx) => {
@@ -138,9 +153,7 @@ router.get('/', async (ctx) => {
 
     let vals = await getValues(keys);
 
-    for (let _id in vals[NOTE_]) {
-        await setForumStats(_id, vals[NOTE_][_id], vals[NOTE_PST_STATS_LST]);
-    }
+    await setForumStats(vals[NOTE_], vals[NOTE_PST_STATS_LST]);
 
     ctx.body = {
         data: {
@@ -189,22 +202,20 @@ router.get('/forum/:slug', async (ctx) => {
     const forum_id = ctx.params.slug;
     let {_id, forum} = findForum(vals[NOTE_], forum_id);
 
-    await setForumStats(_id, forum, vals[NOTE_PST_STATS_LST], false);
-    for (let _id in forum.children) {
-        await setForumStats(_id, forum.children[_id], vals[NOTE_PST_STATS_LST]);
-    }
+    await setForumStats({[_id]: forum}, vals[NOTE_PST_STATS_LST], false);
+    await setForumStats(forum.children, vals[NOTE_PST_STATS_LST]);
 
     const tag = idToTag(_id);
     const data = await golos.api.getAllDiscussionsByActiveAsync(
         '', '', ctx.query.page ? (ctx.query.page - 1) * CONFIG.FORUM.posts_per_page : 0, CONFIG.FORUM.posts_per_page,
-        tag,
+        [tag],
         0, 0
     );
 
     let filteredData = [];
     const hidden = vals[NOTE_PST_HIDMSG_LST];
     const banned = vals[NOTE_PST_HIDACC_LST];
-    for (let post of data) {
+    for (let post of data[tag]) {
         if (ctx.query.filter !== 'all' && post.net_rshares < CONFIG.MODERATION.hide_threshold) continue;
         post.post_hidden = !!hidden[post.id];
         post.author_banned = !!banned[post.author];
