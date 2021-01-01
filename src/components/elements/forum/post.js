@@ -6,7 +6,7 @@ import ForumPostText from './post/types/text';
 export default class ForumPost extends React.Component {
     constructor(props) {
         super(props)
-        const isModerator = props && props.account && props.account.isUser && 
+        const isModerator = props && props.account && props.account.isUser && props.forum &&
             (props.forum.moders.includes(props.account.name) 
             || props.forum.supers.includes(props.account.name));
         this.state = {

@@ -69,7 +69,7 @@ class Response extends React.Component {
       let jsonMetadata = {}
       let high_quality_post = true
       let formId = 0
-      if(count > 0) {
+      if (count > 0 && this.props.post.forum) {
         const isModerator = this.props.account && this.props.account.isUser && 
             (this.props.post.forum.moders.includes(this.props.account.name) 
             || this.props.post.forum.supers.includes(this.props.account.name));

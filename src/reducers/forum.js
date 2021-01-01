@@ -8,13 +8,7 @@ export default function forum(state = {last: null}, action) {
     case types.FORUM_LOAD_RESOLVED:
       let { forum } = action.payload
       forum = setProgression(forum)
-      return Object.assign({}, state, {
-          target: forum,
-          funding: {
-              'history': (action.payload.data && action.payload.data.history) ? action.payload.data.history : [],
-              'contributors': (action.payload.data && action.payload.data.contributors) ? action.payload.data.contributors : [],
-          }
-      })
+      return Object.assign({}, state, forum);
     case types.FORUM_CONFIG_PROCESSING:
     case types.FORUM_CONFIG_RESOLVED:
     case types.FORUM_CONFIG_RESOLVED_ERROR:
