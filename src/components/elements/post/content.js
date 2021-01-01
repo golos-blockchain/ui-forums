@@ -99,7 +99,7 @@ export default class PostContent extends React.Component {
             editing = (this.state && this.state.editing) ? this.state.editing : false,
             editButton = false,
             editForm = false;
-        const isBanned = !!this.props.post.forum.banned[this.props.account.name];
+        const isBanned = this.props.post.forum && !!this.props.post.forum.banned[this.props.account.name];
         let postButton = (
                 <Popup
                     trigger={
