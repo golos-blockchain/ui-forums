@@ -95,7 +95,7 @@ async function getLastActivity(data, lastPosts, lastReplies, _id, forum, isRootC
         lastPost.url = getUrl(lastPost.url, _id);
         lastPosts.push(lastPost);
         lastPost.last_reply.title = lastPost.title;
-        lastPost.last_reply.url = _id + '/@' + lastPost.author + '/' + lastPost.permlink + '#@' + lastPost.last_reply.author + '/' + lastPost.last_reply.permlink;
+        lastPost.last_reply.url = '/' + _id + '/@' + lastPost.author + '/' + lastPost.permlink + '#@' + lastPost.last_reply.author + '/' + lastPost.last_reply.permlink;
         if (lastPost.last_reply.author) lastReplies.push(lastPost.last_reply);
     }
     if (forum.children) {
