@@ -359,10 +359,10 @@ router.get('/send_email/:email/:locale/:username/:owner/:active/:posting/:memo',
         return returnError(ctx, 'email_html in config has wrong format. It does not contain <code>{verification_code}</code>. Admin should configure it like this:<pre>email_html: \'Your verification code: <h4>{verification_code}</h4>\'</pre>');
     }
     html = html.replace('{verification_code}', veri_code);
-    html = html.replace('{FORUM.logo_title}', CONFIG.FORUM[ctx.params.locale].logo_title);
+    html = html.replace('{FORUM.link_title}', CONFIG.FORUM[ctx.params.locale].link_title);
 
     let sbj = CONFIG_SEC.registrar[ctx.params.locale].email_subject;
-    sbj = sbj.replace('{FORUM.logo_title}', CONFIG.FORUM[ctx.params.locale].logo_title);
+    sbj = sbj.replace('{FORUM.link_title}', CONFIG.FORUM[ctx.params.locale].link_title);
 
     const {username, owner, active, posting, memo} = ctx.params;
     let file_obj = {username, owner, active, posting, memo};

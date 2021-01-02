@@ -92,12 +92,17 @@
 
 .ui.embed {
   max-width: 800px;
+  padding-bottom: 45%;
   margin: auto;
 }
 
 .banner {
   display: block;
   margin: auto;
+}
+
+.ui.header h1 {
+  font-size: 1.5rem;
 }
 
 .thread-post h1,

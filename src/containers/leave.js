@@ -14,7 +14,6 @@ export default class Leave extends React.Component {
     render() {
         const targetPage = this.props.location.search.slice(1) + this.props.location.hash;
         const ourForum = (<Link to='/'>{ttGetByKey(CONFIG.FORUM, 'link_title')}</Link>);
-        const golosBlockchain = (<a href='https://golos.id'>Golos Blockchain</a>);
         return (
             <Segment textAlign='left' padded='very'>
                 <Helmet>
@@ -31,7 +30,7 @@ export default class Leave extends React.Component {
                             {targetPage}
                         </pre></b>
                         <p>
-                            {ourForum} {tt('g.and')} {golosBlockchain} {tt('leave_page.desc2')}
+                            {ourForum} {tt('leave_page.desc2')}
                         </p>
                         <p>
                             {tt('leave_page.desc3')}
