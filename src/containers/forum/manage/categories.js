@@ -200,7 +200,40 @@ class ForumCategoriesForm extends React.Component {
         }
         parentCat.children = childrenNew;
         this.setState({categories: parentCat.name ? categories : childrenNew});
-        return false
+        return false;
+    };
+
+    moveRightCategory = (e, data) => {
+        e.preventDefault()
+        let categories = Object.assign({}, this.state.categories);
+        let parentCat = this.getParentCat(categories, data.parentIds);
+
+        let childrenNew = {};
+        let prevId = null;
+        for (let [_id, cat] of Object.entries(parentCat.children)) {
+            if (_id === data.editCatId) {
+                childrenNew[prevId].children = childrenNew[prevId].children || {};
+                childrenNew[prevId].children[_id] = cat;
+            } else {
+                 childrenNew[_id] = cat;
+            }
+            prevId = _id;
+        }
+        parentCat.children = childrenNew;
+        this.setState({categories: parentCat.name ? categories : childrenNew});
+        return false;
+    };
+
+    moveLeftCategory = (e, data) => {
+        e.preventDefault()
+        let categories = Object.assign({}, this.state.categories);
+        let parentCat = this.getParentCat(categories, data.parentIds);
+        let parentCat2 = this.getParentCat(categories, data.parentIds.slice(0, -1));
+        
+        parentCat2.children[data.editCatId] = parentCat.children[data.editCatId];
+        delete parentCat.children[data.editCatId];
+        this.setState({categories: parentCat.name ? categories : parentCat2.children});
+        return false;
     };
 
     handleSubmit = (data) => {
@@ -248,18 +281,19 @@ class ForumCategoriesForm extends React.Component {
         const { account } = this.props
         const { categories, addEditParentIds, editCatId, showConfirm, loading } = this.state
 
-        let catsToItems = (cats, parentIds=[]) => {
+        let catsToItems = (cats, parentIds=[], parentForum=null, parentForum2=null) => {
             let listItems = [];
+            let prev = null;
             for (let [_id, forum] of Object.entries(cats)) {
                 let innerList = null;
                 if (forum.children && Object.keys(forum.children).length) {
                     innerList = (
                         <List.List>
-                            {catsToItems(forum.children, parentIds.concat(_id))}
+                            {catsToItems(forum.children, parentIds.concat(_id), forum, parentForum)}
                         </List.List>
                     );
                 }
-                listItems.push(
+                let listItem = (
                     <List.Item key={_id}>
                         <List.Icon name={innerList ? 'folder' : 'file'} />
                         <List.Content>
@@ -289,6 +323,38 @@ class ForumCategoriesForm extends React.Component {
                                     content={tt('categories.add_sub')}
                                     inverted
                                 />
+                                {parentIds.length ? <Popup
+                                    mouseEnterDelay={500}
+                                    trigger={
+                                        <Button
+                                            basic
+                                            icon='chevron left'
+                                            size='mini'
+                                            color='blue'
+                                            parentIds={parentIds}
+                                            editCatId={_id}
+                                            onClick={this.moveLeftCategory}
+                                        />
+                                    }
+                                    content={tt('categories.move_left_INTO', {INTO: parentForum2 ? parentForum2.name_ru : tt('categories.root')})}
+                                    inverted
+                                /> : null}
+                                {prev ? <Popup
+                                    mouseEnterDelay={500}
+                                    trigger={
+                                        <Button
+                                            basic
+                                            icon='chevron right'
+                                            size='mini'
+                                            color='blue'
+                                            parentIds={parentIds}
+                                            editCatId={_id}
+                                            onClick={this.moveRightCategory}
+                                        />
+                                    }
+                                    content={tt('categories.move_right_INTO', {INTO: prev.name_ru})}
+                                    inverted
+                                /> : null}
                                 {listItems.length ? <Popup
                                     mouseEnterDelay={500}
                                     trigger={
@@ -342,6 +408,8 @@ class ForumCategoriesForm extends React.Component {
                         </List.Content>
                     </List.Item>
                 );
+                listItems.push(listItem);
+                prev = forum;
             }
             return listItems;
         };
