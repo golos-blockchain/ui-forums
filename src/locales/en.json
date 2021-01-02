@@ -85,7 +85,10 @@
     "add": "Add Category",
     "add_sub": "Add Subcategory",
     "edit": "Edit Category",
-    "move_up": "Move Up"
+    "move_up": "Move Up",
+    "move_right_INTO": "Put into %(INTO)s",
+    "move_left_INTO": "Take out to %(INTO)s",
+    "root": "root"
   },
   "permissions": {
     "title": "Forum Permissions",
