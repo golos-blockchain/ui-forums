@@ -23,13 +23,13 @@ module.exports = {
             meta_title: 'GolosTalk - forum based on the Golos blockchain',
             meta_description: 'Forum with token rewards that operates on the basis of a decentralized blockchain.',
             title: 'Forum on Golos Blockchain',
-            description: 'On this forum <b>you</b> can post, donate and receive others donates :)',
+            description: 'Write, communicate, receive rewards and reward others :)',
             breadcrumb_title: 'GolosTalk',
             logo_title: 'GolosTalk.com',
             page_title: 'Forum on GOLOS',
             link_title: 'GolosTalk',
-            footer_title: 'GolosTalk.com',
-            footer_description: 'An experimental forum built on top of the <a href="https://golos.id" target="_new">Golos Blockchain</a>.<br/>Brought to you by <a href="https://golos.id/@id-raccoon-hater" target="_new">id-raccoon-hater</a>.'
+            footer_title: 'Have any questions?<br/>Write to the telegram group <a href="https://t.me/goloshelp" target="_new">@goloshelp</a>',
+            footer_description: 'GolosTalk — forum on the <a href="https://golos.id" target="_new">Golos blockchain</a> platform (developed by <a href="https://golos.id/@id-raccoon-hater" target="_new">@id-raccoon-hater</a>).'
         },
         posts_per_page: 20,
         replies_per_page: 10,
