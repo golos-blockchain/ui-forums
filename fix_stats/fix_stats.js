@@ -100,6 +100,13 @@ async function fillStats(stats, cats, hidden, banned, parentStats = []) {
     let stats = {};
     await fillStats(stats, cats, hidden, banned);
 
+    console.log('Clearing stat...');
+    await golos.broadcast.customJsonAsync(wif, [], [CONFIG.FORUM.creator], 'account_notes',
+        JSON.stringify(['set_value', {
+            account: CONFIG.FORUM.creator,
+            key: NOTE_PST_STATS_LST,
+            value: ''
+        }]));
     console.log('Setting stat: ', JSON.stringify(stats));
     await golos.broadcast.customJsonAsync(wif, [], [CONFIG.FORUM.creator], 'account_notes',
         JSON.stringify(['set_value', {
