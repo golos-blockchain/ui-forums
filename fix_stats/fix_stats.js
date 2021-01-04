@@ -32,10 +32,10 @@ async function fillStats(stats, cats, hidden, banned, parentStats = []) {
         let stat = {posts: 0, total_posts: 0, comments: 0, total_comments: 0};
         const posts = await golos.api.getAllDiscussionsByActiveAsync(
             '', '', 0, 1000000,
-            tag,
+            [tag],
             0, 0);
 
-        for (let post of posts) {
+        for (let post of posts[tag]) {
             const good = !banned[post.author] && !hidden[post.id];
 
             ++stat.total_posts;
@@ -107,6 +107,6 @@ async function fillStats(stats, cats, hidden, banned, parentStats = []) {
             key: NOTE_PST_STATS_LST,
             value: JSON.stringify(stats)
         }]));
-    console.log('SUCCESSFULL!');
+    console.log('SUCCESSFUL!');
     console.log('Press Ctrl+C to exit');
 })();
