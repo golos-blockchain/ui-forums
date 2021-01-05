@@ -105,6 +105,16 @@
   font-size: 1.5rem;
 }
 
+.ui.breadcrumb {
+  padding: 0.5em 0;
+}
+
+.donating {
+  padding-left: 10px;
+  margin-left: 10px;
+  border-left: 0.15em solid;
+}
+
 .thread-post h1,
 .thread-post h1:first-child,
 .thread-post h2,

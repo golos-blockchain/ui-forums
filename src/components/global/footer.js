@@ -7,7 +7,7 @@ import ttGetByKey from '../../utils/ttGetByKey';
 export default class HeaderMenu extends Component {
   render() {
     return (
-      <Segment inverted vertical className="footer" style={{marginTop: '1.5em'}}>
+      <Segment inverted vertical className="footer" style={{marginTop: '1em'}}>
         <Container>
           <Grid stackable className="divided equal height stackable">
             {/*

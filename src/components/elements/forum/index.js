@@ -53,7 +53,7 @@ export default class ForumIndex extends React.Component {
     let childs = [];
     if (forum.children)
       for (let [_id, f] of Object.entries(forum.children)) {
-        childs.push(<span key={_id}>{" • "}<ForumLink _id={_id} forum={f}/></span>);
+        childs.push(<span key={_id}>{" • "}<ForumLink _id={_id} forum={f}/><span className='mobile only'><br /></span></span>);
       }
     return (
       <Segment

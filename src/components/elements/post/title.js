@@ -51,7 +51,7 @@ export default class PostTitle extends React.Component {
                 <Segment secondary attached>
                     <Grid>
                         <Grid.Row verticalAlign='top'>
-                            <Grid.Column tablet={8} computer={8} mobile={12}>
+                            <Grid.Column tablet={8} computer={8} mobile={14}>
                                 <Header size='medium'>
                                     <AccountAvatar username={content.author} />
                                     <AccountLink username={content.author} reputation={this.repLog10(content.author_reputation)} isBanned={content.author_banned} />

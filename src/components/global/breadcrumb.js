@@ -22,7 +22,7 @@ class BreadcrumbMenu extends Component {
             <Grid.Column width={12}>
               <Breadcrumb>
                 {trail.map((crumb, i) => <span key={i}>
-                  {!!i && <Breadcrumb.Divider style={{margin: '0 0.3rem'}}></Breadcrumb.Divider>}
+                  {!!i && <Breadcrumb.Divider></Breadcrumb.Divider>}
                   <Link to={crumb.link} className='section'>
                     {!i && <Icon name='home' color='blue' />}
                     {crumb.name}
@@ -30,9 +30,9 @@ class BreadcrumbMenu extends Component {
                 </span>)}
               </Breadcrumb>
             </Grid.Column>
-            <Grid.Column width={4}>
-              <div style={{height: '30px'}}>&nbsp;</div>{/*<SearchBox />*/}
-            </Grid.Column>
+            {/*<Grid.Column width={4}>
+              <div style={{height: '30px'}}>&nbsp;</div><SearchBox />
+            </Grid.Column>*/}
           </Grid.Row>
         </Grid>
       </Container>

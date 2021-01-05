@@ -215,7 +215,7 @@ export default class Donating extends React.Component {
                             {donates}
                         </Dropdown.Menu>
                     </Dropdown>
-                    {donate_uia_sum != null ? <span>&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<Dropdown text={donate_uia_sum}>
+                    {donate_uia_sum != null ? <span className='donating'><Dropdown text={donate_uia_sum}>
                         <Dropdown.Menu>
                             {donates_uia}
                         </Dropdown.Menu>

@@ -182,17 +182,17 @@ class Forums extends React.Component {
                         <Grid>
                           <Grid.Row verticalAlign="middle">
                             <Grid.Column computer={1} tablet={2} mobile={2}>
-                              <Button
+                              {/*<Button
                                 basic
                                 onClick={this.toggleVisibility}
                                 value={group}
                                 icon={isMinimized ? "plus" : "minus"}
                                 size="small"
-                              />
+                              />*/}
                             </Grid.Column>
                             <Grid.Column computer={6} tablet={8} mobile={8}>
-                              <Header>
-                                {group}
+                              <Header size='tiny'>
+                                {group} {tt('forum_controls.categories')}
                               </Header>
                             </Grid.Column>
                             <Grid.Column width={2} className='tablet or lower hidden' textAlign='center'>

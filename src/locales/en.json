@@ -43,7 +43,7 @@
     "title": "Enter title",
     "body": "Your post text...",
     "submit": "Post",
-    "cancel": "Close & Remove Draft",
+    "cancel": "Remove and Close",
     "tab_post": "Post",
     "tab_rewards": "Settings",
     "submitting": "Creating Post...",

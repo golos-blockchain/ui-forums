@@ -70,9 +70,9 @@ export default class PostControls extends React.Component {
     return (
       <Segment secondary basic clearing attached textAlign='right'>
         {voting}
-        {donating}
         {this.props.editButton}
         {this.props.postButton}
+        {donating}
       </Segment>
     )
   }
