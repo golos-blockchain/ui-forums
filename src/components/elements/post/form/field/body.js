@@ -1,55 +1,63 @@
 import React from 'react';
 import tt from 'counterpart';
-import { EditorState } from 'draft-js';
 
-import { Label } from 'semantic-ui-react'
-import { Form } from 'formsy-semantic-ui-react'
-
-import HtmlEditor from '../HtmlEditor/HtmlEditor';
+import { Label, Button, Icon } from 'semantic-ui-react';
+import { Form } from 'formsy-semantic-ui-react';
 
 export default class PostFormFieldBody extends React.Component {
   constructor(props) {
     super(props);
-    const st = HtmlEditor.getStateFromHtml(props.value);
-    this.state = {
-      rteState: st
-    };
     if (this.props.handleChange) {
-      this.props.handleChange(this, {name: 'body', value: st.toString('html')});
+      this.props.handleChange(this, {name: 'body', value: props.value});
     }
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (!this.props.rootUsage && nextProps && nextProps.value && nextProps.value != this.props.value) {
-        let es = HtmlEditor.getStateFromHtml(nextProps.value).getEditorState();
-        es = EditorState.moveFocusToEnd(es);
-        this.setState({
-            rteState: this.state.rteState.setEditorState(es)
-        });
+  onChange = (e, data) => {
+    if (this.props.handleChange) {
+      this.props.handleChange(this, {name: 'body', value: data.value});
     }
-  }
-
-  _onHtmlEditorChange = state => {
-      this.setState(
-          {
-              rteState: state,
-          }
-      , () => {
-        if (this.props.handleChange) {
-          this.props.handleChange(this, {name: 'body', value: state.toString('html')});
-        }
-      });
   };
 
   render() {
+    const errorLabel = <Label color="red" pointing />;
     return (
-      <HtmlEditor
+      <div>
+      <Button.Group color='blue'>
+        <Button icon>
+          <Icon name='bold' />
+        </Button>
+        <Button icon>
+          <Icon name='italic' />
+        </Button>
+        <Button icon>
+          <Icon name='strikethrough' />
+        </Button>
+      </Button.Group>
+      {' '}
+      <Button.Group color='blue'>
+        <Button icon>
+          <Icon name='linkify' />
+        </Button>
+        <Button icon>
+          <Icon name='unlinkify' />
+        </Button>
+      </Button.Group>
+      {' '}
+      <Button.Group color='blue'>
+        <Button icon>
+          <Icon name='picture' />
+        </Button>
+      </Button.Group>
+      <Form.TextArea
         name="body"
+        autoFocus={true}
         placeholder={tt('post_form.body')}
-        ref="editor"
-        value={this.state.rteState}
-        onChange={this._onHtmlEditorChange}
+        rows={5}
+        defaultValue={this.props.value}
+        errorLabel={errorLabel}
+        onChange={this.onChange}
       />
+      </div>
     )
   }
 }

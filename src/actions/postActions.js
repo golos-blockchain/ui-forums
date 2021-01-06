@@ -435,7 +435,7 @@ export function submit(account, data, parent, forum, action = 'post') {
         // JSON to append to the post
         const meta = {
             app: 'chainbb/0.1',
-            format: 'html',
+            format: 'markdown+html',
             tags: data.tags
         };
         const json_metadata = JSON.stringify(meta);
