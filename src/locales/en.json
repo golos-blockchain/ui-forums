@@ -42,6 +42,8 @@
   "post_form": {
     "title": "Enter title",
     "body": "Your post text...",
+    "how_to_markup": "How To Use Markup",
+    "how_to_markup_html": "<b>**bold**</b> <i>_italic_</i> ~~<s>striked</s>~~ [link](http://ssilka) ![](http://site.ru/kartinka.png)",
     "submit": "Post",
     "cancel": "Remove and Close",
     "tab_post": "Post",

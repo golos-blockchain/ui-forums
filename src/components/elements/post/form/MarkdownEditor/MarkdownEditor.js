@@ -3,7 +3,9 @@ import PropTypes from 'prop-types';
 import debounce from 'lodash/debounce';
 import throttle from 'lodash/throttle';
 import tt from 'counterpart';
+
 import MarkdownEditorToolbar from '../MarkdownEditorToolbar';
+
 import 'simplemde/dist/simplemde.min.css';
 import './MarkdownEditor.css';
 
