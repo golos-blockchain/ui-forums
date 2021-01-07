@@ -4,6 +4,8 @@ import tt from 'counterpart';
 import { Label, Button, Icon } from 'semantic-ui-react';
 import { Form } from 'formsy-semantic-ui-react';
 
+import MarkdownEditor from '../MarkdownEditor/MarkdownEditor';
+
 export default class PostFormFieldBody extends React.Component {
   constructor(props) {
     super(props);
@@ -12,9 +14,9 @@ export default class PostFormFieldBody extends React.Component {
     }
   }
 
-  onChange = (e, data) => {
+  onChange = (data) => {
     if (this.props.handleChange) {
-      this.props.handleChange(this, {name: 'body', value: data.value});
+      this.props.handleChange(this, {name: 'body', value: data});
     }
   };
 
@@ -22,33 +24,14 @@ export default class PostFormFieldBody extends React.Component {
     const errorLabel = <Label color="red" pointing />;
     return (
       <div>
-      <Button.Group color='blue'>
-        <Button icon>
-          <Icon name='bold' />
-        </Button>
-        <Button icon>
-          <Icon name='italic' />
-        </Button>
-        <Button icon>
-          <Icon name='strikethrough' />
-        </Button>
-      </Button.Group>
-      {' '}
-      <Button.Group color='blue'>
-        <Button icon>
-          <Icon name='linkify' />
-        </Button>
-        <Button icon>
-          <Icon name='unlinkify' />
-        </Button>
-      </Button.Group>
-      {' '}
-      <Button.Group color='blue'>
-        <Button icon>
-          <Icon name='picture' />
-        </Button>
-      </Button.Group>
-      <Form.TextArea
+      <MarkdownEditor
+        ref="editor"
+        initialValue={this.props.value}
+        placeholder={tt('post_form.body')}
+        previewEnabled={this.props.previewEnabled}
+        onChangeNotify={this.onChange}
+      />
+      {/*<Form.TextArea
         name="body"
         autoFocus={true}
         placeholder={tt('post_form.body')}
@@ -56,7 +39,7 @@ export default class PostFormFieldBody extends React.Component {
         defaultValue={this.props.value}
         errorLabel={errorLabel}
         onChange={this.onChange}
-      />
+      />*/}
       </div>
     )
   }

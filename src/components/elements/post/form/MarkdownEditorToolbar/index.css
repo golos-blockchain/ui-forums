@@ -1,0 +1,199 @@
+
+.MET {
+  display: flex !important;
+  font-size: 16px;
+}
+
+.MET__toolbar {
+  position: absolute;
+  display: flex;
+  top: -9999px;
+  height: 46px;
+  padding: 0 16px;
+  border-radius: 23px;
+  align-items: center;
+  background: #fff;
+  box-shadow: -1px 1px 14px 0 rgba(0, 0, 0, 0.15);
+  transform: translate3d(-50%, -100%, 0);
+  opacity: 0;
+  transition: opacity 0.2s;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.MET__toolbar_raising {
+  opacity: 1;
+  pointer-events: initial;
+}
+
+.MET_comment .MET__toolbar {
+  height: 36px;
+  border-radius: 18px;
+}
+
+.MET__icon {
+  width: 40px;
+  height: 30px;
+  flex-shrink: 0;
+  padding-top: 1px;
+  text-align: center;
+  cursor: pointer;
+  color: #333;
+}
+
+.MET__icon:hover {
+  color: #0062a0;
+}
+
+.MET__icon_active, .MET__icon_active:hover {
+  color: #0078c4;
+}
+
+.MET__icon > svg {
+  vertical-align: middle;
+  width: unset;
+  height: 18px;
+}
+
+.MET_comment .MET__icon {
+  width: 30px;
+  height: 22px;
+  padding-top: 4px;
+}
+
+.MET_comment .MET__icon > svg {
+  vertical-align: top;
+  height: 15px;
+}
+
+.MET__separator {
+  height: 30px;
+  margin: 0 8px;
+  border-right: 1px solid #d9d9d9;
+}
+
+.MET_comment .MET__separator {
+  height: 24px;
+}
+
+.MET__new-line-helper {
+  position: absolute;
+  display: flex;
+  left: -43px;
+  height: 40px;
+  width: 40px;
+  margin-top: -20px;
+  border-radius: 20px;
+  background: #fff;
+  box-shadow: 0 0 9px 0 rgba(0, 0, 0, 0.25);
+  transition: width 0.3s;
+  overflow: hidden;
+  z-index: 10;
+  animation: fade-in 0.1s;
+}
+
+@media screen and (max-width: 890px) {
+  .MET__new-line-helper {
+    left: 0;
+    margin-top: 20px;
+    opacity: 0.7;
+    transition: width 0.3s, opacity 0.2s;
+  }
+
+  .MET__new-line-helper:hover {
+    opacity: 1;
+  }
+}
+
+.MET__new-line-helper_open {
+  width: 117px;
+  opacity: 1;
+}
+
+.MET__new-line-helper_selected {
+  width: 400px;
+}
+
+.MET__plus {
+  display: flex;
+  width: 40px;
+  height: 40px;
+  padding: 12px;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.MET__plus > svg {
+  width: 14px;
+  height: 14px;
+  transform-origin: center;
+  transition: transform 0.2s;
+  pointer-events: none;
+  color: #2f2f2f;
+}
+
+.MET__new-line-helper_open .MET__plus > svg {
+  transform: rotate(45deg);
+}
+
+.MET__new-line-actions {
+  position: absolute;
+  display: flex;
+  left: 40px;
+  height: 100%;
+  padding-top: 5px;
+  flex-shrink: 0;
+  overflow: hidden;
+  opacity: 1;
+  transition: opacity 0.5s;
+}
+
+.MET__new-line-actions_selected {
+  opacity: 0;
+}
+
+.MET__new-line-item {
+  width: 30px;
+  height: 30px;
+  margin: 0 8px;
+  flex-shrink: 0;
+}
+
+.MET__new-line-icon {
+  width: 30px;
+  height: 30px;
+  padding-top: 5px;
+  text-align: center;
+  cursor: pointer;
+  transition: color 0.1s;
+}
+
+.MET__new-line-icon:hover {
+  color: #0078c4;
+}
+
+.MET__new-line-icon > svg {
+  width: unset;
+  height: 21px;
+}
+
+.MET__new-line-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex-grow: 1;
+  animation: fade-in 0.5s forwards;
+}
+
+.MET__new-line-input {
+  width: inherit;
+  height: 100%;
+  padding: 0;
+  flex-grow: 1;
+  margin-left: 6px;
+  border: none;
+  outline: none;
+  color: #333;
+}

@@ -6,7 +6,7 @@ import store from 'store'
 import ReactDOMServer from 'react-dom/server';
 import tt from 'counterpart';
 
-import { Button, Dimmer, Divider, Header, Loader, Menu, Segment } from 'semantic-ui-react'
+import { Button, Dimmer, Divider, Header, Loader, Menu, Segment, Icon } from 'semantic-ui-react'
 import { Form } from 'formsy-semantic-ui-react'
 
 import Noty from 'noty'
@@ -48,9 +48,10 @@ class PostForm extends React.Component {
       submitting: false,
       waitingforblock: false,
       preview: {},
+      previewEnabled: false,
       submitted: {},
       tags: tags,
-      rewards: 'decline'
+      rewards: 'decline',
     };
   }
 
@@ -146,6 +147,10 @@ class PostForm extends React.Component {
     e.preventDefault()
     return false
   }
+
+  handlePreview = (e) => {
+    this.setState({previewEnabled: !this.state.previewEnabled});
+  };
 
   removeDraft = () => {
     const identifier = this.getIdentifier()
@@ -258,7 +263,7 @@ class PostForm extends React.Component {
           draft = this.drafts[identifier] || {}
     const disableAutoFocus = this.props.disableAutoFocus || false
     let formHeader = this.props.formHeader,
-        { existingPost, tags } = this.state,
+        { existingPost, tags, previewEnabled } = this.state,
         enableMenu = false,
         formFieldTitle = false,
         formNotice = false,
@@ -333,6 +338,7 @@ class PostForm extends React.Component {
               disableAutoFocus={disableAutoFocus}
               handleChange={this.handleChange}
               rootUsage={action !== 'threadReply'}
+              previewEnabled={previewEnabled}
               value={ (draft.body) ? draft.body : (existingPost) ? existingPost.body : '' }
             />
           </Segment>
@@ -354,6 +360,7 @@ class PostForm extends React.Component {
           disableAutoFocus={disableAutoFocus}
           handleChange={this.handleChange}
           rootUsage={action !== 'threadReply'}
+          previewEnabled={previewEnabled}
           value={ (draft.body) ? draft.body : (existingPost) ? existingPost.body : (replyQuote || '') }
         />
         </div>
@@ -389,6 +396,8 @@ class PostForm extends React.Component {
           {menuDisplay}
           <Divider hidden />
           <Button color='orange' style={{opacity: (action !== 'threadReply' ? 1 : 0)}} onClick={this.handleCancel}>{tt('post_form.cancel')}</Button>
+          
+          <Button color='blue' floated='right' icon='eye' onClick={this.handlePreview}></Button>
           <Button
             ref={ref => this.formSubmit = ref}
             floated='right'

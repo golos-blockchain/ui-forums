@@ -50,7 +50,25 @@
     "error_submitting": "Cannot create post",
     "error_submitting_description": "Please contact us and provide the text below in your message.",
     "draft_loaded": "Draft restored",
-    "draft_loaded_description": "Forum restored your draft text."
+    "draft_loaded_description": "Forum restored your draft text.",
+
+    "bold": "Toggle bold style",
+    "italic": "Toggle italic style",
+    "header": "Make header",
+    "strikethrough": "Toggle strikethrough style",
+    "unordered_list": "Make list",
+    "ordered_list": "Make ordered list",
+    "quote": "Toggle quote style",
+    "enter_the_link": "Enter the link",
+    "add_image": "Add image",
+    "add_link": "Add link",
+    "add_video": "Add media (youtube/vimeo/coub...)",
+    "add_image_from_computer": "Add image from computer",
+    "add_image_via_link": "Add image via link",
+    "enter_video_link": "Enter YouTube/Vimeo link",
+    "enter_link": "Enter the link",
+    "link_text": "Link title",
+    "link_value": "Link url"
   },
   "voting": {
     "vote_changes_exceed": "You exceed your voting limit for this post.",
