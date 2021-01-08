@@ -5,3 +5,26 @@
 .CodeMirror-scroll {
     min-height: 150px;
 }
+
+.MarkdownEditor {
+    font-size: 16px;
+}
+
+.MarkdownEditor img {
+  max-width: 800px;
+  display: block;
+  margin: auto;
+}
+
+.MarkdownEditor code {
+  padding: 0.3em;
+  background: #ededed;
+  font-size: 90%;
+}
+
+.MarkdownEditor blockquote {
+  border-left: 0.25em solid #d4d4d5;
+  margin: 0 0 1em 0;
+  padding: 1em;
+  color: #999999;
+}

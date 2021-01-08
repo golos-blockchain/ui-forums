@@ -404,7 +404,7 @@ class PostForm extends React.Component {
                     <Divider hidden />
                     <Button color='orange' style={{opacity: (action !== 'threadReply' ? 1 : 0)}} onClick={this.handleCancel}>{tt('post_form.cancel')}</Button>
                     
-                    {isMobile() ? null : <Button color={previewEnabled? 'green' : 'blue'} floated='right' icon='eye' onClick={this.handlePreview}></Button>}
+                    {isMobile() ? null : <Button color={previewEnabled? 'blue' : 'gray'} floated='right' icon='eye' onClick={this.handlePreview}></Button>}
                     <Button
                         ref={ref => this.formSubmit = ref}
                         floated='right'
