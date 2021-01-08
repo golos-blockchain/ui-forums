@@ -132,6 +132,9 @@ class PostForm extends React.Component {
                 }
             }
         }
+        if (nextProps.replyQuote != this.props.replyQuote) {
+           this.refs.replyBody.focus();
+        }
     }
 
     handleCancel = (e) => {
@@ -223,6 +226,9 @@ class PostForm extends React.Component {
             forum: this.props.forum,
             namespace: _id,
         };
+        if (this.props.replyQuote) {
+            data.body = this.props.replyQuote + data.body;
+        }
         const { action, account, parent } = this.props;
         this.props.actions.submit(account, data, parent, this.props.forum, action);
         this.setState({
@@ -334,6 +340,7 @@ class PostForm extends React.Component {
                     <Segment attached='bottom' padded className={`${activeItem === tt('post_form.tab_post') ? 'active ' : ''}tab`}>
                         {formFieldTitle}
                         <PostFormFieldBody
+                            ref='replyBody'
                             disableAutoFocus={disableAutoFocus}
                             handleChange={this.handleChange}
                             rootUsage={action !== 'threadReply'}
@@ -356,11 +363,12 @@ class PostForm extends React.Component {
                 <div>
                 {formFieldTitle}
                 <PostFormFieldBody
+                    ref='replyBody'
                     disableAutoFocus={disableAutoFocus}
                     handleChange={this.handleChange}
                     rootUsage={action !== 'threadReply'}
                     previewEnabled={previewEnabled}
-                    value={ (draft.body) ? draft.body : (existingPost) ? existingPost.body : (replyQuote || '') }
+                    value={ (draft.body) ? draft.body : (existingPost) ? existingPost.body : '' }
                 />
                 </div>
             );

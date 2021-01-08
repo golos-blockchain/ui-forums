@@ -34,22 +34,29 @@ export default class PostFormFieldBody extends React.Component {
         this.setState({ showMarkupGuide: !this.state.showMarkupGuide });
     };
 
+    focus = () => {
+        if (this.refs.editor) {
+            this.refs.editor.focus();
+        } else {
+            document.getElementsByName('body')[0].focus();
+        }
+    };
+
     render() {
-        const errorLabel = <Label color="red" pointing />;
+        const errorLabel = (<Label color='red' pointing />);
         return (
             <div>
             {isMobile() ? <div><a onClick={this.toggleMarkupGuide}>{tt('post_form.how_to_markup')}</a>
             {this.state.showMarkupGuide ? (<div dangerouslySetInnerHTML={{__html: tt('post_form.how_to_markup_html')}}></div>): null}
             </div> : null}
             {!isMobile() ? <MarkdownEditor
-                ref="editor"
+                ref='editor'
                 initialValue={this.props.value}
                 placeholder={tt('post_form.body')}
                 previewEnabled={this.props.previewEnabled}
                 onChangeNotify={this.onChange} />
             : <Form.TextArea
-                name="body"
-                autoFocus={true}
+                name='body'
                 placeholder={tt('post_form.body')}
                 rows={5}
                 defaultValue={this.props.value}
