@@ -1,25 +1,24 @@
 import React from 'react';
-import { withRouter } from "react-router-dom";
+import { withRouter } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import ReactDOMServer from 'react-dom/server';
-import { connect } from 'react-redux'
-import _ from 'lodash'
-import slug from 'slug'
-import Noty from 'noty'
+import { connect } from 'react-redux';
+import slug from 'slug';
+import Noty from 'noty';
 
-import { Button, Dimmer, Divider, Header, Icon, Label, Loader, Modal, Segment, Table } from 'semantic-ui-react'
-import { Form } from 'formsy-semantic-ui-react'
+import { Button, Dimmer, Divider, Header, Icon, Label, Loader, Modal, Segment, Table } from 'semantic-ui-react';
+import { Form } from 'formsy-semantic-ui-react';
 
 import * as types from '../../../actions/actionTypes';
-import * as forumActions from '../../../actions/forumActions'
+import * as forumActions from '../../../actions/forumActions';
 
-import AccountLink from '../../../components/elements/account/link'
+import AccountLink from '../../../components/elements/account/link';
 
-const fields = ['name', 'description', 'tags', 'exclusive']
+const fields = ['name', 'description', 'tags', 'exclusive'];
 
 class ForumConfigForm extends React.Component {
     constructor(props) {
-        super(props)
+        super(props);
         this.state = {
             name: '',
             description: '',
@@ -29,44 +28,46 @@ class ForumConfigForm extends React.Component {
             processing: false,
             showConfirm: false,
             tags_detected: []
-        }
-        const state = {}
-        fields.map((field) => state[field] = null)
-        this.state = state
+        };
+        const state = {};
+        fields.map((field) => state[field] = null);
+        this.state = state;
     }
+
     componentWillMount() {
-        const { target } = this.props.forum
+        const { target } = this.props.forum;
         fields.map((field) => this.handleChange(false, {
             name: field,
             value: target[field] || false
-        }))
-        if(target.exclusive) {
+        }));
+        if (target.exclusive) {
             this.setState({
                 exclusive: target.exclusive
-            })
+            });
         }
     }
+
     componentWillReceiveProps(nextProps) {
-        const { forum } = nextProps
-        if(forum.last) {
+        const { forum } = nextProps;
+        if (forum.last) {
             switch(forum.last.type) {
                 case types.FORUM_CONFIG_PROCESSING:
-                    this.setState({processing: true})
+                    this.setState({ processing: true });
                     break;
                 case types.FORUM_CONFIG_RESOLVED:
                     if (this.state.showConfirm && this.state.processing) {
                         this.setState({
                             processing: false,
                             awaitingBlock: true,
-                        })
-                        if(this.props.newForum) {
+                        });
+                        if (this.props.newForum) {
                             this.props.history.push(`/f/${this.props.forum.target._id}`);
                         }
                         this.timeout = setTimeout(() => {
                             this.setState({
                                 showConfirm: false,
                                 awaitingBlock: false,
-                            })
+                            });
                             new Noty({
                                 closeWith: ['click', 'button'],
                                 layout: 'topRight',
@@ -83,7 +84,7 @@ class ForumConfigForm extends React.Component {
                                 type: 'success',
                                 timeout: 8000
                             }).show();
-                        }, 3000)
+                        }, 3000);
                     }
                     break;
                 default:
@@ -91,9 +92,10 @@ class ForumConfigForm extends React.Component {
             }
         }
     }
+
     handleChange = (e, data) => {
         if (data.value && data.value.constructor === Array) {
-            data.value = data.value.join(",")
+            data.value = data.value.join(',');
         }
         if (typeof this.state[data.name] !== 'undefined') {
             if (data.name === 'tags' && data.value) {
@@ -105,56 +107,61 @@ class ForumConfigForm extends React.Component {
                         remove: /[._]/g,
                         lower: true
                     })
-                })
-                this.setState({'tags_detected': detected})
+                });
+                this.setState({ 'tags_detected': detected });
             }
-            this.setState({[data.name]: data.value})
+            this.setState({ [data.name]: data.val });
         }
     }
+
     toggleExclusivity = (e, data) => {
-        this.setState({exclusive: data.checked})
+        this.setState({ exclusive: data.checked });
     }
+
     handleSubmit = (data) => {
-        this.setState({showConfirm: true})
+        this.setState({ showConfirm: true });
     }
-    hideConfirm = () => this.setState({showConfirm: false})
+
+    hideConfirm = () => this.setState({ showConfirm: false });
+
     broadcast = () => {
         const settings = {
             description: this.state.description,
             exclusive: this.state.exclusive,
             name: this.state.name,
             tags: this.state.tags_detected,
-        }
-        const namespace = this.props.forum.target._id
-        this.props.actions.forumConfig(this.props.account, namespace, settings)
+        };
+        const namespace = this.props.forum.target._id;
+        this.props.actions.forumConfig(this.props.account, namespace, settings);
     }
+
     render() {
-        const { account, forum } = this.props
-        const { target } = forum
-        const { _id } = target
-        const { name, description, tags } = this.state
+        const { account, forum } = this.props;
+        const { target } = forum;
+        const { _id } = target;
+        const { name, description, tags } = this.state;
         const tag_labels = (this.state.tags) ? this.state.tags_detected.map((tag) => (
             <Label as='a' color='blue' key={tag}>
                 <Icon name='tag' />
                 {tag}
             </Label>
-        )) : []
-        const errorLabel = <Label color="red" pointing/>
+        )) : [];
+        const errorLabel = (<Label color='red' pointing/>);
         let submit = (
             <Button fluid disabled>
                 You do not have access to edit this forum.
             </Button>
-        )
+        );
         if (account.name === target.creator) {
             submit = (
                 <Button fluid color='blue' type='submit'>
                     Submit Changes
                 </Button>
-            )
+            );
         }
-        let modal = false
+        let modal = false;
         if (this.state.showConfirm) {
-            let { awaitingBlock, processing } = this.state
+            let { awaitingBlock, processing } = this.state;
             modal = (
                 <Modal
                     open={true}
@@ -218,9 +225,9 @@ class ForumConfigForm extends React.Component {
                         </Modal.Content>
                     </Segment>
                 </Modal>
-            )
+            );
         }
-        let newForumDisplay = false
+        let newForumDisplay = false;
         if (this.props.newForum) {
             newForumDisplay = (
                 <Segment>
@@ -245,7 +252,7 @@ class ForumConfigForm extends React.Component {
                         </Header>
                     </Segment>
                 </Segment>
-            )
+            );
         }
         return (
             <div>
@@ -280,13 +287,13 @@ class ForumConfigForm extends React.Component {
                                 placeholder=''
                                 required
                                 validationErrors={{
-                                  minLength: '3 or more characters required.',
-                                  maxLength: '80 or less characters required.',
-                                  isDefaultRequiredValue: 'This field is required.'
+                                    minLength: '3 or more characters required.',
+                                    maxLength: '80 or less characters required.',
+                                    isDefaultRequiredValue: 'This field is required.'
                                 }}
                                 validations={{
-                                  minLength: 3,
-                                  maxLength: 80,
+                                    minLength: 3,
+                                    maxLength: 80,
                                 }}
                                 value={name}
                             />
@@ -363,13 +370,13 @@ function mapStateToProps(state, ownProps) {
         forum: state.forum,
         preferences: state.preferences,
         status: state.status
-    }
+    };
 }
 
 function mapDispatchToProps(dispatch) {
     return {actions: bindActionCreators({
         ...forumActions
-    }, dispatch)}
+    }, dispatch)};
 }
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ForumConfigForm));

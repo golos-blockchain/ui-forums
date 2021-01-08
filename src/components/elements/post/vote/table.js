@@ -1,5 +1,5 @@
 import React from 'react';
-import _ from 'lodash';
+import sortBy from 'lodash/sortBy';
 
 import { Label, Table } from 'semantic-ui-react';
 
@@ -30,7 +30,7 @@ export default class PostVoteTable extends React.Component {
         super(props);
         this.state = {
             column: 'rshares',
-            data: _.sortBy(props.votes, ['rshares']).reverse(),
+            data: sortBy(props.votes, ['rshares']).reverse(),
             direction: 'descending',
         };
     }
@@ -64,7 +64,7 @@ export default class PostVoteTable extends React.Component {
         if (column !== clickedColumn) {
             this.setState({
                 column: clickedColumn,
-                data: _.sortBy(data, [clickedColumn]),
+                data: sortBy(data, [clickedColumn]),
                 direction: 'ascending',
             });
             return;

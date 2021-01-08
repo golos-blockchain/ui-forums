@@ -1,5 +1,4 @@
 import React from 'react';
-import _ from 'lodash'
 
 import { Button, Divider, Header, Icon, Label, Message, Segment } from 'semantic-ui-react'
 import { Form } from 'formsy-semantic-ui-react'

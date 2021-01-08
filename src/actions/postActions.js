@@ -1,6 +1,5 @@
 import golos from 'golos-classic-js';
 import slug from 'slug';
-import _ from 'lodash';
 import tt from 'counterpart';
 
 import * as types from './actionTypes';

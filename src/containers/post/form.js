@@ -1,7 +1,8 @@
 import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import _ from 'lodash';
+import uniqueId from 'lodash/uniqueId';
+import debounce from 'lodash/debounce';
 import store from 'store';
 import ReactDOMServer from 'react-dom/server';
 import tt from 'counterpart';
@@ -39,7 +40,7 @@ class PostForm extends React.Component {
         }
         this.drafts = props.drafts || {};
         this.state = {
-            formId: _.uniqueId('postform_'),
+            formId: uniqueId('postform_'),
             activeItem: tt('post_form.tab_post'),
             beneficiaries: {},
             existingPost: (existingPost) ? existingPost : false,
@@ -56,7 +57,7 @@ class PostForm extends React.Component {
     }
 
     onKeyDown = (e) => {
-        if (e.nativeEvent.metaKey){
+        if (e.nativeEvent.metaKey) {
             if (e.nativeEvent.keyCode === 13) {
                 this.formSubmit.handleClick();
                 e.nativeEvent.preventDefault();
@@ -85,7 +86,7 @@ class PostForm extends React.Component {
                 type: 'success',
                 timeout: 4000
             }).show();
-            this.setState({preview: draft || {}, body: draft.body || ''});
+            this.setState({ preview: draft || {}, body: draft.body || '' });
         }
     }
 
@@ -142,7 +143,7 @@ class PostForm extends React.Component {
         // Remove any drafts upon cancel
         this.removeDraft();
         // Clear the preview
-        this.setState({preview: {}});
+        this.setState({ preview: {} });
         // Reset the form
         this.form.formsyForm.reset();
         // Parent callback
@@ -152,7 +153,7 @@ class PostForm extends React.Component {
     };
 
     handlePreview = (e) => {
-        this.setState({previewEnabled: !this.state.previewEnabled});
+        this.setState({ previewEnabled: !this.state.previewEnabled });
     };
 
     removeDraft = () => {
@@ -175,9 +176,9 @@ class PostForm extends React.Component {
         });
     };
 
-    handleBeneficiariesUpdate = (beneficiaries) => this.setState({beneficiaries});
+    handleBeneficiariesUpdate = (beneficiaries) => this.setState({ beneficiaries });
 
-    handleOnChange = _.debounce((data) => {
+    handleOnChange = debounce((data) => {
         const drafts = this.drafts || store.get('drafts') || {};
         const identifier = this.getIdentifier();
         const { title, body, rewards } = data;
@@ -191,7 +192,7 @@ class PostForm extends React.Component {
     }, 50);
 
     handleOnBlur = () => {
-        this.setState({preview: this.drafts[this.getIdentifier()] || {}});
+        this.setState({ preview: this.drafts[this.getIdentifier()] || {} });
     }
 
     addTag = (e, data) => {

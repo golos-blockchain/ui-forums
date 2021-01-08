@@ -1,11 +1,10 @@
 import React from 'react';
-import { withRouter } from "react-router-dom";
+import { withRouter } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux'
-import _ from 'lodash'
+import { connect } from 'react-redux';
 
-import { Button, Dimmer, Header, Icon, Loader, Modal, Segment } from 'semantic-ui-react'
-import ForumCreateForm from './form'
+import { Button, Dimmer, Header, Icon, Loader, Modal, Segment } from 'semantic-ui-react';
+import ForumCreateForm from './form';
 
 import * as CONFIG from '../../../../config';
 import * as accountActions from '../../../actions/accountActions'
@@ -25,23 +24,24 @@ class ForumCreateButton extends React.Component {
             payload: [],
             redirecting: false,
             suggestion: '',
-        }
+        };
     }
+
     componentWillReceiveProps(nextProps) {
-        const { forum } = nextProps
-        const t = this
-        if(forum.last) {
-            switch(forum.last.type) {
-                case "FORUM_RESERVATION_RESOLVED":
-                    const { namespace } = forum.last.payload[1]
+        const { forum } = nextProps;
+        const t = this;
+        if (forum.last) {
+            switch (forum.last.type) {
+                case 'FORUM_RESERVATION_RESOLVED':
+                    const { namespace } = forum.last.payload[1];
                     t.setState({
                         loading: false,
                         redirecting: true,
                         payload: forum.last.payload,
-                    })
+                    });
                     setTimeout(() => {
                         this.props.history.push(`/f/${namespace}`);
-                    }, 6000)
+                    }, 6000);
                     break;
                 default:
             }
@@ -49,50 +49,54 @@ class ForumCreateButton extends React.Component {
     }
 
     handleNamespaceChange = (e, data) => {
-        this.setState({namespace: data.value})
-    }
+        this.setState({namespace: data.value});
+    };
+
     handleNameChange = (e, data) => {
-        let nextState = {name: data.value}
+        let nextState = {name: data.value};
         if (this.state.namespace === '') {
-            const suggestion = data.value.toLowerCase().replace(/ /g,'-').replace(/[^\w-]+/g,'')
-            nextState['suggestion'] = suggestion
+            const suggestion = data.value.toLowerCase().replace(/ /g,'-').replace(/[^\w-]+/g,'');
+            nextState['suggestion'] = suggestion;
         }
-        this.setState(nextState)
-    }
+        this.setState(nextState);
+    };
+
     handleSubmit = (data) => {
-        const t = this
+        const t = this;
         this.setState({
             loading: true,
             namespace_unavailable: false,
-        })
+        });
         this.nsUnique(data.namespace).then((exists) => {
-            if(exists) {
+            if (exists) {
                 t.setState({
                     loading: false,
                     namespace_unavailable: true,
-                })
+                });
             } else {
-                t.props.actions.forumReservation(this.props.account, data.name, data.namespace)
-                console.log("submitted to action")
+                t.props.actions.forumReservation(this.props.account, data.name, data.namespace);
+                console.log('submitted to action');
             }
-        })
-    }
+        });
+    };
+
     async nsUnique(value) {
         try {
-          let uri = CONFIG.REST_API + `/api/ns_lookup?ns=${value}`;
-          const response = await fetch(uri);
-          if (response.ok) {
-            const result = await response.json();
-            return result.data.exists
-          } else {
-            console.error(response.status);
-          }
+            let uri = CONFIG.REST_API + `/api/ns_lookup?ns=${value}`;
+            const response = await fetch(uri);
+            if (response.ok) {
+                const result = await response.json();
+                return result.data.exists;
+            } else {
+                console.error(response.status);
+            }
         } catch(e) {
-          console.error(e);
+            console.error(e);
         }
     }
+
     render() {
-        const processing = false
+        const processing = false;
         let form = (
             <ForumCreateForm
                 account={this.props.account}
@@ -105,9 +109,9 @@ class ForumCreateButton extends React.Component {
                 namespace_unavailable={this.state.namespace_unavailable}
                 suggestion={this.state.suggestion}
             />
-        )
-        if(this.state.redirecting) {
-            const reservation = this.state.payload[1] || {}
+        );
+        if (this.state.redirecting) {
+            const reservation = this.state.payload[1] || {};
             form = (
                 <Segment textAlign='center' padded size='huge' color='blue'>
                     <Icon name='circle notched' loading />
@@ -123,7 +127,7 @@ class ForumCreateButton extends React.Component {
                         <a href={`/f/${reservation.namespace}`}>click here to continue</a>.
                     </p>
                 </Segment>
-            )
+            );
         }
         let display = (
             <Modal
@@ -144,13 +148,13 @@ class ForumCreateButton extends React.Component {
                     </Modal.Content>
                 </Segment>
             </Modal>
-        )
-        if(!this.props.account.isUser) {
+        );
+        if (!this.props.account.isUser) {
             display = (
                 <Button color='grey'>You must be logged in</Button>
-            )
+            );
         }
-        return display
+        return display;
     }
 }
 
@@ -160,7 +164,7 @@ function mapStateToProps(state, ownProps) {
         forum: state.forum,
         preferences: state.preferences,
         status: state.status
-    }
+    };
 }
 
 function mapDispatchToProps(dispatch) {
@@ -169,7 +173,7 @@ function mapDispatchToProps(dispatch) {
         ...forumActions,
         ...preferenceActions,
         ...statusActions,
-    }, dispatch)}
+    }, dispatch)};
 }
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ForumCreateButton));

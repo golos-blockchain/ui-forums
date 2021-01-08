@@ -1,20 +1,19 @@
 import React from 'react';
-import { withRouter } from "react-router-dom";
+import { withRouter } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux'
-import _ from 'lodash'
-import slug from 'slug'
+import { connect } from 'react-redux';
+import slug from 'slug';
 import tt from 'counterpart';
-import golos from 'golos-classic-js'
+import golos from 'golos-classic-js';
 
-import { Button, Divider, Header, Icon, Label, Modal, Segment, List, Popup } from 'semantic-ui-react'
-import { Form } from 'formsy-semantic-ui-react'
+import { Button, Divider, Header, Icon, Label, Modal, Segment, List, Popup } from 'semantic-ui-react';
+import { Form } from 'formsy-semantic-ui-react';
 
 //import * as types from '../../../actions/actionTypes';
-import * as forumActions from '../../../actions/forumActions'
+import * as forumActions from '../../../actions/forumActions';
 import * as CONFIG from '../../../../config';
 
-import LoginModal from '../../../components/elements/login/modal'
+import LoginModal from '../../../components/elements/login/modal';
 
 class ForumCategoriesForm extends React.Component {
     constructor(props) {
@@ -94,7 +93,7 @@ class ForumCategoriesForm extends React.Component {
     }
     handleChange = (e, data) => {
         if (data.value && data.value.constructor === Array) {
-            data.value = data.value.join(",");
+            data.value = data.value.join(',');
         }
         if (typeof this.state[data.name] !== 'undefined') {
             if (data.name === 'tags' && data.value) {
@@ -246,7 +245,7 @@ class ForumCategoriesForm extends React.Component {
 
         let values = JSON.stringify(this.state.categories);
 
-        golos.broadcast.customJson(wif, [account], [], "account_notes",
+        golos.broadcast.customJson(wif, [account], [], 'account_notes',
             JSON.stringify(['set_value', {
                 account: account,
                 key: 'g.f.' + CONFIG.FORUM._id.toLowerCase(),
@@ -261,7 +260,7 @@ class ForumCategoriesForm extends React.Component {
                 }
             });
 
-        golos.broadcast.customJson(this.props.account.key, [], [account], "account_notes",
+        golos.broadcast.customJson(this.props.account.key, [], [account], 'account_notes',
             JSON.stringify(['set_value', {
                 account: account,
                 key: 'g.pst.f.' + CONFIG.FORUM._id.toLowerCase() + '.stats.lst.accs',
@@ -421,7 +420,7 @@ class ForumCategoriesForm extends React.Component {
                 {tag}
             </Label>
         ))
-        const errorLabel = (<Label color="red" pointing/>);
+        const errorLabel = (<Label color='red' pointing/>);
         let submit = (
             <Button fluid disabled>
                 {tt('forum_controls.only_creator_can_edit')}
@@ -469,7 +468,7 @@ class ForumCategoriesForm extends React.Component {
         let actions = {signinAccount: this.broadcast, onClose: this.hideConfirm};
         return (
             <div>
-                <LoginModal authType="active" noButton={true} open={showConfirm} actions={actions}/>
+                <LoginModal authType='active' noButton={true} open={showConfirm} actions={actions}/>
                 {newForumDisplay}
                 <Form
                     loading={loading}
@@ -506,7 +505,7 @@ class ForumCategoriesForm extends React.Component {
                                     onValidSubmit={this.onAddEdit}
                                 >
                                     <Form.Input
-                                        name="name_ru"
+                                        name='name_ru'
                                         label={tt('categories.name_ru')}
                                         required
                                         focus
@@ -518,7 +517,7 @@ class ForumCategoriesForm extends React.Component {
                                         errorLabel={ errorLabel }
                                     />
                                     <Form.Input
-                                        name="name"
+                                        name='name'
                                         label={tt('categories.name')}
                                         required
                                         focus
@@ -529,7 +528,7 @@ class ForumCategoriesForm extends React.Component {
                                         errorLabel={ errorLabel }
                                     />
                                     <Form.Input
-                                        name="desc_ru"
+                                        name='desc_ru'
                                         label={tt('categories.desc_ru')}
                                         focus
                                         value={editCat ? editCat.desc_ru : undefined}
@@ -540,7 +539,7 @@ class ForumCategoriesForm extends React.Component {
                                         errorLabel={ errorLabel }
                                     />
                                     <Form.Input
-                                        name="desc"
+                                        name='desc'
                                         label={tt('categories.desc')}
                                         focus
                                         value={editCat ? editCat.desc : undefined}
@@ -551,7 +550,7 @@ class ForumCategoriesForm extends React.Component {
                                         errorLabel={ errorLabel }
                                     />
                                     <Form.Input
-                                        name="tag"
+                                        name='tag'
                                         label={tt('categories.tag')}
                                         required
                                         focus

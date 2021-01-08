@@ -3,7 +3,7 @@ import { Helmet } from 'react-helmet';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { goToTop } from 'react-scrollable-anchor';
-import _ from 'lodash';
+import find from 'lodash/find';
 import golos from 'golos-classic-js';
 
 import { Button, Header, List, Grid, Segment, Table } from 'semantic-ui-react';
@@ -49,7 +49,7 @@ class Accounts extends React.Component {
 
     swapAccount = (e, { value }) => {
         const { props } = this;
-        const { name, key } = _.find(props.accounts.auths, {name: value});
+        const { name, key } = find(props.accounts.auths, {name: value});
         if (name && key) {
             const t = this;
             let isValidKey = golos.auth.isWif(key),
