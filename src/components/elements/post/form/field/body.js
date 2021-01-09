@@ -5,7 +5,6 @@ import { Label, Button, Icon } from 'semantic-ui-react';
 import { Form } from 'formsy-semantic-ui-react';
 
 import MarkdownEditor from '../MarkdownEditor/MarkdownEditor';
-import isMobile from '../../../../../utils/isMobile';
 
 export default class PostFormFieldBody extends React.Component {
     constructor(props) {
@@ -14,7 +13,7 @@ export default class PostFormFieldBody extends React.Component {
             this.props.handleChange(this, {name: 'body', value: props.value});
         }
         this.state = {
-            showMarkupGuide: false
+            showMarkupGuide: false,
         };
     }
 
@@ -42,14 +41,20 @@ export default class PostFormFieldBody extends React.Component {
         }
     };
 
+    setValue = (value) => {
+        if (this.refs.editor) {
+            this.refs.editor.setValue(value);
+        }
+    };
+
     render() {
         const errorLabel = (<Label color='red' pointing />);
         return (
             <div>
-            {isMobile() ? <div><a onClick={this.toggleMarkupGuide}>{tt('post_form.how_to_markup')}</a>
+            {window._isMobile ? <div><a onClick={this.toggleMarkupGuide}>{tt('post_form.how_to_markup')}</a>
             {this.state.showMarkupGuide ? (<div dangerouslySetInnerHTML={{__html: tt('post_form.how_to_markup_html')}}></div>): null}
             </div> : null}
-            {!isMobile() ? <MarkdownEditor
+            {!window._isMobile ? <MarkdownEditor
                 ref='editor'
                 initialValue={this.props.value}
                 placeholder={tt('post_form.body')}

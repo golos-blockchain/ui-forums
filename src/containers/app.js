@@ -12,6 +12,8 @@ tt.registerTranslations('ru', require('../locales/ru-RU.json'));
 tt.setLocale(localStorage.getItem('locale') || 'ru');
 tt.setFallbackLocale('en');
 
+window._isMobile = /Mobi/.test(navigator.userAgent);
+
 import { Container } from 'semantic-ui-react';
 
 import * as CONFIG from '../../config';

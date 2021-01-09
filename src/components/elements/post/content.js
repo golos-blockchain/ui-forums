@@ -21,6 +21,10 @@ export default class PostContent extends React.Component {
         });*/
     };
 
+    handleRespondingWithQuote = (e) => {
+        this.props.goReply('[@' + this.props.content.author + '](' + this.props.content.url + '), \n', this.props.content.body);
+    };
+
     handleRespondingComplete = (e) => {
         new Noty({
             closeWith: ['click', 'button'],
@@ -104,8 +108,20 @@ export default class PostContent extends React.Component {
                 <Popup
                     trigger={
                         <Button floated='right'>
-                            <i className={'left quote icon'}></i>
+                            <i className={'left reply icon'}></i>
                             {tt('g.reply')}
+                        </Button>
+                    }
+                    position='bottom center'
+                    inverted
+                    content={isBanned ? tt('forum_controls.you_are_blocked') : tt('forum_controls.you_must_be_logged_in_to_post')}
+                    basic
+                />
+            );
+        let quoteButton = (
+                <Popup
+                    trigger={
+                        <Button floated='right' icon='left quote'>
                         </Button>
                     }
                     position='bottom center'
@@ -128,9 +144,25 @@ export default class PostContent extends React.Component {
                 <Button
                     onClick={this.handleResponding}
                     color='green'
-                    icon='left quote'
+                    icon='left reply'
                     content={tt('g.reply')}
                     floated='right'
+                />
+            );
+            quoteButton = (
+                <Popup
+                    trigger={
+                        <Button
+                            onClick={this.handleRespondingWithQuote}
+                            color='purple'
+                            icon='left quote'
+                            floated='right'
+                        />
+                    }
+                    position='bottom center'
+                    inverted
+                    content={tt('g.reply_with_quote')}
+                    basic
                 />
             );
         }
@@ -199,6 +231,7 @@ export default class PostContent extends React.Component {
                         target={post}
                         editButton={editButton}
                         postButton={postButton}
+                        quoteButton={quoteButton}
                         { ...this.props }
                         />
                 );

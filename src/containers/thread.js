@@ -32,7 +32,7 @@ class Thread extends React.Component {
         super(props);
         this.state = Object.assign({}, props.params, {
             page: 1,
-            replyQuote: '',
+            replyAuthor: '',
             scrollTo2: '',
         });
     }
@@ -121,11 +121,23 @@ class Thread extends React.Component {
         if (page) location.hash = page > 1 ? 'comments-page-' + page : '';
     };
 
-    goReply = (replyQuote) => {
-        goToAnchor('reply')
-        this.setState({
-            replyQuote,
-        });
+    goReply = (replyAuthor, replyQuote = null) => {
+        goToAnchor('reply');
+        if (replyQuote) {
+            let quoteLines = replyQuote.split('\n');
+            let newText = '';
+            for (let ql of quoteLines) {
+                newText += '> ' + ql + '\n';
+            }
+            this.setState({
+                replyAuthor,
+                replyQuote: newText + '\n'
+            });
+        } else {
+            this.setState({
+                replyAuthor
+            });
+        }
     };
 
     handleCancel = () => {
@@ -225,6 +237,7 @@ class Thread extends React.Component {
                         noCancelButton='true'
                         forum={this.props.post.forum}
                         parent={this.props.post.content}
+                        replyAuthor={this.state.replyAuthor}
                         replyQuote={this.state.replyQuote}
                         onCancel={this.handleCancel}
                         onComplete={this.handleResponse}

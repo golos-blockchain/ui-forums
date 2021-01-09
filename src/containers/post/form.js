@@ -19,7 +19,6 @@ import PostFormFieldBody from '../../components/elements/post/form/field/body';
 import PostFormFieldRewards from '../../components/elements/post/form/field/rewards';
 import PostFormFieldTags from '../../components/elements/post/form/field/tags';
 import PostFormFieldTitle from '../../components/elements/post/form/field/title';
-import isMobile from '../../utils/isMobile';
 
 class PostForm extends React.Component {
 
@@ -31,7 +30,7 @@ class PostForm extends React.Component {
 
     constructor(props) {
         super(props);
-        const { action, filter, forum, existingPost, replyQuote } = props;
+        const { action, filter, forum, existingPost, replyAuthor } = props;
         let tags = (filter) ? [filter] : (forum && forum.tags) ? forum.tags : [];
         if (action === 'edit') {
             if (existingPost.json_metadata && existingPost.json_metadata.tags && existingPost.json_metadata.tags.length) {
@@ -134,7 +133,10 @@ class PostForm extends React.Component {
             }
         }
         if (nextProps.replyQuote != this.props.replyQuote) {
-           this.refs.replyBody.focus();
+            this.refs.replyBody.setValue(nextProps.replyQuote);
+        }
+        if (nextProps.replyAuthor != this.props.replyAuthor) {
+            this.refs.replyBody.focus();
         }
     }
 
@@ -227,8 +229,8 @@ class PostForm extends React.Component {
             forum: this.props.forum,
             namespace: _id,
         };
-        if (this.props.replyQuote) {
-            data.body = this.props.replyQuote + data.body;
+        if (this.props.replyAuthor) {
+            data.body = this.props.replyAuthor + data.body;
         }
         const { action, account, parent } = this.props;
         this.props.actions.submit(account, data, parent, this.props.forum, action);
@@ -264,7 +266,7 @@ class PostForm extends React.Component {
 
     render() {
         const { activeItem } = this.state;
-        const { action, account, replyQuote } = this.props;
+        const { action, account, replyAuthor, replyQuote } = this.props;
         const identifier = this.getIdentifier(),
                     draft = this.drafts[identifier] || {};
         const disableAutoFocus = this.props.disableAutoFocus || false;
@@ -346,7 +348,7 @@ class PostForm extends React.Component {
                             handleChange={this.handleChange}
                             rootUsage={action !== 'threadReply'}
                             previewEnabled={previewEnabled}
-                            value={ (draft.body) ? draft.body : (existingPost) ? existingPost.body : '' }
+                            value={ window._isMobile ? replyQuote : ((draft.body) ? draft.body : (existingPost) ? existingPost.body : '') }
                         />
                     </Segment>
                     <Segment attached='bottom' padded className={`${activeItem === tt('post_form.tab_rewards') ? 'active ' : ''}tab`}>
@@ -369,7 +371,7 @@ class PostForm extends React.Component {
                     handleChange={this.handleChange}
                     rootUsage={action !== 'threadReply'}
                     previewEnabled={previewEnabled}
-                    value={ (draft.body) ? draft.body : (existingPost) ? existingPost.body : '' }
+                    value={ window._isMobile ? replyQuote : ((draft.body) ? draft.body : (existingPost) ? existingPost.body : '') }
                 />
                 </div>
             );
@@ -405,7 +407,7 @@ class PostForm extends React.Component {
                     <Divider hidden />
                     <Button color='orange' style={{opacity: (action !== 'threadReply' ? 1 : 0)}} onClick={this.handleCancel}>{tt('post_form.cancel')}</Button>
                     
-                    {isMobile() ? null : <Button color={previewEnabled? 'blue' : 'gray'} floated='right' icon='eye' onClick={this.handlePreview}></Button>}
+                    {window._isMobile ? null : <Button color={previewEnabled? 'blue' : 'gray'} floated='right' icon='eye' onClick={this.handlePreview}></Button>}
                     <Button
                         ref={ref => this.formSubmit = ref}
                         floated='right'

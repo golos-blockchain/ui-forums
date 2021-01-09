@@ -140,6 +140,7 @@ export default class MarkdownEditor extends PureComponent {
 
     focus() {
         this._cm.focus();
+        this._cm.setCursor({ line: 999, ch: 999 });
     }
 
     getValue() {
