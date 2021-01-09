@@ -80,7 +80,7 @@ export default class MarkdownEditor extends PureComponent {
             this._cm.on('cursorActivity', this._onCursorActivityLazy);
         }
 
-        this._cm.setCursor({ line: 999, ch: 999 });
+        //this._cm.setCursor({ line: 999, ch: 999 });
 
         this.forceUpdate();
 
