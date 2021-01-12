@@ -7,6 +7,8 @@ import { Form } from 'formsy-semantic-ui-react';
 
 import * as CONFIG from '../../../../../config';
 
+import { imgurUpload } from '../../../../utils/imgurUpload';
+
 export default class AccountAbout extends React.Component {
     constructor(props) {
         super(props);
@@ -14,69 +16,6 @@ export default class AccountAbout extends React.Component {
             valid: false,
             avatarUploading: false
         };
-    }
-
-     makeRequest = (method, url, data, headersInitializer) => {
-        return new Promise((resolve, reject) => {
-            let xhr = new XMLHttpRequest();
-            xhr.open(method, url);
-            if (headersInitializer) headersInitializer(xhr);
-            xhr.onload = function () {
-                if (this.status >= 200 && this.status < 300) {
-                    resolve(xhr.response);
-                } else {
-                    reject({
-                        status: this.status,
-                        statusText: xhr.statusText
-                    });
-                }
-            };
-            xhr.onerror = function () {
-                reject({
-                    status: this.status,
-                    statusText: xhr.statusText
-                });
-            };
-            xhr.send(data);
-        });
-    };
-
-    imgurUpload = async (image) => {
-        const formData = new FormData();
-        formData.append('image', image);
-
-        let res = null
-        try {
-            res = await this.makeRequest('POST', CONFIG.STM_Config.upload_image, formData, (xhr) => {
-                xhr.setRequestHeader('Authorization', 'Client-ID ' + CONFIG.STM_Config.client_id);
-            });
-        } catch (error) {
-            this.setState({ avatarUploading: false });
-            console.error(error);
-            alert(tt('account.cannot_load_image_try_again') + ' Error: ' + JSON.stringify(error));
-            return false;
-        }
-
-        this.setState({ avatarUploading: false });
-
-        console.log(res);
-
-        const data = JSON.parse(res);
-        if (!data.success) {
-            alert(tt('account.cannot_load_image_try_again'));
-            return false;
-        }
-
-        if (data.data.size > CONFIG.STM_Config.max_upload_file_bytes) {
-            alert(tt('g.too_big_file'));
-            return false;
-        }
-
-        this.setState({
-            profile_image: data.data.link
-        });
-
-        return data.data.link;
     }
 
     onValid = () => {
@@ -90,10 +29,13 @@ export default class AccountAbout extends React.Component {
     onValidSubmit = async (formData) => {
         let profile_image = formData.profile_image;
         if (formData.profile_image && !formData.profile_image.includes('imgur')) {
-            profile_image = await this.imgurUpload(formData.profile_image);
+            profile_image = await imgurUpload(formData.profile_image, CONFIG.STM_Config.max_upload_avatar_bytes);
             if (!profile_image) {
                 return;
             }
+            this.setState({
+                profile_image
+            });
         }
 
         const { username } = this.props.match.params;
@@ -130,14 +72,21 @@ export default class AccountAbout extends React.Component {
         const file = document.getElementsByName('avatar_file')[0].files[0];
         if (!file) return;
 
-        if (file.size > CONFIG.STM_Config.max_upload_file_bytes) {
+        if (file.size > CONFIG.STM_Config.max_upload_avatar_bytes) {
             alert(tt('g.too_big_file'));
             return;
         }
 
         this.setState({ avatarUploading: true });
 
-        await this.imgurUpload(file, (url) => {});
+        const profile_image = await imgurUpload(file, CONFIG.STM_Config.max_upload_avatar_bytes);
+        if (profile_image) {
+            this.setState({
+                profile_image
+            });
+        }
+
+        this.setState({ avatarUploading: false });
     };
 
     render() {

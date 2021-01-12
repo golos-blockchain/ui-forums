@@ -1,10 +1,13 @@
 import React from 'react';
 import cn from 'classnames';
+import DropZone from 'react-dropzone';
 import tt from 'counterpart';
 import plusSvg from './plus.svg';
 
-import { Label, Button, Icon, Modal, Popup } from 'semantic-ui-react';
+import { Label, Button, Icon, Modal, Popup, Divider, Dimmer, Loader } from 'semantic-ui-react';
 import { Form } from 'formsy-semantic-ui-react';
+
+import { imgurUpload } from '../../../../../utils/imgurUpload';
 
 import './index.css'
 
@@ -40,6 +43,7 @@ export default class MarkdownEditorToolbar extends React.PureComponent {
             newLineOpen: false,
             addLinkOpen: false,
             addImageOpen: false,
+            imageUploading: false,
             selected: null,
         };
 
@@ -129,12 +133,28 @@ export default class MarkdownEditorToolbar extends React.PureComponent {
                     <Modal.Header>{tt('post_form.add_image')}</Modal.Header>
                     <Modal.Content>
                         <Modal.Description>
+                            {this.state.imageUploading ? 
+                            <Dimmer inverted active style={{minHeight: '100px', display: 'block'}}>
+                                <Loader size='large'/>
+                            </Dimmer> : null}
+                            <DropZone
+                                multiple={false}
+                                style={{ cursor: 'pointer', fontWeight: 'bold', color: '#2185d0' }}
+                                accept='image/*'
+                                onDrop={this._onDropImage}
+                            >
+                                <Icon name='picture' size='large' />
+                                <span style={{ borderBottom: '1px dashed #2185d0' }}>
+                                    {tt('post_form.add_image_from_computer')}
+                                </span>
+                            </DropZone>
+                            <Divider />
                             <Form
                                 ref={ref => this.addImageForm = ref }
                                 onValidSubmit={this._onAddImage}>
                                 <Form.Input
                                     name='link'
-                                    label={tt('post_form.link_value') + ':'}
+                                    label={tt('post_form.add_image_via_link') + ':'}
                                     autoFocus
                                     focus
                                     required
@@ -726,6 +746,31 @@ export default class MarkdownEditorToolbar extends React.PureComponent {
         this.setState({
             addImageOpen: null
         });
+    };
+
+    _onDropImage = async (acceptedFiles, rejectedFiles) => {
+        const file = acceptedFiles[0];
+
+        if (!file) {
+            if (rejectedFiles.length) {
+                alert(
+                    tt('post_form.please_insert_only_image_files')
+                );
+            }
+            return;
+        }
+
+        this.setState({ imageUploading: true });
+
+        const url = await imgurUpload(file);
+        if (url) {
+            this.setState({
+                addImageOpen: null
+            });
+            this._insertLink(url, true);
+        }
+
+        this.setState({ imageUploading: false });
     };
 
     _onAddLink = (formData) => {

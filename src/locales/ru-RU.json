@@ -71,7 +71,10 @@
     "enter_video_link": "Вставьте ссылку на YouTube/Vimeo",
     "enter_link": "Вставьте ссылку",
     "link_text": "Текст отображения",
-    "link_value": "Ссылка"
+    "link_value": "Ссылка",
+    "add_image_from_computer": "Добавить изображение с компьютера",
+    "add_image_via_link": "Добавить изображение ссылкой",
+    "please_insert_only_image_files": "Вставляйте только файлы изображений"
   },
   "voting": {
     "vote_changes_exceed": "Вы исчерпали лимит и больше не можете изменять ваш голос за этот пост.",

@@ -71,7 +71,10 @@
     "enter_video_link": "Enter YouTube/Vimeo link",
     "enter_link": "Enter the link",
     "link_text": "Link title",
-    "link_value": "Link url"
+    "link_value": "Link url",
+    "add_image_from_computer": "Add image from computer",
+    "add_image_via_link": "Add image via link",
+    "please_insert_only_image_files": "Please insert only image files"
   },
   "voting": {
     "vote_changes_exceed": "You exceed your voting limit for this post.",

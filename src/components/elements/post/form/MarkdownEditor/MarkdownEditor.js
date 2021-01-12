@@ -2,9 +2,13 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import debounce from 'lodash/debounce';
 import throttle from 'lodash/throttle';
+import Dropzone from 'react-dropzone';
 import tt from 'counterpart';
 
+import { Dimmer, Loader } from 'semantic-ui-react';
+
 import MarkdownEditorToolbar from '../MarkdownEditorToolbar';
+import { imgurUpload } from '../../../../../utils/imgurUpload';
 
 import 'simplemde/dist/simplemde.min.css';
 import './MarkdownEditor.css';
@@ -31,6 +35,10 @@ export default class MarkdownEditor extends PureComponent {
 
     constructor(props) {
         super(props);
+
+        this.state = {
+            uploading: false
+        };
 
         this._processTextLazy = throttle(this._processText, 100, {
             leading: false,
@@ -117,23 +125,30 @@ export default class MarkdownEditor extends PureComponent {
             <div
                 className='MarkdownEditor'
             >
-                <div
-                    className="MarkdownEditor__dropzone"
-                    style={{ position: 'relative' }}
+                {this.state.uploading ? 
+                <Dimmer inverted active style={{minHeight: '100px', display: 'block'}}>
+                    <Loader size='large'/>
+                </Dimmer> : null}
+                <Dropzone
+                    className='MarkdownEditor__dropzone'
+                    disableClick
+                    multiple={false}
+                    accept='image/*'
+                    onDrop={this._onDrop}
                 >
-                {this._simplemde ? (
-                    <MarkdownEditorToolbar
-                        commentMode={commentMode}
-                        editor={this._simplemde}
-                        uploadImage={uploadImage}
-                        SM={SimpleMDE}
+                    {this._simplemde ? (
+                        <MarkdownEditorToolbar
+                            commentMode={commentMode}
+                            editor={this._simplemde}
+                            uploadImage={uploadImage}
+                            SM={SimpleMDE}
+                        />
+                    ) : null}
+                    <textarea
+                        ref='textarea'
+                        className='MarkdownEditor__textarea'
                     />
-                ) : null}
-                <textarea
-                    ref="textarea"
-                    className="MarkdownEditor__textarea"
-                />
-                </div>
+                </Dropzone>
             </div>
         );
     }
@@ -160,30 +175,33 @@ export default class MarkdownEditor extends PureComponent {
         this._processTextLazy();
     };
 
-    _onDrop = (acceptedFiles, rejectedFiles, e) => {
+    _onDrop = async (acceptedFiles, rejectedFiles, e) => {
         const file = acceptedFiles[0];
 
         if (!file) {
             if (rejectedFiles.length) {
-                alert(
-                    tt('reply_editor.please_insert_only_image_files')
-                );
+                alert(tt('post_form.please_insert_only_image_files'));
             }
             return;
         }
 
-        const cursorPosition = this._cm.coordsChar({
+        /*const cursorPosition = this._cm.coordsChar({
             left: e.pageX,
             top: e.pageY,
-        });
+        });*/ // e.pageX is function somewhy
 
-        this.props.uploadImage(file, progress => {
-            if (progress.url) {
-                const imageUrl = `![${file.name}](${progress.url})`;
+        this.setState({ uploading: true });
 
-                this._cm.replaceRange(imageUrl, cursorPosition);
-            }
-        });
+        const url = await imgurUpload(file);
+        if (url) {
+            const imageUrl = `![${file.name}](${
+                url
+            })`;
+
+            this._cm.replaceRange(imageUrl, this._cm.getCursor());
+        }
+
+        this.setState({ uploading: false });
     };
 
     _processText = () => {
@@ -344,12 +362,13 @@ export default class MarkdownEditor extends PureComponent {
         //img.src = $STM_Config.img_proxy_prefix + '0x0/' + url;
     }
 
-    _onPaste = (cm, e) => {
+    _onPaste = async (cm, e) => {
         try {
             if (e.clipboardData) {
                 let fileName = null;
 
                 for (let item of e.clipboardData.items) {
+                    console.log(item.type)
                     if (item.kind === 'string' && item.type === 'text/plain') {
                         try {
                             fileName = item.getAsString(a => (fileName = a));
@@ -361,15 +380,18 @@ export default class MarkdownEditor extends PureComponent {
 
                         const file = item.getAsFile();
 
-                        this.props.uploadImage(file, progress => {
-                            if (progress.url) {
-                                const imageUrl = `![${fileName || file.name}](${
-                                    progress.url
-                                })`;
+                        this.setState({ uploading: true });
 
-                                this._cm.replaceSelection(imageUrl);
-                            }
-                        });
+                        const url = await imgurUpload(file);
+                        if (url) {
+                            const imageUrl = `![${fileName || file.name}](${
+                                url
+                            })`;
+
+                            this._cm.replaceSelection(imageUrl);
+                        }
+
+                        this.setState({ uploading: false });
                     }
                 }
             }
