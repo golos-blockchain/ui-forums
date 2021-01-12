@@ -160,7 +160,7 @@ export function fetchPostByAuthorResolved(payload = {}) {
 
 export function fetchPostByAuthor(author, page = 1) {
     return async dispatch => {
-        let uri = `${ CONFIG.REST_API }/@${ author }`;
+        let uri = `${ CONFIG.REST_API }/@${ author }/posts`;
         if (page > 1) {
             uri = uri + '?page=' + page;
         }
@@ -176,7 +176,11 @@ export function fetchPostByAuthor(author, page = 1) {
             dispatch(fetchPostByAuthorResolved({
                 account: author,
                 posts: result.data.posts,
-                totalPosts: result.data.total
+                totalPosts: result.data.total,
+                moders: result.data.moders,
+                supers: result.data.supers,
+                hidden: result.data.hidden,
+                banned: result.data.banned,
             }));
         } else {
             console.error(response.status);
@@ -287,6 +291,40 @@ export function fetchPostResponsesByAuthor(author, page = 1) {
         } else {
             console.error(response.status);
             dispatch(fetchPostResponsesByAuthorResolved());
+        }
+    };
+}
+
+export function fetchDonatesByAuthorResolved(payload = {}) {
+    return {
+        type: types.POST_LOAD_DONATES_BY_AUTHOR_RESOLVED,
+        payload: payload
+    };
+}
+
+export function fetchDonatesByAuthor(author, direction, page = 1) {
+    return async dispatch => {
+        let uri = `${ CONFIG.REST_API }/@${ author }/donates/${ direction }`;
+        if (page > 1) {
+            uri = uri + '?page=' + page;
+        }
+        const response = await fetch(uri);
+        if (response.ok) {
+            const result = await response.json();
+            dispatch({
+                type: types.SET_STATUS,
+                payload: {
+                    network: result.network
+                }
+            });
+            dispatch(fetchDonatesByAuthorResolved({
+                account: author,
+                donates: result.data.donates,
+                totalDonates: result.data.total
+            }));
+        } else {
+            console.error(response.status);
+            dispatch(fetchDonatesByAuthorResolved());
         }
     };
 }

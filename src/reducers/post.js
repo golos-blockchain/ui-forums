@@ -48,8 +48,8 @@ export default function post(state = initialState, action) {
     case types.POST_LOAD_RESOLVED:
       return Object.assign({}, state, action.payload)
     case types.POST_LOAD_BY_AUTHOR_RESOLVED:
-      let { posts, totalPosts } = action.payload;
-      authors[action.payload.account] = { posts, totalPosts };
+      let { posts, totalPosts, moders, supers, hidden, banned } = action.payload;
+      authors[action.payload.account] = { posts, totalPosts, moders, supers, hidden, banned };
       return Object.assign({}, state, { authors });
     case types.POST_LOAD_REPLIES_BY_AUTHOR_STARTED:
       if(authors[action.payload.account]) delete authors[action.payload.account]['replies']
@@ -71,6 +71,10 @@ export default function post(state = initialState, action) {
     case types.POST_LOAD_RESPONSES_BY_AUTHOR_RESOLVED:
       let { responses, totalResponses } = action.payload;
       authors[action.payload.account] = { responses, totalResponses };
+      return Object.assign({}, state, { authors });
+    case types.POST_LOAD_DONATES_BY_AUTHOR_RESOLVED:
+      let { donates, totalDonates } = action.payload;
+      authors[action.payload.account] = { donates, totalDonates };
       return Object.assign({}, state, { authors });
     case types.POST_LOAD_RESPONSES_RESOLVED:
       action.payload.forEach((data, index) => {

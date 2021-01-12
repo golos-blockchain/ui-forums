@@ -109,11 +109,13 @@ async function getLastActivity(data, lastPosts, lastReplies, _id, forum, isRootC
     }
 }
 
-function getAllTags(tags, forums) {
+function getAllTags(forums, tags, tagIdMap = {}) {
     if (forums)
     for (let _id in forums) {
-        tags.push(idToTag(_id));
-        getAllTags(tags, forums[_id].children);
+        const tag = idToTag(_id);
+        tags.push(tag);
+        tagIdMap[tag] = _id;
+        getAllTags(forums[_id].children, tags, tagIdMap);
     }
 }
 
@@ -121,7 +123,7 @@ async function setForumStats(forums, stats, lastPostNeed = true) {
     if (!stats) return;
 
     let tags = [];
-    getAllTags(tags, forums);
+    getAllTags(forums, tags);
     const data = await golos.api.getAllDiscussionsByActiveAsync(
         '', '', 0, 1,
         tags,
@@ -333,6 +335,142 @@ router.get('/@:author', async (ctx) => {
         moders: vals[NOTE_PST_HIDMSG_LST_ACCS],
         supers: vals[NOTE_PST_HIDACC_LST_ACCS],
         banned: vals[NOTE_PST_HIDACC_LST],
+        "network": {}, 
+        "status": "ok"
+    }
+})
+
+router.get('/@:author/posts', async (ctx) => {
+    let keys = {};
+    keys[NOTE_] = Object;
+    keys[NOTE_PST_HIDMSG_LST] = Object;
+    keys[NOTE_PST_HIDMSG_LST_ACCS] = Array;
+    keys[NOTE_PST_HIDACC_LST] = Object;
+    keys[NOTE_PST_HIDACC_LST_ACCS] = Array;
+
+    let vals = await getValues(keys);
+
+    const hidden = vals[NOTE_PST_HIDMSG_LST];
+    const banned = vals[NOTE_PST_HIDACC_LST];
+
+    let tags = [];
+    let tagIdMap = {};
+    getAllTags(vals[NOTE_], tags, tagIdMap);
+
+    let data = await golos.api.getDiscussionsByBlogAsync({
+        select_authors: [ctx.params.author],
+        limit: 100
+    });
+    let posts = [];
+    for (let post of data) {
+        const tag = post.url.split('/')[1];
+        const _id = tagIdMap[tag];
+        if (!_id) continue;
+        post.url = getUrl(post.url, _id);
+        post.forum = findForum(vals[NOTE_], _id); // for moderation
+        post.post_hidden = !!hidden[post.id];
+        post.author_banned = !!banned[post.author];
+        posts.push(post);
+    }
+    ctx.body = {
+        data: {
+            total: posts.length,
+            posts,
+            moders: vals[NOTE_PST_HIDMSG_LST_ACCS],
+            supers: vals[NOTE_PST_HIDACC_LST_ACCS],
+            admins: [],
+            hidden,
+            banned,
+        },
+        "network": {}, 
+        "status": "ok"
+    }
+})
+
+router.get('/@:author/responses', async (ctx) => {
+    let keys = {};
+    keys[NOTE_] = Object;
+    keys[NOTE_PST_HIDMSG_LST] = Object;
+    keys[NOTE_PST_HIDACC_LST] = Object;
+
+    let vals = await getValues(keys);
+
+    let tags = [];
+    let tagIdMap = {};
+    getAllTags(vals[NOTE_], tags, tagIdMap);
+
+    let data = await golos.api.getRepliesByLastUpdateAsync(
+        ctx.params.author,
+        '', 100,
+        0, 0
+    );
+    let posts = [];
+    for (let post of data) {
+        const tag = post.url.split('/')[1];
+        const _id = tagIdMap[tag];
+        if (!_id) continue;
+        post.url = getUrl(post.url, _id);
+        posts.push({parent: {depth: 0}, reply: post});
+    }
+    ctx.body = {
+        data: {
+            total: posts.length,
+            responses: posts
+        },
+        "network": {}, 
+        "status": "ok"
+    }
+})
+
+router.get('/@:author/donates/:direction', async (ctx) => {
+    const direction = ctx.params.direction;
+
+    if (direction !== 'from' && direction !== 'to') {
+        return returnError(ctx, 'direction should be \'from\' or \'to\'');
+    }
+
+    let keys = {};
+    keys[NOTE_] = Object;
+    keys[NOTE_PST_HIDACC_LST] = Object;
+
+    let vals = await getValues(keys);
+
+    let tags = [];
+    let tagIdMap = {};
+    getAllTags(vals[NOTE_], tags, tagIdMap);
+
+    let donates = await golos.api.getAccountHistoryAsync(ctx.params.author, -1, 1000, {
+        select_ops: ['donate_operation'],
+        direction: direction === 'from' ? 'sender' : 'receiver'
+    });
+
+    const total = donates.length;
+
+    const start = ctx.query.page ? (ctx.query.page - 1) * CONFIG.FORUM.account_donates_per_page : 0;
+    const end = start + CONFIG.FORUM.account_donates_per_page;
+    donates = donates.slice(start, end);
+
+    for (let op of donates) {
+        let item = op[1].op[1];
+        op[1].from_banned = !!vals[NOTE_PST_HIDACC_LST][item.from];
+        op[1].to_banned = !!vals[NOTE_PST_HIDACC_LST][item.to];
+        const { author, permlink } = item.memo.target;
+        if (author && permlink) {
+            const post = await golos.api.getContentAsync(author, permlink, 0, 0);
+            post.author_banned = !!vals[NOTE_PST_HIDACC_LST][post.author];
+            const tag = post.url.split('/')[1];
+            const _id = tagIdMap[tag];
+            if (!_id) continue;
+            post.url = getUrl(post.url, _id);
+            op[1].target = post;
+        }
+    }
+
+    ctx.body = {
+        data: {
+            donates,
+            total
+        },
         "network": {}, 
         "status": "ok"
     }

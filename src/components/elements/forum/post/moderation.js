@@ -14,7 +14,7 @@ export default class ForumPostModeration extends React.Component {
 
     componentWillReceiveProps(nextProps) {
         const { moderation, topic } = nextProps;
-        if (moderation.last) {
+        if (moderation && moderation.last) {
             const last_topic = moderation.last.payload[1].topic;
             if (last_topic === topic._id) {
                 const processing = moderation.last.loading;

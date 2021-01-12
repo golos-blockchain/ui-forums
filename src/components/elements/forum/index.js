@@ -1,12 +1,12 @@
 import React from 'react';
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom';
 
-import { Grid, Header, Icon, Segment } from 'semantic-ui-react'
+import { Grid, Header, Icon, Segment } from 'semantic-ui-react';
 
-import TimeAgoWrapper from '../../../utils/TimeAgoWrapper'
-import UserAvatar from '../account/avatar'
-import NumericLabel from '../../../utils/NumericLabel'
-import ForumLink from '../../../utils/forumlink'
+import TimeAgoWrapper from '../../../utils/TimeAgoWrapper';
+import UserAvatar from '../account/avatar';
+import NumericLabel from '../../../utils/NumericLabel';
+import ForumLink from '../../../utils/forumlink';
 
 export default class ForumIndex extends React.Component {
   render() {

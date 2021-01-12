@@ -1,60 +1,65 @@
 import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux'
-import { withRouter } from "react-router-dom";
-import { Button, Header, Icon, Segment, Tab } from 'semantic-ui-react'
-import { Link } from 'react-router-dom'
+import { withRouter, Link } from 'react-router-dom';
 import tt from 'counterpart';
 
-import AccountLink from '../../components/elements/account/link'
-import ForumConfigForm from './manage/config'
-import ForumCategoriesForm from './manage/categories'
-//import ForumUpgrade from '../../components/elements/forum/manage/upgrade'
-import ForumOverview from '../../components/elements/forum/manage/overview'
-import ForumPermissions from './manage/permissions'
-import ForumReservation from '../../components/elements/forum/reservation'
+import { Button, Header, Icon, Segment, Tab } from 'semantic-ui-react';
 
-import * as accountActions from '../../actions/accountActions'
-import * as forumActions from '../../actions/forumActions'
-import * as statusActions from '../../actions/statusActions'
-import * as preferenceActions from '../../actions/preferenceActions'
+import * as accountActions from '../../actions/accountActions';
+import * as forumActions from '../../actions/forumActions';
+import * as statusActions from '../../actions/statusActions';
+import * as preferenceActions from '../../actions/preferenceActions';
+
+import AccountLink from '../../components/elements/account/link';
+import ForumConfigForm from './manage/config';
+import ForumCategoriesForm from './manage/categories';
+//import ForumUpgrade from '../../components/elements/forum/manage/upgrade';
+import ForumOverview from '../../components/elements/forum/manage/overview';
+import ForumPermissions from './manage/permissions';
+import ForumReservation from '../../components/elements/forum/reservation';
 
 class ForumManage extends React.Component {
     componentDidMount() {
-        const { forum, reservation } = this.props
-        const id = (reservation) ? reservation._id : forum.target._id
+        const { forum, reservation } = this.props;
+        const id = (reservation) ? reservation._id : forum.target._id;
         if (!this.props.forum || !this.props.forum.data) {
-            this.props.actions.fetchForumDetails(id)
+            this.props.actions.fetchForumDetails(id);
         }
         this.interval = setInterval(() => this.props.actions.fetchForumDetails(id), 15000);
     }
+
     componentWillUnmount() {
-      clearInterval(this.interval);
+        clearInterval(this.interval);
     }
+
     componentDidUpdate(prevProps, prevState) {
         // If we have a reservation, and are returned a forum, the transfer has completed
-        if(this.props.reservation && this.props.forum.target) {
-            this.props.completeReservation()
+        if (this.props.reservation && this.props.forum.target) {
+            this.props.completeReservation();
         }
     }
+
     onTabChange = (e, data) => {
         if (data.panes[data.activeIndex].menuItem.key === 'close') {
-            this.props.hideConfig()
+            this.props.hideConfig();
         } else {
             // Push the history if the tab has changed
             if(this.props.section !== data.panes[data.activeIndex].menuItem.key) {
                 this.props.history.push(`/${data.panes[data.activeIndex].menuItem.key}`);
             }
         }
-    }
+    };
+
     getActiveIndex = (panes, key) => {
-        const indexes = panes.map((pane) => pane.menuItem.key)
-        return indexes.indexOf(key)
-    }
+        const indexes = panes.map((pane) => pane.menuItem.key);
+        return indexes.indexOf(key);
+    };
+
     render() {
-        const { account, forum, reservation, target, categories, moders, supers, admins } = this.props
+        const { account, forum, reservation, target, categories, moders, supers, admins } = this.props;
         if (reservation) {
-            return <ForumReservation status={this.props.status} reservation={reservation} />
+            return (<ForumReservation status={this.props.status} reservation={reservation} />);
         }
         let panes = [
             //{ menuItem: { key: 'overview', icon: 'cubes', color: 'black', content: tt('forum_controls.overview') }, render: () => <ForumOverview forum={forum} /> },
@@ -63,7 +68,7 @@ class ForumManage extends React.Component {
             //{ menuItem: { key: 'configuration', icon: 'settings', color: 'orange', content: tt('forum_controls.configuration') }, render: () => <ForumConfigForm newForum={this.props.newForum} hideConfig={this.props.hideConfig}/> },
             //{ menuItem: { key: 'upgrades', icon: 'arrow circle up', color: 'blue', content: 'Upgrades' }, render: () => <ForumUpgrade account={account} forum={forum} target={target} /> },
             { menuItem: { key: 'close', icon: 'window close', color: 'black', position: 'right' } },
-        ]
+        ];
         let display = (
             <Segment>
                 <Segment padded textAlign='center'>
@@ -80,11 +85,11 @@ class ForumManage extends React.Component {
                     </Header>
                 </Segment>
             </Segment>
-        )
+        );
         if (forum.target._id) {
             // If this is a legacy forum, only display pane #1 (overview) and the last one (close)
             if (!forum.target.creator) {
-                panes = [panes[0], panes[panes.length - 1]]
+                panes = [panes[0], panes[panes.length - 1]];
             }
             display = (
                 <Tab
@@ -96,7 +101,7 @@ class ForumManage extends React.Component {
                     panes={panes}
                     style={{marginTop: '1em'}}
                 />
-            )
+            );
         }
         return (
             <div>
@@ -110,11 +115,9 @@ class ForumManage extends React.Component {
                     />
                 </Segment>
             </div>
-        )
+        );
     }
 }
-
-
 
 function mapStateToProps(state, ownProps) {
     return {
@@ -122,7 +125,7 @@ function mapStateToProps(state, ownProps) {
         forum: ownProps.forum,
         preferences: state.preferences,
         status: state.status
-    }
+    };
 }
 
 function mapDispatchToProps(dispatch) {
@@ -131,7 +134,7 @@ function mapDispatchToProps(dispatch) {
         ...forumActions,
         ...preferenceActions,
         ...statusActions,
-    }, dispatch)}
+    }, dispatch)};
 }
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ForumManage));

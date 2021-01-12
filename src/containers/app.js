@@ -104,7 +104,7 @@ class App extends React.Component {
                     <Container>
                         <Switch>
                             {/*<Route exact path='/' render={(props) => <Redirect to='/forums'/>}/>*/}
-                            <Route path='/@:username' component={Account} />
+                            <Route path='/@:username/:section?' component={Account} />
                             {/*<Route path='/accounts' component={AccountsLayout} />*/}
                             <Route path='/create_account' component={CreateAccount} />
                             <Route path='/create/forum' component={ForumCreateLayout} />
