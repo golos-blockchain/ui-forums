@@ -33,9 +33,12 @@ class PostForm extends React.Component {
         const { action, filter, forum, existingPost, replyAuthor } = props;
         let tags = (filter) ? [filter] : (forum && forum.tags) ? forum.tags : [];
         if (action === 'edit') {
-            if (existingPost.json_metadata && existingPost.json_metadata.tags && existingPost.json_metadata.tags.length) {
-                tags = existingPost.json_metadata.tags;
-            }
+            try {
+                const json_metadata = JSON.parse(existingPost.json_metadata);
+                if (json_metadata && json_metadata.tags && json_metadata.tags.length) {
+                    tags = json_metadata.tags;
+                }
+            } catch (jsonParseEx) {}
         }
         this.drafts = props.drafts || {};
         this.state = {
