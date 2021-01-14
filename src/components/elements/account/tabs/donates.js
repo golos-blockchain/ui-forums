@@ -50,10 +50,19 @@ export default class AccountDonates extends React.Component {
 
                     let actorDesc = this.props.direction === 'from' ? tt('account.to') : tt('account.from');
                     let actor = this.props.direction === 'from' ? item.to : item.from;
+                    let actorBanned = this.props.direction === 'from' ? op[1].to_banned : op[1].from_banned;
 
-                    let target = null;
-                    if (op[1].target) {
-                        const url = op[1].target.url;
+                    let target = item.memo.target;
+                    if (target.permlink) {
+                        let author = '@' + target.author;
+                        let url = author + '/' + target.permlink;
+
+                        if (target._root_permlink) {
+                            let root_author = '@' + target._root_author;
+                            url = root_author + '/' + target._root_permlink + '#' + url;
+                        }
+
+                        url = '/' + op[1]._category + '/' + url;
                         target = (<span>
                             {tt('account.for')}
                             <Link to={url}>{url}</Link>
@@ -68,6 +77,7 @@ export default class AccountDonates extends React.Component {
                             <AccountLink
                                 noPopup={true}
                                 username={actor}
+                                isBanned={actorBanned}
                             />
                             {target}
                         </Table.Cell>

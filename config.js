@@ -34,7 +34,8 @@ module.exports = {
         posts_per_page: 20,
         replies_per_page: 10,
         votes_per_page: 10,
-        donates_per_page: 10
+        donates_per_page: 10,
+        account_donates_per_page: 10
     },
     STM_Config: {
         img_proxy_prefix: 'https://steemitimages.com/',

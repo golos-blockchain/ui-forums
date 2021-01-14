@@ -61,15 +61,18 @@ export function setDonateProcessing(id) {
 
 export function castDonate(payload) {
     return async dispatch => {
-        const { author, permlink, amount, note } = payload;
+        const { author, permlink, category, root_author, root_permlink, amount, note } = payload;
         const { key, name } = payload.account;
         let donate_memo = {};
         donate_memo.app = 'golos-id';
-        donate_memo.version = 1;
+        donate_memo.version = 2;
         donate_memo.comment = note;
         donate_memo.target = {
             author: author,
-            permlink: permlink
+            permlink: permlink,
+            _category: category,
+            _root_author: root_author,
+            _root_permlink: root_permlink
         };
         golos.broadcast.donate(key, name, author, amount, donate_memo, [], (err, result) => {
             if (err) {
