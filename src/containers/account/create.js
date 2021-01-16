@@ -8,6 +8,7 @@ import ttGetByKey from '../../utils/ttGetByKey';
 import golos from 'golos-classic-js';
 import { key_utils } from 'golos-classic-js/lib/auth/ecc';
 import { validateAccountName } from 'golos-classic-js/lib/utils';
+import { jsPDF } from 'jspdf';
 
 import { Header, Label, Button, Icon } from 'semantic-ui-react';
 import { Form } from 'formsy-semantic-ui-react';
@@ -126,6 +127,10 @@ class CreateAccount extends React.Component {
 
     useVk = (e) => {
         e.preventDefault();
+        const doc = new jsPDF();
+
+doc.text("Hello world!", 10, 10);
+doc.save('keys.pdf');
         this.setState({
             authType: 'ВКонтакте'
         });

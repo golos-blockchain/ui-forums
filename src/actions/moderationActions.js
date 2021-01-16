@@ -136,7 +136,7 @@ export function moderatorUnBanAccount(wif, moderator, accountName) {
                 });
             } else {
                 dispatch({
-                    type: types.MODERATION_UNBANL_RESOLVED,
+                    type: types.MODERATION_UNBAN_RESOLVED,
                     payload: {moderator, accountName},
                     loading: false
                 });

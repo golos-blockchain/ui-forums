@@ -42,7 +42,7 @@ class Thread extends React.Component {
     }
 
     componentDidMount() {
-        const { hash } = location;
+        const { hash } = window.location;
         let matchesPage = hash.match(regexPage);
         if (matchesPage) {
             this.setState({
@@ -52,7 +52,7 @@ class Thread extends React.Component {
     }
 
     componentDidUpdate() {
-        const { hash } = location;
+        const { hash } = window.location;
         let matchesPost = hash.match(regexPost);
         if (matchesPost) {
             const anchor = '@' + matchesPost[1] + '/' + matchesPost[2];
@@ -118,7 +118,7 @@ class Thread extends React.Component {
             goToTop();
         }
         this.setState(state);
-        if (page) location.hash = page > 1 ? 'comments-page-' + page : '';
+        if (page) window.location.hash = page > 1 ? 'comments-page-' + page : '';
     };
 
     goReply = (replyAuthor, replyQuote = null) => {
@@ -165,7 +165,7 @@ class Thread extends React.Component {
             submitted: new Date(),
             scrollTo2: anchor
         });
-        location.hash = anchor;
+        window.location.hash = anchor;
     };
 
     render() {

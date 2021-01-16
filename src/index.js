@@ -8,10 +8,10 @@ import { Provider } from 'react-redux';
 import App from './containers/app';
 import { configureStore } from './store';
 
-const { persistor, store } = configureStore();
-
-import './semantic/dist/semantic.min.css';;
+import './semantic/dist/semantic.min.css';
 import './index.css';
+
+const { persistor, store } = configureStore();
 
 const node = (
     <Provider store={store}>

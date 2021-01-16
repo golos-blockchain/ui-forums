@@ -1,18 +1,10 @@
 import React from 'react';
 import { Helmet } from 'react-helmet';
-import { BrowserRouter, browserHistory, Route, Switch, Redirect } from 'react-router-dom';
+import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 import golos from 'golos-classic-js';
 
 import tt from 'counterpart';
 import ttGetByKey from '../utils/ttGetByKey';
-
-tt.registerTranslations('en', require('../locales/en.json'));
-tt.registerTranslations('ru', require('../locales/ru-RU.json'));
-
-tt.setLocale(localStorage.getItem('locale') || 'ru');
-tt.setFallbackLocale('en');
-
-window._isMobile = /Mobi/.test(navigator.userAgent);
 
 import { Container } from 'semantic-ui-react';
 
@@ -83,7 +75,7 @@ class App extends React.Component {
 
     render() {
         return (
-            <BrowserRouter history={browserHistory}>
+            <BrowserRouter>
                 <div className='AppContainer'>
                     <Helmet>
                         <title>{ttGetByKey(CONFIG.FORUM, 'page_title')}</title>
