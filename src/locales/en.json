@@ -177,7 +177,8 @@
     "enter_password": "Enter your generated password",
     "warning_password": "Check that you safely saved your password.",
     "checkbox_password": "I understand that GOLOS cannot restore my password.",
-    "create_account": "Create account"
+    "create_account": "Create account",
+    "authorized_with": "Authorized with "
   },
   "validation": {
     "account_name_should_be_shorter": "Account name should not be longer that 16 characters.",

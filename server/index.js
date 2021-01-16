@@ -1,17 +1,19 @@
-const koa = require('koa')
-const koaRouter = require('koa-router')
+const koa = require('koa');
+const session = require('koa-session');
+const koaRouter = require('koa-router');
 const cors = require('koa-cors');
 const livereload = require('koa-livereload');
 const golos = require('golos-classic-js');
-const gmailSend = require('gmail-send');
-const fs = require('fs');
-const atob = require('atob');
-const btoa = require('btoa');
 
 const CONFIG = require('../config');
 const CONFIG_SEC = require('../configSecure');
 
+const { useAuthApi } = require('./api/auth');
+
 golos.config.set('websocket', CONFIG.GOLOS_NODE);
+if (CONFIG.GOLOS_CHAIN_ID) {
+    golos.config.set('chain_id', CONFIG.GOLOS_CHAIN_ID);
+}
 
 const app = new koa();
 const router = new koaRouter();
@@ -454,15 +456,14 @@ router.get('/@:author/donates/:direction', async (ctx) => {
         let item = op[1].op[1];
         op[1].from_banned = !!vals[NOTE_PST_HIDACC_LST][item.from];
         op[1].to_banned = !!vals[NOTE_PST_HIDACC_LST][item.to];
-        const { author, permlink } = item.memo.target;
+        const { author, permlink, _category, _root_author, _root_permlink } = item.memo.target;
         if (author && permlink) {
-            const post = await golos.api.getContentAsync(author, permlink, 0, 0);
-            post.author_banned = !!vals[NOTE_PST_HIDACC_LST][post.author];
-            const tag = post.url.split('/')[1];
-            const _id = tagIdMap[tag];
-            if (!_id) continue;
-            post.url = getUrl(post.url, _id);
-            op[1].target = post;
+            if (!_category) continue; // Not version 2+ which is used on chainBB 
+            const _id = tagIdMap[_category];
+            if (!_id) continue; // Not from this chain BB forum
+            op[1]._category = _id;
+            op[1].author_banned = !!vals[NOTE_PST_HIDACC_LST][author];
+            op[1].root_author_banned = !!vals[NOTE_PST_HIDACC_LST][_root_author];
         }
     }
 
@@ -476,128 +477,13 @@ router.get('/@:author/donates/:direction', async (ctx) => {
     }
 })
 
-getRandomArbitrary = (min, max) => {
-    return parseInt(Math.random() * (max - min) + min);
-}
-
-router.get('/send_email/:email/:locale/:username/:owner/:active/:posting/:memo', async (ctx) => {
-    if (!CONFIG_SEC.gmail_send.user || !CONFIG_SEC.gmail_send.pass)
-        return returnError(ctx, 'Mail service is not configured. Admin should configure it like this:<pre>\
-            {\n\
-                gmail_send: {\n\
-                    user: \'vasya.pupkin\',\n\
-                    pass: \'gmail application password\'\n\
-                }\n\
-            }</pre>');
-
-    const veri_code = getRandomArbitrary(1000, 9999);
-
-    let html = CONFIG_SEC.registrar[ctx.params.locale].email_html;
-    if (!html.includes('{verification_code}')) {
-        return returnError(ctx, 'email_html in config has wrong format. It does not contain <code>{verification_code}</code>. Admin should configure it like this:<pre>email_html: \'Your verification code: <h4>{verification_code}</h4>\'</pre>');
-    }
-    html = html.replace('{verification_code}', veri_code);
-    html = html.replace('{FORUM.link_title}', CONFIG.FORUM[ctx.params.locale].link_title);
-
-    let sbj = CONFIG_SEC.registrar[ctx.params.locale].email_subject;
-    sbj = sbj.replace('{FORUM.link_title}', CONFIG.FORUM[ctx.params.locale].link_title);
-
-    const {username, owner, active, posting, memo} = ctx.params;
-    let file_obj = {username, owner, active, posting, memo};
-    file_obj.code = veri_code;
-
-    fs.writeFileSync('verification_codes/' + btoa(ctx.params.email) + '.txt', JSON.stringify(file_obj));
-
-    const send = gmailSend({
-      user: CONFIG_SEC.gmail_send.user,
-      pass: CONFIG_SEC.gmail_send.pass,
-      from: CONFIG_SEC.registrar.email_sender,
-      to: ctx.params.email,
-      subject: sbj,
-    });
-
-    try {
-        const res = await send({
-            html
-        });
-        ctx.body = {
-            "data": ctx.params.email,
-            "network": {}, 
-            "status": "ok"
-        }
-    } catch (e) {
-        console.log(e)
-        return returnError(ctx, JSON.stringify(e));
-    }
-})
-
-router.get('/verify_email/:email/:code', async (ctx) => {
-    const path = 'verification_codes/' + btoa(ctx.params.email) + '.txt';
-    let file_obj = null;
-    try {
-        file_obj = JSON.parse(fs.readFileSync(path, 'utf8'));
-    } catch (e) {
-        return returnError(ctx, 'Wrong code');
-    }
-    if (file_obj.code != ctx.params.code) {
-        return returnError(ctx, 'Wrong code');
-    }
-
-    let aro = undefined;
-    if (CONFIG_SEC.registrar.referer) {
-        let max_referral_interest_rate;
-        let max_referral_term_sec;
-        let max_referral_break_fee;
-        try {
-            const chain_properties = await golos.api.getChainPropertiesAsync();
-            max_referral_interest_rate = chain_properties.max_referral_interest_rate;
-            max_referral_term_sec = chain_properties.max_referral_term_sec;
-            max_referral_break_fee = chain_properties.max_referral_break_fee;
-        } catch (error) {
-            console.error('Error in verify_email get_chain_properties', error);
-        }
-
-        const dgp = await golos.api.getDynamicGlobalPropertiesAsync();
-        aro = [[
-            0, {
-                referrer: CONFIG_SEC.registrar.referer,
-                interest_rate: max_referral_interest_rate,
-                end_date: new Date(Date.parse(dgp.time) + max_referral_term_sec*1000).toISOString().split(".")[0],
-                break_fee: max_referral_break_fee
-            }
-        ]];
-    }
-    let accs = null;
-    try {
-        await golos.broadcast.accountCreateWithDelegationAsync(CONFIG_SEC.registrar.signing_key,
-          CONFIG_SEC.registrar.fee, CONFIG_SEC.registrar.delegation,
-          CONFIG_SEC.registrar.account, file_obj.username, 
-            {weight_threshold: 1, account_auths: [], key_auths: [[file_obj.owner, 1]]},
-            {weight_threshold: 1, account_auths: [], key_auths: [[file_obj.active, 1]]},
-            {weight_threshold: 1, account_auths: [], key_auths: [[file_obj.posting, 1]]},
-            file_obj.memo,
-          '{}', aro);
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        accs = await golos.api.getAccountsAsync([file_obj.username]);
-    } catch (err) {
-        return returnError(ctx, err)
-    }
-
-    if (!accs || !accs.length) {
-        return returnError(ctx, 'unknown reason');
-    }
-
-    fs.unlinkSync(path);
-
-    ctx.body = {
-        "network": {}, 
-        "status": "ok"
-    }
-});
-
 app.use(livereload());
-app.use(cors());
+app.use(cors({ credentials: true }));
+app.keys = ['your-session-secret'];
+app.use(session({}, app));
 app.use(router.routes());
 app.use(router.allowedMethods());
+
+useAuthApi(app);
 
 app.listen(5000, () => console.log('running on port 5000'));

@@ -48,7 +48,7 @@ function _logError(...parameters) {
 console.error = _logError;
 
 golos.config.set('websocket', CONFIG.GOLOS_NODE);
-if (CONFIG.GOLOS_CHAIN_ID && CONFIG.GOLOS_CHAIN_ID.length) {
+if (CONFIG.GOLOS_CHAIN_ID) {
     golos.config.set('chain_id', CONFIG.GOLOS_CHAIN_ID);
 }
 

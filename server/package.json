@@ -16,7 +16,13 @@
     "koa": "^2.13.0",
     "koa-cors": "0.0.16",
     "koa-livereload": "^0.2.0",
-    "koa-router": "^10.0.0"
+    "koa-router": "^10.0.0",
+    "koa-bodyparser": "latest",
+    "koa-session": "^3.4.0",
+    "koa-passport": "latest",
+    "passport-google-oauth20": "^1.0.0",
+    "passport-vk": "latest",
+    "passport-facebook": "latest"
   },
   "devDependencies": {
     "nodemon": "^2.0.6"
