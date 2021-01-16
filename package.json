@@ -3,6 +3,7 @@
   "version": "0.4.0",
   "private": true,
   "dependencies": {
+    "loadable-components": "2.0.0",
     "babel-runtime": "6.26.0",
     "classnames": "^2.2.5",
     "core-js": "^2.5.1",
@@ -13,10 +14,8 @@
     "highlight.js": "^9.12.0",
     "immutability-helper": "^2.2.2",
     "immutable": "^3.7.6",
-    "jspdf": "^2.3.0",
     "lodash": "^4.17.11",
     "noty": "^3.1.0",
-    "pdfjs": "^2.4.2",
     "prop-types": "15.6.0",
     "rc-pagination": "^1.8.7",
     "react": "^15.4.2",

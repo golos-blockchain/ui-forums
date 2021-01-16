@@ -14,15 +14,6 @@ import * as CONFIG_SEC from '../../configSecure';
 import Account from '../containers/account';
 import CreateAccount from '../containers/account/create';
 import Leave from '../containers/leave';
-import AccountsLayout from '../components/layouts/accounts';
-import IndexLayout from '../components/layouts/index';
-import FeedLayout from '../components/layouts/feed';
-import ForumLayout from '../components/layouts/forum';
-import ForumCreateLayout from '../components/layouts/forum/create';
-import ForumsLayout from '../components/layouts/forums';
-import RepliesLayout from '../components/layouts/replies';
-import ThreadLayout from '../components/layouts/thread';
-import TopicLayout from '../components/layouts/topic';
 import BreadcrumbMenu from '../components/global/breadcrumb';
 import BannerMenu from '../components/global/banner';
 import FooterMenu from '../components/global/footer';
@@ -31,6 +22,16 @@ import GlobalNotice from '../components/global/notice';
 
 import './app.css';
 import '../../node_modules/noty/lib/noty.css';
+import loadable from 'loadable-components'
+const AccountsLayout = loadable(() => import('../components/layouts/accounts'));
+const IndexLayout = loadable(() => import('../components/layouts/index'));
+const FeedLayout = loadable(() => import('../components/layouts/feed'));
+const ForumLayout = loadable(() => import('../components/layouts/forum'));
+const ForumCreateLayout = loadable(() => import('../components/layouts/forum/create'));
+const ForumsLayout = loadable(() => import('../components/layouts/forums'));
+const RepliesLayout = loadable(() => import('../components/layouts/replies'));
+const ThreadLayout = loadable(() => import('../components/layouts/thread'));
+const TopicLayout = loadable(() => import('../components/layouts/topic'));
 
 var _errorOrig = console.error;
 function _logError(...parameters) {
