@@ -3,6 +3,7 @@ import { Helmet } from 'react-helmet';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { goToTop } from 'react-scrollable-anchor';
+import TelegramLoginButton from 'react-telegram-login';
 import tt from 'counterpart';
 import ttGetByKey from '../../utils/ttGetByKey';
 import golos from 'golos-classic-js';
@@ -144,6 +145,26 @@ class CreateAccount extends React.Component {
         return false;
     };
 
+    useMailru = (e) => {
+        e.preventDefault();
+        this.setState({
+            authType: 'Mail.Ru'
+        });
+        window.open(CONFIG.REST_API + '/auth/mailru', '_blank');
+        document.getElementsByName('username')[0].focus();
+        return false;
+    };
+
+    useYandex = (e) => {
+        e.preventDefault();
+        this.setState({
+            authType: 'Яндекс'
+        });
+        window.open(CONFIG.REST_API + '/auth/yandex', '_blank');
+        document.getElementsByName('username')[0].focus();
+        return false;
+    };
+
     render() {
         const { methods, authType } = this.state;
         const errorLabel = (<Label color='red' pointing/>);
@@ -172,8 +193,18 @@ class CreateAccount extends React.Component {
                     {methods.includes('facebook') ? (<Button color='facebook' onClick={this.useFacebook}>
                         <Icon name='facebook' /> Facebook
                     </Button>) : null }
-                    {methods.includes('google') ? (<Button color='google plus'>
-                        <Icon name='google plus' /> Google Plus
+                    {methods.includes('telegram') ? (<Button color='linkedin' onClick={this.useMailru}>
+                        <Icon name='telegram plane' /> Telegram
+                    </Button>) : null }
+                    {/*<TelegramLoginButton dataAuthUrl={'http://localhost:5000/auth/telegram'} requestAccess='write' botName={'TestAuthBotBobot'} />*/}
+                    {methods.includes('mailru') ? (<Button color='blue' onClick={this.useMailru}>
+                        <Icon name='mail' color='yellow' /> Mail.ru
+                    </Button>) : null }
+                    {methods.includes('twitter') ? (<Button color='twitter' onClick={this.useMailru}>
+                        <Icon name='twitter' /> Twitter
+                    </Button>) : null }
+                    {methods.includes('yandex') ? (<Button color='white' onClick={this.useYandex}>
+                        <Icon name='yahoo' color='red' /> Yandex
                     </Button>) : null }
                     {authType !== 'email' ? (<div><br/><Icon color='green' name='checkmark' /><b>{tt('login.authorized_with') + authType}.</b></div>) : null}
                     {methods.length > 1 ? (<div style={{height: '20px'}} />) : null}

@@ -4,10 +4,17 @@ const gmailSend = require('gmail-send');
 const fs = require('fs');
 const btoa = require('btoa');
 const passport = require('koa-passport');
-// const GoogleStrategy         = require('passport-google').Strategy;
-const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const VKontakteStrategy = require('passport-vk').Strategy;
 const FacebookStrategy = require('passport-facebook').Strategy;
+//const MailruStrategy = require('passport-mailru-email').Strategy;
+/*mailru2: {
+    enabled: true,
+    client_id: '09a96585d156437585f4adbc45d39b02',
+    client_secret: 'b93d7dec003d42a9b21bfd022373de5d'
+},*/
+const MailruStrategy = require('passport-mail').Strategy;
+const { TelegramStrategy } = require('passport-telegram-official');
+const YandexStrategy = require('passport-yandex').Strategy;
 
 const CONFIG = require('../../config');
 const CONFIG_SEC = require('../../configSecure');
@@ -80,10 +87,76 @@ function useAuthApi(app) {
         }
     }
 
+    if (CONFIG_SEC.registrar.mailru.enabled) {
+        try {
+            passport.use(new MailruStrategy(
+              {
+                  clientID: CONFIG_SEC.registrar.mailru.client_id,
+                  clientSecret: CONFIG_SEC.registrar.mailru.client_secret,
+                  callbackURL: '/auth/mailru/callback',
+                  passReqToCallback: true
+              },
+              (req, accessToken, refreshToken, params, profile, done) => {
+                  req.session.soc_id = profile.id;
+                  req.session.soc_id_type = 'mailru_id';
+                  done(null, {profile});
+              }
+            ));
+        } catch (ex) {
+            console.error('ERROR: Wrong registrar.mailru settings. Fix them or just disable registration with mailru. Error is following:')
+            throw ex;
+        }
+    }
+
+    if (CONFIG_SEC.registrar.telegram.enabled) {
+        try {
+            passport.use(new TelegramStrategy(
+              {
+                  botToken: CONFIG_SEC.registrar.telegram.bot_token,
+                  passReqToCallback: true
+              },
+              (req, accessToken, refreshToken, params, profile, done) => {
+                console.log(profile)
+                  req.session.soc_id = profile.id;
+                  req.session.soc_id_type = 'telegram_id';
+                  done(null, {profile});
+              }
+            ));
+        } catch (ex) {
+            console.error('ERROR: Wrong registrar.telegram settings. Fix them or just disable registration with telegram. Error is following:')
+            throw ex;
+        }
+    }
+
+    if (CONFIG_SEC.registrar.yandex.enabled) {
+        try {
+            passport.use(new YandexStrategy(
+              {
+                  clientID: CONFIG_SEC.registrar.yandex.client_id,
+                  clientSecret: CONFIG_SEC.registrar.yandex.client_secret,
+                  callbackURL: '/auth/yandex/callback',
+                  passReqToCallback: true
+              },
+              (req, accessToken, refreshToken, params, profile, done) => {
+                  req.session.soc_id = profile.id;
+                  req.session.soc_id_type = 'yandex_id';
+                  done(null, {profile});
+              }
+            ));
+        } catch (ex) {
+            console.error('ERROR: Wrong registrar.yandex settings. Fix them or just disable registration with yandex. Error is following:')
+            throw ex;
+        }
+    }
+
     router.get('/', (ctx, next) => {
         const methods = ['email'];
         if (CONFIG_SEC.registrar.vk.enabled) methods.push('vk');
         if (CONFIG_SEC.registrar.facebook.enabled) methods.push('facebook');
+        if (CONFIG_SEC.registrar.telegram.enabled) methods.push('telegram');
+        if (CONFIG_SEC.registrar.mailru.enabled) methods.push('mailru');
+        if (CONFIG_SEC.registrar.twitter.enabled) methods.push('twitter');
+        if (CONFIG_SEC.registrar.yandex.enabled) methods.push('yandex');
         ctx.body = {
             "data": {
                 methods
@@ -239,6 +312,33 @@ function useAuthApi(app) {
     });
 
     router.get('/facebook/callback', passport.authenticate('facebook', {
+        successRedirect: '/auth/success',
+        failureRedirect: '/auth/failure'
+    }));
+
+    router.get('/mailru', (ctx, next) => {
+        passport.authenticate('mailru')(ctx, next);
+    });
+
+    router.get('/mailru/callback', passport.authenticate('mailru', {
+        successRedirect: '/auth/success',
+        failureRedirect: '/auth/failure'
+    }));
+
+    router.get('/telegram', (ctx, next) => {
+        passport.authenticate('telegram')(ctx, next);
+    });
+
+    router.get('/telegram/callback', passport.authenticate('telegram', {
+        successRedirect: '/auth/success',
+        failureRedirect: '/auth/failure'
+    }));
+
+    router.get('/yandex', (ctx, next) => {
+        passport.authenticate('yandex')(ctx, next);
+    });
+
+    router.get('/yandex/callback', passport.authenticate('yandex', {
         successRedirect: '/auth/success',
         failureRedirect: '/auth/failure'
     }));
