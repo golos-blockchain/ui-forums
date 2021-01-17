@@ -9,6 +9,7 @@ import ttGetByKey from '../../utils/ttGetByKey';
 import golos from 'golos-classic-js';
 import { key_utils } from 'golos-classic-js/lib/auth/ecc';
 import { validateAccountName } from 'golos-classic-js/lib/utils';
+import { jsPDF } from 'jspdf';
 
 import { Header, Label, Button, Icon } from 'semantic-ui-react';
 import { Form } from 'formsy-semantic-ui-react';
@@ -68,10 +69,51 @@ class CreateAccount extends React.Component {
         console.error(err);
     }
 
+    createPdf = (username, privateKeys) => {
+        this.keysPDFFileName = 'keys-' + username + '.pdf';
+        this.keysPDF = new jsPDF();
+        let pdf = this.keysPDF;
+
+        /*"pdf_title": "Ключи от аккаунта @",
+        "pdf_desc": "Это приватные ключи, которые дают доступ к вашему аккаунту. Храните этот файл в надежном месте.",
+        "pdf_password_desc": "Пароль (используйте для входа на форум): ",
+        "pdf_posting_desc": "Posting-ключ (также подходит в качестве пароля на форуме): ",
+        "pdf_active_desc": "Active-ключ: ",
+        "pdf_owner_desc": "Owner-ключ: ",
+        "pdf_memo_desc": "Memo-ключ: "*/
+
+        pdf.setFontSize(28);
+        pdf.text(10, 20, tt('login.pdf_title') + username);
+
+        pdf.setFontSize(10);
+        pdf.text(10, 30, tt('login.pdf_desc'));
+
+        pdf.setFontSize(12);
+        pdf.text(10, 40, tt('login.pdf_password_desc'));
+        pdf.text(10, 45, privateKeys.password);
+
+        pdf.text(10, 55, tt('login.pdf_posting_desc'));
+        pdf.text(10, 60, privateKeys.posting);
+
+        pdf.text(10, 70, tt('login.pdf_active_desc'));
+        pdf.text(10, 75, privateKeys.active);
+
+        pdf.text(10, 85, tt('login.pdf_owner_desc'));
+        pdf.text(10, 90, privateKeys.owner);
+
+        pdf.text(10, 100, tt('login.pdf_memo_desc'));
+        pdf.text(10, 105, privateKeys.memo);
+    };
+
     onValidSubmit = async (data) => {
         try {
             const { authType } = this.state;
-            let keys = golos.auth.generateKeys(data.username, data.pass, ['owner', 'active', 'posting', 'memo']);
+            let keys = golos.auth.getPrivateKeys(data.username, data.pass, ['owner', 'active', 'posting', 'memo']);
+
+            this.createPdf(data.username, {...keys, password: data.pass});
+            delete keys.owner;
+            delete keys.posting;
+            delete keys.active;
 
             let uri;
             if (authType === 'email') {
@@ -79,13 +121,14 @@ class CreateAccount extends React.Component {
             } else {
                 uri = CONFIG.REST_API + '/auth/verify_email/-/-/';
             }
-            uri += data.username + '/' + keys.owner + '/' + keys.active + '/' + keys.posting + '/' + keys.memo;
+            uri += data.username + '/' + keys.ownerPubkey + '/' + keys.activePubkey + '/' + keys.postingPubkey + '/' + keys.memoPubkey;
 
             const response = await fetch(uri, { credentials: 'include'}); // credentials are for not email case
             if (response.ok) {
                 const result = await response.json();
                 if (authType !== 'email' && result.status === 'ok') {
-                    alert('Поздравляем! Вы успешно зарегистрировались');
+                    alert('Поздравляем! Вы успешно зарегистрировались. Сейчас скачается PDF-файл, содержащий ваши ключи. Сохраните его.');
+                    this.keysPDF.save(this.keysPDFFileName);
                     window.location.href = '/';
                 } else if (authType === 'email' && result.data === data.email) {
                     this.setState({
@@ -110,7 +153,8 @@ class CreateAccount extends React.Component {
             if (response.ok) {
                 const result = await response.json();
                 if (result.status === 'ok') {
-                    alert('Поздравляем! Вы успешно зарегистрировались');
+                    alert('Поздравляем! Вы успешно зарегистрировались. Сейчас скачается PDF-файл, содержащий ваши ключи. Сохраните его.');
+                    this.keysPDF.save(this.keysPDFFileName);
                     window.location.href = '/';
                 } else if (result.data === 'Wrong code') {
                     alert('Неверный код подтверждения!');

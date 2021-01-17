@@ -178,7 +178,14 @@
     "warning_password": "Check that you safely saved your password.",
     "checkbox_password": "I understand that GOLOS cannot restore my password.",
     "create_account": "Create account",
-    "authorized_with": "Authorized with "
+    "authorized_with": "Authorized with ",
+    "pdf_title": "Keys Of @",
+    "pdf_desc": "There are private keys, which are authorizing your account. Store this file in secure place.",
+    "pdf_password_desc": "Password (use it to log in on forum): ",
+    "pdf_posting_desc": "Posting Key (also can be used as forum password): ",
+    "pdf_active_desc": "Active Key: ",
+    "pdf_owner_desc": "Owner Key: ",
+    "pdf_memo_desc": "Memo Key: "
   },
   "validation": {
     "account_name_should_be_shorter": "Account name should not be longer that 16 characters.",

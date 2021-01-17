@@ -178,7 +178,14 @@
     "warning_password": "Удостоверьтесь, что вы надежно сохранили сгенерированный пароль.",
     "checkbox_password": "Я понимаю, что восстановление потерянного пароля невозможно.",
     "create_account": "Создать аккаунт",
-    "authorized_with": "Авторизовано с помощью "
+    "authorized_with": "Авторизовано с помощью ",
+    "pdf_title": "Keys Of @",
+    "pdf_desc": "There are private keys, which are authorizing your account. Store this file in secure place.",
+    "pdf_password_desc": "Password (use it to log in on forum): ",
+    "pdf_posting_desc": "Posting Key (also can be used as forum password): ",
+    "pdf_active_desc": "Active Key: ",
+    "pdf_owner_desc": "Owner Key: ",
+    "pdf_memo_desc": "Memo Key: "
   },
   "validation": {
     "account_name_should_not_be_empty": "Имя аккаунта должно быть непустым.",
