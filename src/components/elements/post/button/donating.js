@@ -20,7 +20,7 @@ export default class Donating extends React.Component {
             prec: 3,
             valid: false
         };
-        const { category, author, permlink } = this.props.post;
+        //const { category, author, permlink } = this.props.post;
         //this.props.fetchPostDonates({category, author, permlink});
     }
 
