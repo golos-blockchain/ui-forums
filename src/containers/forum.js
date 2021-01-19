@@ -6,7 +6,6 @@ import { withRouter } from 'react-router-dom';
 import { goToTop } from 'react-scrollable-anchor';
 import ReactDOMServer from 'react-dom/server';
 import Noty from 'noty';
-import slug from 'slug';
 import tt from 'counterpart';
 
 import { Accordion, Dimmer, Grid, Header, Icon, Loader, Message, Segment } from 'semantic-ui-react';
@@ -156,7 +155,7 @@ class Forum extends React.Component {
   };
 
   changeFilter = (data) => {
-      let filter = slug(data).toString();
+      let filter = data;
       if (filter === 'false') {
           filter = false;
       }

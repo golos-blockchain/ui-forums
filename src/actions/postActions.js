@@ -1,5 +1,5 @@
 import golos from 'golos-classic-js';
-import slug from 'slug';
+import getSlug from 'speakingurl';
 import tt from 'counterpart';
 
 import * as types from './actionTypes';
@@ -415,12 +415,29 @@ export function resetPostState() {
     };
 }
 
+function slug(text) {
+    return getSlug(text.replace(/[<>]/g, ''), { truncate: 128 });
+}
+
+function randomSlug() {
+   let result = '';
+   const characters = 'aaaabdeeeeeeefghiiiiiijkmnooooopqrstuuuvwxyz'; // no l and c because they are "unsafe"
+   const charactersLength = characters.length;
+   for (let i = 0; i < 6; i++) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+   }
+   return result;
+}
+
 export function generatePermlink(title, parent = null) {
     var permlink = '',
         date = new Date(),
         time = date.getFullYear().toString() + (date.getMonth()+1).toString() + date.getDate().toString() + 't' + date.getHours().toString() + date.getMinutes().toString() + date.getSeconds().toString() + date.getMilliseconds().toString() + 'z';
     if (title && title.trim() !== '') {
-        permlink = slug(title).toString();
+        permlink = slug(title);
+        if (!permlink) {
+            permlink = randomSlug();
+        }
     }
     if (parent) {
         permlink = 're-' + parent.author + '-' + parent.permlink + '-' + time;

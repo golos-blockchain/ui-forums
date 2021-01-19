@@ -2,7 +2,6 @@ import React from 'react';
 import { withRouter } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import slug from 'slug';
 import tt from 'counterpart';
 import golos from 'golos-classic-js';
 
@@ -100,11 +99,7 @@ class ForumCategoriesForm extends React.Component {
                 const detected = data.value.split(',').filter((tag) => {
                     return !!tag && tag.trim() !== '';
                 }).map((tag) => {
-                    return slug(tag, {
-                        replacement: '-',
-                        remove: /[._]/g,
-                        lower: true
-                    });
+                    return tag;
                 })
                 this.setState({'tags_detected': detected});
             }

@@ -1,5 +1,4 @@
 import React from 'react';
-import slug from 'slug';
 import { Link } from 'react-router-dom';
 import tt from 'counterpart';
 
@@ -7,7 +6,7 @@ import { Grid, Header, Icon, Segment } from 'semantic-ui-react'
 
 export default class ForumTitle extends React.Component {
     changeFilter = (e, data) => {
-        const tag = (data.value) ? slug(data.value).toString() : false;
+        const tag = (data.value) ? data.value : false;
         this.setState({ active: tag });
         this.props.changeFilter(tag);
         this.props.hideConfig();
