@@ -27,7 +27,7 @@ export function getAccountsFailed(payload) {
 export function getAccountsResolved(payload) {
     return {
         type: types.CHAINSTATE_ACCOUNT_LOAD_RESOLVED,
-        ts: +new Date,
+        ts: +new Date(),
         payload: payload
     };
 }

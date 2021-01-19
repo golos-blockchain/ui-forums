@@ -37,7 +37,7 @@ export default class Donating extends React.Component {
             const { author, permlink, category, url } = this.props.post;
             let root_author = '', root_permlink = '';
             const parts = url.split('#');
-            if (parts.length == 2) {
+            if (parts.length === 2) {
                 [root_author, root_permlink] = parts[0].split('/').slice(2);
             }
             const { symbol, prec } = this.state;
@@ -116,7 +116,7 @@ export default class Donating extends React.Component {
         let donatesInPage = 0;
         let donatesTotal = 0;
         for (let [from, item] of Object.entries(donatesJoined)) {
-            for (let [sym, asset] of Object.entries(item.assets)) {
+            for (let [, asset] of Object.entries(item.assets)) {
                 donatesTotal++;
                 if (donatesInPage >= CONFIG.FORUM.donates_per_page) continue;
                 donates.push(<Dropdown.Item

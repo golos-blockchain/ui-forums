@@ -1,7 +1,7 @@
 import React from 'react';
 import tt from 'counterpart';
 
-import { Label, Button, Icon } from 'semantic-ui-react';
+import { Label } from 'semantic-ui-react';
 import { Form } from 'formsy-semantic-ui-react';
 
 import MarkdownEditor from '../MarkdownEditor/MarkdownEditor';

@@ -38,7 +38,7 @@ class HeaderMenu extends Component {
         if (nextProps.account && nextProps.account.data) {
             const { data } = nextProps.account;
             let hasBalance = [data.tip_balance];
-            for (let [sym, obj] of Object.entries(data.uia_balances)) {
+            for (let [, obj] of Object.entries(data.uia_balances)) {
                 hasBalance.push(obj.tip_balance);
             }
             this.setState({ hasBalance, isClaiming: false });

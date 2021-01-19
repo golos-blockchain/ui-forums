@@ -3,7 +3,6 @@ import { Helmet } from 'react-helmet';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { goToTop } from 'react-scrollable-anchor';
-import TelegramLoginButton from 'react-telegram-login';
 import tt from 'counterpart';
 import ttGetByKey from '../../utils/ttGetByKey';
 import golos from 'golos-classic-js';

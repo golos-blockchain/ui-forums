@@ -116,7 +116,7 @@ export function fetchPostResolved(payload = {}) {
 }
 
 function getForumName(forum) {
-    return ((tt.getLocale() == 'ru') ? (forum.name_ru || forum.name) : (forum.name || forum.name_ru)) || '';
+    return ((tt.getLocale() === 'ru') ? (forum.name_ru || forum.name) : (forum.name || forum.name_ru)) || '';
 }
 
 export function fetchPost(params) {
@@ -509,7 +509,7 @@ export function submit(account, data, parent, forum, action = 'post') {
         // console.log(data)
         // console.log('ops')
         // console.table(ops)
-        // setTimeout(function() {
+        // setTimeout(() => {
         //     dispatch({
         //         type: types.POST_SUBMIT_RESOLVED,
         //         payload: {

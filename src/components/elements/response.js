@@ -86,7 +86,7 @@ class Response extends React.Component {
                     {' '}
                     said
                     {' '}
-                    <a onClick={this.props.scrollToPost.bind(this, parent_post._id)}>
+                    <a href='#' onClick={this.props.scrollToPost.bind(this, parent_post._id)}>
                       <TimeAgo date={`${parent_post.created}Z`} />
                     </a>
                     {' '}

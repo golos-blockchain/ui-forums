@@ -13,7 +13,7 @@ import * as statusActions from '../../actions/statusActions';
 
 class AccountCard extends React.Component {
     render() {
-        let { username, trigger } = this.props;
+        let { trigger } = this.props;
         return trigger;
         /*return (
             <Popup

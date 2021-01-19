@@ -26,7 +26,6 @@ import ForumTitle from '../components/elements/forum/title';
 import Forum404 from '../components/elements/forum/404';
 import ForumPosts from '../components/elements/forum/posts';
 import PostForm from './post/form';
-import PostFormHeader from '../components/elements/post/form/header';
 import { getForumName, getPageTitle } from '../utils/text';
 
 const configSections = ['overview', 'upgrades', 'permissions', 'configuration'];
@@ -234,7 +233,7 @@ class Forum extends React.Component {
   };
 
   removeTopic = (id) => {
-      const topics = this.state.topics.filter(function(topic) {
+      const topics = this.state.topics.filter((topic) => {
           return topic._id !== id;
       });
       this.setState({topics});

@@ -1,7 +1,7 @@
 import tt from 'counterpart';
 
 // Note: recommended way is errorStr.includes(errid) if error has errid
-export default function (op, error) {
+export default function translateError(op, error) {
     let errorStr = JSON.stringify(error);
     switch (op) {
         case 'vote':

@@ -3,7 +3,7 @@ import {connect} from 'react-redux'
 import {Component} from 'react'
 import Remarkable from 'remarkable'
 import hljs from 'highlight.js'
-import sanitizeConfig, {noImageText} from './SanitizeConfig'
+import sanitizeConfig, {noImageText} from './sanitizeConfig'
 import { Embed } from 'semantic-ui-react'
 import sanitize from 'sanitize-html'
 import HtmlReady from '../shared/HtmlReady'
@@ -136,7 +136,7 @@ class MarkdownViewer extends Component {
                     const url = `https://player.vimeo.com/video/${id}`
                     sections.push(
                         <div className="videoWrapper">
-                            <iframe key={idx++} src={url} width={w} height={h} frameBorder="0"
+                            <iframe key={idx++} src={url} title='Video' width={w} height={h} frameBorder="0"
                                 webkitallowfullscreen mozallowfullscreen allowFullScreen></iframe>
                         </div>
                     )

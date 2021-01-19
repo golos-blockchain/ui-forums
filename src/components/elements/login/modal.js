@@ -20,12 +20,12 @@ class LoginModal extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        if (nextProps.open && nextProps.open != this.state.loginOpen) {
+        if (nextProps.open && nextProps.open !== this.state.loginOpen) {
             this.setState({
                 loginOpen : nextProps.open ? true : false
             });
         }
-        if (nextProps.account != this.state.account) {
+        if (nextProps.account !== this.state.account) {
             this.setState({
                 account : nextProps.account
             });
@@ -122,7 +122,6 @@ class LoginModal extends React.Component {
             buttonFluid,
             buttonIcon,
             buttonText,
-            authType,
             isActive
         } = this.props;
         let modal = (

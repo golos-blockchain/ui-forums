@@ -36,7 +36,7 @@ class ForumCategoriesForm extends React.Component {
     }
 
     sanitizeCategories(categories) {
-        for (const [_id, cat] of Object.entries(categories)) {
+        for (const [, cat] of Object.entries(categories)) {
             for (const field in cat) {
                 if (!['name_ru', 'name', 'desc_ru', 'desc', 'children'].includes(field)) {
                     delete cat[field];
@@ -561,7 +561,7 @@ class ForumCategoriesForm extends React.Component {
                                             isDefaultRequiredValue: tt('g.this_field_required')
                                         }}
                                         validations={{
-                                            isAlphanumericWithDashes: function(values, value) {
+                                            isAlphanumericWithDashes: (values, value) => {
                                                 return (!value || /^[0-9A-Za-z\s-]+$/.test(value)) ? true : tt('validation.only_letters_digits_dashes');
                                             }
                                         }}

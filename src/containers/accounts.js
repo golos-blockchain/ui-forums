@@ -1,12 +1,11 @@
 import React from 'react';
-import { Helmet } from 'react-helmet';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { goToTop } from 'react-scrollable-anchor';
 import find from 'lodash/find';
 import golos from 'golos-classic-js';
 
-import { Button, Header, List, Grid, Segment, Table } from 'semantic-ui-react';
+import { Header, Segment, Table } from 'semantic-ui-react';
 
 import * as accountActions from '../actions/accountActions';
 import * as accountsActions from '../actions/accountsActions';
@@ -16,8 +15,6 @@ import * as preferenceActions from '../actions/preferenceActions';
 import * as statusActions from '../actions/statusActions';
 
 import LoginButton from '../components/elements/login/button';
-import AccountAvatar from '../components/elements/account/avatar';
-import AccountLink from '../components/elements/account/link';
 import AccountManageRow from '../components/elements/account/manage/row';
 
 class Accounts extends React.Component {
@@ -51,7 +48,6 @@ class Accounts extends React.Component {
         const { props } = this;
         const { name, key } = find(props.accounts.auths, {name: value});
         if (name && key) {
-            const t = this;
             let isValidKey = golos.auth.isWif(key),
                 isValidForAccount = false;
             golos.api.getAccounts([name], (err, result) => {

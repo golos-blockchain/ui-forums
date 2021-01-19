@@ -3,13 +3,11 @@ import { Link } from 'react-router-dom';
 import { goToTop } from 'react-scrollable-anchor';
 import tt from 'counterpart';
 
-import { Grid, Header, Segment, Table } from 'semantic-ui-react';
+import { Grid, Segment, Table } from 'semantic-ui-react';
 
 import * as CONFIG from '../../../../../config';
 
 import AccountLink from '../link';
-import ForumPostReply from '../../forum/post/reply';
-import AccountResponse from './types/response';
 import Paginator from '../../../global/paginator';
 import TimeAgoWrapper from '../../../../utils/TimeAgoWrapper';
 
@@ -94,7 +92,7 @@ export default class AccountDonates extends React.Component {
     }
 
     render() {
-        const { totalDonates, username } = this.state;
+        const { totalDonates } = this.state;
         let { content } = this.state;
         if (!content) content = (<Segment attached padded='very' loading style={{margin: '2em 0'}} />);
         return (

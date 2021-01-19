@@ -1,10 +1,8 @@
 import React from 'react';
 import { goToTop } from 'react-scrollable-anchor';
 
-import { Grid, Header, Segment } from 'semantic-ui-react';
+import { Grid, Segment } from 'semantic-ui-react';
 
-import AccountLink from '../link';
-import ForumPostReply from '../../forum/post/reply';
 import AccountResponse from './types/response';
 import Paginator from '../../../global/paginator';
 
@@ -47,7 +45,7 @@ export default class AccountResponses extends React.Component {
     }
 
     render() {
-        const { totalResponses, username } = this.state;
+        const { totalResponses } = this.state;
         let { content } = this.state;
         if (!content) content = (<Segment attached padded='very' loading style={{margin: '2em 0'}} />);
         return (

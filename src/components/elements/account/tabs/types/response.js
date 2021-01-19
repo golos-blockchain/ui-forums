@@ -1,26 +1,21 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-import { Grid, Header, Icon, Segment } from 'semantic-ui-react';
-
-import * as CONFIG from '../../../../../../config';
+import { Grid, Header, Segment } from 'semantic-ui-react';
 
 import TimeAgoWrapper from '../../../../../utils/TimeAgoWrapper';
-import AccountAvatar from '../../avatar';
 import AccountLink from '../../link';
-import Paginator from '../../../forum/post/paginator';
 import { getForumName } from '../../../../../utils/text';
 import MarkdownViewer from '../../../../../utils/MarkdownViewer';
 
 export default class AccountResponse extends React.Component {
     render() {
-        let { account, forum, topic, showForumName } = this.props,
-                control = null,
-                paginator = false,
-                last_reply = (
-                    <Grid.Column mobile={6} tablet={6} computer={5} largeScreen={4} textAlign="center">
-                    </Grid.Column>
-                );
+        let { forum, topic, showForumName } = this.props,
+            paginator = false,
+            last_reply = (
+                <Grid.Column mobile={6} tablet={6} computer={5} largeScreen={4} textAlign="center">
+                </Grid.Column>
+            );
         return (
             <Segment
                 attached

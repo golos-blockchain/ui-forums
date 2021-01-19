@@ -13,7 +13,6 @@ import { imgurUpload } from '../../../../../utils/imgurUpload';
 import 'simplemde/dist/simplemde.min.css';
 import './MarkdownEditor.css';
 
-const DELAYED_TIMEOUT = 1000;
 const LINE_HEIGHT = 28;
 let SimpleMDE;
 
@@ -47,7 +46,7 @@ export default class MarkdownEditor extends PureComponent {
     }
 
     componentWillReceiveProps(nextProps) {
-        if (nextProps.previewEnabled != this.props.previewEnabled) {
+        if (nextProps.previewEnabled !== this.props.previewEnabled) {
             SimpleMDE.togglePreview(this._simplemde);
         }
     }
@@ -367,11 +366,13 @@ export default class MarkdownEditor extends PureComponent {
             if (e.clipboardData) {
                 let fileName = null;
 
+                const obtainFilename = (a) => {
+                    fileName = a;
+                };
                 for (let item of e.clipboardData.items) {
-                    console.log(item.type)
                     if (item.kind === 'string' && item.type === 'text/plain') {
                         try {
-                            fileName = item.getAsString(a => (fileName = a));
+                            fileName = item.getAsString(obtainFilename);
                         } catch (err) {}
                     }
 

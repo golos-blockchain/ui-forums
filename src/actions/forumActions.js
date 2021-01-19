@@ -2,7 +2,6 @@ import golos from 'golos-classic-js';
 
 import * as types from './actionTypes';
 import * as CONFIG from '../../config';
-import * as statusActions from './statusActions';
 
 export function forumReservation(account, name, namespace) {
     return (dispatch: () => void) => {
@@ -16,7 +15,7 @@ export function forumReservation(account, name, namespace) {
             type: types.FORUM_RESERVATION_PROCESSING,
             payload: json,
         });
-        // setTimeout(function() {
+        // setTimeout(() => {
         //         dispatch({
         //             type: types.FORUM_RESERVATION_RESOLVED,
         //             payload: json,
@@ -51,7 +50,7 @@ export function forumConfig(account, namespace, settings) {
             type: types.FORUM_CONFIG_PROCESSING,
             payload: json,
         });
-        // setTimeout(function() {
+        // setTimeout(() => {
         //     dispatch({
         //         type: types.FORUM_CONFIG_RESOLVED,
         //         payload: json,
@@ -115,10 +114,10 @@ export async function updateForumStats(wif, account, _id, forum, addPosts, addCo
             stat.total_comments += addTotalComments;
 
             let json = JSON.stringify(['set_value', {
-                    account,
-                    key,
-                    value: JSON.stringify({[item._id]: stat})
-                }]);
+                account,
+                key,
+                value: JSON.stringify({[item._id]: stat})
+            }]);
             operations.push(['custom_json', {
                 required_auths: [],
                 required_posting_auths: [account],

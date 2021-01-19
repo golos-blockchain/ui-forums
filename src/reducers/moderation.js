@@ -1,5 +1,3 @@
-import * as types from '../actions/actionTypes';
-
 export default function moderation(state = {last: null}, action) {
     switch (action.type) {
         /*case types.MODERATION_REMOVE_PROCESSING:

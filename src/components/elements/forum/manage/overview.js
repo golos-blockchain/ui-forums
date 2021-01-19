@@ -39,7 +39,7 @@ export default class ForumOverview extends React.Component {
                                     Block #
                                     {(target.created_tx)
                                         ? (
-                                            <a href={`https://steemd.com/b/${target.created_height}`} target='_blank'>
+                                            <a href={`https://steemd.com/b/${target.created_height}`} target='_blank' rel='noreferrer'>
                                                 {target.created_height}
                                             </a>
                                         )
@@ -50,7 +50,7 @@ export default class ForumOverview extends React.Component {
                                     {' '}
                                     {(target.created_tx)
                                         ? (
-                                            <a href={`https://steemd.com/tx/${target.created_tx}`} target='_blank'>
+                                            <a href={`https://steemd.com/tx/${target.created_tx}`} target='_blank' rel='noreferrer'>
                                                 {target.created_tx.substring(0,8)}
                                             </a>
                                         )

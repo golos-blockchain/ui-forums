@@ -138,7 +138,6 @@ class ForumConfigForm extends React.Component {
     render() {
         const { account, forum } = this.props;
         const { target } = forum;
-        const { _id } = target;
         const { name, description, tags } = this.state;
         const tag_labels = (this.state.tags) ? this.state.tags_detected.map((tag) => (
             <Label as='a' color='blue' key={tag}>
