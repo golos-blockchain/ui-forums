@@ -290,12 +290,27 @@ router.get('/:category/@:author/:permlink/responses', async (ctx) => {
     keys[NOTE_PST_HIDACC_LST] = Object;
     const vals = await getValues(keys);
 
-    let data = await golos.api.getContentRepliesAsync(ctx.params.author, ctx.params.permlink, DEFAULT_VOTE_LIMIT, 0);
+    let data = await golos.api.getAllContentRepliesAsync(ctx.params.author, ctx.params.permlink, DEFAULT_VOTE_LIMIT, 0, [], [], false, 'false');
     for (let item of data) {
         item.donate_list = [];
         item.donate_uia_list = [];
         item.url = getUrl(item.url, ctx.params.category);
         item.author_banned = !!vals[NOTE_PST_HIDACC_LST][item.author];
+        let body = item.body;
+        let firstSpace = body.indexOf(' ');
+        let firstWord = body.substring(0, firstSpace);
+        if (firstWord) {
+            let after = body.substring(firstSpace);
+            if (!firstWord.startsWith('[@')) {
+                let replyAuthor = '';
+                if (item.depth > 1) replyAuthor = '[@' + item.parent_author + '](#@' + item.parent_author + '/' +  item.parent_permlink + '), ';
+                if (firstWord.startsWith('@')) {
+                    item.body = replyAuthor + `${after}`;
+                } else {
+                    item.body = replyAuthor + `${firstWord}${after}`;
+                }
+            }
+        }
     }
     ctx.body = {
         data: data,
