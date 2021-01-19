@@ -256,6 +256,18 @@ router.get('/forum/:slug', async (ctx) => {
 
 const DEFAULT_VOTE_LIMIT = 10000
 
+async function fillDonates(post, bannedAccs) {
+    const { author, permlink } = post;
+    post.donate_list = await golos.api.getDonatesAsync(false, {author, permlink}, '', '', 200, 0, false);
+    for (let item of post.donate_list) {
+        item.from_banned = !!bannedAccs[item.from];
+    }
+    post.donate_uia_list = await golos.api.getDonatesAsync(true, {author, permlink}, '', '', 200, 0, false);
+    for (let item of post.donate_uia_list) {
+        item.from_banned = !!bannedAccs[item.from];
+    }
+}
+
 router.get('/:category/@:author/:permlink', async (ctx) => {
     let keys = {};
     keys[NOTE_] = Object;
@@ -269,10 +281,9 @@ router.get('/:category/@:author/:permlink', async (ctx) => {
 
     let data = await golos.api.getContentAsync(ctx.params.author, ctx.params.permlink, CONFIG.FORUM.votes_per_page, 0);
     data.url = getUrl(data.url, _id);
-    data.donate_list = [];
+    await fillDonates(data, vals[NOTE_PST_HIDACC_LST]);
     data.author_banned = !!vals[NOTE_PST_HIDACC_LST][data.author];
     data.post_hidden = !!vals[NOTE_PST_HIDMSG_LST][data.id];
-    data.donate_uia_list = [];
     forum.moders = vals[NOTE_PST_HIDMSG_LST_ACCS];
     forum.supers = vals[NOTE_PST_HIDACC_LST_ACCS];
     forum.admins = [];
@@ -292,8 +303,7 @@ router.get('/:category/@:author/:permlink/responses', async (ctx) => {
 
     let data = await golos.api.getAllContentRepliesAsync(ctx.params.author, ctx.params.permlink, DEFAULT_VOTE_LIMIT, 0, [], [], false, 'false');
     for (let item of data) {
-        item.donate_list = [];
-        item.donate_uia_list = [];
+        await fillDonates(item, vals[NOTE_PST_HIDACC_LST]);
         item.url = getUrl(item.url, ctx.params.category);
         item.author_banned = !!vals[NOTE_PST_HIDACC_LST][item.author];
         let body = item.body;

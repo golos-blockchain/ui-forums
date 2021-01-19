@@ -21,7 +21,7 @@ export default class Donating extends React.Component {
             valid: false
         };
         const { category, author, permlink } = this.props.post;
-        this.props.fetchPostDonates({category, author, permlink});
+        //this.props.fetchPostDonates({category, author, permlink});
     }
 
     onValid = () => {

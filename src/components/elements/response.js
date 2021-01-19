@@ -59,7 +59,7 @@ class Response extends React.Component {
         ),
         post = this.props.post,
         count = (post && post.responses) ? post.responses.length : false
-    if (post.content && !count) {
+    if (post.content && post.responsesLoaded && !count) {
       display = <Response404 {...this.props} />
     }
     if(count && count > 0) {

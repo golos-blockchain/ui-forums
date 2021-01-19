@@ -8,6 +8,7 @@ const initialState = {
     content: false,
     authors: {},
     responses: [],
+    responsesLoaded: false,
     processing: {
         errors: {},
         votes: [],
@@ -81,7 +82,8 @@ export default function post(state = initialState, action) {
                 action.payload[index].reputation = repLog10(data['author_reputation']);
             });
             return Object.assign({}, state, {
-                responses: action.payload
+                responses: action.payload,
+                responsesLoaded: true
             });
         case types.POST_LOAD_LIVE_RESOLVED:
             live[[action.payload.author, action.payload.permlink].join('/')] = action.payload.data;
