@@ -268,6 +268,22 @@ async function fillDonates(post, bannedAccs) {
     }
 }
 
+async function fillDonatesBatch(data, targets, bannedAccs) {
+    const results = await golos.api.getDonatesForTargetsAsync(targets, 200, 0, false);;
+    for (let i = 0; i < results.length; i += 2) {
+        const post = data[i / 2];
+        if (!post) break;
+        post.donate_list = results[i];
+        for (let item of post.donate_list) {
+            item.from_banned = !!bannedAccs[item.from];
+        }
+        post.donate_uia_list = results[i + 1];
+        for (let item of post.donate_uia_list) {
+            item.from_banned = !!bannedAccs[item.from];
+        }
+    }
+}
+
 router.get('/:category/@:author/:permlink', async (ctx) => {
     let keys = {};
     keys[NOTE_] = Object;
@@ -301,9 +317,10 @@ router.get('/:category/@:author/:permlink/responses', async (ctx) => {
     keys[NOTE_PST_HIDACC_LST] = Object;
     const vals = await getValues(keys);
 
+    targets = [];
+
     let data = await golos.api.getAllContentRepliesAsync(ctx.params.author, ctx.params.permlink, DEFAULT_VOTE_LIMIT, 0, [], [], false, 'false');
     for (let item of data) {
-        await fillDonates(item, vals[NOTE_PST_HIDACC_LST]);
         item.url = getUrl(item.url, ctx.params.category);
         item.author_banned = !!vals[NOTE_PST_HIDACC_LST][item.author];
         let body = item.body;
@@ -321,7 +338,9 @@ router.get('/:category/@:author/:permlink/responses', async (ctx) => {
                 }
             }
         }
+        targets.push({ author: item.author, permlink: item.permlink });
     }
+    await fillDonatesBatch(data, targets, vals[NOTE_PST_HIDACC_LST]);
     ctx.body = {
         data: data,
         "network": {}, 
