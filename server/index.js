@@ -471,26 +471,29 @@ router.get('/@:author/donates/:direction', async (ctx) => {
         direction: direction === 'from' ? 'sender' : 'receiver'
     });
 
+    const banned = vals[NOTE_PST_HIDACC_LST];
+
+    donates = donates.filter((op) => {
+        let item = op[1].op[1];
+        op[1].from_banned = !!banned[item.from];
+        op[1].to_banned = !!banned[item.to];
+        const { author, permlink, _category, _root_author } = item.memo.target;
+        if (author && permlink) {
+            if (!_category) return false; // Not version 2+ which is used on chainBB 
+            const _id = tagIdMap[_category];
+            if (!_id) return false; // Not from this chain BB forum
+            op[1]._category = _id;
+            op[1].author_banned = !!banned[author];
+            op[1].root_author_banned = !!banned[_root_author];
+        }
+        return true;
+    });
+
     const total = donates.length;
 
     const start = ctx.query.page ? (ctx.query.page - 1) * CONFIG.FORUM.account_donates_per_page : 0;
     const end = start + CONFIG.FORUM.account_donates_per_page;
     donates = donates.slice(start, end);
-
-    for (let op of donates) {
-        let item = op[1].op[1];
-        op[1].from_banned = !!vals[NOTE_PST_HIDACC_LST][item.from];
-        op[1].to_banned = !!vals[NOTE_PST_HIDACC_LST][item.to];
-        const { author, permlink, _category, _root_author, _root_permlink } = item.memo.target;
-        if (author && permlink) {
-            if (!_category) continue; // Not version 2+ which is used on chainBB 
-            const _id = tagIdMap[_category];
-            if (!_id) continue; // Not from this chain BB forum
-            op[1]._category = _id;
-            op[1].author_banned = !!vals[NOTE_PST_HIDACC_LST][author];
-            op[1].root_author_banned = !!vals[NOTE_PST_HIDACC_LST][_root_author];
-        }
-    }
 
     ctx.body = {
         data: {
