@@ -9,7 +9,7 @@ COPY . /
 WORKDIR /
 RUN npm install fsevents@latest -f --save-optional
 RUN npm install
-RUN npm run-script build
+RUN chmod +x /docker_run.sh
 
 EXPOSE 3000
-CMD [ "serve", "-s", "build", "-l", "3000" ]
+CMD ["/docker_run.sh"]
