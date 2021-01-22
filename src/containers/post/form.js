@@ -8,7 +8,7 @@ import ReactDOMServer from 'react-dom/server';
 import tt from 'counterpart';
 import Noty from 'noty';
 
-import { Button, Dimmer, Divider, Header, Loader, Menu, Segment, Icon } from 'semantic-ui-react';
+import { Button, Dimmer, Divider, Header, Loader, Menu, Segment } from 'semantic-ui-react';
 import { Form } from 'formsy-semantic-ui-react';
 
 import * as postActions from '../../actions/postActions';
@@ -30,7 +30,7 @@ class PostForm extends React.Component {
 
     constructor(props) {
         super(props);
-        const { action, filter, forum, existingPost, replyAuthor } = props;
+        const { action, filter, forum, existingPost } = props;
         let tags = (filter) ? [filter] : (forum && forum.tags) ? forum.tags : [];
         if (action === 'edit') {
             try {
@@ -109,8 +109,7 @@ class PostForm extends React.Component {
                     const { parent } = this.props;
                     if (parent) {
                         let parent_author = (parent.root_author) ? parent.root_author : parent.author,
-                                parent_category = (parent.category) ? parent.category : 'tag',
-                                parent_permlink = (parent.root_permlink) ? parent.root_permlink : parent.permlink;
+                            parent_permlink = (parent.root_permlink) ? parent.root_permlink : parent.permlink;
                         if (parent.root_post) {
                             [ parent_author, parent_permlink ] = parent.root_post.split('/');
                         }
@@ -135,10 +134,10 @@ class PostForm extends React.Component {
                 }
             }
         }
-        if (nextProps.replyQuote != this.props.replyQuote) {
+        if (nextProps.replyQuote !== this.props.replyQuote) {
             this.refs.replyBody.setValue(nextProps.replyQuote);
         }
-        if (nextProps.replyAuthor != this.props.replyAuthor) {
+        if (nextProps.replyAuthor !== this.props.replyAuthor) {
             this.refs.replyBody.focus();
         }
     }
@@ -235,8 +234,16 @@ class PostForm extends React.Component {
         if (this.props.replyAuthor) {
             data.body = this.props.replyAuthor + data.body;
         }
-        const { action, account, parent } = this.props;
-        this.props.actions.submit(account, data, parent, this.props.forum, action);
+        const { action, account, parent, replyAuthor } = this.props;
+        let realParent = null;
+        if (replyAuthor && replyAuthor.indexOf('#')) {
+            realParent = replyAuthor.split('#')[1];
+            if (realParent) {
+                realParent = realParent.split('/');
+                realParent = { author: realParent[0].substring(1), permlink: realParent[1].split(')')[0] };
+            }
+        }
+        this.props.actions.submit(account, data, realParent || parent, this.props.forum, action);
         this.setState({
             submitting: true
         });
@@ -269,7 +276,7 @@ class PostForm extends React.Component {
 
     render() {
         const { activeItem } = this.state;
-        const { action, account, replyAuthor, replyQuote } = this.props;
+        const { action, account, replyQuote } = this.props;
         const identifier = this.getIdentifier(),
                     draft = this.drafts[identifier] || {};
         const disableAutoFocus = this.props.disableAutoFocus || false;

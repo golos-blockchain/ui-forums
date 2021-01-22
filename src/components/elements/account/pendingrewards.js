@@ -1,7 +1,7 @@
 import React from 'react';
 import golos from 'golos-classic-js';
 
-import { Button, Container, Dropdown, Grid, Header, Icon, Menu, Popup } from 'semantic-ui-react';
+import { Button, Grid, Header, Icon, Menu, Popup } from 'semantic-ui-react';
 
 export default class AccountPendingRewards extends React.Component {
 
@@ -14,7 +14,7 @@ export default class AccountPendingRewards extends React.Component {
     };
 
     componentWillReceiveProps(nextProps) {
-        if (nextProps.chainstate && nextProps.chainstate.ts != this.state.chainstate.ts) {
+        if (nextProps.chainstate && nextProps.chainstate.ts !== this.state.chainstate.ts) {
             const { chainstate } = nextProps;
             const fields = [
                 'reward_sbd_balance',

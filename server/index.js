@@ -256,6 +256,34 @@ router.get('/forum/:slug', async (ctx) => {
 
 const DEFAULT_VOTE_LIMIT = 10000
 
+async function fillDonates(post, bannedAccs) {
+    const { author, permlink } = post;
+    post.donate_list = await golos.api.getDonatesAsync(false, {author, permlink}, '', '', 200, 0, false);
+    for (let item of post.donate_list) {
+        item.from_banned = !!bannedAccs[item.from];
+    }
+    post.donate_uia_list = await golos.api.getDonatesAsync(true, {author, permlink}, '', '', 200, 0, false);
+    for (let item of post.donate_uia_list) {
+        item.from_banned = !!bannedAccs[item.from];
+    }
+}
+
+async function fillDonatesBatch(data, targets, bannedAccs) {
+    const results = await golos.api.getDonatesForTargetsAsync(targets, 200, 0, false);;
+    for (let i = 0; i < results.length; i += 2) {
+        const post = data[i / 2];
+        if (!post) break;
+        post.donate_list = results[i];
+        for (let item of post.donate_list) {
+            item.from_banned = !!bannedAccs[item.from];
+        }
+        post.donate_uia_list = results[i + 1];
+        for (let item of post.donate_uia_list) {
+            item.from_banned = !!bannedAccs[item.from];
+        }
+    }
+}
+
 router.get('/:category/@:author/:permlink', async (ctx) => {
     let keys = {};
     keys[NOTE_] = Object;
@@ -269,10 +297,9 @@ router.get('/:category/@:author/:permlink', async (ctx) => {
 
     let data = await golos.api.getContentAsync(ctx.params.author, ctx.params.permlink, CONFIG.FORUM.votes_per_page, 0);
     data.url = getUrl(data.url, _id);
-    data.donate_list = [];
+    await fillDonates(data, vals[NOTE_PST_HIDACC_LST]);
     data.author_banned = !!vals[NOTE_PST_HIDACC_LST][data.author];
     data.post_hidden = !!vals[NOTE_PST_HIDMSG_LST][data.id];
-    data.donate_uia_list = [];
     forum.moders = vals[NOTE_PST_HIDMSG_LST_ACCS];
     forum.supers = vals[NOTE_PST_HIDACC_LST_ACCS];
     forum.admins = [];
@@ -290,13 +317,30 @@ router.get('/:category/@:author/:permlink/responses', async (ctx) => {
     keys[NOTE_PST_HIDACC_LST] = Object;
     const vals = await getValues(keys);
 
-    let data = await golos.api.getContentRepliesAsync(ctx.params.author, ctx.params.permlink, DEFAULT_VOTE_LIMIT, 0);
+    targets = [];
+
+    let data = await golos.api.getAllContentRepliesAsync(ctx.params.author, ctx.params.permlink, DEFAULT_VOTE_LIMIT, 0, [], [], false, 'false');
     for (let item of data) {
-        item.donate_list = [];
-        item.donate_uia_list = [];
         item.url = getUrl(item.url, ctx.params.category);
         item.author_banned = !!vals[NOTE_PST_HIDACC_LST][item.author];
+        let body = item.body;
+        let firstSpace = body.indexOf(' ');
+        let firstWord = body.substring(0, firstSpace);
+        if (firstWord) {
+            let after = body.substring(firstSpace);
+            if (!firstWord.startsWith('[@')) {
+                let replyAuthor = '';
+                if (item.depth > 1) replyAuthor = '[@' + item.parent_author + '](#@' + item.parent_author + '/' +  item.parent_permlink + '), ';
+                if (firstWord.startsWith('@')) {
+                    item.body = replyAuthor + `${after}`;
+                } else {
+                    item.body = replyAuthor + `${firstWord}${after}`;
+                }
+            }
+        }
+        targets.push({ author: item.author, permlink: item.permlink });
     }
+    await fillDonatesBatch(data, targets, vals[NOTE_PST_HIDACC_LST]);
     ctx.body = {
         data: data,
         "network": {}, 
@@ -446,26 +490,29 @@ router.get('/@:author/donates/:direction', async (ctx) => {
         direction: direction === 'from' ? 'sender' : 'receiver'
     });
 
+    const banned = vals[NOTE_PST_HIDACC_LST];
+
+    donates = donates.filter((op) => {
+        let item = op[1].op[1];
+        op[1].from_banned = !!banned[item.from];
+        op[1].to_banned = !!banned[item.to];
+        const { author, permlink, _category, _root_author } = item.memo.target;
+        if (author && permlink) {
+            if (!_category) return false; // Not version 2+ which is used on chainBB 
+            const _id = tagIdMap[_category];
+            if (!_id) return false; // Not from this chain BB forum
+            op[1]._category = _id;
+            op[1].author_banned = !!banned[author];
+            op[1].root_author_banned = !!banned[_root_author];
+        }
+        return true;
+    });
+
     const total = donates.length;
 
     const start = ctx.query.page ? (ctx.query.page - 1) * CONFIG.FORUM.account_donates_per_page : 0;
     const end = start + CONFIG.FORUM.account_donates_per_page;
     donates = donates.slice(start, end);
-
-    for (let op of donates) {
-        let item = op[1].op[1];
-        op[1].from_banned = !!vals[NOTE_PST_HIDACC_LST][item.from];
-        op[1].to_banned = !!vals[NOTE_PST_HIDACC_LST][item.to];
-        const { author, permlink, _category, _root_author, _root_permlink } = item.memo.target;
-        if (author && permlink) {
-            if (!_category) continue; // Not version 2+ which is used on chainBB 
-            const _id = tagIdMap[_category];
-            if (!_id) continue; // Not from this chain BB forum
-            op[1]._category = _id;
-            op[1].author_banned = !!vals[NOTE_PST_HIDACC_LST][author];
-            op[1].root_author_banned = !!vals[NOTE_PST_HIDACC_LST][_root_author];
-        }
-    }
 
     ctx.body = {
         data: {

@@ -1,5 +1,4 @@
 import golos from 'golos-classic-js';
-import store from 'store';
 import Noty from 'noty';
 
 import * as types from './actionTypes';
@@ -66,15 +65,15 @@ export function fetchAccount(account) {
     }
 }
 
-export function fetchAccountFollowing(name, start="", limit=100) {
+export function fetchAccountFollowing(name, start='', limit=100) {
     return dispatch => {
-        golos.api.getFollowing(name, start, "blog", limit, (err, result) => {
+        golos.api.getFollowing(name, start, 'blog', limit, (err, result) => {
             if (!result) return;
             const accounts = result.map((c) => { return c.following });
             if (result.length === limit) {
                 const last = result[result.length-1].following;
-                setTimeout(function() {
-                  dispatch(fetchAccountFollowing(name, last, limit))
+                setTimeout(() => {
+                    dispatch(fetchAccountFollowing(name, last, limit))
                 }, 50);
             }
             dispatch({

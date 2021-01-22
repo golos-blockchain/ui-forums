@@ -1,5 +1,4 @@
 import React from 'react';
-import slug from 'slug';
 
 import ForumPostText from './post/types/text';
 
@@ -25,7 +24,7 @@ export default class ForumPost extends React.Component {
     onClose = (removePost = false) => this.setState({moderating: false});
 
     changeFilter = (e, data) => {
-        const tag = slug(data.value).toString();
+        const tag = data.value;
         this.props.changeFilter(tag);
     }
 

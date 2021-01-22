@@ -18,7 +18,6 @@ import * as statusActions from '../actions/statusActions';
 
 import Post from '../components/elements/post';
 import PostForm from './post/form';
-import PostFormHeader from '../components/elements/post/form/header';
 import Post404 from '../components/elements/post/404';
 import Response from '../components/elements/response';
 import Paginator from '../components/global/paginator';
@@ -56,7 +55,7 @@ class Thread extends React.Component {
         let matchesPost = hash.match(regexPost);
         if (matchesPost) {
             const anchor = '@' + matchesPost[1] + '/' + matchesPost[2];
-            if (this.state.scrollTo2 != '+' + anchor && this.state.scrollTo2 != anchor) {
+            if (this.state.scrollTo2 !== '+' + anchor && this.state.scrollTo2 !== anchor) {
                 this.setState({
                     scrollTo2: anchor
                 });
@@ -173,7 +172,6 @@ class Thread extends React.Component {
             perPage = CONFIG.FORUM.replies_per_page || 10,
             responses = (this.props.post) ? this.props.post.responses : 0,
             content = (this.props.post) ? this.props.post.content : false,
-            pages = Math.ceil(responses.length / perPage),
             postForm = false;
         if (content.author === '' || content.post_hidden || content.author_banned) {
             const isModerator = this.props && this.props.account && this.props.account.isUser && 
@@ -210,7 +208,7 @@ class Thread extends React.Component {
                     <Grid.Row verticalAlign='middle'>
                         <Grid.Column className='mobile hidden' width={8}>
                             <Header>
-                                <a name='reply' style={{ color: 'black' }}>{!isBanned && tt('forum_controls.write_your_reply')}</a>
+                                <a href='#reply' name='reply' style={{ color: 'black' }}>{!isBanned && tt('forum_controls.write_your_reply')}</a>
                             </Header>
                         </Grid.Column>
                         <Grid.Column mobile={16} tablet={8} computer={8}>

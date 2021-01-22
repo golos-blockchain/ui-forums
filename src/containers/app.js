@@ -3,7 +3,6 @@ import { Helmet } from 'react-helmet';
 import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 import golos from 'golos-classic-js';
 
-import tt from 'counterpart';
 import ttGetByKey from '../utils/ttGetByKey';
 
 import { Container } from 'semantic-ui-react';
@@ -23,7 +22,6 @@ import GlobalNotice from '../components/global/notice';
 import './app.css';
 import '../../node_modules/noty/lib/noty.css';
 import loadable from 'loadable-components'
-const AccountsLayout = loadable(() => import('../components/layouts/accounts'));
 const IndexLayout = loadable(() => import('../components/layouts/index'));
 const FeedLayout = loadable(() => import('../components/layouts/feed'));
 const ForumLayout = loadable(() => import('../components/layouts/forum'));

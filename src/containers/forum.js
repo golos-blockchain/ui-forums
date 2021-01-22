@@ -6,7 +6,6 @@ import { withRouter } from 'react-router-dom';
 import { goToTop } from 'react-scrollable-anchor';
 import ReactDOMServer from 'react-dom/server';
 import Noty from 'noty';
-import slug from 'slug';
 import tt from 'counterpart';
 
 import { Accordion, Dimmer, Grid, Header, Icon, Loader, Message, Segment } from 'semantic-ui-react';
@@ -26,7 +25,6 @@ import ForumTitle from '../components/elements/forum/title';
 import Forum404 from '../components/elements/forum/404';
 import ForumPosts from '../components/elements/forum/posts';
 import PostForm from './post/form';
-import PostFormHeader from '../components/elements/post/form/header';
 import { getForumName, getPageTitle } from '../utils/text';
 
 const configSections = ['overview', 'upgrades', 'permissions', 'configuration'];
@@ -157,7 +155,7 @@ class Forum extends React.Component {
   };
 
   changeFilter = (data) => {
-      let filter = slug(data).toString();
+      let filter = data;
       if (filter === 'false') {
           filter = false;
       }
@@ -234,7 +232,7 @@ class Forum extends React.Component {
   };
 
   removeTopic = (id) => {
-      const topics = this.state.topics.filter(function(topic) {
+      const topics = this.state.topics.filter((topic) => {
           return topic._id !== id;
       });
       this.setState({topics});

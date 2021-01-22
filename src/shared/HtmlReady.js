@@ -65,7 +65,7 @@ const XMLSerializer = new xmldom.XMLSerializer()
 
 /** Embed videos, link mentions and hashtags, etc...
 */
-export default function (html, {mutate = true} = {}) {
+export default function HtmlReady(html, {mutate = true} = {}) {
     const state = {mutate}
     state.hashtags = new Set()
     state.usertags = new Set()

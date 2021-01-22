@@ -59,7 +59,7 @@ class Response extends React.Component {
         ),
         post = this.props.post,
         count = (post && post.responses) ? post.responses.length : false
-    if (post.content && !count) {
+    if (post.content && post.responsesLoaded && !count) {
       display = <Response404 {...this.props} />
     }
     if(count && count > 0) {
@@ -86,7 +86,7 @@ class Response extends React.Component {
                     {' '}
                     said
                     {' '}
-                    <a onClick={this.props.scrollToPost.bind(this, parent_post._id)}>
+                    <a href='#' onClick={this.props.scrollToPost.bind(this, parent_post._id)}>
                       <TimeAgo date={`${parent_post.created}Z`} />
                     </a>
                     {' '}

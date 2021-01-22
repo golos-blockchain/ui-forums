@@ -1,6 +1,3 @@
-import store from 'store';
-import Noty from 'noty';
-
 import * as types from './actionTypes';
 
 export function removeAccount() {

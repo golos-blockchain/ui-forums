@@ -8,7 +8,7 @@ tt.setFallbackLocale('en');
 
 window._isMobile = /Mobi/.test(navigator.userAgent);
 
-export default function (config, key) {
+export default function ttGetByKey(config, key) {
     let loc = tt.getLocale();
     if (!config[loc] || !config[loc][key]) loc = 'en';
     return config[loc][key];

@@ -1,7 +1,7 @@
 import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux'
-import { withRouter, Link } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import tt from 'counterpart';
 
 import { Button, Header, Icon, Segment, Tab } from 'semantic-ui-react';
@@ -12,10 +12,8 @@ import * as statusActions from '../../actions/statusActions';
 import * as preferenceActions from '../../actions/preferenceActions';
 
 import AccountLink from '../../components/elements/account/link';
-import ForumConfigForm from './manage/config';
 import ForumCategoriesForm from './manage/categories';
 //import ForumUpgrade from '../../components/elements/forum/manage/upgrade';
-import ForumOverview from '../../components/elements/forum/manage/overview';
 import ForumPermissions from './manage/permissions';
 import ForumReservation from '../../components/elements/forum/reservation';
 
@@ -57,7 +55,7 @@ class ForumManage extends React.Component {
     };
 
     render() {
-        const { account, forum, reservation, target, categories, moders, supers, admins } = this.props;
+        const { account, forum, reservation, categories, moders, supers, admins } = this.props;
         if (reservation) {
             return (<ForumReservation status={this.props.status} reservation={reservation} />);
         }

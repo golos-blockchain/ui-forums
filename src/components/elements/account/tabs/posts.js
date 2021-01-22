@@ -3,7 +3,6 @@ import React from 'react';
 import { Grid, Segment } from 'semantic-ui-react';
 
 // import AccountAvatar from './avatar';
-import AccountLink from '../link';
 import ForumPost from '../../forum/post';
 import Paginator from '../../../global/paginator';
 

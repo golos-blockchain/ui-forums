@@ -3,7 +3,6 @@ import { withRouter } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import ReactDOMServer from 'react-dom/server';
 import { connect } from 'react-redux';
-import slug from 'slug';
 import Noty from 'noty';
 
 import { Button, Dimmer, Divider, Header, Icon, Label, Loader, Modal, Segment, Table } from 'semantic-ui-react';
@@ -102,11 +101,7 @@ class ForumConfigForm extends React.Component {
                 const detected = data.value.split(',').filter((tag) => {
                     return !!tag && tag.trim() !== ''
                 }).map((tag) => {
-                    return slug(tag, {
-                        replacement: '-',
-                        remove: /[._]/g,
-                        lower: true
-                    })
+                    return tag
                 });
                 this.setState({ 'tags_detected': detected });
             }
@@ -138,7 +133,6 @@ class ForumConfigForm extends React.Component {
     render() {
         const { account, forum } = this.props;
         const { target } = forum;
-        const { _id } = target;
         const { name, description, tags } = this.state;
         const tag_labels = (this.state.tags) ? this.state.tags_detected.map((tag) => (
             <Label as='a' color='blue' key={tag}>

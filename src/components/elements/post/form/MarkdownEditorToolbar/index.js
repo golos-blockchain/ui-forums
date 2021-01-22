@@ -80,7 +80,7 @@ export default class MarkdownEditorToolbar extends React.PureComponent {
     render() {
         const { commentMode } = this.props;
         const { newLineHelper } = this.state;
-        const errorLabel = (<Label color="red" pointing/>);
+        const errorLabel = (<Label color='red' pointing/>);
         return (
             <div
                 className={cn('MET', { MET_comment: commentMode })}
@@ -176,7 +176,7 @@ export default class MarkdownEditorToolbar extends React.PureComponent {
     }
 
     _renderToolbar() {
-        const { SM, commentMode } = this.props;
+        const { SM } = this.props;
         const { state, toolbarPosition, toolbarShow } = this.state;
         const { root } = this.refs;
 
@@ -334,7 +334,8 @@ export default class MarkdownEditorToolbar extends React.PureComponent {
                     )
                 }}
             >
-                <img src={plusSvg} 
+                <img src={plusSvg}
+                    alt='+'
                     className='MET__plus'
                     onClick={this._onPlusClick}/>
                 <div

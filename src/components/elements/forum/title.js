@@ -1,31 +1,30 @@
-
 import React from 'react';
-import slug from 'slug'
-import { Link } from 'react-router-dom'
-import { Grid, Header, Icon, Menu, Popup, Segment } from 'semantic-ui-react'
+import { Link } from 'react-router-dom';
 import tt from 'counterpart';
 
+import { Grid, Header, Icon, Segment } from 'semantic-ui-react'
 
 export default class ForumTitle extends React.Component {
     changeFilter = (e, data) => {
-        const tag = (data.value) ? slug(data.value).toString() : false
-        this.setState({active: tag})
-        this.props.changeFilter(tag)
-        this.props.hideConfig()
-    }
+        const tag = (data.value) ? data.value : false;
+        this.setState({ active: tag });
+        this.props.changeFilter(tag);
+        this.props.hideConfig();
+    };
+
     render() {
-        let { _id, forum } = this.props
-        let tags = false
-        let parent = false
-        if(forum) {
-            if(forum.tags) {
+        let { _id, forum } = this.props;
+        //let tags = false;
+        //let parent = false;
+        if (forum) {
+            /*if(forum.tags) {
               tags = forum.tags.map((tag, i) => (
                   <Menu.Item key={i} value={tag} onClick={this.changeFilter} active={(this.props.active === tag)}>
                       #{tag}
                   </Menu.Item>
               ))
-            }
-            if(forum.parent) {
+            }*/
+            /*if (forum.parent) {
                 parent = (
                     <Popup
                       trigger={
@@ -36,8 +35,8 @@ export default class ForumTitle extends React.Component {
                       content='Go to Parent Forum'
                       inverted
                     />
-                )
-            }
+                );
+            }*/
         }
         return (
             <div>
@@ -112,6 +111,6 @@ export default class ForumTitle extends React.Component {
                 </Menu>*/}
                 {this.props.subforums}
             </div>
-        )
+        );
     }
 }

@@ -40,7 +40,7 @@
     "sanitize-html": "^1.11.4",
     "semantic-ui-react": "^0.76.0",
     "simplemde": "1.11.2",
-    "slug": "^0.9.1",
+    "speakingurl": "^14.0.1",
     "store": "^1.3.20",
     "ws": "^7.4.1",
     "xmldom": "^0.1.22"
@@ -56,12 +56,16 @@
     "extends": [
       "react-app",
       "react-app/jest"
-    ]
+    ],
+    "rules": {
+      "jsx-a11y/anchor-is-valid": "off",
+      "jsx-a11y/anchor-has-content": "off"
+    }
   },
   "scripts": {
     "start": "react-app-rewired start",
     "start:server": "NODE_ENV=development nodemon server",
-    "build": "react-scripts build && yarn run delete-maps",
+    "build": "react-app-rewired build && yarn run delete-maps",
     "delete-maps": "yarn run delete-map-files && yarn run delete-references-to-map-files",
     "delete-map-files": "find ./build -name '*.map' -delete",
     "delete-references-to-map-files": "find ./build -regex '.*\\.\\(js\\|css\\)' -exec sed -i -E '\\/[\\*\\/]#\\ssourceMappingURL=main(\\.[0-9a-f]+)?\\.(css|js)\\.map(\\*\\/)?/g' {} +",

@@ -2,7 +2,7 @@ import React from 'react';
 import tt from 'counterpart';
 import golos from 'golos-classic-js';
 
-import { Segment, Icon, Label, Button, Input } from 'semantic-ui-react';
+import { Segment, Icon, Label, Button } from 'semantic-ui-react';
 import { Form } from 'formsy-semantic-ui-react';
 
 import * as CONFIG from '../../../../../config';
@@ -199,9 +199,9 @@ export default class AccountAbout extends React.Component {
                 }
                 content = (
                     <Segment attached>
-                        {location != '' ? (<div>{tt('account.location')}&nbsp;<Icon name='location arrow' color='blue' />{location}</div>) : null}
-                        {website != '' ? (<div>{tt('account.website')}&nbsp;<a target="_blank" rel="nofollow noopener" href={website}>{website}</a></div>) : null}
-                        {about != '' ? (<div><br />{about}</div>) : null}
+                        {location !== '' ? (<div>{tt('account.location')}&nbsp;<Icon name='location arrow' color='blue' />{location}</div>) : null}
+                        {website !== '' ? (<div>{tt('account.website')}&nbsp;<a target="_blank" rel="nofollow noopener noreferrer" href={website}>{website}</a></div>) : null}
+                        {about !== '' ? (<div><br />{about}</div>) : null}
                     </Segment>
                 );
             }

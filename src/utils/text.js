@@ -4,10 +4,10 @@ import ttGetByKey from './ttGetByKey';
 import * as CONFIG from '../../config';
 
 export function getForumName(forum) {
-    return ((tt.getLocale() == 'ru') ?
-            (forum.name_ru || forum.name) :
-            (forum.name || forum.name_ru)
-        ) || '';
+    return ((tt.getLocale() === 'ru') ?
+        (forum.name_ru || forum.name) :
+        (forum.name || forum.name_ru)
+    ) || '';
 };
 
 export function getPageTitle(title) {

@@ -1,14 +1,12 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import tt from 'counterpart';
 
-import { Button, Divider, List, Header, Popup, Segment } from 'semantic-ui-react';
+import { Button, Header, Popup, Segment } from 'semantic-ui-react';
 
 export default class Forum404 extends React.Component {
 
   render() {
-    let forum = this.props.forum,
-        isUser = this.props.isUser,
+    let isUser = this.props.isUser,
         showNewPost = this.props.showNewPost,
         button = (
           <Popup

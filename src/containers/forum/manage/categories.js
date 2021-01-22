@@ -2,7 +2,6 @@ import React from 'react';
 import { withRouter } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import slug from 'slug';
 import tt from 'counterpart';
 import golos from 'golos-classic-js';
 
@@ -36,7 +35,7 @@ class ForumCategoriesForm extends React.Component {
     }
 
     sanitizeCategories(categories) {
-        for (const [_id, cat] of Object.entries(categories)) {
+        for (const [, cat] of Object.entries(categories)) {
             for (const field in cat) {
                 if (!['name_ru', 'name', 'desc_ru', 'desc', 'children'].includes(field)) {
                     delete cat[field];
@@ -100,11 +99,7 @@ class ForumCategoriesForm extends React.Component {
                 const detected = data.value.split(',').filter((tag) => {
                     return !!tag && tag.trim() !== '';
                 }).map((tag) => {
-                    return slug(tag, {
-                        replacement: '-',
-                        remove: /[._]/g,
-                        lower: true
-                    });
+                    return tag;
                 })
                 this.setState({'tags_detected': detected});
             }
@@ -561,7 +556,7 @@ class ForumCategoriesForm extends React.Component {
                                             isDefaultRequiredValue: tt('g.this_field_required')
                                         }}
                                         validations={{
-                                            isAlphanumericWithDashes: function(values, value) {
+                                            isAlphanumericWithDashes: (values, value) => {
                                                 return (!value || /^[0-9A-Za-z\s-]+$/.test(value)) ? true : tt('validation.only_letters_digits_dashes');
                                             }
                                         }}
