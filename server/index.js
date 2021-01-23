@@ -504,6 +504,8 @@ router.get('/@:author/donates/:direction', async (ctx) => {
             op[1]._category = _id;
             op[1].author_banned = !!banned[author];
             op[1].root_author_banned = !!banned[_root_author];
+        } else {
+            return false;
         }
         return true;
     });
