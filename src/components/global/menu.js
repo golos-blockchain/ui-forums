@@ -146,6 +146,8 @@ class HeaderMenu extends Component {
                 <Dropdown style={{padding: '0 1.1em'}} item trigger={avatar} pointing='top right' icon={null} className='icon'>
                     <Dropdown.Menu>
                         <Dropdown.Item as={Link} to={`/@${name}`} icon='user' content={tt('account.profile')} />
+                        <Dropdown.Item as={Link} to={`/@${name}/donates_to`} icon='gift' content={tt('account.donates')} />
+                        <Dropdown.Item as={Link} to={`/@${name}/responses`} icon='comments' content={tt('account.responses')} />
                         <Dropdown.Item as={Link} target='_blank' to={`https://golos.id/@${name}`} icon='users' content={tt('account.blogs')} />
                         <LogoutItem {...this.props} />
                     </Dropdown.Menu>
