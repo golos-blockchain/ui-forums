@@ -87,7 +87,7 @@ export default function HtmlReady(html, {mutate = true} = {}) {
 
 function traverse(node, state, depth = 0) {
     if(!node || !node.childNodes) return
-    Array(...node.childNodes).forEach(child => {
+    Object.values(node.childNodes).forEach(child => {
         const tag = child.tagName ? child.tagName.toLowerCase() : null
         if(tag) state.htmltags.add(tag)
         if(tag === 'img')
@@ -189,11 +189,13 @@ function header(tag, state, child) {
 function proxifyImages(doc) {
     if (!CONFIG.STM_Config.img_proxy_prefix) return
     if (!doc) return;
-    [...doc.getElementsByTagName('img')].forEach(node => {
+    const imgs = doc.getElementsByTagName('img');
+    for (let i = 0; i < imgs.length; ++i) {
+        const node = imgs.item(i);
         const url = node.getAttribute('src')
         if(! linksRe.local.test(url))
             node.setAttribute('src', CONFIG.STM_Config.img_proxy_prefix + '0x0/' + url)
-    })
+    }
 }
 
 function linkifyNode(child, state) {try{
