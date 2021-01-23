@@ -25,9 +25,6 @@ module.exports = {
             client_id: '783069',
             client_secret: '61f78ffeb9411b6289150d46a93ee034'
         },
-        twitter: {
-            enabled: false
-        },
         yandex: {
             enabled: true,
             client_id: '9e9787bd59204b95812bc7e438939616',

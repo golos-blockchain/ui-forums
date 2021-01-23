@@ -172,6 +172,7 @@
     "wrong_password_owner": "Cannot login with owner key (even if posting key is same)",
     "sign_up": "Register",
     "enter_email": "Enter your e-mail",
+    "authorized_with_socials": "...or log in using your account",
     "enter_username": "Enter your name username",
     "generate_password": "Get your generated password",
     "enter_password": "Enter your generated password",

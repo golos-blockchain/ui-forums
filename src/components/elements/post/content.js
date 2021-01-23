@@ -154,7 +154,7 @@ export default class PostContent extends React.Component {
                     trigger={
                         <Button
                             onClick={this.handleRespondingWithQuote}
-                            color='purple'
+                            color='gray'
                             icon='left quote'
                             floated='right'
                         />
