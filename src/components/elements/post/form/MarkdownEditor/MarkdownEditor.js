@@ -153,8 +153,11 @@ export default class MarkdownEditor extends PureComponent {
     }
 
     focus() {
-        this._cm.focus();
-        this._cm.setCursor({ line: 999, ch: 999 });
+        setTimeout(() => {
+            this._cm.focus();
+            this._cm.setCursor({ line: 999, ch: 999 });
+            document.getElementsByTagName('textarea')[1].focus();
+        }, 100);
     }
 
     getValue() {
