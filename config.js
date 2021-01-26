@@ -1,11 +1,11 @@
 module.exports = {
-    GOLOS_NODE: 'wss://apibeta.golos.today/ws',
+    GOLOS_NODE: 'https://apibeta.golos.today',
     //GOLOS_CHAIN_ID: '5876894a41e6361bde2e73278f07340f2eb8b41c2facd29099de9deef6cdb679',
     REST_API: 'http://144.91.110.80:5000',
     FORUM: {
         _id: 'golostalks',
         creator: 'cyberfounder',
-        footer_banner: '<a href="https://golos.id" target="_new"><img src="https://i.imgur.com/6mxuwsE.jpg" /></a>', // 700x90 px
+        footer_banner: '<a href="https://golos.id" target="_new"><img style="width: 700px" src="https://i.imgur.com/6mxuwsE.jpg" /></a>',
         // html is supported in all fields excl. breadcrumb_title, page_title
         ru: {
             meta_title: 'GolosTalk - форум на базе блокчейна Голос',
@@ -25,14 +25,14 @@ module.exports = {
             title: 'Forum on Golos Blockchain',
             description: 'Write, communicate, receive rewards and reward others :)',
             breadcrumb_title: 'GolosTalk',
-            logo_title: 'GolosTalk.com',
+            logo_title: '<img style="margin: -13px -17px -16px -18px" src="https://i.imgur.com/QP3yc26.png" />',
             page_title: 'Forum on GOLOS',
             link_title: 'GolosTalk',
             footer_title: 'Have any questions?<br/>Write to the telegram group <a href="https://t.me/goloshelp" target="_new">@goloshelp</a>',
             footer_description: 'GolosTalk — forum on the <a href="https://golos.id" target="_new">Golos blockchain</a> platform (developed by <a href="https://golos.id/@id-raccoon-hater" target="_new">@id-raccoon-hater</a>).'
         },
         posts_per_page: 20,
-        replies_per_page: 10,
+        replies_per_page: 20,
         votes_per_page: 10,
         donates_per_page: 10,
         account_donates_per_page: 10

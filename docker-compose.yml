@@ -6,15 +6,23 @@ services:
             dockerfile: server/Dockerfile
             context: .
         image: local/chainbb-rest
+        #image: golosblockchain/forum-ui:rest // ready-made image
         ports:
             - 5000:5000
+        volumes:
+            - ./config.js:/config.js
+            - ./configSecure.js:/configSecure.js
     chainbb:
         restart: always
         build:
             dockerfile: Dockerfile
             context: .
         image: local/chainbb
+        #image: golosblockchain/forum-ui:latest // ready-made image
         ports:
             - 3000:3000
         depends_on:
             - chainbb-rest
+        volumes:
+            - ./config.js:/config.js
+            - ./configSecure.js:/configSecure.js

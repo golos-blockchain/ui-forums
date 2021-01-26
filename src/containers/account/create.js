@@ -230,8 +230,9 @@ class CreateAccount extends React.Component {
                         }}
                         errorLabel={ errorLabel }
                     /> : null}
+                    {tt('login.authorized_with_socials')}<br/>
                     {methods.includes('vk') ? (<Button color='vk' onClick={this.useVk}>
-                        <Icon name='vk' /> VK
+                        <Icon name='vk' /> ВКонтакте
                     </Button>) : null }
                     {methods.includes('facebook') ? (<Button color='facebook' onClick={this.useFacebook}>
                         <Icon name='facebook' /> Facebook
@@ -242,9 +243,6 @@ class CreateAccount extends React.Component {
                     {/*<TelegramLoginButton dataAuthUrl={'http://localhost:5000/auth/telegram'} requestAccess='write' botName={'TestAuthBotBobot'} />*/}
                     {methods.includes('mailru') ? (<Button color='blue' onClick={this.useMailru}>
                         <Icon name='mail' color='yellow' /> Mail.ru
-                    </Button>) : null }
-                    {methods.includes('twitter') ? (<Button color='twitter' onClick={this.useMailru}>
-                        <Icon name='twitter' /> Twitter
                     </Button>) : null }
                     {methods.includes('yandex') ? (<Button color='white' onClick={this.useYandex}>
                         <Icon name='yahoo' color='red' /> Yandex

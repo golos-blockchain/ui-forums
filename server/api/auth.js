@@ -155,7 +155,6 @@ function useAuthApi(app) {
         if (CONFIG_SEC.registrar.facebook.enabled) methods.push('facebook');
         if (CONFIG_SEC.registrar.telegram.enabled) methods.push('telegram');
         if (CONFIG_SEC.registrar.mailru.enabled) methods.push('mailru');
-        if (CONFIG_SEC.registrar.twitter.enabled) methods.push('twitter');
         if (CONFIG_SEC.registrar.yandex.enabled) methods.push('yandex');
         ctx.body = {
             "data": {
