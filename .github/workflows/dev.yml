@@ -2,8 +2,9 @@ name: Build forum-ui-dev docker image
 
 on:
   push:
-    branches:
-      - dev
+    branches: [ dev ]
+
+  workflow_dispatch:
 
 jobs:
   build_dev:
