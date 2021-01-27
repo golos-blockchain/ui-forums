@@ -4,7 +4,7 @@ import * as types from './actionTypes';
 import * as CONFIG from '../../config';
 
 export function forumReservation(account, name, namespace) {
-    return (dispatch: () => void) => {
+    return dispatch => {
         const id = 'chainbb';
         let json = ['forum_reserve'];
         json.push({
@@ -39,7 +39,7 @@ export function forumReservation(account, name, namespace) {
 }
 
 export function forumConfig(account, namespace, settings) {
-    return (dispatch: () => void) => {
+    return dispatch => {
         const id = 'chainbb';
         let json = ['forum_config'];
         json.push({
@@ -74,7 +74,7 @@ export function forumConfig(account, namespace, settings) {
 }
 
 export function setForum(forum) {
-    return (dispatch: () => void) => {
+    return dispatch => {
         dispatch({
             type: types.FORUM_LOAD_RESOLVED,
             payload: {forum},
@@ -83,7 +83,7 @@ export function setForum(forum) {
 }
 
 export function fetchForumDetails(ns) {
-    return (dispatch: () => void) => {
+    return dispatch => {
         /*axios.get(`${ CONFIG.REST_API }/status/${ns}`)
             .then(response => {
                 dispatch(statusActions.setStatus(response.data))

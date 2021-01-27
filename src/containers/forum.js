@@ -5,8 +5,9 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { goToTop } from 'react-scrollable-anchor';
 import ReactDOMServer from 'react-dom/server';
-import Noty from 'noty';
+let Noty; if (typeof(document) !== 'undefined') Noty = import('noty');
 import tt from 'counterpart';
+import fetch from 'cross-fetch';
 
 import { Accordion, Dimmer, Grid, Header, Icon, Loader, Message, Segment } from 'semantic-ui-react';
 
@@ -31,7 +32,7 @@ const configSections = ['overview', 'upgrades', 'permissions', 'configuration'];
 
 class Forum extends React.Component {
   constructor(props, state) {
-      goToTop();
+      if (process.browser) goToTop();
       const hash = props.history.location.hash.replace('#', '');
       super(props, state);
       this.state = {
@@ -73,7 +74,7 @@ class Forum extends React.Component {
   hideSubforums = () => this.setState({showSubforums: false});
   toggleSubforums = () => (this.state.showSubforums) ? this.hideSubforums() : this.showSubforums();
   handleNewPost = (data) => {
-      new Noty({
+      if (Noty) new Noty({
           closeWith: ['click', 'button'],
           layout: 'topRight',
           progressBar: true,

@@ -6,7 +6,7 @@ import debounce from 'lodash/debounce';
 import store from 'store';
 import ReactDOMServer from 'react-dom/server';
 import tt from 'counterpart';
-import Noty from 'noty';
+let Noty; if (typeof(document) !== 'undefined') Noty = import('noty');
 
 import { Button, Dimmer, Divider, Header, Loader, Menu, Segment } from 'semantic-ui-react';
 import { Form } from 'formsy-semantic-ui-react';
@@ -72,7 +72,7 @@ class PostForm extends React.Component {
     componentWillMount() {
         const draft = this.drafts[this.getIdentifier()];
         if (draft) {
-            new Noty({
+            if (Noty) new Noty({
                 closeWith: ['click', 'button'],
                 layout: 'topRight',
                 progressBar: true,

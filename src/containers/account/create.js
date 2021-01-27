@@ -20,7 +20,7 @@ class CreateAccount extends React.Component {
 
     constructor(props) {
         super(props);
-        goToTop();
+        if (process.browser) goToTop();
         this.state = {
             alreadyExists: false,
             generatedPassword: 'P' + key_utils.get_random_key().toWif(),

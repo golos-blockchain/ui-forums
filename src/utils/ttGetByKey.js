@@ -3,10 +3,10 @@ import tt from 'counterpart';
 tt.registerTranslations('en', require('../locales/en.json'));
 tt.registerTranslations('ru', require('../locales/ru-RU.json'));
 
-tt.setLocale(localStorage.getItem('locale') || 'ru');
+tt.setLocale((typeof(localStorage) !== 'undefined' && localStorage.getItem('locale')) || 'ru');
 tt.setFallbackLocale('en');
 
-window._isMobile = /Mobi/.test(navigator.userAgent);
+var _isMobile = typeof(navigator) === 'undefined' ? true : /Mobi/.test(navigator.userAgent);
 
 export default function ttGetByKey(config, key) {
     let loc = tt.getLocale();

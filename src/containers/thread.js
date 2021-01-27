@@ -4,9 +4,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { goToTop, goToAnchor } from 'react-scrollable-anchor';
 import ReactDOMServer from 'react-dom/server';
-import Noty from 'noty';
-import tt from 'counterpart';
-import { getPageTitle } from '../utils/text';
+let Noty; if (typeof(document) !== 'undefined') Noty = import('noty');
 
 import { Divider, Grid, Header, Segment } from 'semantic-ui-react';
 
@@ -21,12 +19,13 @@ import PostForm from './post/form';
 import Post404 from '../components/elements/post/404';
 import Response from '../components/elements/response';
 import Paginator from '../components/global/paginator';
+import tt from 'counterpart';
+import { getPageTitle } from '../utils/text';
 
 const regexPage = /#comments-page-(\d+)+$/;
 const regexPost = /#@?([A-Za-z0-9\-_]+)\/([A-Za-z0-9\-_]+)$/;
 
 class Thread extends React.Component {
-
     constructor(props) {
         super(props);
         this.state = Object.assign({}, props.params, {
@@ -76,6 +75,7 @@ class Thread extends React.Component {
     }
 
     fetchPost(params) {
+        if (!process.browser) return;
         goToTop();
         this.props.actions.resetPostState();
         this.props.actions.fetchPost(params);
@@ -143,7 +143,7 @@ class Thread extends React.Component {
     };
 
     handleResponse = (submitted) => {
-        new Noty({
+        if (Noty) new Noty({
             closeWith: ['click', 'button'],
             layout: 'topRight',
             progressBar: true,
@@ -293,7 +293,7 @@ class Thread extends React.Component {
 function mapStateToProps(state, ownProps) {
     return {
         account: state.account,
-        post: state.post,
+        post: ownProps.post || state.post,
         preferences: state.preferences,
         status: state.status
     };

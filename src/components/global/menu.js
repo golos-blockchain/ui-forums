@@ -60,6 +60,7 @@ class HeaderMenu extends Component {
     }
 
     toggleLocale = (e, { value }) => {
+        if (typeof(window) === 'undefined') return;
         if (localStorage.getItem('locale') === value) return;
         localStorage.setItem('locale', value);
         tt.setLocale(value);
@@ -73,7 +74,7 @@ class HeaderMenu extends Component {
         let data = {};
         let avatar = false;
         let pendingBalance = false;
-        let locale = localStorage.getItem('locale') || 'ru';
+        let locale = (typeof(localStorage) !== 'undefined' && localStorage.getItem('locale')) || 'ru';
         const options = [
             { key: 1, text: 'RU', value: 'ru' },
             { key: 2, text: 'EN', value: 'en' },

@@ -5,6 +5,7 @@ import { goToTop } from 'react-scrollable-anchor';
 import { withRouter } from 'react-router-dom';
 import tt from 'counterpart';
 import ttGetByKey from '../utils/ttGetByKey';
+import fetch from 'cross-fetch';
 
 import { Button, Dimmer, Divider, Loader, Grid, Header, Segment, Popup } from 'semantic-ui-react';
 
@@ -20,7 +21,7 @@ import ForumManage from './forum/manage';
 
 class Forums extends React.Component {
     constructor(props, state) {
-        goToTop();
+        if (process.browser) goToTop();
         super(props);
         this.state = {
             group: false,

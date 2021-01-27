@@ -1,6 +1,6 @@
 import React from 'react';
 import { Helmet } from 'react-helmet';
-import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
+import { StaticRouter, Route, Switch, Redirect } from 'react-router-dom';
 import golos from 'golos-classic-js';
 
 import ttGetByKey from '../utils/ttGetByKey';
@@ -18,18 +18,18 @@ import BannerMenu from '../components/global/banner';
 import FooterMenu from '../components/global/footer';
 import HeaderMenu from '../components/global/menu';
 import GlobalNotice from '../components/global/notice';
+import ThreadLayout from '../components/layouts/thread';
+import IndexLayout from '../components/layouts/index';
+import FeedLayout from '../components/layouts/feed';
+import ForumLayout from '../components/layouts/forum';
+import ForumCreateLayout from '../components/layouts/forum/create';
+import ForumsLayout from '../components/layouts/forums';
+import RepliesLayout from '../components/layouts/replies';
+import TopicLayout from '../components/layouts/topic';
 
 import './app.css';
 import '../../node_modules/noty/lib/noty.css';
 import loadable from 'loadable-components'
-const IndexLayout = loadable(() => import('../components/layouts/index'));
-const FeedLayout = loadable(() => import('../components/layouts/feed'));
-const ForumLayout = loadable(() => import('../components/layouts/forum'));
-const ForumCreateLayout = loadable(() => import('../components/layouts/forum/create'));
-const ForumsLayout = loadable(() => import('../components/layouts/forums'));
-const RepliesLayout = loadable(() => import('../components/layouts/replies'));
-const ThreadLayout = loadable(() => import('../components/layouts/thread'));
-const TopicLayout = loadable(() => import('../components/layouts/topic'));
 
 var _errorOrig = console.error;
 function _logError(...parameters) {
@@ -42,6 +42,18 @@ golos.config.set('websocket', CONFIG.GOLOS_NODE);
 if (CONFIG.GOLOS_CHAIN_ID) {
     golos.config.set('chain_id', CONFIG.GOLOS_CHAIN_ID);
 }
+
+import createBrowserHistory from 'history/createBrowserHistory'
+import createMemoryHistory from 'history/createMemoryHistory'
+
+let history
+
+if (typeof document !== 'undefined') {
+    history = createBrowserHistory();
+} else {
+    history = createMemoryHistory();
+}
+
 
 class App extends React.Component {
     componentDidMount() {
@@ -73,8 +85,10 @@ class App extends React.Component {
     };
 
     render() {
+        console.log(this.props.ssrRoute)
+        const context = {};
         return (
-            <BrowserRouter>
+            <StaticRouter location={this.props.ssrRoute || '/'} context={context}>
                 <div className='AppContainer'>
                     <Helmet>
                         <title>{ttGetByKey(CONFIG.FORUM, 'page_title')}</title>
@@ -106,7 +120,7 @@ class App extends React.Component {
                             <Route path='/forum/:id' render={(props) => <Redirect to={`/f/${props.match.params.id}`}/>}/>
                             <Route path='/replies' component={RepliesLayout} />
                             <Route path='/topic/:category' component={TopicLayout} />
-                            <Route path='/:category/@:author/:permlink/:action?' component={ThreadLayout} />
+                            <Route path='/:category/@:author/:permlink/:action?' component={(props) => <ThreadLayout {...props} {...this.props.ssrState} />} />
                             <Route path='/leave_page' component={Leave} />
                             <Route exact path='/:section?' component={IndexLayout} />
                         </Switch>
@@ -115,7 +129,7 @@ class App extends React.Component {
                     <BannerMenu />
                     <FooterMenu />
                 </div>
-            </BrowserRouter>
+            </StaticRouter>
         );
     }
 }

@@ -1,6 +1,7 @@
 import React from 'react';
+let Noty; if (typeof(document) !== 'undefined') Noty = import('noty');
+
 import { Button } from 'semantic-ui-react';
-import Noty from 'noty';
 
 import LoginModal from '../../login/modal';
 
@@ -22,7 +23,7 @@ export default class ForumPostModeration extends React.Component {
                     switch (moderation.last.type) {
                         case 'MODERATION_REMOVE_RESOLVED':
                         case 'MODERATION_RESTORE_RESOLVED':
-                            new Noty({
+                            if (Noty) new Noty({
                                 closeWith: ['click', 'button'],
                                 layout: 'topRight',
                                 progressBar: true,

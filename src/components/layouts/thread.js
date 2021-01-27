@@ -17,7 +17,7 @@ export default class ThreadLayout extends React.Component {
                     </Grid.Column>
                 </Grid.Row>
             </Grid>*/
-            <Thread params={params} />
+            <Thread params={params} post={this.props.post} />
         );
     }
 }

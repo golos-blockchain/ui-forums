@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 
 import Pagination from 'rc-pagination';
-import 'rc-pagination/assets/index.css';
+if (typeof(document) !== 'undefined') import('rc-pagination/assets/index.css');
 
 export default class Paginator extends Component {
 

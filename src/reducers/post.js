@@ -41,7 +41,7 @@ export const repLog10 = rep2 => {
     return out;
 }
 
-export default function post(state = initialState, action) {
+export default function post(state = initialState, action = {type: '_ssr_state_init'}) {
     let authors = state.authors;
     let votes = state.votes;
     let live = state.live;

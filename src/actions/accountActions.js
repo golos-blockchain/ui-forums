@@ -1,12 +1,12 @@
 import golos from 'golos-classic-js';
-import Noty from 'noty';
+let Noty; if (typeof(document) !== 'undefined') Noty = import('noty');
 
 import * as types from './actionTypes';
 import * as AccountsActions from './accountsActions';
 import * as chainstateActions from './chainstateActions';
 
 export function claimRewards(params) {
-    return (dispatch: () => void) => {
+    return dispatch => {
         const { account, reward_steem, reward_sbd, reward_vests } = params;
         const { name, key } = account;
         const ops = [
@@ -24,7 +24,7 @@ export function claimRewards(params) {
             posting: key
         }, (err, result) => {
             dispatch(chainstateActions.getAccounts([name]));
-            new Noty({
+            if (Noty) new Noty({
                 closeWith: ['click', 'button'],
                 layout: 'topRight',
                 progressBar: true,
@@ -92,7 +92,7 @@ export function fetchAccountResolved(payload) {
 }
 
 export function signoutAccount() {
-    return (dispatch: () => void) => {
+    return dispatch => {
         dispatch(AccountsActions.removeAccounts());
         dispatch({
             type: types.ACCOUNT_SIGNOUT
@@ -101,7 +101,7 @@ export function signoutAccount() {
 }
 
 export function signinAccount(account, key) {
-    return (dispatch: () => void) => {
+    return dispatch => {
         let payload = {
             account: account,
             key: key,
@@ -116,7 +116,7 @@ export function signinAccount(account, key) {
 }
 
 export function follow(payload) {
-    return (dispatch: () => void) => {
+    return dispatch => {
         const wif = payload.account.key;
         const account = payload.account.name;
         const who = payload.who;
