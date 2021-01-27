@@ -1,6 +1,5 @@
 import React from 'react';
 import ReactDOMServer from 'react-dom/server';
-let Noty; if (typeof(document) !== 'undefined') Noty = import('noty');
 import tt from 'counterpart';
 
 import { Button, Divider, Header, Popup, Segment } from 'semantic-ui-react';
@@ -11,6 +10,8 @@ import PostControls from './controls';
 import PostForm from '../../../containers/post/form';
 import PostFormHeader from './form/header';
 import PostTitle from './title';
+
+let Noty; if (typeof(document) !== 'undefined') Noty = import('noty');
 
 export default class PostContent extends React.Component {
 

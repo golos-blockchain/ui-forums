@@ -6,7 +6,6 @@ import debounce from 'lodash/debounce';
 import store from 'store';
 import ReactDOMServer from 'react-dom/server';
 import tt from 'counterpart';
-let Noty; if (typeof(document) !== 'undefined') Noty = import('noty');
 
 import { Button, Dimmer, Divider, Header, Loader, Menu, Segment } from 'semantic-ui-react';
 import { Form } from 'formsy-semantic-ui-react';
@@ -19,6 +18,8 @@ import PostFormFieldBody from '../../components/elements/post/form/field/body';
 import PostFormFieldRewards from '../../components/elements/post/form/field/rewards';
 import PostFormFieldTags from '../../components/elements/post/form/field/tags';
 import PostFormFieldTitle from '../../components/elements/post/form/field/title';
+
+let Noty; if (typeof(document) !== 'undefined') Noty = import('noty');
 
 class PostForm extends React.Component {
 

@@ -1,9 +1,10 @@
 import golos from 'golos-classic-js';
-let Noty; if (typeof(document) !== 'undefined') Noty = import('noty');
 
 import * as types from './actionTypes';
 import * as AccountsActions from './accountsActions';
 import * as chainstateActions from './chainstateActions';
+
+let Noty; if (typeof(document) !== 'undefined') Noty = import('noty');
 
 export function claimRewards(params) {
     return dispatch => {

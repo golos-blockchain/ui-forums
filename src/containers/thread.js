@@ -4,7 +4,6 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { goToTop, goToAnchor } from 'react-scrollable-anchor';
 import ReactDOMServer from 'react-dom/server';
-let Noty; if (typeof(document) !== 'undefined') Noty = import('noty');
 
 import { Divider, Grid, Header, Segment } from 'semantic-ui-react';
 
@@ -21,6 +20,8 @@ import Response from '../components/elements/response';
 import Paginator from '../components/global/paginator';
 import tt from 'counterpart';
 import { getPageTitle } from '../utils/text';
+
+let Noty; if (typeof(document) !== 'undefined') Noty = import('noty');
 
 const regexPage = /#comments-page-(\d+)+$/;
 const regexPost = /#@?([A-Za-z0-9\-_]+)\/([A-Za-z0-9\-_]+)$/;

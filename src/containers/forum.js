@@ -5,7 +5,6 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { goToTop } from 'react-scrollable-anchor';
 import ReactDOMServer from 'react-dom/server';
-let Noty; if (typeof(document) !== 'undefined') Noty = import('noty');
 import tt from 'counterpart';
 import fetch from 'cross-fetch';
 
@@ -27,6 +26,8 @@ import Forum404 from '../components/elements/forum/404';
 import ForumPosts from '../components/elements/forum/posts';
 import PostForm from './post/form';
 import { getForumName, getPageTitle } from '../utils/text';
+
+let Noty; if (typeof(document) !== 'undefined') Noty = import('noty');
 
 const configSections = ['overview', 'upgrades', 'permissions', 'configuration'];
 

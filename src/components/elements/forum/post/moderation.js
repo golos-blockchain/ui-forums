@@ -1,9 +1,10 @@
 import React from 'react';
-let Noty; if (typeof(document) !== 'undefined') Noty = import('noty');
 
 import { Button } from 'semantic-ui-react';
 
 import LoginModal from '../../login/modal';
+
+let Noty; if (typeof(document) !== 'undefined') Noty = import('noty');
 
 export default class ForumPostModeration extends React.Component {
     constructor(props) {

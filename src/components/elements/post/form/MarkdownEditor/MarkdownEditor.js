@@ -10,8 +10,8 @@ import { Dimmer, Loader } from 'semantic-ui-react';
 import MarkdownEditorToolbar from '../MarkdownEditorToolbar';
 import { imgurUpload } from '../../../../../utils/imgurUpload';
 
-if (typeof(document) !== 'undefined') import('simplemde/dist/simplemde.min.css');
 import './MarkdownEditor.css';
+if (typeof(document) !== 'undefined') import('simplemde/dist/simplemde.min.css');
 
 const LINE_HEIGHT = 28;
 let SimpleMDE;
