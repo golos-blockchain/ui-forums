@@ -23,7 +23,7 @@ module.exports = {
             meta_title: 'GolosTalk - forum based on the Golos blockchain',
             meta_description: 'Forum with token rewards that operates on the basis of a decentralized blockchain.',
             title: 'Forum on Golos Blockchain',
-            description: 'Write, communicate, receive rewards and reward others :)',
+            description: 'Write, communicate, receive rewards and reward others',
             breadcrumb_title: 'GolosTalk',
             logo_title: '<img style="margin: -13px -17px -16px -18px" src="https://i.imgur.com/QP3yc26.png" />',
             page_title: 'Forum on GOLOS',
