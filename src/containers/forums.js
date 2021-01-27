@@ -26,14 +26,16 @@ class Forums extends React.Component {
         this.state = {
             group: false,
             minimized: props.preferences.forums_minimized || [],
-            forums: null,
-            moders: [],
-            supers: [],
-            admins: [],
+            forums: props.forums || null,
+            moders: props.moders || [],
+            supers: props.supers || [],
+            admins: props.admins || [],
             showConfig: (['categories', 'permissions'].indexOf(props.section) >= 0) ? true : false,
         };
-        this.getForums = this.getForums.bind(this);
-        this.getForums();
+        if (process.browser) {
+            this.getForums = this.getForums.bind(this);
+            this.getForums();
+        }
     }
 
     componentDidMount() {

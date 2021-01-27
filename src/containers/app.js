@@ -110,13 +110,13 @@ class App extends React.Component {
                     <Route path='/feed' component={FeedLayout} />
                     <Route path='/forums' component={ForumsLayout} />
                     <Route path='/forums/:group' component={IndexLayout} />
-                    <Route path='/f/:id/:section?' component={ForumLayout} />
+                    <Route path='/f/:id/:section?' component={(props) => <ForumLayout {...props} {...this.props.ssrState} />} />
                     <Route path='/forum/:id' render={(props) => <Redirect to={`/f/${props.match.params.id}`}/>}/>
                     <Route path='/replies' component={RepliesLayout} />
                     <Route path='/topic/:category' component={TopicLayout} />
                     <Route path='/:category/@:author/:permlink/:action?' component={(props) => <ThreadLayout {...props} {...this.props.ssrState} />} />
                     <Route path='/leave_page' component={Leave} />
-                    <Route exact path='/:section?' component={IndexLayout} />
+                    <Route exact path='/:section?' component={(props) => <IndexLayout {...props} {...this.props.ssrState} />} />
                 </Switch>
             </Container>
             <BreadcrumbMenu />

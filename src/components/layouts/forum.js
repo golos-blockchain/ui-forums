@@ -17,7 +17,7 @@ export default class ForumLayout extends React.Component {
                     </Grid.Column>
                 </Grid.Row>
             </Grid>*/
-            <Forum forumid={id} section={section} />
+            <Forum forumid={id} section={section} children={this.props.children} topics={this.props.topics} />
         );
     }
 }

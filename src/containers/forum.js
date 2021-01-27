@@ -37,10 +37,10 @@ class Forum extends React.Component {
       const hash = props.history.location.hash.replace('#', '');
       super(props, state);
       this.state = {
-          children: {},
-          loadingPosts: true,
+          children: props.children || {},
+          loadingPosts: !props.topics,
           page: 1,
-          topics: false,
+          topics: props.topics || false,
           filter: (hash) ? hash : false,
           newForum: false,
           showConfig: (['overview', 'upgrades', 'permissions', 'configuration'].indexOf(props.section) >= 0) ? true : false,
@@ -96,7 +96,7 @@ class Forum extends React.Component {
           showNewPost: false,
           loadingPosts: true
       });
-      setTimeout(() => {
+      if (process.browser) setTimeout(() => {
           this.getForum(1);
       }, 4000);
   };
