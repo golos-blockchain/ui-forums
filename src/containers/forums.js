@@ -26,7 +26,7 @@ class Forums extends React.Component {
         this.state = {
             group: false,
             minimized: props.preferences.forums_minimized || [],
-            forums: props.forums || null,
+            forums: props.forums0 || null,
             moders: props.moders || [],
             supers: props.supers || [],
             admins: props.admins || [],
