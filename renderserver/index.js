@@ -26,6 +26,9 @@ router.get('(.*)', async (ctx) => {
             if (file.endsWith('.css')) {
                 ctx.set('Content-Type', 'text/css');
             }
+            if (file.endsWith('.svg')) {
+                ctx.set('Content-Type', 'image/svg+xml');
+            }
             ctx.body = fs.createReadStream(file);
             return;
         } catch (e) {}
