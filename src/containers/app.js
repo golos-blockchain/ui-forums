@@ -98,7 +98,7 @@ class App extends React.Component {
                 <meta property='og:image' content='https://i.imgur.com/0AeZtdV.png' />
             </Helmet>
             <HeaderMenu />
-            <BreadcrumbMenu />
+            <BreadcrumbMenu {...this.props.ssrState} />
             <GlobalNotice />
             <Container>
                 <Switch>
@@ -119,7 +119,7 @@ class App extends React.Component {
                     <Route exact path='/:section?' component={(props) => <IndexLayout {...props} {...this.props.ssrState} />} />
                 </Switch>
             </Container>
-            <BreadcrumbMenu />
+            <BreadcrumbMenu {...this.props.ssrState} />
             <BannerMenu />
             <FooterMenu />
         </div>);

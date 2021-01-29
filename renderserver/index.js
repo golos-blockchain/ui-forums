@@ -37,9 +37,9 @@ router.get('(.*)', async (ctx) => {
     const state = await getState(ctx.path);
 
     const app = ReactDOMServer.renderToString(
-    <Provider store={store}>
+        <Provider store={store}>
             <App ssrRoute={ctx.path} ssrState={state} />
-    </Provider>);
+        </Provider>);
     const indexFile = path.resolve('./build/index.html');
     ctx.body = fs.readFileSync(indexFile, 'utf8').replace('<div id="root"></div>', `<div id="root">${app}</div>`)
 });

@@ -43,7 +43,7 @@ class BreadcrumbMenu extends Component {
 function mapStateToProps(state, ownProps) {
     return {
         account: state.account,
-        breadcrumb: state.breadcrumb,
+        breadcrumb: ownProps.breadcrumb || state.breadcrumb,
         post: state.post
     };
 }
