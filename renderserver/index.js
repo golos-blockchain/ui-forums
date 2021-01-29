@@ -44,7 +44,6 @@ router.get('(.*)', async (ctx) => {
     ctx.body = fs.readFileSync(indexFile, 'utf8').replace('<div id="root"></div>', `<div id="root">${app}</div>`)
 });
 
-app.use(livereload());
 app.use(cors({ credentials: true }));
 app.use(router.routes());
 app.use(router.allowedMethods());
