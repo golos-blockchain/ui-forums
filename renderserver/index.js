@@ -1,4 +1,4 @@
-import App from '../src/containers/app.js';
+import App from '../src/containers/app-ssr.js';
 const koa = require('koa');
 const koaRouter = require('koa-router');
 const cors = require('koa-cors');
