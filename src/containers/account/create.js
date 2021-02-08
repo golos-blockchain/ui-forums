@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 import { Helmet } from 'react-helmet';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';

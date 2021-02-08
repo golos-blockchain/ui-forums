@@ -7,6 +7,7 @@ const livereload = require('koa-livereload');
 const path = require('path');
 const fs = require('fs');
 import React from 'react';
+import { Helmet } from 'react-helmet';
 const ReactDOMServer = require('react-dom/server');
 
 const app = new koa();
@@ -41,6 +42,9 @@ router.get('(.*)', async (ctx) => {
             if (file.endsWith('.css')) {
                 ctx.set('Content-Type', 'text/css');
             }
+            if (file.endsWith('.js')) {
+                ctx.set('Content-Type', 'text/javascript');
+            }
             if (file.endsWith('.svg')) {
                 ctx.set('Content-Type', 'image/svg+xml');
             }
@@ -55,8 +59,13 @@ router.get('(.*)', async (ctx) => {
         <Provider store={store}>
             <App ssrRoute={ctx.path} ssrState={state} />
         </Provider>);
+
+    const helmet = Helmet.renderStatic();
+
     const indexFile = path.resolve('./build/index.html');
-    ctx.body = fs.readFileSync(indexFile, 'utf8').replace('<div id="root"></div>', `<div id="root">${app}</div>`)
+    let html = fs.readFileSync(indexFile, 'utf8');
+    html = html.replace('<head>', `<head>${helmet.title.toString()}${helmet.meta.toString()}`);
+    ctx.body = html.replace('<div id="root"></div>', `<div id="root">${app}</div>`)
 });
 
 app.use(cors({ credentials: true }));
