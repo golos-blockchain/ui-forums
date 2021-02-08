@@ -4,6 +4,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { goToTop, goToAnchor } from 'react-scrollable-anchor';
 import ReactDOMServer from 'react-dom/server';
+import truncate from 'lodash/truncate';
 
 import { Divider, Grid, Header, Segment } from 'semantic-ui-react';
 
@@ -249,16 +250,17 @@ class Thread extends React.Component {
             image = content.json_metadata.image[0];
         }
         const title = getPageTitle(content.title);
+        const metaDesc = truncate(content.body, {length: 150});
         return (
             <div>
                 <Helmet>
                     <title>{title}</title>                    
-                    <meta name='description' content={`Posted by ${content.author} on ${content.created} UTC.`} />
+                    <meta name='description' content={metaDesc} />
                     <meta name='twitter:title' content={title} />
-                    <meta name='twitter:description' content={`Posted by ${content.author} on ${content.created} UTC.`} />
+                    <meta name='twitter:description' content={metaDesc} />
                     <meta name='twitter:image:src' content={image} />
                     <meta property='og:title' content={title} />
-                    <meta property='og:description' content={`Posted by ${content.author} on ${content.created} UTC.`} />
+                    <meta property='og:description' content={metaDesc} />
                     <meta property='og:image' content={image} />
                 </Helmet>
                 <Post
