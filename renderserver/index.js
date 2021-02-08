@@ -1,6 +1,7 @@
 import App from '../src/containers/app-ssr.js';
 const koa = require('koa');
 const koaRouter = require('koa-router');
+const compress = require('koa-compress');
 const cors = require('koa-cors');
 const livereload = require('koa-livereload');
 const path = require('path');
@@ -18,6 +19,20 @@ import { PersistGate } from 'redux-persist/lib/integration/react';
 import { Provider } from 'react-redux';
 
 import { getState } from './StateBuilder';
+
+app.use(compress({
+    filter(contentType) {
+        return true;
+    },
+    threshold: 2048,
+    gzip: {
+        flush: require('zlib').constants.Z_SYNC_FLUSH
+    },
+    deflate: {
+        flush: require('zlib').constants.Z_SYNC_FLUSH,
+    },
+    br: false // disable brotli
+}));
 
 router.get('(.*)', async (ctx) => {
     let file = path.resolve('./build' + ctx.path);

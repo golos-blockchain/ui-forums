@@ -15,6 +15,7 @@
     "golos-classic-js": "0.7.83",
     "koa": "^2.13.0",
     "koa-bodyparser": "latest",
+    "koa-compress": "^5.0.1",
     "koa-cors": "0.0.16",
     "koa-livereload": "^0.2.0",
     "koa-passport": "latest",
@@ -25,8 +26,8 @@
     "passport-mail": "latest",
     "passport-mailru-email": "latest",
     "passport-telegram-official": "latest",
-    "passport-yandex": "latest",
-    "passport-vk": "latest"
+    "passport-vk": "latest",
+    "passport-yandex": "latest"
   },
   "devDependencies": {
     "nodemon": "^2.0.6"

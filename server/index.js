@@ -1,6 +1,7 @@
 const koa = require('koa');
 const session = require('koa-session');
 const koaRouter = require('koa-router');
+const compress = require('koa-compress');
 const cors = require('koa-cors');
 const livereload = require('koa-livereload');
 const golos = require('golos-classic-js');
@@ -16,6 +17,21 @@ if (CONFIG.GOLOS_CHAIN_ID) {
 }
 
 const app = new koa();
+
+app.use(compress({
+    filter(contentType) {
+        return true;
+    },
+    threshold: 2048,
+    gzip: {
+        flush: require('zlib').constants.Z_SYNC_FLUSH
+    },
+    deflate: {
+        flush: require('zlib').constants.Z_SYNC_FLUSH,
+    },
+    br: false // disable brotli
+}));
+
 const router = new koaRouter();
 
 const returnError = (ctx, err) => {
