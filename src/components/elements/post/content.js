@@ -11,7 +11,7 @@ import PostForm from '../../../containers/post/form';
 import PostFormHeader from './form/header';
 import PostTitle from './title';
 
-let Noty; if (typeof(document) !== 'undefined') Noty = import('noty');
+import importNoty from '../../../utils/importNoty';
 
 export default class PostContent extends React.Component {
 
@@ -26,7 +26,8 @@ export default class PostContent extends React.Component {
         this.props.goReply('[@' + this.props.content.author + '](' + this.props.content.url + '), \n', this.props.content.body);
     };
 
-    handleRespondingComplete = (e) => {
+    handleRespondingComplete = async (e) => {
+        let Noty = await importNoty();
         if (Noty) new Noty({
             closeWith: ['click', 'button'],
             layout: 'topRight',
@@ -58,7 +59,8 @@ export default class PostContent extends React.Component {
         });
     }
 
-    handleEditingComplete = (data) => {
+    handleEditingComplete = async (data) => {
+        let Noty = await importNoty();
         if (Noty) new Noty({
             closeWith: ['click', 'button'],
             layout: 'topRight',

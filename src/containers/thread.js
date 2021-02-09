@@ -22,7 +22,7 @@ import Paginator from '../components/global/paginator';
 import tt from 'counterpart';
 import { getPageTitle } from '../utils/text';
 
-let Noty; if (typeof(document) !== 'undefined') Noty = import('noty');
+import importNoty from '../utils/importNoty';
 
 const regexPage = /#comments-page-(\d+)+$/;
 const regexPost = /#@?([A-Za-z0-9\-_]+)\/([A-Za-z0-9\-_]+)$/;
@@ -144,7 +144,8 @@ class Thread extends React.Component {
     handleCancel = () => {
     };
 
-    handleResponse = (submitted) => {
+    handleResponse = async (submitted) => {
+        let Noty = await importNoty();
         if (Noty) new Noty({
             closeWith: ['click', 'button'],
             layout: 'topRight',

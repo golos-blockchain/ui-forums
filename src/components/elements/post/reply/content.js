@@ -10,7 +10,7 @@ import PostControls from '../controls';
 import PostForm from '../../../../containers/post/form';
 import PostFormHeader from '../form/header';
 
-let Noty; if (typeof(document) !== 'undefined') Noty = import('noty');
+import importNoty from '../../../../utils/importNoty';
 
 export default class PostReplyContent extends React.Component {
 
@@ -20,7 +20,8 @@ export default class PostReplyContent extends React.Component {
         });
     };
 
-    handleRespondingComplete = (e) => {
+    handleRespondingComplete = async (e) => {
+        let Noty = await importNoty();
         if (Noty) new Noty({
             closeWith: [ 'click', 'button' ],
             layout: 'topRight',
@@ -52,7 +53,8 @@ export default class PostReplyContent extends React.Component {
         });
     };
 
-    handleEditingComplete = (data) => {
+    handleEditingComplete = async (data) => {
+        let Noty = await importNoty();
         if (Noty) new Noty({
             closeWith: [ 'click', 'button' ],
             layout: 'topRight',

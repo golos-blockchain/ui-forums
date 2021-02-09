@@ -3,7 +3,7 @@ import { withRouter } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import ReactDOMServer from 'react-dom/server';
 import { connect } from 'react-redux';
-let Noty; if (typeof(document) !== 'undefined') Noty = import('noty');
+import importNoty from '../../../../utils/importNoty';
 
 import { Button, Dimmer, Divider, Header, Icon, Label, Loader, Modal, Segment, Table } from 'semantic-ui-react';
 import { Form } from 'formsy-semantic-ui-react';
@@ -62,11 +62,12 @@ class ForumConfigForm extends React.Component {
                         if (this.props.newForum) {
                             this.props.history.push(`/f/${this.props.forum.target._id}`);
                         }
-                        this.timeout = setTimeout(() => {
+                        this.timeout = setTimeout(async () => {
                             this.setState({
                                 showConfirm: false,
                                 awaitingBlock: false,
                             });
+                            let Noty = await importNoty();
                             if (Noty) new Noty({
                                 closeWith: ['click', 'button'],
                                 layout: 'topRight',
