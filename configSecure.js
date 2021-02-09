@@ -21,12 +21,12 @@ module.exports = {
             bot_token: '1559315861:AAFWDjcRP0dgsccGEosqBZEgdggHWUOgDU8'
         },
         mailru: {
-            enabled: true,
+            enabled: false,
             client_id: '783069',
             client_secret: '61f78ffeb9411b6289150d46a93ee034'
         },
         yandex: {
-            enabled: true,
+            enabled: false,
             client_id: '9e9787bd59204b95812bc7e438939616',
             client_secret: 'ca10592646784980a11179cc72146344'
         },

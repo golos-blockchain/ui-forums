@@ -146,7 +146,7 @@ class Response extends React.Component {
 function mapStateToProps(state, ownProps) {
   return {
     account: state.account,
-    post: state.post,
+    post: ownProps.post || state.post,
     preferences: state.preferences
   }
 }

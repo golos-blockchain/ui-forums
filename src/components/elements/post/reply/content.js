@@ -1,7 +1,6 @@
 import React from 'react';
 import ReactDOMServer from 'react-dom/server';
 import { Link } from 'react-router-dom';
-import Noty from 'noty';
 import tt from 'counterpart';
 
 import { Button, Header, Popup, Segment } from 'semantic-ui-react';
@@ -10,6 +9,8 @@ import MarkdownViewer from '../../../../utils/MarkdownViewer';
 import PostControls from '../controls';
 import PostForm from '../../../../containers/post/form';
 import PostFormHeader from '../form/header';
+
+let Noty; if (typeof(document) !== 'undefined') Noty = import('noty');
 
 export default class PostReplyContent extends React.Component {
 
@@ -20,7 +21,7 @@ export default class PostReplyContent extends React.Component {
     };
 
     handleRespondingComplete = (e) => {
-        new Noty({
+        if (Noty) new Noty({
             closeWith: [ 'click', 'button' ],
             layout: 'topRight',
             progressBar: true,
@@ -52,7 +53,7 @@ export default class PostReplyContent extends React.Component {
     };
 
     handleEditingComplete = (data) => {
-        new Noty({
+        if (Noty) new Noty({
             closeWith: [ 'click', 'button' ],
             layout: 'topRight',
             progressBar: true,

@@ -21,7 +21,13 @@ class IndexLayout extends React.Component {
                     </Grid.Column>
                 </Grid.Row>
             </Grid>*/
-            <Forums forums={params} section={params.section} />
+            <Forums forums={params} section={params.section} 
+                forums0={this.props.forums}
+                moders={this.props.moders}
+                supers={this.props.supers}
+                admins={this.props.admins}
+                users={this.props.users}
+                />
         );
     }
 }

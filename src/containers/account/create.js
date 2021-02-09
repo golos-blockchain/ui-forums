@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 import { Helmet } from 'react-helmet';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -20,7 +20,7 @@ class CreateAccount extends React.Component {
 
     constructor(props) {
         super(props);
-        goToTop();
+        if (process.browser) goToTop();
         this.state = {
             alreadyExists: false,
             generatedPassword: 'P' + key_utils.get_random_key().toWif(),

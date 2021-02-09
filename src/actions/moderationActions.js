@@ -28,7 +28,7 @@ function hidacc(wif, account, objWithAcc, callback) {
 }
 
 export function moderatorHidePostForum(wif, moderator, post, _id, forum, why = '') {
-    return (dispatch: () => void) => {
+    return dispatch => {
         const { name } = moderator;
         let obj = {};
         obj[post.id] = why + '|' + name + '|' + parseInt(Date.now() / 1000);
@@ -59,7 +59,7 @@ export function moderatorHidePostForum(wif, moderator, post, _id, forum, why = '
 }
 
 export function moderatorRevealPostForum(wif, moderator, post, _id, forum) {
-    return (dispatch: () => void) => {
+    return dispatch => {
         const { name } = moderator;
         let obj = {};
         obj[post.id] = null;
@@ -90,7 +90,7 @@ export function moderatorRevealPostForum(wif, moderator, post, _id, forum) {
 }
 
 export function moderatorBanAccount(wif, moderator, accountName, why = '') {
-    return (dispatch: () => void) => {
+    return dispatch => {
         const { name } = moderator;
         let obj = {};
         obj[accountName] = why + '|' + name + '|' + parseInt(Date.now() / 1000);
@@ -118,7 +118,7 @@ export function moderatorBanAccount(wif, moderator, accountName, why = '') {
 }
 
 export function moderatorUnBanAccount(wif, moderator, accountName) {
-    return (dispatch: () => void) => {
+    return dispatch => {
         const { name } = moderator;
         let obj = {};
         obj[accountName] = null;

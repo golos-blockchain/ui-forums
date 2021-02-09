@@ -1,6 +1,7 @@
 import golos from 'golos-classic-js';
 import getSlug from 'speakingurl';
 import tt from 'counterpart';
+import fetch from 'cross-fetch';
 
 import * as types from './actionTypes';
 import * as BreadcrumbActions from './breadcrumbActions';
@@ -345,6 +346,7 @@ export function fetchPostResponses(params) {
         const response = await fetch(`${ CONFIG.REST_API }/${ category }/@${ author }/${ permlink }/responses`);
         if (response.ok) {
             const result = await response.json();
+            console.log(result);
             dispatch(fetchPostResponsesResolved(result.data));
         } else {
             console.error(response.status);

@@ -23,7 +23,7 @@ class Account extends React.Component {
 
     constructor(props) {
         super(props);
-        goToTop();
+        if (process.browser) goToTop();
         this.state = {
             isBanned: false,
             canIBan: false,

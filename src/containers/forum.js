@@ -5,8 +5,8 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { goToTop } from 'react-scrollable-anchor';
 import ReactDOMServer from 'react-dom/server';
-import Noty from 'noty';
 import tt from 'counterpart';
+import fetch from 'cross-fetch';
 
 import { Accordion, Dimmer, Grid, Header, Icon, Loader, Message, Segment } from 'semantic-ui-react';
 
@@ -27,18 +27,20 @@ import ForumPosts from '../components/elements/forum/posts';
 import PostForm from './post/form';
 import { getForumName, getPageTitle } from '../utils/text';
 
+let Noty; if (typeof(document) !== 'undefined') Noty = import('noty');
+
 const configSections = ['overview', 'upgrades', 'permissions', 'configuration'];
 
 class Forum extends React.Component {
   constructor(props, state) {
-      goToTop();
+      if (process.browser) goToTop();
       const hash = props.history.location.hash.replace('#', '');
       super(props, state);
       this.state = {
-          children: {},
-          loadingPosts: true,
+          children: props.children || {},
+          loadingPosts: !props.topics,
           page: 1,
-          topics: false,
+          topics: props.topics || false,
           filter: (hash) ? hash : false,
           newForum: false,
           showConfig: (['overview', 'upgrades', 'permissions', 'configuration'].indexOf(props.section) >= 0) ? true : false,
@@ -73,7 +75,7 @@ class Forum extends React.Component {
   hideSubforums = () => this.setState({showSubforums: false});
   toggleSubforums = () => (this.state.showSubforums) ? this.hideSubforums() : this.showSubforums();
   handleNewPost = (data) => {
-      new Noty({
+      if (Noty) new Noty({
           closeWith: ['click', 'button'],
           layout: 'topRight',
           progressBar: true,
@@ -94,7 +96,7 @@ class Forum extends React.Component {
           showNewPost: false,
           loadingPosts: true
       });
-      setTimeout(() => {
+      if (process.browser) setTimeout(() => {
           this.getForum(1);
       }, 4000);
   };

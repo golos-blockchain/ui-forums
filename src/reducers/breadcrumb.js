@@ -11,7 +11,7 @@ const initialState = {
   }]
 }
 
-export default function breadcrumb(state = initialState, action) {
+export default function breadcrumb(state = initialState, action = {type: '_ssr_state_init'}) {
   switch(action.type) {
     case types.SET_BREADCRUMB:
       const payload = action.payload,

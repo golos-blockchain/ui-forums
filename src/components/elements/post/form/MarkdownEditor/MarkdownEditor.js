@@ -10,13 +10,13 @@ import { Dimmer, Loader } from 'semantic-ui-react';
 import MarkdownEditorToolbar from '../MarkdownEditorToolbar';
 import { imgurUpload } from '../../../../../utils/imgurUpload';
 
-import 'simplemde/dist/simplemde.min.css';
 import './MarkdownEditor.css';
+if (typeof(document) !== 'undefined') import('simplemde/dist/simplemde.min.css');
 
 const LINE_HEIGHT = 28;
 let SimpleMDE;
 
-SimpleMDE = require('simplemde');
+if (typeof(document) !== 'undefined') SimpleMDE = require('simplemde');
 
 
 let lastWidgetId = 0;
@@ -54,7 +54,7 @@ export default class MarkdownEditor extends PureComponent {
     componentDidMount() {
         // Don't init on server
 
-        this._init();
+        if (typeof(document) !== 'undefined') this._init();
     }
 
     _init() {

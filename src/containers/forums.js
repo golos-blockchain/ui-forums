@@ -5,6 +5,7 @@ import { goToTop } from 'react-scrollable-anchor';
 import { withRouter } from 'react-router-dom';
 import tt from 'counterpart';
 import ttGetByKey from '../utils/ttGetByKey';
+import fetch from 'cross-fetch';
 
 import { Button, Dimmer, Divider, Loader, Grid, Header, Segment, Popup } from 'semantic-ui-react';
 
@@ -20,19 +21,21 @@ import ForumManage from './forum/manage';
 
 class Forums extends React.Component {
     constructor(props, state) {
-        goToTop();
+        if (process.browser) goToTop();
         super(props);
         this.state = {
             group: false,
             minimized: props.preferences.forums_minimized || [],
-            forums: null,
-            moders: [],
-            supers: [],
-            admins: [],
+            forums: props.forums0 || null,
+            moders: props.moders || [],
+            supers: props.supers || [],
+            admins: props.admins || [],
             showConfig: (['categories', 'permissions'].indexOf(props.section) >= 0) ? true : false,
         };
-        this.getForums = this.getForums.bind(this);
-        this.getForums();
+        if (process.browser) {
+            this.getForums = this.getForums.bind(this);
+            this.getForums();
+        }
     }
 
     componentDidMount() {
