@@ -4,7 +4,7 @@ import * as types from './actionTypes';
 import * as AccountsActions from './accountsActions';
 import * as chainstateActions from './chainstateActions';
 
-let Noty; if (typeof(document) !== 'undefined') Noty = import('noty');
+import importNoty from '../utils/importNoty';
 
 export function claimRewards(params) {
     return dispatch => {
@@ -23,8 +23,9 @@ export function claimRewards(params) {
             extensions: []
         }, {
             posting: key
-        }, (err, result) => {
+        }, async (err, result) => {
             dispatch(chainstateActions.getAccounts([name]));
+            let Noty = await importNoty();
             if (Noty) new Noty({
                 closeWith: ['click', 'button'],
                 layout: 'topRight',

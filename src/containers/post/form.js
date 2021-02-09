@@ -19,7 +19,7 @@ import PostFormFieldRewards from '../../components/elements/post/form/field/rewa
 import PostFormFieldTags from '../../components/elements/post/form/field/tags';
 import PostFormFieldTitle from '../../components/elements/post/form/field/title';
 
-let Noty; if (typeof(document) !== 'undefined') Noty = import('noty');
+import importNoty from '../../utils/importNoty';
 
 class PostForm extends React.Component {
 
@@ -70,9 +70,10 @@ class PostForm extends React.Component {
         }
     };
 
-    componentWillMount() {
+    async componentWillMount() {
         const draft = this.drafts[this.getIdentifier()];
         if (draft) {
+            let Noty = await importNoty();
             if (Noty) new Noty({
                 closeWith: ['click', 'button'],
                 layout: 'topRight',

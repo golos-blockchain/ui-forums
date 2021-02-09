@@ -27,7 +27,7 @@ import ForumPosts from '../components/elements/forum/posts';
 import PostForm from './post/form';
 import { getForumName, getPageTitle } from '../utils/text';
 
-let Noty; if (typeof(document) !== 'undefined') Noty = import('noty');
+import importNoty from '../utils/importNoty';
 
 const configSections = ['overview', 'upgrades', 'permissions', 'configuration'];
 
@@ -74,7 +74,8 @@ class Forum extends React.Component {
   showSubforums = () => this.setState({showSubforums: true});
   hideSubforums = () => this.setState({showSubforums: false});
   toggleSubforums = () => (this.state.showSubforums) ? this.hideSubforums() : this.showSubforums();
-  handleNewPost = (data) => {
+  handleNewPost = async (data) => {
+      let Noty = await importNoty();
       if (Noty) new Noty({
           closeWith: ['click', 'button'],
           layout: 'topRight',
