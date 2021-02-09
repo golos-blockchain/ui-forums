@@ -237,10 +237,6 @@ class CreateAccount extends React.Component {
                     {methods.includes('facebook') ? (<Button color='facebook' onClick={this.useFacebook}>
                         <Icon name='facebook' /> Facebook
                     </Button>) : null }
-                    {methods.includes('telegram') ? (<Button color='linkedin' onClick={this.useMailru}>
-                        <Icon name='telegram plane' /> Telegram
-                    </Button>) : null }
-                    {/*<TelegramLoginButton dataAuthUrl={'http://localhost:5000/auth/telegram'} requestAccess='write' botName={'TestAuthBotBobot'} />*/}
                     {methods.includes('mailru') ? (<Button color='blue' onClick={this.useMailru}>
                         <Icon name='mail' color='yellow' /> Mail.ru
                     </Button>) : null }
