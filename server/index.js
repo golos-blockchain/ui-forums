@@ -242,7 +242,7 @@ router.get('/forum/:slug', async (ctx) => {
         post.author_banned = !!banned[post.author];
         post.url = getUrl(post.url, _id);
 
-        const replies = await golos.api.getContentRepliesAsync(post.author, post.permlink, 0, 0);
+        const replies = await golos.api.getAllContentRepliesAsync(post.author, post.permlink, 0, 0);
         if (replies.length) {
             const reply = replies[replies.length - 1];
             post.last_reply = reply.created;
