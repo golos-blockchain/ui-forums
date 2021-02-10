@@ -112,6 +112,7 @@ async function getLastActivity(data, lastPosts, lastReplies, _id, forum, isRootC
         let lastPost = data[tag][0];
         lastPost.url = getUrl(lastPost.url, _id);
         lastPosts.push(lastPost);
+        lastPost.last_reply = lastPost.last_reply || {};
         lastPost.last_reply.title = lastPost.title;
         lastPost.last_reply.url = '/' + _id + '/@' + lastPost.author + '/' + lastPost.permlink + '#@' + lastPost.last_reply.author + '/' + lastPost.last_reply.permlink;
         if (lastPost.last_reply.author) lastReplies.push(lastPost.last_reply);
@@ -241,7 +242,7 @@ router.get('/forum/:slug', async (ctx) => {
         post.author_banned = !!banned[post.author];
         post.url = getUrl(post.url, _id);
 
-        const replies = await golos.api.getContentRepliesAsync(post.author, post.permlink, 0, 0);
+        const replies = await golos.api.getAllContentRepliesAsync(post.author, post.permlink, 0, 0);
         if (replies.length) {
             const reply = replies[replies.length - 1];
             post.last_reply = reply.created;
