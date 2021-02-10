@@ -223,8 +223,7 @@ router.get('/forum/:slug', async (ctx) => {
     const forum_id = ctx.params.slug;
     let {_id, forum} = findForum(vals[NOTE_], forum_id);
 
-    await setForumStats({[_id]: forum}, vals[NOTE_PST_STATS_LST], false);
-    await setForumStats(forum.children, vals[NOTE_PST_STATS_LST]);
+    await setForumStats({[_id]: forum, ...forum.children}, vals[NOTE_PST_STATS_LST]);
 
     const tag = idToTag(_id);
     const data = await golos.api.getAllDiscussionsByActiveAsync(
@@ -242,12 +241,11 @@ router.get('/forum/:slug', async (ctx) => {
         post.author_banned = !!banned[post.author];
         post.url = getUrl(post.url, _id);
 
-        const replies = await golos.api.getAllContentRepliesAsync(post.author, post.permlink, 0, 0);
-        if (replies.length) {
-            const reply = replies[replies.length - 1];
+        if (post.last_reply) {
+            const reply = post.last_reply;
             post.last_reply = reply.created;
             post.last_reply_by = reply.author;
-            post.last_reply_url = getUrl(reply.url, _id);
+            post.last_reply_url = '/' + _id + '/@' + post.author + '/' + post.permlink + '#@' + reply.author + '/' + reply.permlink;
         } else {
             post.last_reply = post.created;
             post.last_reply_by = post.author;
