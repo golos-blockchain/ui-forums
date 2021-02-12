@@ -30,7 +30,6 @@
     "rc-pagination": "^1.8.7",
     "react": "^15.4.2",
     "react-addons-pure-render-mixin": "^15.4.1",
-    "react-app-rewire-inline-source-plugin": "^0.1.0",
     "react-dom": "^15.4.2",
     "react-dropzone": "^4.2.12",
     "react-helmet": "^5.2.0",
