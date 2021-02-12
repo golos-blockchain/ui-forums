@@ -138,7 +138,7 @@ function getAllTags(forums, tags, tagIdMap = {}) {
     }
 }
 
-async function setForumStats(forums, stats, lastPostNeed = true) {
+async function setForumStats(forums, stats, hidden, banned) {
     if (!stats) return;
 
     let tags = [];
@@ -146,14 +146,13 @@ async function setForumStats(forums, stats, lastPostNeed = true) {
     const data = await golos.api.getAllDiscussionsByActiveAsync(
         '', '', 0, 1,
         tags,
-        0, 0
+        0, 0,
+        Object.keys(hidden), Object.keys(banned)
     );
 
     if (forums)
     for (let [_id, forum] of Object.entries(forums)) {
         forum.stats = stats[_id] || {posts: 0, total_posts: 0, comments: 0, total_comments: 0};
-
-        if (!lastPostNeed) continue;
 
         let lastPosts = [];
         let lastReplies = [];
@@ -174,7 +173,7 @@ router.get('/', async (ctx) => {
 
     let vals = await getValues(keys);
 
-    await setForumStats(vals[NOTE_], vals[NOTE_PST_STATS_LST]);
+    await setForumStats(vals[NOTE_], vals[NOTE_PST_STATS_LST], vals[NOTE_PST_HIDMSG_LST], vals[NOTE_PST_HIDACC_LST]);
 
     ctx.body = {
         data: {
@@ -223,7 +222,7 @@ router.get('/forum/:slug', async (ctx) => {
     const forum_id = ctx.params.slug;
     let {_id, forum} = findForum(vals[NOTE_], forum_id);
 
-    await setForumStats({[_id]: forum, ...forum.children}, vals[NOTE_PST_STATS_LST]);
+    await setForumStats({[_id]: forum, ...forum.children}, vals[NOTE_PST_STATS_LST], vals[NOTE_PST_HIDMSG_LST], vals[NOTE_PST_HIDACC_LST]);
 
     const tag = idToTag(_id);
     const data = await golos.api.getAllDiscussionsByActiveAsync(
@@ -235,7 +234,7 @@ router.get('/forum/:slug', async (ctx) => {
     let filteredData = [];
     const hidden = vals[NOTE_PST_HIDMSG_LST];
     const banned = vals[NOTE_PST_HIDACC_LST];
-    for (let post of data[tag]) {
+    for (let post of data[tag] || []) {
         if (ctx.query.filter !== 'all' && post.net_rshares < CONFIG.MODERATION.hide_threshold) continue;
         post.post_hidden = !!hidden[post.id];
         post.author_banned = !!banned[post.author];
