@@ -145,6 +145,7 @@ export default function post(state = initialState, action = {type: '_ssr_state_i
                 found.percent = weight;
             } else {
                 msg.net_votes += Math.sign(weight);
+                ++msg.active_votes_count;
                 msg.active_votes.push({voter, percent: weight});
             }
             //setResponseVote(state, action.payload);
