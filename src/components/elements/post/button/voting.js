@@ -52,19 +52,18 @@ export default class Voting extends React.Component {
         let { account, post } = this.props;
         // Is there an active vote by this account?
         let myVote = null;
-        let netVotes = post.net_votes;
+        let totalVotes = post.active_votes_count;
         let votes = [];
         if (post && post.active_votes) {
             for (let av of post.active_votes) {
-                if (av.percent === 0) continue;
                 if (av.voter === account.name) {
                     myVote = av;
                 }
                 votes.push(<Dropdown.Item key={av.voter} text={av.voter} description={(av.percent/100) + '%'} onClick={this.openVoter}/>);
             }
         }
-        if (votes.length && votes.length < post.active_votes_count) {
-            votes.push(<Dropdown.Header content={tt('voting.has_more_VOTES', {VOTES: post.active_votes_count - votes.length})} />);
+        if (votes.length && votes.length < totalVotes) {
+            votes.push(<Dropdown.Header content={tt('voting.has_more_VOTES', {VOTES: totalVotes - votes.length})} />);
         }
 
         const iUpvoted = myVote && myVote.percent > 0;
@@ -88,7 +87,7 @@ export default class Voting extends React.Component {
                 <Dropdown
                     floating
                     className="VoteList"
-                    text={netVotes.toString()}
+                    text={totalVotes.toString()}
                     icon={null}>
                     <Dropdown.Menu>
                         {votes}
@@ -139,7 +138,7 @@ export default class Voting extends React.Component {
                         floating
                         className="VoteList"
                         loading={this.props.loading}
-                        text={this.props.loading ? '' : netVotes.toString()}
+                        text={this.props.loading ? '' : totalVotes.toString()}
                         icon={this.props.loading ? '' : null}>
                         <Dropdown.Menu>
                           {votes}

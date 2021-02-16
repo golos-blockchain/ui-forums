@@ -333,7 +333,7 @@ router.get('/:category/@:author/:permlink/responses', async (ctx) => {
 
     targets = [];
 
-    let data = await golos.api.getAllContentRepliesAsync(ctx.params.author, ctx.params.permlink, DEFAULT_VOTE_LIMIT, 0, [], [], false, 'false');
+    let data = await golos.api.getAllContentRepliesAsync(ctx.params.author, ctx.params.permlink, CONFIG.FORUM.votes_per_page, 0, [], [], false, 'false');
     for (let item of data) {
         item.url = getUrl(item.url, ctx.params.category);
         item.author_banned = !!vals[NOTE_PST_HIDACC_LST][item.author];
