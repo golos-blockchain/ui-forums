@@ -405,16 +405,17 @@ class Forum extends React.Component {
       let meta = false;
       if (forum && forumid) {
           const title = getPageTitle(getForumName(forum));
+          const image = CONFIG.FORUM.meta_image;
           meta = (
               <Helmet>
                   <title>{title}</title>
                   <meta name='description' content={forum.desc_ru} />
                   <meta name='twitter:title' content={title} />
                   <meta name='twitter:description' content={forum.desc_ru} />
-                  <meta name='twitter:image:src' content='https://i.imgur.com/0AeZtdV.png' />
+                  <meta name='twitter:image:src' content={image} />
                   <meta property='og:title' content={title} />
                   <meta property='og:description' content={forum.desc_ru} />
-                  <meta property='og:image' content='https://i.imgur.com/0AeZtdV.png' />
+                  <meta property='og:image' content={image} />
               </Helmet>
           );
       }

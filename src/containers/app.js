@@ -91,11 +91,11 @@ class App extends React.Component {
                 <meta name='twitter:card' content='summary' />
                 <meta name='twitter:title' content={ttGetByKey(CONFIG.FORUM, 'meta_title')} />
                 <meta name='twitter:description' content={ttGetByKey(CONFIG.FORUM, 'meta_description')} />
-                <meta name='twitter:image:src' content='https://i.imgur.com/0AeZtdV.png' />
+                <meta name='twitter:image:src' content={CONFIG.FORUM.meta_image} />
                 <meta property='og:type' content='article' />  
                 <meta property='og:title' content={ttGetByKey(CONFIG.FORUM, 'meta_title')} />
                 <meta property='og:description' content={ttGetByKey(CONFIG.FORUM, 'meta_description')} />
-                <meta property='og:image' content='https://i.imgur.com/0AeZtdV.png' />
+                <meta property='og:image' content={CONFIG.FORUM.meta_image} />
             </Helmet>
             <HeaderMenu />
             <BreadcrumbMenu {...this.props.ssrState} />

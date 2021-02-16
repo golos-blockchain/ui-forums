@@ -45,7 +45,7 @@
     "how_to_markup": "Как пользоваться разметкой Markdown",
     "how_to_markup_html": "**жирный** > цитата ## заголовок <br /> [ссылка](http://ssilka) <br /> ![](http://site.ru/kartinka.jpg)",
     "submit": "Опубликовать",
-    "cancel": "Стереть и выйти",
+    "cancel": "Отмена",
     "tab_post": "Пост",
     "tab_rewards": "Настройки",
     "submitting": "Сообщение публикуется...",
