@@ -210,6 +210,10 @@
     "desc4": "Remember what keys of your account in ",
     "desc5": " cannot be recovered, and claiming access of them will allow scammers use your funds."
   },
+  "search": {
+    "placeholder": "Search for threads and replies",
+    "results": "Results: "
+  },
   "g": {
     "and": "and",
     "cancel": "Cancel",
@@ -227,6 +231,7 @@
     "too_big_file": "Too big file.",
     "this_field_required": "This field is required.",
     "should_be_email": "E-mail is wrong.",
-    "enter_code": "You received verification code at your e-mail. Enter it below (instead of e-mail):"
+    "enter_code": "You received verification code at your e-mail. Enter it below (instead of e-mail):",
+    "search": "Search"
   }
 }

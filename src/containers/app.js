@@ -31,6 +31,7 @@ const ForumsLayout = loadable(() => import('../components/layouts/forums'));
 const RepliesLayout = loadable(() => import('../components/layouts/replies'));
 const ThreadLayout = loadable(() => import('../components/layouts/thread'));
 const TopicLayout = loadable(() => import('../components/layouts/topic'));
+const SearchResults = loadable(() => import('../containers/search/results'));
 
 var _errorOrig = console.error;
 function _logError(...parameters) {
@@ -98,7 +99,7 @@ class App extends React.Component {
                 <meta property='og:image' content='https://i.imgur.com/0AeZtdV.png' />
             </Helmet>
             <HeaderMenu />
-            <BreadcrumbMenu {...this.props.ssrState} />
+            <BreadcrumbMenu {...this.props.ssrState} withSearch={true} />
             <GlobalNotice />
             <Container>
                 <Switch>
@@ -116,6 +117,7 @@ class App extends React.Component {
                     <Route path='/topic/:category' component={TopicLayout} />
                     <Route path='/:category/@:author/:permlink/:action?' component={(props) => <ThreadLayout {...props} {...this.props.ssrState} />} />
                     <Route path='/leave_page' component={Leave} />
+                    <Route path='/search/:query?' component={SearchResults} />
                     <Route exact path='/:section?' component={(props) => <IndexLayout {...props} {...this.props.ssrState} />} />
                 </Switch>
             </Container>

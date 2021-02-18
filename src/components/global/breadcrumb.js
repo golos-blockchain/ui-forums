@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import { Breadcrumb, Container, Grid, Icon } from 'semantic-ui-react';
 
 import * as breadcrumbActions from '../../actions/breadcrumbActions';
+import SearchBox from '../../containers/search';
 
 class BreadcrumbMenu extends Component {
     render() {
@@ -14,6 +15,12 @@ class BreadcrumbMenu extends Component {
         if (post && post.breadcrumb) {
             trail = trail.concat(post.breadcrumb);
             trail = Array.from(trail.reduce((m, t) => m.set(t.link, t), new Map()).values());
+        }
+        let withSearch = this.props.withSearch;
+        if (withSearch) {
+            let goodPath = window.location.pathname;
+            goodPath = goodPath === '/' || goodPath.startsWith('/f/')
+            withSearch = goodPath;
         }
         return (
             <Container>
@@ -30,9 +37,10 @@ class BreadcrumbMenu extends Component {
                                 </span>)}
                             </Breadcrumb>
                         </Grid.Column>
-                        {/*<Grid.Column width={4}>
+                        {withSearch ? <Grid.Column width={4}>
                             <div style={{height: '30px'}}>&nbsp;</div><SearchBox />
-                        </Grid.Column>*/}
+                            <br/>&nbsp;
+                        </Grid.Column> : null}
                     </Grid.Row>
                 </Grid>
             </Container>

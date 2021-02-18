@@ -48,6 +48,11 @@ module.exports = {
         // if post/comment has lesser net_rshares, it will be hidden
         hide_threshold: -9999999999
     },
+    ELASTIC_SEARCH: {
+        url: 'http://144.91.110.80:9200',
+        login: 'golosclient',
+        password: 'golosclient'
+    },
     PROGRESSION: {
         increment: 25,
         steps: [
