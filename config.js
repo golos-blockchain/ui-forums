@@ -49,7 +49,7 @@ module.exports = {
         hide_threshold: -9999999999
     },
     ELASTIC_SEARCH: {
-        url: 'http://betasearch.golos.today',
+        url: 'https://betasearch.golos.today',
         login: 'golosclient',
         password: 'golosclient'
     },
