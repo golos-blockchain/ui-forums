@@ -7,6 +7,34 @@ export function search(query) {
 
         let url = new URL(CONFIG.ELASTIC_SEARCH.url);
         url += 'blog/post/_search?pretty';
+        let sort = {};
+        let main = [];
+        if (query.value) {
+            main = [{
+                "bool": {
+                    "should": [
+                        {
+                            "match": {
+                                "title": query.value
+                            }
+                        },
+                        {
+                            "match": {
+                                "body": query.value
+                            }
+                        } 
+                    ]
+                }
+            }];
+        } else {
+            sort = {
+                "sort": {
+                    "created": {
+                        "order": "desc"
+                    }
+                }
+            };
+        }
         let body = {
             "_source": false,
             "from": (query.page - 1) * 20,
@@ -19,33 +47,22 @@ export function search(query) {
                                 "category": "fm-" + CONFIG.FORUM._id + "-"
                             }
                         },
-                        {
-                            "bool": {
-                                "should": [
-                                    {
-                                        "match": {
-                                            "title": query.value
-                                        }
-                                    },
-                                    {
-                                        "match": {
-                                            "body": query.value
-                                        }
-                                    } 
-                                ]
-                            }
-                        }
+                        ...main,
+                        ...query.filters
                     ]
                 }
             },
+            ...sort,
             "highlight": {
                 "fragment_size" : 350,
                 "fields": {
-                    "title": {},
-                    "body": {}
+                    "title": {
+                    },
+                    "body": {
+                    }
                 }
             },
-            "fields": ["author", "permlink", "category", "title", "body"]
+            "fields": ["author", "permlink", "category", "root_title", "body", "root_author", "root_permlink", "created"]
         };
         const response = await fetch(url, {
             method: 'post',
@@ -61,6 +78,8 @@ export function search(query) {
             dispatch(searchResolved(result));
         } else {
             console.error(response.status);
+            const result = await response.json();
+            alert(JSON.stringify(result, null, 2));
             dispatch(searchResolved());
         }
     };

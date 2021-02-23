@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Redirect } from 'react-router';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import debounce from 'lodash/debounce';
+import tt from 'counterpart';
 
 import { Search } from 'semantic-ui-react';
 
@@ -19,12 +19,13 @@ resultRenderer.propTypes = {
 };
 
 class SearchBox extends React.Component {
+    state = {
+        query: ''
+    };
+
     componentWillMount() {
         this.resetComponent();
         this.search = debounce(this.props.actions.search, 400);
-        this.state = {
-            query: ''
-        };
     }
 
     resetComponent = () => this.setState({ isLoading: false, results: [], value: '' });
@@ -41,7 +42,7 @@ class SearchBox extends React.Component {
     };
 
     goSearch = (e, value) => {
-        if (e.keyCode != 13 || this.state.query === '') return;
+        if (e.keyCode !== 13 || this.state.query === '') return;
         this.setState({
             redirect: '/search/' + this.state.query
         });
@@ -58,15 +59,17 @@ class SearchBox extends React.Component {
         return (
             <Search
                 style={{'float': 'right'}}
+                className='golossearch'
                 fluid={true}
                 loading={isLoading}
                 open={false}
+                placeholder={tt('search.placeholder')}
                 onResultSelect={this.handleResultSelect}
                 onSearchChange={this.handleSearchChange}
                 onKeyDown={this.goSearch}
                 resultRenderer={resultRenderer}
                 results={results}
-                size='mini'
+                size='tiny'
             />
         );
     }
