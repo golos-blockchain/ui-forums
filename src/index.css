@@ -375,7 +375,17 @@ github.com style (c) Vasily Polovnyov <vast@whiteants.net>
   min-width: 300px;
 }
 
+.golossearch-results {
+  font-size: 1.1em;
+}
+
 .golossearch-results em {
   background-color: yellow;
   font-style: normal;
+}
+
+.golossearch-results img {
+  width: 25%;
+  height: 25%;
+  display: block;
 }
