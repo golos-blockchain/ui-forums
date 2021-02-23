@@ -346,3 +346,12 @@ github.com style (c) Vasily Polovnyov <vast@whiteants.net>
 .hljs-strong {
   font-weight: bold;
 }
+
+.golossearch input {
+  min-width: 300px;
+}
+
+.golossearch-results em {
+  background-color: yellow;
+  font-style: normal;
+}

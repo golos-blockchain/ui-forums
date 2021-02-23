@@ -212,10 +212,15 @@
   },
   "search": {
     "placeholder": "Поиск по темам и ответам",
-    "results": "Результатов: "
+    "results": "Результатов: ",
+    "where_posts": "В темах",
+    "where_comments": "В ответах",
+    "where_anywhere": "Искать везде",
+    "alltime": "За все время"
   },
   "g": {
     "and": "и",
+    "author": "Автор",
     "cancel": "Отмена",
     "proceed": "Далее ",
     "error": "Ошибка",

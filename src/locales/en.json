@@ -212,10 +212,15 @@
   },
   "search": {
     "placeholder": "Search for threads and replies",
-    "results": "Results: "
+    "results": "Results: ",
+    "where_posts": "In threads",
+    "where_comments": "In comments",
+    "where_anywhere": "Everywhere",
+    "alltime": "All time"
   },
   "g": {
     "and": "and",
+    "author": "Author",
     "cancel": "Cancel",
     "proceed": "Proceed ",
     "error": "Error",
