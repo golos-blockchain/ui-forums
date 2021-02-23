@@ -121,7 +121,7 @@ class App extends React.Component {
                     <Route exact path='/:section?' component={(props) => <IndexLayout {...props} {...this.props.ssrState} />} />
                 </Switch>
             </Container>
-            <BreadcrumbMenu {...this.props.ssrState} />
+            <BreadcrumbMenu {...this.props.ssrState} withSearch={true} />
             <BannerMenu />
             <FooterMenu />
         </div>);
