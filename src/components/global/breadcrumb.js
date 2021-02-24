@@ -38,7 +38,7 @@ class BreadcrumbMenu extends Component {
                             </Breadcrumb>
                         </Grid.Column>
                         {withSearch ? <Grid.Column width={4}>
-                            <SearchBox /><div style={{paddingBottom: '50px'}}></div>
+                            <SearchBox />
                         </Grid.Column> : null}
                     </Grid.Row>
                 </Grid>

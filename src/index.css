@@ -389,3 +389,7 @@ github.com style (c) Vasily Polovnyov <vast@whiteants.net>
   height: 25%;
   display: block;
 }
+
+.golossearch-results h1,h2,h3 {
+    font-size: 100%;
+}
