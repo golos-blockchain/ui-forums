@@ -1,11 +1,11 @@
 module.exports = {
-    GOLOS_NODE: 'https://apibeta.golos.today',
-    //GOLOS_CHAIN_ID: '5876894a41e6361bde2e73278f07340f2eb8b41c2facd29099de9deef6cdb679',
-    REST_API: 'http://144.91.110.80:5000',
+    GOLOS_NODE: 'https://apibeta.golos.today', // http://144.91.110.80:3000
+    REST_API: 'https://restdev.golostalk.com', // http://144.91.110.80:5000
     FORUM: {
-        _id: 'golostalks',
-        creator: 'cyberfounder',
+        _id: 'golostalk',
+        creator: 'golostalk',
         footer_banner: '<a href="https://golos.id" target="_new"><img style="width: 700px" src="https://i.imgur.com/6mxuwsE.jpg" /></a>',
+        meta_image: 'https://i.imgur.com/0AeZtdV.png',
         // html is supported in all fields excl. breadcrumb_title, page_title
         ru: {
             meta_title: 'GolosTalk - форум на базе блокчейна Голос',
@@ -49,7 +49,7 @@ module.exports = {
         hide_threshold: -9999999999
     },
     ELASTIC_SEARCH: {
-        url: 'http://betasearch.golos.today',
+        url: 'https://betasearch.golos.today',
         login: 'golosclient',
         password: 'golosclient'
     },

@@ -22,10 +22,7 @@
     "koa-router": "^10.0.0",
     "koa-session": "^3.4.0",
     "passport-facebook": "latest",
-    "passport-google-oauth20": "^1.0.0",
     "passport-mail": "latest",
-    "passport-mailru-email": "latest",
-    "passport-telegram-official": "latest",
     "passport-vk": "latest",
     "passport-yandex": "latest"
   },

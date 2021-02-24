@@ -16,10 +16,6 @@ module.exports = {
             client_id: '400946054546292',
             client_secret: '62fefc26e01cce7c56aed3e2b0c2f5bf'
         },
-        telegram: {
-            enabled: false,
-            bot_token: '1559315861:AAFWDjcRP0dgsccGEosqBZEgdggHWUOgDU8'
-        },
         mailru: {
             enabled: false,
             client_id: '783069',

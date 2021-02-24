@@ -246,7 +246,7 @@ class Thread extends React.Component {
                   </Segment>
             );
         }
-        let image = 'https://i.imgur.com/0AeZtdV.png';
+        let image = CONFIG.FORUM.meta_image;
         if (content && content.json_metadata && content.json_metadata.image && content.json_metadata.image.length > 0) {
             image = content.json_metadata.image[0];
         }
@@ -255,7 +255,7 @@ class Thread extends React.Component {
         return (
             <div>
                 <Helmet>
-                    <title>{title}</title>                    
+                    <title>{title}</title>
                     <meta name='description' content={metaDesc} />
                     <meta name='twitter:title' content={title} />
                     <meta name='twitter:description' content={metaDesc} />

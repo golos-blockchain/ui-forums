@@ -58,7 +58,7 @@ class SearchBox extends React.Component {
         }
         return (
             <Search
-                style={{'float': 'right'}}
+                style={{'float': 'right', 'paddingBottom': '10px'}}
                 className='golossearch'
                 fluid={true}
                 loading={isLoading}
