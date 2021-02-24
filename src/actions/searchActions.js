@@ -10,16 +10,21 @@ export function search(query) {
         let sort = {};
         let main = [];
         if (query.value) {
+            let queryTrimmed = query.value.trim();
+            let queryOp = 'match';
+            if (queryTrimmed.length >= 3 && queryTrimmed[0] === '"' && queryTrimmed[queryTrimmed.length - 1] === '"') {
+                queryOp = 'match_phrase';
+            }
             main = [{
                 "bool": {
                     "should": [
                         {
-                            "match": {
+                            [queryOp]: {
                                 "title": query.value
                             }
                         },
                         {
-                            "match": {
+                            [queryOp]: {
                                 "body": query.value
                             }
                         } 

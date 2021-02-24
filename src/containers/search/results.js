@@ -162,7 +162,7 @@ class SearchResults extends React.Component {
 
     handleAuthorLookup = (e) => {
         if (e.keyCode === 13) return;
-        golos.api.lookupAccounts(e.target.value, 6, (err, data) => {
+        golos.api.lookupAccounts(e.target.value.toLowerCase(), 6, (err, data) => {
             let options = data.map((name) => {
                 return {text: name, value: name};
             });
@@ -210,11 +210,11 @@ class SearchResults extends React.Component {
 
                 return (<div>
                         <Link to={url}><h4 dangerouslySetInnerHTML={{__html: title}}></h4></Link>
-                        <Link to={url}><div style={{color: 'rgb(180, 180, 180)'}}>
+                        <Link to={url}><span style={{color: 'rgb(180, 180, 180)'}}>
                             <TimeAgoWrapper date={`${hit.fields.created[0]}Z`} />
                             &nbsp;—&nbsp;@
                             {hit.fields.author[0]}
-                        </div></Link>
+                        </span></Link>
                         <div dangerouslySetInnerHTML={{__html: remarkableStripper.render(body)}}></div>
                         <br/>
                     </div>);
