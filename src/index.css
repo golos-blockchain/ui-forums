@@ -271,12 +271,6 @@
   display: none;
 }
 
-/*
-
-github.com style (c) Vasily Polovnyov <vast@whiteants.net>
-
-*/
-
 .hljs {
   display: block;
   overflow-x: auto;
@@ -377,16 +371,21 @@ github.com style (c) Vasily Polovnyov <vast@whiteants.net>
 
 .golossearch-results {
   font-size: 1.1em;
-  h1, h2, h3 {
-    font-size: 100%;
-  }
-  em {
-    background-color: yellow;
-    font-style: normal;
-  }
-  img {
-    width: 25%;
-    height: 25%;
-    display: block;
-  }
+}
+
+.golossearch-results em {
+  background-color: yellow;
+  font-style: normal;
+}
+
+.golossearch-results img {
+  width: 25%;
+  height: 25%;
+  display: block;
+}
+
+.golossearch-results h1,
+.golossearch-results h2,
+.golossearch-results h3 {
+  font-size: 100%;
 }
