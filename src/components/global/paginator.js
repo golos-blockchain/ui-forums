@@ -2,8 +2,8 @@ import React, { Component } from 'react'
 import tt from 'counterpart';
 
 import Pagination from 'rc-pagination';
-import localeEn from 'rc-pagination/es/locale/en_US';
-import localeRu from 'rc-pagination/es/locale/ru_RU';
+import localeEn from 'rc-pagination/lib/locale/en_US';
+import localeRu from 'rc-pagination/lib/locale/ru_RU';
 if (typeof(document) !== 'undefined') import('rc-pagination/assets/index.css');
 
 export default class Paginator extends Component {
