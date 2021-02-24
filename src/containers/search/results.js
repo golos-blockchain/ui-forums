@@ -162,7 +162,7 @@ class SearchResults extends React.Component {
 
     handleAuthorLookup = (e) => {
         if (e.keyCode === 13) return;
-        golos.api.lookupAccounts(e.target.value, 6, (err, data) => {
+        golos.api.lookupAccounts(e.target.value.toLowerCase(), 6, (err, data) => {
             let options = data.map((name) => {
                 return {text: name, value: name};
             });
