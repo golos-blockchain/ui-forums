@@ -5,6 +5,8 @@ import { Link, withRouter } from 'react-router-dom';
 import { goToTop } from 'react-scrollable-anchor';
 import golos from 'golos-classic-js';
 import tt from 'counterpart';
+import truncate from 'lodash/truncate';
+import sanitize from 'sanitize-html';
 
 import { Button, Dropdown, Input } from 'semantic-ui-react';
 
@@ -206,7 +208,10 @@ class SearchResults extends React.Component {
                     url += '#@' + author + '/' + permlink;
                 }
                 let body = hit.highlight && hit.highlight.body;
-                body = body ? body[0].split('</em> <em>').join(' ') : hit.fields.body[0].substring(0, 100);
+                body = body ? body[0].split('</em> <em>').join(' ') : truncate(hit.fields.body[0], {length: 200});
+
+                body = remarkableStripper.render(body);
+                body = sanitize(body, {allowedTags: ['em', 'img']});
 
                 return (<div>
                         <Link to={url}><h4 dangerouslySetInnerHTML={{__html: title}}></h4></Link>
@@ -215,7 +220,7 @@ class SearchResults extends React.Component {
                             &nbsp;—&nbsp;@
                             {hit.fields.author[0]}
                         </span></Link>
-                        <div dangerouslySetInnerHTML={{__html: remarkableStripper.render(body)}}></div>
+                        <div dangerouslySetInnerHTML={{__html: body}}></div>
                         <br/>
                     </div>);
             });
@@ -226,6 +231,7 @@ class SearchResults extends React.Component {
                         perPage={20}
                         total={totalPosts}
                         callback={this.changePage}
+                        showMorePages={true}
                         /><br/><br/>
                     {results}
                     <Paginator
@@ -233,6 +239,7 @@ class SearchResults extends React.Component {
                         perPage={20}
                         total={totalPosts}
                         callback={this.changePage}
+                        showMorePages={true}
                         />
                 </div>);
         }

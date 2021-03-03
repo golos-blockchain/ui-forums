@@ -8,23 +8,23 @@ if (typeof(document) !== 'undefined') import('rc-pagination/assets/index.css');
 
 export default class Paginator extends Component {
 
-  changePage = (data) => {
-    this.props.callback(data, `comments-page-${data}`)
-  }
+    changePage = (data) => {
+        this.props.callback(data, `comments-page-${data}`);
+    };
 
-  render() {
-    let { page, perPage, total } = this.props
-    return (
-      <Pagination
-        showLessItems
-        defaultPageSize={perPage}
-        current={page}
-        onShowSizeChange={this.onShowSizeChange}
-        onChange={this.changePage}
-        total={total}
-        style={{ float: 'right', margin: 0 }}
-        locale={tt.getLocale() === 'ru' ? localeRu : localeEn}
-      />
-    )
-  }
+    render() {
+        let { page, perPage, total } = this.props;
+        return (
+            <Pagination
+                showLessItems={this.props.showMorePages ? undefined : true}
+                defaultPageSize={perPage}
+                current={page}
+                onShowSizeChange={this.onShowSizeChange}
+                onChange={this.changePage}
+                total={total}
+                style={{ float: 'right', margin: 0 }}
+                locale={tt.getLocale() === 'ru' ? localeRu : localeEn}
+            />
+        );
+    }
 }
