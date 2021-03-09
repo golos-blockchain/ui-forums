@@ -103,7 +103,7 @@ class LoginModal extends React.Component {
                 return;
             }
             if (res.posting) {
-                t.props.actions.signinAccount(account, res.posting);
+                t.props.actions.signinAccount(account, res.posting, res.memo);
                 t.handleClose();
                 return;
             }

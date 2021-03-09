@@ -218,6 +218,9 @@
     "where_anywhere": "Everywhere",
     "alltime": "All time"
   },
+  "messages": {
+    "type_a_message_NAME": "Type a message, @%(NAME)s"
+  },
   "g": {
     "and": "and",
     "author": "Author",

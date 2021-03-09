@@ -25,6 +25,7 @@ import '../../node_modules/noty/lib/noty.css';
 import loadable from 'loadable-components';
 const IndexLayout = loadable(() => import('../components/layouts/index'));
 const FeedLayout = loadable(() => import('../components/layouts/feed'));
+const Messages = loadable(() => import('../containers/messages'));
 const ForumLayout = loadable(() => import('../components/layouts/forum'));
 const ForumCreateLayout = loadable(() => import('../components/layouts/forum/create'));
 const ForumsLayout = loadable(() => import('../components/layouts/forums'));
@@ -84,7 +85,14 @@ class App extends React.Component {
     };
 
     render() {
-        const container = (<div className='AppContainer'>
+        let container;
+        const pathname = window.location.pathname;
+        if (pathname.startsWith('/msgs/')) {
+            container = (<Switch>
+                    <Route path='/msgs/:to?' component={Messages} />
+                </Switch>);
+        } else
+        container = (<div className='AppContainer'>
             <Helmet>
                 <title>{ttGetByKey(CONFIG.FORUM, 'page_title')}</title>
                 <meta name='description' content={ttGetByKey(CONFIG.FORUM, 'meta_description')} />

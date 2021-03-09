@@ -102,11 +102,12 @@ export function signoutAccount() {
     }
 }
 
-export function signinAccount(account, key) {
+export function signinAccount(account, key, memoKey) {
     return dispatch => {
         let payload = {
             account: account,
             key: key,
+            memoKey: memoKey,
         };
         dispatch(AccountsActions.addAccount(account, key));
         dispatch({

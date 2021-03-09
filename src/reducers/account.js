@@ -27,13 +27,15 @@ export default function account(state = false, action) {
             return {
                 isUser: false,
                 name: '',
-                key: ''
+                key: '',
+                memoKey: ''
             };
         case types.ACCOUNT_SIGNIN:
             return Object.assign({}, state, {
                 isUser: true,
                 name: action.payload.account,
                 key: action.payload.key,
+                memoKey: action.payload.memoKey || state.memoKey
             });
         default:
             return state;

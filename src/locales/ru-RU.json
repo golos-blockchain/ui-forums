@@ -218,6 +218,9 @@
     "where_anywhere": "Искать везде",
     "alltime": "За все время"
   },
+  "messages": {
+    "type_a_message_NAME": "Напишите сообщение, @%(NAME)s"
+  },
   "g": {
     "and": "и",
     "author": "Автор",
