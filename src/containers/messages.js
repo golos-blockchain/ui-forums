@@ -12,6 +12,7 @@ import * as CONFIG from '../../config';
 import * as messagesActions from '../actions/messagesActions';
 
 import Messenger from './messages/Messenger';
+import TimeAgoWrapper from '../utils/TimeAgoWrapper';
 
 class Messages extends React.Component {
  
@@ -109,7 +110,7 @@ objDiv.scrollTop = objDiv.scrollHeight;
 
     onSendMessage = (message, event) => {
         const { account, messages } = this.props;
-        this.props.actions.addMessage(account, this.state.to, messages.toMemoKey, message);
+        this.props.actions.addMessage(account, this.state.to, messages.to.memo_key, message);
     };
 
     render() {
@@ -128,7 +129,18 @@ objDiv.scrollTop = objDiv.scrollHeight;
                     onConversationAdd={this.onConversationAdd}
                     onConversationSelect={this.onConversationSelect}
                     onSendMessage={this.onSendMessage}
-                    {...this.props.messages} />
+                    messages={this.props.messages.messages}
+                    messagesTopCenter={[
+                        <div style={{fontSize: '14px'}}>{this.state.to}</div>,
+                        <div style={{fontSize: '12px'}}>
+                            {this.props.messages.to ?
+                                <span>
+                                    был(а) <TimeAgoWrapper date={`${this.props.messages.to.last_custom_json_bandwidth_update}}Z`} />
+                                </span>
+                                : null}
+                        </div>
+                    ]}
+                    contacts={this.props.messages.contacts} />
                 <Modal size='small' open={this.state.addContactShow}>
                         <Modal.Header>Добавить контакт</Modal.Header>
                         <Modal.Content>

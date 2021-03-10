@@ -5,6 +5,7 @@ import * as types from './actionTypes';
 import * as CONFIG from '../../config';
 
 import TimeAgoWrapper from '../utils/TimeAgoWrapper';
+import { getAccountAvatarSrc } from '../utils/accountMetaUtils';
 
 export function addMessage(account, to, toMemoKey, body) {
     return async dispatch => {
@@ -38,36 +39,30 @@ export function addMessage(account, to, toMemoKey, body) {
 export function fetchMessages(account, to) {
     return async dispatch => {
         if (!account.data) return;
-        let toAcc = await golos.api.getAccountsAsync([to]);
-        toAcc = toAcc[0];
-        golos.api.getThread(account.name, to, {}, (err, results) => {
+        let url = `${ CONFIG.REST_API }/msgs/chat/@${ account.name }/@${ to }`;
+        const response = await fetch(url);
+        if (response.ok) {
+            const result = await response.json();
+
             const memoKey = account.memoKey || '5JVFFWRLwz6JoP9kguuRFfytToGU6cLgBVTL9t6NB3D3BQLbUBS';
-            if (err) {
-                console.log(err);
-                alert(err);
-                dispatch(fetchMessagesResolved({
-                    account,
-                    toMemoKey: toAcc.memo_key,
-                }));
-                return;
-            }
+
             let id = 0;
             let resultsDecrypted = []; // TODO: remove copying, just remove/hide invalid messages
-            for (let result of results) {
+            for (let msg of result.data.messages) {
                 let public_key;
-                if (account.data.memo_key === result.to_memo_key) {
-                    public_key = result.from_memo_key;
+                if (account.data.memo_key === msg.to_memo_key) {
+                    public_key = msg.from_memo_key;
                 } else {
-                    public_key = result.to_memo_key;
+                    public_key = msg.to_memo_key;
                 }
 
                 try {
-                    let message = golos.messages.decode(memoKey, public_key, result);
+                    let message = golos.messages.decode(memoKey, public_key, msg);
 
                     message = JSON.parse(message).body;
                     let status = undefined; // no mark (for from's messages)
-                    if (result.from === account.name) {
-                        if (result.read_date.startsWith('1970')) {
+                    if (msg.from === account.name) {
+                        if (msg.read_date.startsWith('1970')) {
                             status = 'sent'; // 1 mark (actually meansreceived)
                         } else {
                             status = 'read'; // 2 marks
@@ -75,16 +70,16 @@ export function fetchMessages(account, to) {
                     }
 
                     // TODO: less trickly, separate as util
-                    /*let dateString = ReactDOMServer.renderToString(<TimeAgoWrapper date={`${result.create_date}Z`} />);
+                    /*let dateString = ReactDOMServer.renderToString(<TimeAgoWrapper date={`${msg.create_date}Z`} />);
                     let dateEl = document.createElement('div');
                     dateEl.innerHTML = dateString;
                     dateString = dateEl.textContent;*/
 
-                    resultsDecrypted.unshift({...result,
+                    resultsDecrypted.unshift({...msg,
                         id: ++id,
                         message,
-                        author: result.from,
-                        timestamp: new Date(result.receive_date).getTime(),
+                        author: msg.from,
+                        timestamp: new Date(msg.receive_date).getTime(),
                         status,
                     });
                 } catch (ex) {
@@ -93,10 +88,16 @@ export function fetchMessages(account, to) {
             }
             dispatch(fetchMessagesResolved({
                 account,
-                toMemoKey: toAcc.memo_key,
+                to: result.data.accounts[to],
                 results: resultsDecrypted,
             }));
-        });
+        } else {
+            console.log(response);
+            dispatch(fetchMessagesResolved({
+                account,
+                to: undefined,
+            }));
+        }
     };
 }
 
@@ -110,42 +111,43 @@ export function fetchMessagesResolved(payload) {
 export function fetchContacts(account) {
     return async dispatch => {
         if (!account.data) return;
-        golos.api.getContacts(account.name, 'unknown', 100, 0, (err, results) => {
+
+        let url = `${ CONFIG.REST_API }/msgs/contacts/@${ account.name }`;
+        const response = await fetch(url);
+        if (response.ok) {
+            const result = await response.json();
+
             const memoKey = account.memoKey || '5JVFFWRLwz6JoP9kguuRFfytToGU6cLgBVTL9t6NB3D3BQLbUBS';
-            if (err) {
-                console.log(err);
-                alert(err);
-                dispatch(fetchContactsResolved({
-                    account
-                }));
-                return;
-            }
-            for (let result of results) {
-                if (result.last_message.receive_date.startsWith('1970')) {
-                    result.last_message.message = "";
+
+            let contacts = result.data.contacts;
+            for (let contact of contacts) {
+                if (contact.last_message.receive_date.startsWith('1970')) {
+                    contact.last_message.message = "";
                     continue;
                 }
 
                 let public_key;
-                if (account.data.memo_key === result.last_message.to_memo_key) {
-                    public_key = result.last_message.from_memo_key;
+                if (account.data.memo_key === contact.last_message.to_memo_key) {
+                    public_key = contact.last_message.from_memo_key;
                 } else {
-                    public_key = result.last_message.to_memo_key;
+                    public_key = contact.last_message.to_memo_key;
                 }
 
                 try {
-                    let message = golos.messages.decode(memoKey, public_key, result.last_message);
+                    let message = golos.messages.decode(memoKey, public_key, contact.last_message);
 
-                    result.last_message.message = JSON.parse(message).body;
+                    contact.last_message.message = JSON.parse(message).body;
                 } catch (ex) {
                     console.log(ex);
                 }
+
+                contact.avatar = getAccountAvatarSrc(result.data.accounts[contact.contact].json_metadata);
             }
             dispatch(fetchContactsResolved({
                 account,
-                results
+                results: contacts
             }));
-        });
+        }
     };
 }
 

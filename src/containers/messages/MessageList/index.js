@@ -78,11 +78,11 @@ export default class MessageList extends React.Component {
     };
 
     render() {
-        const { account, onSendMessage } = this.props;
+        const { account, topCenter, onSendMessage } = this.props;
         return (
             <div className='message-list'>
                 <Toolbar
-                    title='Conversation Title'
+                    title={topCenter}
                     rightItems={[
                         <ToolbarButton key='info' icon='ion-ios-information-circle-outline' />,
                         <ToolbarButton key='video' icon='ion-ios-videocam' />,

@@ -27,13 +27,13 @@ export default class ConversationListItem extends React.Component {
 
     render() {
         const { selected } = this.props;
-        const { photo, contact, last_message } = this.props.data;
+        const { avatar, contact, last_message } = this.props.data;
 
         const link = this.makeLink();
 
         return (
             <a href={link} onClick={this.onClick} className={'conversation-list-item' + (selected ? ' selected' : '')}>
-                <img className='conversation-photo' src={photo} alt='conversation' />
+                <img className='conversation-photo' src={avatar} alt='conversation' />
                 <div className='conversation-info'>
                     <h1 className='conversation-title'>{contact}</h1>
                     <p className='conversation-snippet'>{last_message.message}</p>

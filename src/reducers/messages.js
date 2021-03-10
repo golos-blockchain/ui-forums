@@ -10,7 +10,7 @@ export default function messages(state = initialState, action) {
         case types.MESSAGES_LOAD_RESOLVED: {
             return Object.assign({}, state, {
                 messages: action.payload.results,
-                toMemoKey: action.payload.toMemoKey,
+                to: action.payload.to,
             });
         }
         case types.MESSAGES_CONTACTS_LOAD_RESOLVED: {

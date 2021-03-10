@@ -9,7 +9,7 @@ export default class Messages extends React.Component {
         const { account, to,
             contacts, conversationTopLeft, conversationLinkPattern,
             onConversationAdd, onConversationSelect,
-            messages, onSendMessage } = this.props;
+            messagesTopCenter, messages, onSendMessage } = this.props;
         return (
             <div className='messenger'>
                 {/* <Toolbar
@@ -45,6 +45,7 @@ export default class Messages extends React.Component {
                 <div className='scrollable content'>
                     <MessageList
                         account={account}
+                        topCenter={messagesTopCenter}
                         messages={messages}
                         onSendMessage={onSendMessage} />
                 </div>
