@@ -55,7 +55,7 @@ class LoginModal extends React.Component {
 
     handleSubmit = async e => {
         e.preventDefault();
-        const { isActive } = this.props;
+        const { isActive, isMemo } = this.props;
         const { account, key } = this.state,
               t = this;
         // Indicate we're loading
@@ -75,7 +75,19 @@ class LoginModal extends React.Component {
             }
             return;
         }
-        if (isActive) {
+        if (isMemo) {
+            if (res.memo) {
+                t.props.actions.signinAccount(account, '', res.memo);
+                t.handleClose();
+                return;
+            } else if (res.posting || res.owner || res.active) {
+                t.setState({
+                    loading: false,
+                    error: tt('login.wrong_password_not_memo')
+                });
+                return;
+            }
+        } else if (isActive) {
             if (res.active) {
                 t.props.actions.signinAccount(account, res.active);
                 t.handleClose();
@@ -122,7 +134,9 @@ class LoginModal extends React.Component {
             buttonFluid,
             buttonIcon,
             buttonText,
-            isActive
+            isActive,
+            isMemo,
+            authType,
         } = this.props;
         let modal = (
             <Modal
@@ -159,7 +173,7 @@ class LoginModal extends React.Component {
                     open={this.state.loginOpen}
                     size='small'
                 >
-                    <Header icon='lock' content={isActive ? tt('login.active_title') : tt('login.sign_in')} />
+                    <Header icon='lock' content={tt(`login.${authType}_title`)} />
                     <Modal.Content>
                         {/*<Message>
                             <Message.Header>Before you login, please note:</Message.Header>
@@ -169,16 +183,16 @@ class LoginModal extends React.Component {
                                 <Message.Item>chainBB is currently in <strong>BETA</strong> and may contain bugs.</Message.Item>
                             </Message.List>
                         </Message>*/}
-                        {isActive ?
+                        {authType ?
                             <Message>
-                            {tt('login.active_description')}
+                            {tt(`login.${authType}_description`)}
                             </Message>
                         : null}
                         <Form
                             error={(this.state.error) ? true : false}
                             loading={this.state.loading}>
-                            <Form.Input placeholder={tt('login.account_name')} autoFocus={!isActive} disabled={isActive} name='account' value={this.state.account} onChange={this.handleChange} />
-                            <Form.Input placeholder={isActive ? tt('login.password_active') : tt('login.password')} autoFocus={isActive} type='password' name='key' value={this.state.key} onChange={this.handleChange} />
+                            <Form.Input placeholder={tt('login.account_name')} autoFocus={!isActive && !isMemo} disabled={isActive || isMemo} name='account' value={this.state.account} onChange={this.handleChange} />
+                            <Form.Input placeholder={tt(`login.password_${authType}`)} autoFocus={isActive || isMemo} type='password' name='key' value={this.state.key} onChange={this.handleChange} />
                             {/*<p>
                                 Need help finding your <strong>Posting (Private Key)</strong>?
                                 {' '}
@@ -207,7 +221,9 @@ class LoginModal extends React.Component {
 function mapStateToProps(state, ownProps) {
     return {
         account: state.account ? state.account.name : '',
-        isActive: ownProps.authType === 'active'
+        isActive: ownProps.authType === 'active',
+        isMemo: ownProps.authType === 'memo',
+        authType: ownProps.authType || '',
     };
 }
 

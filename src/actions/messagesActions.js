@@ -14,10 +14,11 @@ export function addMessage(account, to, toMemoKey, body) {
             version: 1,
             body,
         };
+        message = JSON.stringify(message);
 
-        const memoKey = account.memoKey || '5JVFFWRLwz6JoP9kguuRFfytToGU6cLgBVTL9t6NB3D3BQLbUBS';
+        const memoKey = account.memoKey;
 
-        const data = golos.messages.encode(memoKey, toMemoKey, JSON.stringify(message));
+        const data = golos.messages.encode(memoKey, toMemoKey, message);
 
         const json = JSON.stringify(['private_message', {
             from: account.name,
@@ -30,9 +31,40 @@ export function addMessage(account, to, toMemoKey, body) {
             encrypted_message: data.message,
         }]);
         golos.broadcast.customJson(account.key, [], [account.name], 'private_message', json, (err, result) => {
-            alert(err);
-            alert(JSON.stringify(result));
+            if (err) {
+                alert(err);
+                return;
+            }
+            const now = new Date().toISOString().split('.')[0];
+            dispatch(addMessageResolved({
+                from: account.name,
+                to,
+                from_memo_key: account.data.memo_key,
+                to_memo_key: toMemoKey,
+                nonce: data.nonce.toString(),
+                checksum: data.checksum,
+                encrypted_message: data.message,
+                create_date: now,
+                receive_date: now,
+                read_date: '1970-01-01T00:00:00',
+                remove_date: '1970-01-01T00:00:00',
+
+                id: 134,
+                message: body,
+                author: account.name,
+                date: new Date(),
+            }));
         });
+    };
+}
+
+export function addMessageResolved(payload) {
+    // TODO: remove
+    const input = document.getElementsByClassName('compose-input');
+    if (input[0]) input[0].value = '';
+    return {
+        type: types.MESSAGES_ADD_RESOLVED,
+        payload: payload,
     };
 }
 
@@ -44,7 +76,7 @@ export function fetchMessages(account, to) {
         if (response.ok) {
             const result = await response.json();
 
-            const memoKey = account.memoKey || '5JVFFWRLwz6JoP9kguuRFfytToGU6cLgBVTL9t6NB3D3BQLbUBS';
+            const memoKey = account.memoKey;
 
             let id = 0;
             let resultsDecrypted = []; // TODO: remove copying, just remove/hide invalid messages
@@ -79,7 +111,7 @@ export function fetchMessages(account, to) {
                         id: ++id,
                         message,
                         author: msg.from,
-                        timestamp: new Date(msg.receive_date).getTime(),
+                        date: new Date(msg.receive_date + 'Z'),
                         status,
                     });
                 } catch (ex) {
@@ -117,7 +149,7 @@ export function fetchContacts(account) {
         if (response.ok) {
             const result = await response.json();
 
-            const memoKey = account.memoKey || '5JVFFWRLwz6JoP9kguuRFfytToGU6cLgBVTL9t6NB3D3BQLbUBS';
+            const memoKey = account.memoKey;
 
             let contacts = result.data.contacts;
             for (let contact of contacts) {
@@ -154,6 +186,44 @@ export function fetchContacts(account) {
 export function fetchContactsResolved(payload) {
     return {
         type: types.MESSAGES_CONTACTS_LOAD_RESOLVED,
+        payload: payload
+    };
+}
+
+export function searchContacts(selfName, query) {
+    return async dispatch => {
+        if (!query) {
+            dispatch(searchContactsResolved(null));
+            return;
+        }
+
+        let url = `${ CONFIG.REST_API }/msgs/contacts/search/${ query }`;
+        const response = await fetch(url);
+        if (response.ok) {
+            let result = await response.json();
+            let contacts = [];
+            for (let account of result.data) {
+                if (account.memo_key === 'GLS1111111111111111111111111111111114T1Anm'
+                    || account.name === selfName) {
+                    continue;
+                }
+                account.contact = account.name;
+                account.avatar = getAccountAvatarSrc(account.json_metadata);
+                contacts.push(account);
+            }
+            if (contacts.length === 0) {
+                contacts = [{contact: 'Ничего не найдено'}];
+            }
+            dispatch(searchContactsResolved(contacts));
+        } else {
+            dispatch(searchContactsResolved(null));
+        }
+    };
+}
+
+export function searchContactsResolved(payload) {
+    return {
+        type: types.MESSAGES_SEARCH_RESOLVED,
         payload: payload
     };
 }

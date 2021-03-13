@@ -5,13 +5,18 @@ import { Link, withRouter } from 'react-router-dom';
 import golos from 'golos-classic-js';
 import tt from 'counterpart';
 import ttGetByKey from '../utils/ttGetByKey';
+import max from 'lodash/max';
 
 import { Button, Modal, Dropdown } from 'semantic-ui-react';
 
 import * as CONFIG from '../../config';
+import * as accountActions from '../actions/accountActions';
 import * as messagesActions from '../actions/messagesActions';
 
 import Messenger from './messages/Messenger';
+import LoginModal from '../components/elements/login/modal';
+import LogoutItem from '../components/elements/login/logout';
+import AccountAvatar from '../components/elements/account/avatar';
 import TimeAgoWrapper from '../utils/TimeAgoWrapper';
 
 class Messages extends React.Component {
@@ -25,37 +30,36 @@ class Messages extends React.Component {
             addContactShow: false,
             contactToAdd: '',
             authorLookup: [],
+            showConfirm: false,
         };
-        if (this.state.to) {
+        if (this.state.to && props.account.memoKey) {
             this.props.actions.fetchMessages(this.props.account, this.state.to);
         }
         this.props.actions.fetchContacts(this.props.account);
     }
 
-    send = () => {
+    componentDidMount() {
+        const { account } = this.props;
+        if (!account.memoKey) {
+            this.setState({
+                showConfirm: true
+            });
+        }
+    }
 
-        /*const nonce = +new Date() * 1000;
-        let private_key = PrivateKey.fromWif(this.props.account.memoKey)
-        let shared_secret = private_key.get_shared_secret('GLS58g5rWYS3XFTuGDSxLVwiBiPLoAyCZgn6aB9Ueh8Hj5qwQA3r6');
-        */
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.messages.messages.length > this.props.messages.messages.length) {
+            setTimeout(() => {
+                const scroll = document.getElementsByClassName('scrollable')[1];
+                scroll.scrollTo(0,scroll.scrollHeight);
+            }, 1);
+        }
+    }
 
-
-        /*let messages = [...this.state.messages];
-        messages.push({
-            position: 'right',
-            type: 'text',
-            text: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit',
-            date: new Date(),
-        });
+    onConfirmClose = () => {
         this.setState({
-            messages
-        }, () =>
-         {
-            //window.scrollTo(0, document.body.scrollHeight)
-            var objDiv = document.getElementById("pm-messagelist");
-objDiv.scrollTop = objDiv.scrollHeight;
-
-         });*/
+            showConfirm: false
+        });
     };
 
     onConversationAdd = (event) => {
@@ -97,6 +101,10 @@ objDiv.scrollTop = objDiv.scrollHeight;
         });
     };
 
+    onConversationSearch = (event) => {
+        this.props.actions.searchContacts(this.props.account.name, event.target.value)
+    };
+
     onConversationSelect = (conversation, link, event) => {
         if (this.state.to === conversation.contact) return;
 
@@ -110,37 +118,88 @@ objDiv.scrollTop = objDiv.scrollHeight;
 
     onSendMessage = (message, event) => {
         const { account, messages } = this.props;
+        if (!account.memoKey) {
+            this.setState({
+                showConfirm: true
+            });
+            return;
+        }
         this.props.actions.addMessage(account, this.state.to, messages.to.memo_key, message);
     };
 
+    _renderMessagesTopCenter = () => {
+        let messagesTopCenter = [];
+        const { to } = this.props.messages;
+        if (to) {
+            messagesTopCenter.push(<div style={{fontSize: '14px', width: '100%', textAlign: 'center'}}>
+                <a href={'/@' + to.name}>@{to.name}</a>
+            </div>);
+            const dates = [
+                to.last_custom_json_bandwidth_update,
+                to.last_post,
+                to.last_comment,
+                to.created,
+            ];
+            let lastSeen = max(dates);
+            if (!lastSeen.startsWith('19')) {
+                messagesTopCenter.push(<div style={{fontSize: '12px', fontWeight: 'normal'}}>
+                    {
+                        <span>
+                            <TimeAgoWrapper prefix={tt('messages.last_seen')} date={`${lastSeen}Z`} />
+                        </span>
+                    }
+                </div>);
+            }
+        }
+        return messagesTopCenter;
+    };
+
+    _renderMessagesTopRight = () => {
+        const { name } = this.props.account;
+        let avatar = (
+            <AccountAvatar
+                className=''
+                noLink={true}
+                size={35}
+                style={{margin: 0}}
+                username={name}
+            />
+        );
+        return (<Dropdown title={'@' + name} style={{padding: '0 1.1em'}} item trigger={avatar} pointing='top right' icon={null} className='icon'>
+            <Dropdown.Menu>
+                <Dropdown.Item target='_blank' icon='user' content={<a href={`/@${name}`}>{tt('account.profile')}</a>} />
+                <LogoutItem {...this.props} />
+            </Dropdown.Menu>
+        </Dropdown>)
+    };
+
     render() {
+        const { account, actions } = this.props;
+        const { contacts, searchContacts, messages } = this.props.messages;
+        if (!account.name) {
+            window.location.href = '/';
+            return (<div></div>);
+        }
         return (
             <div>
+                <LoginModal authType='memo' noButton={true} open={this.state.showConfirm} actions={{...actions, onClose: this.onConfirmClose}}/>
                 <link href="https://unpkg.com/ionicons@4.5.0/dist/css/ionicons.min.css" rel="stylesheet"/>
                 <Messenger
                     account={this.props.account}
                     to={this.state.to}
+                    contacts={searchContacts || contacts}
                     conversationTopLeft={[
                         <a href='/'>
-                            <strong dangerouslySetInnerHTML={{__html: ttGetByKey(CONFIG.FORUM, 'logo_title')}}></strong>
+                            <h3 dangerouslySetInnerHTML={{__html: ttGetByKey(CONFIG.FORUM, 'logo_title')}}></h3>
                         </a>
                     ]}
                     conversationLinkPattern='/msgs/@*'
-                    onConversationAdd={this.onConversationAdd}
+                    onConversationSearch={this.onConversationSearch}
                     onConversationSelect={this.onConversationSelect}
-                    onSendMessage={this.onSendMessage}
-                    messages={this.props.messages.messages}
-                    messagesTopCenter={[
-                        <div style={{fontSize: '14px'}}>{this.state.to}</div>,
-                        <div style={{fontSize: '12px'}}>
-                            {this.props.messages.to ?
-                                <span>
-                                    был(а) <TimeAgoWrapper date={`${this.props.messages.to.last_custom_json_bandwidth_update}}Z`} />
-                                </span>
-                                : null}
-                        </div>
-                    ]}
-                    contacts={this.props.messages.contacts} />
+                    messages={messages}
+                    messagesTopCenter={this._renderMessagesTopCenter()}
+                    messagesTopRight={this._renderMessagesTopRight()}
+                    onSendMessage={this.onSendMessage} />
                 <Modal size='small' open={this.state.addContactShow}>
                         <Modal.Header>Добавить контакт</Modal.Header>
                         <Modal.Content>
@@ -172,6 +231,7 @@ function mapStateToProps(state, ownProps) {
 
 function mapDispatchToProps(dispatch) {
     return {actions: bindActionCreators({
+        ...accountActions,
         ...messagesActions,
     }, dispatch)};
 }

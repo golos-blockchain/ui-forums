@@ -34,7 +34,7 @@ export default function account(state = false, action) {
             return Object.assign({}, state, {
                 isUser: true,
                 name: action.payload.account,
-                key: action.payload.key,
+                key: action.payload.key || state.key,
                 memoKey: action.payload.memoKey || state.memoKey
             });
         default:

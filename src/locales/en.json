@@ -161,14 +161,19 @@
     "key_warn": "Please use your keys responsibly.",
     "key_warn_description": "As with all Steem powered applications, please be aware of what website you're on and if you trust the organization running it. Make sure you are only using your posting key and your active/owner keys remain safe (preferrably in a wallet or offline). Use active key only if cases when you want transfer some tokens, etc.",
     "account_name": "Account Name",
-    "password": "Password (or Posting Private Key)",
+    "password_": "Password (or Posting Private Key)",
     "password_active": "Password (or Active Private Key)",
+    "password_memo": "Password (or Memo Private Key)",
+    "_title": "Login",
     "active_title": "Please authorize",
     "active_description": "This operation requires your Active key or password.",
+    "memo_title": "Please authorize",
+    "memo_description": "This operation requires your Memo key or password.",
     "no_such_account_name": "No such account name",
     "wrong_password_format": "Invalid format of password/key",
     "wrong_password": "Wrong password/key",
-    "wrong_password_not_active": "This operation requires active-ключ, not posting or owner",
+    "wrong_password_not_active": "This operation requires active-key, not posting or owner",
+    "wrong_password_not_memo": "This operation requires memo-key, not posting or active",
     "wrong_password_active": "Cannot login with active key (even if posting key is same)",
     "wrong_password_owner": "Cannot login with owner key (even if posting key is same)",
     "sign_up": "Register",
@@ -219,6 +224,8 @@
     "alltime": "All time"
   },
   "messages": {
+    "last_seen": "last seen ",
+    "search": "Search people",
     "type_a_message_NAME": "Type a message, @%(NAME)s"
   },
   "g": {

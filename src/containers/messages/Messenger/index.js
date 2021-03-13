@@ -8,8 +8,8 @@ export default class Messages extends React.Component {
     render() {
         const { account, to,
             contacts, conversationTopLeft, conversationLinkPattern,
-            onConversationAdd, onConversationSelect,
-            messagesTopCenter, messages, onSendMessage } = this.props;
+            onConversationAdd, onConversationSearch, onConversationSelect,
+            messagesTopCenter, messagesTopRight, messages, onSendMessage } = this.props;
         return (
             <div className='messenger'>
                 {/* <Toolbar
@@ -39,13 +39,16 @@ export default class Messages extends React.Component {
                         conversationSelected={to}
                         conversationLinkPattern={conversationLinkPattern}
                         onConversationAdd={onConversationAdd}
+                        onConversationSearch={onConversationSearch}
                         onConversationSelect={onConversationSelect} />
                 </div>
 
                 <div className='scrollable content'>
                     <MessageList
                         account={account}
+                        to={to}
                         topCenter={messagesTopCenter}
+                        topRight={messagesTopRight}
                         messages={messages}
                         onSendMessage={onSendMessage} />
                 </div>

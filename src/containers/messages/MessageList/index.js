@@ -1,5 +1,4 @@
 import React from 'react';
-import moment from 'moment';
 
 import Compose from '../../../components/elements/messages/Compose';
 import Toolbar from '../../../components/elements/messages/Toolbar';
@@ -28,33 +27,32 @@ export default class MessageList extends React.Component {
             let current = messages[i];
             let next = messages[i + 1];
             let isMine = current.author === this.props.account.name;
-            let currentMoment = moment(current.timestamp);
             let prevBySameAuthor = false;
             let nextBySameAuthor = false;
             let startsSequence = true;
             let endsSequence = true;
             let showTimestamp = true;
 
+            const hour = 60 * 60 * 1000;
+
             if (previous) {
-                let previousMoment = moment(previous.timestamp);
-                let previousDuration = moment.duration(currentMoment.diff(previousMoment));
+                let previousDuration = current.date - previous.date;
                 prevBySameAuthor = previous.author === current.author;
                 
-                if (prevBySameAuthor && previousDuration.as('hours') < 1) {
+                if (prevBySameAuthor && previousDuration < hour) {
                     startsSequence = false;
                 }
 
-                if (previousDuration.as('hours') < 1) {
+                if (previousDuration < hour) {
                     showTimestamp = false;
                 }
             }
 
             if (next) {
-                let nextMoment = moment(next.timestamp);
-                let nextDuration = moment.duration(nextMoment.diff(currentMoment));
+                let nextDuration = next.date - current.date;
                 nextBySameAuthor = next.author === current.author;
 
-                if (nextBySameAuthor && nextDuration.as('hours') < 1) {
+                if (nextBySameAuthor && nextDuration < hour) {
                     endsSequence = false;
                 }
             }
@@ -78,21 +76,17 @@ export default class MessageList extends React.Component {
     };
 
     render() {
-        const { account, topCenter, onSendMessage } = this.props;
+        const { account, to, topCenter, topRight, onSendMessage } = this.props;
         return (
             <div className='message-list'>
                 <Toolbar
                     title={topCenter}
-                    rightItems={[
-                        <ToolbarButton key='info' icon='ion-ios-information-circle-outline' />,
-                        <ToolbarButton key='video' icon='ion-ios-videocam' />,
-                        <ToolbarButton key='phone' icon='ion-ios-call' />
-                    ]}
+                    rightItems={topRight}
                 />
 
                 <div className='message-list-container'>{this.renderMessages()}</div>
 
-                <Compose
+                {to ? (<Compose
                     account={account}
                     onSendMessage={onSendMessage}
                     rightItems={[
@@ -102,7 +96,7 @@ export default class MessageList extends React.Component {
                         <ToolbarButton key='money' icon='ion-ios-card' />,
                         <ToolbarButton key='games' icon='ion-logo-game-controller-b' />,
                         <ToolbarButton key='emoji' icon='ion-ios-happy' />
-                    ]}/>
+                    ]}/>) : null}
             </div>
         );
     }

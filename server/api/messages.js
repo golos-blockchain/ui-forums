@@ -40,6 +40,20 @@ function useMessagesApi(app) {
         }
     });
 
+    router.get('/contacts/search/:query', async (ctx, next) => {
+        let { query } = ctx.params;
+
+        const accountNames = await golos.api.lookupAccounts(query, 6);
+
+        const accountsArr = await golos.api.getAccounts([...accountNames]);
+
+        ctx.body = {
+            "data": accountsArr,
+            "network": {}, 
+            "status": "ok"
+        }
+    });
+
     router.get('/chat/@:from/@:to', async (ctx, next) => {
         let { from, to } = ctx.params;
 

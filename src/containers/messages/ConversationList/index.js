@@ -11,17 +11,18 @@ export default class ConversationList extends React.Component {
     render() {
         const { conversationTopLeft,
             conversationSelected, conversationLinkPattern,
-            onConversationAdd, onConversationSelect } = this.props;
+            onConversationAdd, onConversationSearch,
+            onConversationSelect } = this.props;
         return (
             <div className='conversation-list'>
                 <Toolbar
                     leftItems={conversationTopLeft}
                     rightItems={[
-                        <ToolbarButton key='add' icon='ion-ios-add-circle-outline'
-                            onClick={onConversationAdd || undefined} />
+                        onConversationAdd ? (<ToolbarButton key='add' icon='ion-ios-add-circle-outline'
+                            onClick={onConversationAdd} />) : undefined
                     ]}
                 />
-                <ConversationSearch />
+                <ConversationSearch onSearch={onConversationSearch} />
                 {
                     this.props.conversations.map(conversation =>
                         <ConversationListItem

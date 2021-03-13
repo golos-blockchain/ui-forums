@@ -36,7 +36,7 @@ export default class ConversationListItem extends React.Component {
                 <img className='conversation-photo' src={avatar} alt='conversation' />
                 <div className='conversation-info'>
                     <h1 className='conversation-title'>{contact}</h1>
-                    <p className='conversation-snippet'>{last_message.message}</p>
+                    <p className='conversation-snippet'>{last_message && last_message.message}</p>
                 </div>
             </a>
         );
