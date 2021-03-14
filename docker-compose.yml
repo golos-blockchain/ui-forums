@@ -1,28 +1,48 @@
-version: '3'
+version: "3"
 services:
-    chainbb-rest:
-        restart: always
-        build:
-            dockerfile: server/Dockerfile
-            context: .
-        image: local/chainbb-rest
-        #image: golosblockchain/forum-ui:rest // ready-made image
-        ports:
-            - 5000:5000
-        volumes:
-            - ./config.js:/config.js
-            - ./configSecure.js:/configSecure.js
+
     chainbb:
+        image: golosblockchain/forum-ui:latest
+        build: .
         restart: always
-        build:
-            dockerfile: Dockerfile
-            context: .
-        image: local/chainbb
-        #image: golosblockchain/forum-ui:latest // ready-made image
-        ports:
-            - 3000:3000
         depends_on:
             - chainbb-rest
         volumes:
             - ./config.js:/config.js
             - ./configSecure.js:/configSecure.js
+        ports:
+            - "3000:3000"
+
+    chainbb-rest:
+        image: golosblockchain/forum-ui:rest
+        build:
+            context: .
+            dockerfile: server/Dockerfile
+        restart: always
+        volumes:
+            - ./config.js:/config.js
+            - ./configSecure.js:/configSecure.js
+        ports:
+            - "5000:5000"
+    
+    datastore:
+        image: golosblockchain/web-ui:datastore
+        build:
+            context: https://github.com/golos-blockchain/golosnotify.git
+            dockerfile: Dockerfile-datastore
+        volumes:
+            - ./tarantool:/var/lib/tarantool
+        ports:
+            - "3001:3001"
+    
+    datafeed:
+        image: golosblockchain/web-ui:datafeed
+        build:
+            context: https://github.com/golos-blockchain/golosnotify.git
+            dockerfile: Dockerfile-datafeed
+        restart: unless-stopped
+        depends_on:
+            - datastore
+        environment:
+            NODE_URL: https://apibeta.golos.today
+            TARANTOOL_HOST: datastore

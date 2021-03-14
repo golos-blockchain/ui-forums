@@ -32,7 +32,7 @@ module.exports = {
             footer_description: 'GolosTalk — forum on the <a href="https://golos.id" target="_new">Golos blockchain</a> platform (developed by <a href="https://golos.id/@id-raccoon-hater" target="_new">@id-raccoon-hater</a>).'
         },
         posts_per_page: 20,
-        replies_per_page: 20,
+        replies_per_page: 15,
         votes_per_page: 10,
         donates_per_page: 10,
         account_donates_per_page: 10
