@@ -1,10 +1,11 @@
-import ReactDOMServer from 'react-dom/server';
+//import ReactDOMServer from 'react-dom/server';
 import golos from 'golos-classic-js';
+import tt from 'counterpart';
 
 import * as types from './actionTypes';
 import * as CONFIG from '../../config';
 
-import TimeAgoWrapper from '../utils/TimeAgoWrapper';
+//import TimeAgoWrapper from '../utils/TimeAgoWrapper';
 import { getAccountAvatarSrc } from '../utils/accountMetaUtils';
 
 export function addMessage(account, to, toMemoKey, body) {
@@ -28,7 +29,7 @@ export function addMessage(account, to, toMemoKey, body) {
             to_memo_key: toMemoKey,
             checksum: data.checksum,
             update: false,
-            encrypted_message: data.message,
+            encrypted_message: data.encrypted_message,
         }]);
         golos.broadcast.customJson(account.key, [], [account.name], 'private_message', json, (err, result) => {
             if (err) {
@@ -36,6 +37,7 @@ export function addMessage(account, to, toMemoKey, body) {
                 return;
             }
             const now = new Date().toISOString().split('.')[0];
+
             dispatch(addMessageResolved({
                 from: account.name,
                 to,
@@ -43,9 +45,9 @@ export function addMessage(account, to, toMemoKey, body) {
                 to_memo_key: toMemoKey,
                 nonce: data.nonce.toString(),
                 checksum: data.checksum,
-                encrypted_message: data.message,
+                encrypted_message: data.encrypted_message,
                 create_date: now,
-                receive_date: now,
+                receive_date: '1970-01-01T00:00:00',
                 read_date: '1970-01-01T00:00:00',
                 remove_date: '1970-01-01T00:00:00',
 
@@ -53,6 +55,7 @@ export function addMessage(account, to, toMemoKey, body) {
                 message: body,
                 author: account.name,
                 date: new Date(),
+                unread: true,
             }));
         });
     };
@@ -78,46 +81,32 @@ export function fetchMessages(account, to) {
 
             const memoKey = account.memoKey;
 
+            let public_key = result.data.accounts[to].memo_key;
+
             let id = 0;
-            let resultsDecrypted = []; // TODO: remove copying, just remove/hide invalid messages
-            for (let msg of result.data.messages) {
-                let public_key;
-                if (account.data.memo_key === msg.to_memo_key) {
-                    public_key = msg.from_memo_key;
-                } else {
-                    public_key = msg.to_memo_key;
-                }
+            let resultsDecrypted = golos.messages.decode(memoKey, public_key, result.data.messages,
+                    (msg) => {
+                    msg.id = ++id;
+                    msg.author = msg.from;
+                    msg.date = new Date(msg.receive_date + 'Z');
 
-                try {
-                    let message = golos.messages.decode(memoKey, public_key, msg);
-
-                    message = JSON.parse(message).body;
-                    let status = undefined; // no mark (for from's messages)
-                    if (msg.from === account.name) {
-                        if (msg.read_date.startsWith('1970')) {
-                            status = 'sent'; // 1 mark (actually meansreceived)
-                        } else {
-                            status = 'read'; // 2 marks
+                    if (msg.from === account.data.name) {
+                        if (msg.read_date.startsWith('19')) {
+                            msg.unread = true;
+                        }
+                    } else {
+                        if (msg.read_date.startsWith('19')) {
+                            msg.toMark = true;
                         }
                     }
 
-                    // TODO: less trickly, separate as util
-                    /*let dateString = ReactDOMServer.renderToString(<TimeAgoWrapper date={`${msg.create_date}Z`} />);
-                    let dateEl = document.createElement('div');
-                    dateEl.innerHTML = dateString;
-                    dateString = dateEl.textContent;*/
+                    msg.message = JSON.parse(msg.message).body;
 
-                    resultsDecrypted.unshift({...msg,
-                        id: ++id,
-                        message,
-                        author: msg.from,
-                        date: new Date(msg.receive_date + 'Z'),
-                        status,
-                    });
-                } catch (ex) {
-                    console.log(ex);
-                }
-            }
+                    return true;
+                }, result.data.messages.length - 1, -1,
+                (msg, i, err) => {
+                    console.log(err);
+                });
             dispatch(fetchMessagesResolved({
                 account,
                 to: result.data.accounts[to],
@@ -153,6 +142,8 @@ export function fetchContacts(account) {
 
             let contacts = result.data.contacts;
             for (let contact of contacts) {
+                contact.avatar = getAccountAvatarSrc(result.data.accounts[contact.contact].json_metadata);
+
                 if (contact.last_message.receive_date.startsWith('1970')) {
                     contact.last_message.message = "";
                     continue;
@@ -165,15 +156,12 @@ export function fetchContacts(account) {
                     public_key = contact.last_message.to_memo_key;
                 }
 
-                try {
-                    let message = golos.messages.decode(memoKey, public_key, contact.last_message);
-
-                    contact.last_message.message = JSON.parse(message).body;
-                } catch (ex) {
-                    console.log(ex);
-                }
-
-                contact.avatar = getAccountAvatarSrc(result.data.accounts[contact.contact].json_metadata);
+                golos.messages.decode(memoKey, public_key, [contact.last_message],
+                    (message_object) => {
+                        message_object.message = JSON.parse(message_object.message).body;
+                    }, 0, 1, (msg, i, err) => {
+                        console.log(err);
+                    });
             }
             dispatch(fetchContactsResolved({
                 account,
@@ -212,7 +200,10 @@ export function searchContacts(selfName, query) {
                 contacts.push(account);
             }
             if (contacts.length === 0) {
-                contacts = [{contact: 'Ничего не найдено'}];
+                contacts = [{
+                    contact: tt('messages.search_not_found'),
+                    isSystemMessage: true,
+                }];
             }
             dispatch(searchContactsResolved(contacts));
         } else {
@@ -224,6 +215,13 @@ export function searchContacts(selfName, query) {
 export function searchContactsResolved(payload) {
     return {
         type: types.MESSAGES_SEARCH_RESOLVED,
-        payload: payload
+        payload: payload,
+    };
+}
+
+export function messaged(message, updateMessage, isMine, account) {
+    return {
+        type: types.MESSAGES_MESSAGED,
+        payload: {message, updateMessage, isMine, account},
     };
 }

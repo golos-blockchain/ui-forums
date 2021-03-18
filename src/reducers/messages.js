@@ -1,3 +1,5 @@
+import golos from 'golos-classic-js';
+
 import * as types from '../actions/actionTypes';
 
 const initialState = {
@@ -31,6 +33,39 @@ export default function messages(state = initialState, action) {
                 contacts: action.payload.results,
                 searchContacts: null,
             });
+        }
+        case types.MESSAGES_MESSAGED: {
+            let { message, updateMessage, isMine, account } = action.payload;
+
+            message.author = message.from;
+            message.date = new Date(message.receive_date + 'Z');
+            if (isMine) {
+                if (message.read_date.startsWith('19')) {
+                    message.unread = true;
+                }
+            }
+
+            let publicKey;
+            if (message.from === account.data.name) {
+                publicKey = message.to_memo_key;
+            } else {
+                publicKey = message.from_memo_key;
+            }
+
+            golos.messages.decode(account.memoKey, publicKey, [message], (msg) => {
+                msg.message = JSON.parse(msg.message).body;
+            });
+
+            let newState = Object.assign({}, state);
+            if (updateMessage) {
+                const idx = newState.messages.findIndex(i => i.nonce === message.nonce);
+                if (idx === -1) {
+                    newState.messages.push(message);
+                } else {
+                    newState.messages[idx] = message;
+                }
+            }
+            return newState;
         }
         default:
             return state;

@@ -1,7 +1,7 @@
 import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { Link, withRouter } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import golos from 'golos-classic-js';
 import tt from 'counterpart';
 import ttGetByKey from '../utils/ttGetByKey';
@@ -47,11 +47,45 @@ class Messages extends React.Component {
         }
     }
 
+    setCallback(account) {
+        golos.api.setPrivateMessageCallback({select_accounts: [account.data.name]},
+            (err, result) => {
+                if (err) {
+                    this.setCallback(this.props.account || account);
+                    return;
+                }
+                if (!result || !result.message) {
+                    return;
+                }
+                const updateMessage = result.message.from === this.state.to || 
+                    result.message.to === this.state.to;
+                const isMine = account.data.name === result.message.from;
+                if (result.type === 'message') {
+                    if (this.nonce != result.message.nonce) {
+                        this.props.actions.messaged(result.message, updateMessage, isMine, account);
+                        this.nonce = result.message.nonce
+                    }
+                }
+            });
+    }
+
     componentWillReceiveProps(nextProps) {
+        console.log(nextProps.messages.messages.length + ' ' + this.props.messages.messages.length);
+        if (nextProps.account && nextProps.account.memoKey && !this.callbackSet) {
+            this.callbackSet = true;
+            const { account } = nextProps;
+            this.setCallback(account);
+        }
         if (nextProps.messages.messages.length > this.props.messages.messages.length) {
             setTimeout(() => {
                 const scroll = document.getElementsByClassName('scrollable')[1];
                 scroll.scrollTo(0,scroll.scrollHeight);
+            }, 1);
+        }
+        if (nextProps.to != this.state.to) {
+            setTimeout(() => {
+                const input = document.getElementsByClassName('compose-input')[0];
+                if (input) input.focus();
             }, 1);
         }
     }

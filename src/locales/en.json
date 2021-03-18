@@ -226,6 +226,7 @@
   "messages": {
     "last_seen": "last seen ",
     "search": "Search people",
+    "search_not_found": "Nobody found",
     "type_a_message_NAME": "Type a message, @%(NAME)s"
   },
   "g": {
@@ -247,6 +248,7 @@
     "this_field_required": "This field is required.",
     "should_be_email": "E-mail is wrong.",
     "enter_code": "You received verification code at your e-mail. Enter it below (instead of e-mail):",
-    "search": "Search"
+    "search": "Search",
+    "messages": "Messages"
   }
 }

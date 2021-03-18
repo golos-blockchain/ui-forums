@@ -42,6 +42,12 @@ function _logError(...parameters) {
 console.error = _logError;
 
 golos.config.set('websocket', CONFIG.GOLOS_NODE);
+if (typeof window !== 'undefined') {
+    if (window.location.pathname === '/msgs'
+        || window.location.pathname.startsWith('/msgs/')) {
+        golos.config.set('websocket', CONFIG.GOLOS_MSGS_NODE);
+    }
+}
 if (CONFIG.GOLOS_CHAIN_ID) {
     golos.config.set('chain_id', CONFIG.GOLOS_CHAIN_ID);
 }
@@ -58,6 +64,11 @@ if (typeof document !== 'undefined') {
 class App extends React.Component {
     componentDidMount() {
         window.addEventListener('click', this.checkLeave);
+    }
+
+    shouldComponentUpdate(nextProps, nextState) {
+        alert(JSON.stringify(nextProps))
+        return true;
     }
 
     checkLeave = (e) => {
@@ -85,14 +96,9 @@ class App extends React.Component {
     };
 
     render() {
-        let container;
         const pathname = window.location.pathname;
-        if (pathname.startsWith('/msgs/')) {
-            container = (<Switch>
-                    <Route path='/msgs/:to?' component={Messages} />
-                </Switch>);
-        } else
-        container = (<div className='AppContainer'>
+        const isBlank = pathname === '/msgs' || pathname.startsWith('/msgs/');
+        let container = (<div className='AppContainer'>
             <Helmet>
                 <title>{ttGetByKey(CONFIG.FORUM, 'page_title')}</title>
                 <meta name='description' content={ttGetByKey(CONFIG.FORUM, 'meta_description')} />
@@ -106,10 +112,10 @@ class App extends React.Component {
                 <meta property='og:description' content={ttGetByKey(CONFIG.FORUM, 'meta_description')} />
                 <meta property='og:image' content={CONFIG.FORUM.meta_image} />
             </Helmet>
-            <HeaderMenu />
-            <BreadcrumbMenu {...this.props.ssrState} withSearch={true} />
-            <GlobalNotice />
-            <Container>
+            {!isBlank ? (<HeaderMenu />) : null}
+            {!isBlank ? (<BreadcrumbMenu {...this.props.ssrState} withSearch={true} />) : null}
+            {!isBlank ? (<GlobalNotice />) : null}
+            <Container fluid={isBlank} className={isBlank ? 'noPadding' : ''}>
                 <Switch>
                     {/*<Route exact path='/' render={(props) => <Redirect to='/forums'/>}/>*/}
                     <Route path='/@:username/:section?' component={Account} />
@@ -117,6 +123,7 @@ class App extends React.Component {
                     <Route path='/create_account' component={CreateAccount} />
                     <Route path='/create/forum' component={ForumCreateLayout} />
                     <Route path='/feed' component={FeedLayout} />
+                    <Route path='/msgs/:to?' component={Messages} />
                     <Route path='/forums' component={ForumsLayout} />
                     <Route path='/forums/:group' component={IndexLayout} />
                     <Route path='/f/:id/:section?' component={(props) => <ForumLayout {...props} {...this.props.ssrState} />} />
@@ -129,9 +136,9 @@ class App extends React.Component {
                     <Route exact path='/:section?' component={(props) => <IndexLayout {...props} {...this.props.ssrState} />} />
                 </Switch>
             </Container>
-            <BreadcrumbMenu {...this.props.ssrState} withSearch={true} />
-            <BannerMenu />
-            <FooterMenu />
+            {!isBlank ? (<BreadcrumbMenu {...this.props.ssrState} withSearch={true} />) : null}
+            {!isBlank ? (<BannerMenu />) : null}
+            {!isBlank ? (<FooterMenu />) : null}
         </div>);
         if (this.props.ssrRoute) {
             const context = {};

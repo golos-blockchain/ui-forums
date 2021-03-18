@@ -10,7 +10,7 @@
     "cross-fetch": "^3.0.6",
     "formsy-react": "^2.2.3",
     "formsy-semantic-ui-react": "^1.2.0",
-    "golos-classic-js": "0.7.84",
+    "golos-classic-js": "0.7.91",
     "highlight.js": "^9.12.0",
     "history": "^4.7.2",
     "html-webpack-inline-source-plugin": "^1.0.0-beta.2",

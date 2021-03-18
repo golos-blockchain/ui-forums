@@ -148,6 +148,7 @@ class HeaderMenu extends Component {
                     <Dropdown.Menu>
                         <Dropdown.Item as={Link} to={`/@${name}`} icon='user' content={tt('account.profile')} />
                         <Dropdown.Item as={Link} to={`/@${name}/responses`} icon='comments' content={tt('account.responses')} />
+                        <Dropdown.Item as={Link} target='_blank' to={`/msgs/`} icon='envelope outline' content={tt('g.messages')} />
                         <Dropdown.Item as={Link} target='_blank' to={`https://golos.id/@${name}`} icon='users' content={tt('account.blogs')} />
                         <LogoutItem {...this.props} />
                     </Dropdown.Menu>
