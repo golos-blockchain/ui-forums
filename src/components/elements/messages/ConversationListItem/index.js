@@ -28,16 +28,20 @@ export default class ConversationListItem extends React.Component {
 
     render() {
         const { selected } = this.props;
-        const { avatar, isSystemMessage, contact, last_message } = this.props.data;
+        const { avatar, isSystemMessage, contact, last_message, size } = this.props.data;
 
         const link = this.makeLink();
 
+        const unreadMessages = size && size.unread_inbox_messages;
+
         return (
-            <Link to={isSystemMessage ? null : link} onClick={this.onClick} className={'conversation-list-item' + (selected ? ' selected' : '')}>
+            <Link to={isSystemMessage ? '/msgs/' : link} onClick={this.onClick} className={'conversation-list-item' + (selected ? ' selected' : '')}>
                 <img className='conversation-photo' src={avatar} alt='404 :(' />
                 <div className='conversation-info'>
                     <h1 className='conversation-title'>{contact}</h1>
-                    <p className='conversation-snippet'>{last_message && last_message.message}</p>
+                    <div className='conversation-snippet'>{last_message && last_message.message}
+                    </div>
+                    {unreadMessages ? <div className='conversation-unread'>{unreadMessages}</div> : null}
                 </div>
             </Link>
         );

@@ -24,7 +24,8 @@
     "passport-facebook": "latest",
     "passport-mail": "latest",
     "passport-vk": "latest",
-    "passport-yandex": "latest"
+    "passport-yandex": "latest",
+    "tarantool-driver": "^2.0.1"
   },
   "devDependencies": {
     "nodemon": "^2.0.6"

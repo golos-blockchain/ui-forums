@@ -2,7 +2,7 @@ import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux'
 
-import { Image } from 'semantic-ui-react'
+import { Image, Label } from 'semantic-ui-react'
 import AccountLink from './link'
 
 import * as CONFIG from '../../../../config';
@@ -52,9 +52,14 @@ class AccountAvatar extends React.Component {
     const size = this.props.size || 35;
     const style = this.props.style || { minHeight: `${size}px`, minWidth: `${size}px` };
     const className = this.props.className || "ui rounded floated left mini image";
+    const label = this.props.notifications ?
+      <Label content={this.props.notifications}
+        className='notifi-label'
+        floating circular color='red' size='tiny' /> : undefined;
     const image = (
       <Image
         alt={username}
+        label={label}
         bordered={false}
         className={className}
         src={src}

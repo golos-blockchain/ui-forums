@@ -389,3 +389,7 @@
 .golossearch-results h3 {
   font-size: 100%;
 }
+
+.notifi-label {
+  top: 0px !important;
+}

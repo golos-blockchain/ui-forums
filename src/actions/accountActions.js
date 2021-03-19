@@ -1,6 +1,7 @@
 import golos from 'golos-classic-js';
 
 import * as types from './actionTypes';
+import * as CONFIG from '../../config';
 import * as AccountsActions from './accountsActions';
 import * as chainstateActions from './chainstateActions';
 
@@ -63,6 +64,35 @@ export function fetchAccount(account) {
                     });
                 });
             }, 50);
+        }
+    }
+}
+
+export function fetchAccountNotifications(account) {
+    return async dispatch => {
+        if (account) {
+            let url = `${ CONFIG.REST_API }/notifications/` + account;
+            const response = await fetch(url);
+            if (response.ok) {
+                const result = await response.json();
+                dispatch({
+                    type: types.ACCOUNT_NOTIFICATIONS_FETCH,
+                    payload: {
+                        all: result[0],
+                        message: result[10],
+                    },
+                });
+                return;
+            }
+        }
+    }
+}
+
+export function clearAccountNotifications(account) {
+    return async dispatch => {
+        if (account) {
+            let url = `${ CONFIG.REST_API }/notifications/` + account + `/10`;
+            await fetch(url);
         }
     }
 }

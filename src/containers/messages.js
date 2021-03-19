@@ -6,6 +6,7 @@ import golos from 'golos-classic-js';
 import tt from 'counterpart';
 import ttGetByKey from '../utils/ttGetByKey';
 import max from 'lodash/max';
+import debounce from 'lodash/debounce';
 
 import { Button, Modal, Dropdown } from 'semantic-ui-react';
 
@@ -32,10 +33,21 @@ class Messages extends React.Component {
             authorLookup: [],
             showConfirm: false,
         };
-        if (this.state.to && props.account.memoKey) {
-            this.props.actions.fetchMessages(this.props.account, this.state.to);
+        if (props.account.memoKey) {
+            this.load(props);
         }
-        this.props.actions.fetchContacts(this.props.account);
+    }
+
+    load(props) {
+        if (this.loaded) return;
+        this.loaded = true;
+        if (this.state.to) {
+            props.actions.fetchMessages(props.account, this.state.to);
+        }
+        props.actions.fetchContacts(props.account);
+        setInterval(() =>{
+            props.actions.clearAccountNotifications(props.account.name);
+        }, 5000);
     }
 
     componentDidMount() {
@@ -61,32 +73,73 @@ class Messages extends React.Component {
                     result.message.to === this.state.to;
                 const isMine = account.data.name === result.message.from;
                 if (result.type === 'message') {
-                    if (this.nonce != result.message.nonce) {
+                    if (this.nonce !== result.message.nonce) {
                         this.props.actions.messaged(result.message, updateMessage, isMine, account);
                         this.nonce = result.message.nonce
                     }
+                } else if (result.type === 'mark') {
+                    this.props.actions.messageRead(result.message, updateMessage, isMine);
                 }
             });
     }
 
+    markMessages() {
+        const { messages } = this.props.messages;
+        if (!messages.length) return;
+        let ranges = [];
+        let range = null;
+        for (let i = messages.length - 1; i >=0; --i) {
+            const message = messages[i];
+            if (!range) {
+                if (message.toMark) {
+                    range = {
+                        start_date: message.receive_date,
+                        stop_date: message.receive_date,
+                    };
+                }
+            } else {
+                if (message.toMark) {
+                    range.start_date = message.receive_date;
+                } else {
+                    ranges.push({...range});
+                    range = null;
+                }
+            }
+        }
+        if (range) {
+            ranges.push({...range});
+        }
+        const { account } = this.props;
+        this.props.actions.markMessages(account, this.state.to, ranges);
+    }
+
+    markMessages2 = debounce(this.markMessages, 1000);
+
     componentWillReceiveProps(nextProps) {
-        console.log(nextProps.messages.messages.length + ' ' + this.props.messages.messages.length);
         if (nextProps.account && nextProps.account.memoKey && !this.callbackSet) {
+            this.load(nextProps);
             this.callbackSet = true;
             const { account } = nextProps;
             this.setCallback(account);
         }
-        if (nextProps.messages.messages.length > this.props.messages.messages.length) {
+        const anotherChat = nextProps.to !== this.state.to;
+        const msgsUpdated =
+            nextProps.messages.messages.length > this.props.messages.messages.length
+            || nextProps.messages.messagesUpdate !== this.props.messages.messagesUpdate;
+        if (msgsUpdated || anotherChat) {
             setTimeout(() => {
                 const scroll = document.getElementsByClassName('scrollable')[1];
-                scroll.scrollTo(0,scroll.scrollHeight);
+                if (scroll) scroll.scrollTo(0,scroll.scrollHeight);
             }, 1);
         }
-        if (nextProps.to != this.state.to) {
+        if (anotherChat && !nextProps.messages.searchContacts) {
             setTimeout(() => {
                 const input = document.getElementsByClassName('compose-input')[0];
                 if (input) input.focus();
             }, 1);
+        }
+        if (anotherChat || msgsUpdated) {
+            this.markMessages2();
         }
     }
 
@@ -151,6 +204,7 @@ class Messages extends React.Component {
     };
 
     onSendMessage = (message, event) => {
+        if (!message.length) return;
         const { account, messages } = this.props;
         if (!account.memoKey) {
             this.setState({
