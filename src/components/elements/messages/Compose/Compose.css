@@ -5,7 +5,7 @@
     background: white;
     border-top: 1px solid #eeeef1;
     position: fixed;
-    width: calc(100% - 20px);
+    width: calc(100% - 362px);
     bottom: 0px;
 }
 
@@ -31,7 +31,7 @@
 
 .compose .toolbar-button {
     color: #bbbbbf;
-    margin-left: 15px;
+    margin-right: 12px;
 }
 
 .compose .toolbar-button:hover {

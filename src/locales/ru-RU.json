@@ -229,6 +229,40 @@
     "search_not_found": "Никого не найдено",
     "type_a_message_NAME": "Напишите сообщение, @%(NAME)s"
   },
+  "emoji_i18n": {
+    "categoriesLabel": "Категории",
+    "emojiUnsupportedMessage": "Ваш браузер не поддерживает эмодзи.",
+    "favoritesLabel": "Избранное",
+    "loadingMessage": "Загрузка",
+    "networkErrorMessage": "Не удалось загрузить эмодзи. Попробуйте обновить страницу.",
+    "regionLabel": "Эмодзи",
+    "searchDescription": "When search results are available, press up or down to select and enter to choose.",
+    "searchLabel": "Search",
+    "searchResultsLabel": "Search results",
+    "skinToneDescription": "When expanded, press up or down to select and enter to choose.",
+    "skinToneLabel": "Выберите тон кожи (сейчас {skinTone})",
+    "skinTonesLabel": "Тон кожи",
+    "skinTones": [
+      "Обычный",
+      "Очень светлый",
+      "Светлый",
+      "Средний",
+      "Темный",
+      "Очень темный"
+    ],
+    "categories": {
+      "custom": "Custom",
+      "smileys-emotion": "Эмоции",
+      "people-body": "Жесты и люди",
+      "animals-nature": "Животные и растения",
+      "food-drink": "Еда и напитки",
+      "travel-places": "Путешествия и погода",
+      "activities": "Занятия",
+      "objects": "Одежда и предметы",
+      "symbols": "Символы и знаки",
+      "flags": "Флаги"
+    }
+  },
   "g": {
     "and": "и",
     "author": "Автор",
