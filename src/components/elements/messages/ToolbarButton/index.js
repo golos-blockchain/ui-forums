@@ -6,7 +6,9 @@ export default class ToolbarButton extends React.Component {
     render() {
         const { icon, className, onClick } = this.props;
         return (
-            <i className={`toolbar-button ${icon} ` + (className || '')} onClick={onClick || undefined} />
+            <span className={'toolbar-button ' + (className || '')} onClick={onClick || undefined}>
+                <ion-icon name={icon}></ion-icon>
+            </span>
         );
     }
 }

@@ -57,6 +57,10 @@ class Messages extends React.Component {
                 showConfirm: true
             });
         }
+        const script = document.createElement('script');
+        script.src = 'https://unpkg.com/ionicons@5.4.0/dist/ionicons.js';
+        script.async = true;
+        document.body.appendChild(script);
     }
 
     setCallback(account) {
@@ -265,7 +269,6 @@ class Messages extends React.Component {
         return (
             <div>
                 <LoginModal authType='memo' noButton={true} open={this.state.showConfirm} actions={{...actions, onClose: this.onConfirmClose}}/>
-                <link href="https://unpkg.com/ionicons@4.5.0/dist/css/ionicons.min.css" rel="stylesheet"/>
                 <Messenger
                     account={this.props.account}
                     to={this.state.to}
