@@ -65,8 +65,8 @@ export function castDonate(payload) {
         const { author, permlink, category, root_author, root_permlink, amount, note } = payload;
         const { key, name } = payload.account;
         let donate_memo = {};
-        donate_memo.app = 'golos-id';
-        donate_memo.version = 2;
+        donate_memo.app = 'golos-forum';
+        donate_memo.version = 1;
         donate_memo.comment = note;
         donate_memo.target = {
             author: author,
