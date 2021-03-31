@@ -233,26 +233,10 @@ export function messageRead(message, updateMessage, isMine) {
     };
 }
 
-export function markMessages(account, to, ranges) {
+export function sendOperations(account, to, operations) {
     return async dispatch => {
-        if (!ranges.length || !account) return;
+        if (!operations.length || !account) return;
 
-        let operations = [];
-        for (let r of ranges) {
-            const json = JSON.stringify(['private_mark_message', {
-                from: to,
-                to: account.name,
-                nonce: 0,
-                start_date: new Date(new Date(r.start_date+'Z').getTime() - 1000).toISOString().split('.')[0],
-                stop_date: r.stop_date,
-            }]);
-            operations.push(['custom_json', {
-                required_auths: [],
-                required_posting_auths: [account.name],
-                id: 'private_message',
-                json
-            }]);
-        }
         golos.broadcast.send({
                 operations,
                 extensions: []
@@ -261,7 +245,6 @@ export function markMessages(account, to, ranges) {
                 console.log(err);
                 return;
             }
-            console.log('marked');
         });
     }
 }

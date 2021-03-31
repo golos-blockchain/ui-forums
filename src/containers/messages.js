@@ -85,32 +85,26 @@ class Messages extends React.Component {
 
     markMessages() {
         const { messages } = this.props.messages;
-        if (!messages.length) return;
-        let ranges = [];
-        let range = null;
-        for (let i = messages.length - 1; i >=0; --i) {
-            const message = messages[i];
-            if (!range) {
-                if (message.toMark) {
-                    range = {
-                        start_date: message.receive_date,
-                        stop_date: message.receive_date,
-                    };
-                }
-            } else {
-                if (message.toMark) {
-                    range.start_date = message.receive_date;
-                } else {
-                    ranges.push({...range});
-                    range = null;
-                }
-            }
-        }
-        if (range) {
-            ranges.push({...range});
-        }
         const { account } = this.props;
-        this.props.actions.markMessages(account, this.state.to, ranges);
+
+        let OPERATIONS = golos.messages.makeGroups(messages, (message_object, idx) => {
+            return message_object.toMark;
+        }, (group, indexes, results) => {
+            const json = JSON.stringify(['private_mark_message', {
+                from: this.state.to,
+                to: account.name,
+                ...group,
+            }]);
+            return ['custom_json',
+                {
+                    id: 'private_message',
+                    required_posting_auths: [account.name],
+                    json,
+                }
+            ];
+        }, messages.length - 1, -1);
+
+        this.props.actions.sendOperations(account, this.state.to, OPERATIONS);
     }
 
     markMessages2 = debounce(this.markMessages, 1000);
