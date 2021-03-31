@@ -28,6 +28,7 @@ class Messages extends React.Component {
         this.state = {
             to: to ? to.replace('@', '') : '',
             messages: [],
+            selectedMessages: {},
             addContactShow: false,
             contactToAdd: '',
             authorLookup: [],
@@ -213,6 +214,120 @@ class Messages extends React.Component {
         this.props.actions.addMessage(account, this.state.to, messages.to.memo_key, message);
     };
 
+    onMessageSelect = (message, isSelected, event) => {
+        if (message.receive_date.startsWith('19') || message.deleting) {
+            this.focusInput();
+            return;
+        }
+        if (isSelected) {
+            this.presaveInput();
+            const { account } = this.props;
+            const isMine = account.name === message.from;
+            this.setState({
+                selectedMessages: {...this.state.selectedMessages, [message.nonce]: { editable: isMine }},
+            });
+        } else {
+            let selectedMessages = {...this.state.selectedMessages};
+            delete selectedMessages[message.nonce];
+            this.setState({
+                selectedMessages,
+            }, () => {
+                this.restoreInput();
+                this.focusInput();
+            });
+        }
+    };
+
+    onPanelDeleteClick = (event) => {
+        const { messages } = this.state;
+
+        const { account, accounts, to } = this.props;
+
+        // TODO: use makeGroups
+
+        /*let OPERATIONS = [];
+        for (let message_object of messages) {
+            if (!this.state.selectedMessages[message_object.nonce]) {
+                continue;
+            }
+            const json = JSON.stringify(['private_delete_message', {
+                requester: account.name,
+                from: message_object.from,
+                to: message_object.to,
+                start_date: '1970-01-01T00:00:00',
+                stop_date: '1970-01-01T00:00:00',
+                nonce: message_object.nonce,
+            }]);
+            OPERATIONS.push(['custom_json',
+                {
+                    id: 'private_message',
+                    required_posting_auths: [account.name],
+                    json,
+                }
+            ]);
+        }
+
+        this.props.sendOperations(account, accounts[to], OPERATIONS);*/
+
+        this.setState({
+            selectedMessages: {},
+        }, () => {
+            this.restoreInput();
+            this.focusInput();
+        });
+    };
+
+    onPanelEditClick = (event) => {
+        const nonce = Object.keys(this.state.selectedMessages)[0];
+        let message = this.props.messages.messages.filter(message => {
+            return message.nonce === nonce;
+        });
+        this.setState({
+            selectedMessages: {},
+        }, () => {
+            this.editNonce = message[0].nonce;
+            this.setInput(message[0].message);
+            this.focusInput();
+        });
+    };
+
+    onPanelCloseClick = (event) => {
+        this.setState({
+            selectedMessages: {},
+        }, () => {
+            this.restoreInput();
+            this.focusInput();
+        });
+    };
+
+    focusInput = () => {
+        const input = document.getElementsByClassName('compose-input')[0];
+        if (input) input.focus();
+    };
+
+    presaveInput = () => {
+        if (!this.presavedInput) {
+            const input = document.getElementsByClassName('compose-input')[0];
+            if (input) {
+                this.presavedInput = input.value;
+            }
+        }
+    };
+
+    setInput = (value) => {
+        const input = document.getElementsByClassName('compose-input')[0];
+        if (input) {
+            input.value = value;
+        }
+    };
+
+    restoreInput = () => {
+        if (this.presavedInput) {
+            this.setInput(this.presavedInput);
+            this.presavedInput = undefined;
+        }
+    };
+
     _renderMessagesTopCenter = () => {
         let messagesTopCenter = [];
         const { to } = this.props.messages;
@@ -284,7 +399,13 @@ class Messages extends React.Component {
                     messages={messages}
                     messagesTopCenter={this._renderMessagesTopCenter()}
                     messagesTopRight={this._renderMessagesTopRight()}
-                    onSendMessage={this.onSendMessage} />
+                    onSendMessage={this.onSendMessage}
+                    selectedMessages={this.state.selectedMessages}
+                    onMessageSelect={this.onMessageSelect}
+                    onPanelDeleteClick={this.onPanelDeleteClick}
+                    onPanelEditClick={this.onPanelEditClick}
+                    onPanelCloseClick={this.onPanelCloseClick}
+                    />
                 <Modal size='small' open={this.state.addContactShow}>
                         <Modal.Header>Добавить контакт</Modal.Header>
                         <Modal.Content>

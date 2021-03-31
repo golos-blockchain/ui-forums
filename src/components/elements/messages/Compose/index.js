@@ -2,6 +2,8 @@ import React from 'react';
 import tt from 'counterpart';
 import { Picker } from 'emoji-picker-element';
 
+import { Button } from 'semantic-ui-react';
+
 import './Compose.css';
 
 export default class Compose extends React.Component {
@@ -16,7 +18,14 @@ export default class Compose extends React.Component {
         }
     };
 
-    componentDidMount() {
+    init = () => {
+        this._tooltip = document.querySelector('.emoji-picker-tooltip');
+        if (!this._tooltip)
+            return;
+
+        if (this._tooltip.childNodes.length)
+            return;
+
         this._picker = new Picker({
             locale: tt.getLocale(),
             i18n: tt('emoji_i18n'),
@@ -24,14 +33,23 @@ export default class Compose extends React.Component {
 
         this._picker.addEventListener('emoji-click', this.onEmojiSelect);
 
-        this._tooltip = document.querySelector('.emoji-picker-tooltip');
         this._tooltip.appendChild(this._picker);
 
         setTimeout(() => {
             const button = document.querySelector('.emoji-picker-opener');
-            button.addEventListener('click', this.onEmojiClick);
-            document.body.addEventListener('click', this.onBodyClick);
+            if (button) {
+                button.addEventListener('click', this.onEmojiClick);
+                document.body.addEventListener('click', this.onBodyClick);
+            }
         }, 500);
+    };
+
+    componentDidMount() {
+        this.init();
+    }
+
+    componentDidUpdate() {
+        this.init();
     }
 
     onEmojiClick = (event) => {
@@ -80,18 +98,67 @@ export default class Compose extends React.Component {
         }
     };
 
+    onPanelDeleteClick = (event) => {
+        if (this.props.onPanelDeleteClick) {
+            this.props.onPanelDeleteClick(event);
+        }
+    }
+
+    onPanelEditClick = (event) => {
+        if (this.props.onPanelEditClick) {
+            this.props.onPanelEditClick(event);
+        }
+    }
+
+    onPanelCloseClick = (event) => {
+        if (this.props.onPanelCloseClick) {
+            this.props.onPanelCloseClick(event);
+        }
+    }
+
     render() {
         const { account, rightItems } = this.props;
+        const { onPanelDeleteClick, onPanelEditClick, onPanelCloseClick } = this;
+
+        const selectedMessages = Object.entries(this.props.selectedMessages);
+        let selectedMessagesCount = 0;
+        let selectedEditablesCount = 0;
+        for (let [nonce, info] of selectedMessages) {
+            selectedMessagesCount++;
+            if (info.editable) {
+                selectedEditablesCount++;
+            }
+        }
+
         return (
             <div className='compose'>
                 {
-                    rightItems
+                    !selectedMessagesCount ? rightItems : null
                 }
-                <textarea
+                {!selectedMessagesCount ? (<textarea
                     className='compose-input'
                     placeholder={tt('messages.type_a_message_NAME', {NAME: account.name})}
                     onKeyDown={this.onSendMessage}
-                />
+                />) : null}
+                {selectedMessagesCount ? (<div className='compose-panel'>
+                    <Button
+                        icon='remove'
+                        inverted
+                        color='red'
+                        content={tt('g.remove') + ' (' + selectedMessagesCount + ')'}
+                        onClick={onPanelDeleteClick} />
+                    {(selectedMessagesCount === 1 && selectedEditablesCount === 1) ? (<Button
+                        icon='pencil'
+                        inverted
+                        color='blue'
+                        content={tt('g.edit')}
+                        onClick={onPanelEditClick} />) : null}
+                    <Button
+                        color='blue'
+                        inverted
+                        icon='triangle left'
+                        className='cancel-button' onClick={onPanelCloseClick}>{tt('g.cancel')}</Button>
+                </div>) : null}
             </div>
         );
     }

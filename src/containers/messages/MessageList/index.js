@@ -15,7 +15,7 @@ import './MessageList.css';
 },*/
 export default class MessageList extends React.Component {
     renderMessages = () => {
-        const messages = this.props.messages;
+        const { messages, selectedMessages, onMessageSelect } = this.props;
         let i = 0;
         let messageCount = messages.length;
         let tempMessages = [];
@@ -63,6 +63,8 @@ export default class MessageList extends React.Component {
                     endsSequence={endsSequence}
                     showTimestamp={showTimestamp}
                     data={current}
+                    selected={selectedMessages && !!selectedMessages[current.nonce]}
+                    onMessageSelect={onMessageSelect}
                 />
             );
 
@@ -74,7 +76,8 @@ export default class MessageList extends React.Component {
     };
 
     render() {
-        const { account, to, topCenter, topRight, onSendMessage } = this.props;
+        const { account, to, topCenter, topRight, onSendMessage, selectedMessages,
+            onPanelDeleteClick, onPanelEditClick, onPanelCloseClick } = this.props;
         return (
             <div className='message-list'>
                 <Toolbar
@@ -90,10 +93,15 @@ export default class MessageList extends React.Component {
                     rightItems={[
                         (<ToolbarButton key='image' icon='image-outline' />),
                         (<div key='emoji'>
-                            <ToolbarButton className='emoji-picker-opener' key='emoji' icon='happy-outline' />
+                            <ToolbarButton className='emoji-picker-opener' icon='happy-outline' />
                             <div className='emoji-picker-tooltip' role='tooltip'></div>
                         </div>),
-                    ]}/>) : null}
+                    ]}
+                    selectedMessages={selectedMessages}
+                    onPanelDeleteClick={onPanelDeleteClick}
+                    onPanelEditClick={onPanelEditClick}
+                    onPanelCloseClick={onPanelCloseClick}
+                    />) : null}
             </div>
         );
     }
