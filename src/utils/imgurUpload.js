@@ -42,7 +42,7 @@ export async function imgurUpload(image, sizeLimit = CONFIG.STM_Config.max_uploa
         return false;
     }
 
-    console.log(res);
+    console.debug(res);
 
     const data = JSON.parse(res);
     if (!data.success) {
@@ -55,5 +55,5 @@ export async function imgurUpload(image, sizeLimit = CONFIG.STM_Config.max_uploa
         return false;
     }
 
-    return data.data.link;
+    return data.data;
 }

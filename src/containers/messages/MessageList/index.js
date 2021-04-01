@@ -77,6 +77,7 @@ export default class MessageList extends React.Component {
 
     render() {
         const { account, to, topCenter, topRight, onSendMessage, selectedMessages,
+            onButtonImageClicked,
             onPanelDeleteClick, onPanelEditClick, onPanelCloseClick } = this.props;
         return (
             <div className='message-list'>
@@ -91,7 +92,7 @@ export default class MessageList extends React.Component {
                     account={account}
                     onSendMessage={onSendMessage}
                     rightItems={[
-                        (<ToolbarButton key='image' icon='image-outline' />),
+                        (<ToolbarButton key='image' icon='image-outline' onClick={onButtonImageClicked} />),
                         (<div key='emoji'>
                             <ToolbarButton className='emoji-picker-opener' icon='happy-outline' />
                             <div className='emoji-picker-tooltip' role='tooltip'></div>

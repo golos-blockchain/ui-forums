@@ -7,14 +7,25 @@ import * as CONFIG from '../../config';
 
 //import TimeAgoWrapper from '../utils/TimeAgoWrapper';
 import { getAccountAvatarSrc } from '../utils/accountMetaUtils';
+import { assignDecodedMessageFields } from '../utils/MessageUtils';
 
-export function addMessage(account, to, toMemoKey, body) {
+export function addMessage(account, to, toMemoKey, body, type = 'text') {
     return async dispatch => {
         let message = {
             app: 'golos-id',
             version: 1,
             body,
         };
+        if (type !== 'text') {
+            message.type = type;
+            if (type === 'image') {
+                // For clients who don't want use img proxy by themself
+                message.preview = CONFIG.STM_Config.img_proxy_prefix + '600x300/' + body;
+            } else {
+                throw new Error('Unknown message type: ' + type);
+            }
+        }
+        const jsonMessage = message;
         message = JSON.stringify(message);
 
         const memoKey = account.memoKey;
@@ -38,7 +49,7 @@ export function addMessage(account, to, toMemoKey, body) {
             }
             const now = new Date().toISOString().split('.')[0];
 
-            dispatch(addMessageResolved({
+            let msg = {
                 from: account.name,
                 to,
                 from_memo_key: account.data.memo_key,
@@ -52,11 +63,12 @@ export function addMessage(account, to, toMemoKey, body) {
                 remove_date: '1970-01-01T00:00:00',
 
                 id: 134,
-                message: body,
                 author: account.name,
                 date: new Date(),
                 unread: true,
-            }));
+            };
+            assignDecodedMessageFields(msg, jsonMessage);
+            dispatch(addMessageResolved(msg));
         });
     };
 }
@@ -100,7 +112,8 @@ export function fetchMessages(account, to) {
                         }
                     }
 
-                    msg.message = JSON.parse(msg.message).body;
+                    const decoded = JSON.parse(msg.message);
+                    assignDecodedMessageFields(msg, decoded);
 
                     return true;
                 }, result.data.messages.length - 1, -1,

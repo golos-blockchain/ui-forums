@@ -10,6 +10,7 @@ export default class Messages extends React.Component {
             contacts, conversationTopLeft, conversationLinkPattern,
             onConversationAdd, onConversationSearch, onConversationSelect,
             messagesTopCenter, messagesTopRight, messages, onSendMessage,
+            onButtonImageClicked,
             selectedMessages, onMessageSelect, onPanelDeleteClick, onPanelEditClick, onPanelCloseClick } = this.props;
         return (
             <div className='messenger'>
@@ -57,6 +58,7 @@ export default class Messages extends React.Component {
                         onPanelDeleteClick={onPanelDeleteClick}
                         onPanelEditClick={onPanelEditClick}
                         onPanelCloseClick={onPanelCloseClick}
+                        onButtonImageClicked={onButtonImageClicked}
                         />
                 </div>
             </div>

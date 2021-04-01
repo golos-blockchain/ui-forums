@@ -19,6 +19,7 @@ import LoginModal from '../components/elements/login/modal';
 import LogoutItem from '../components/elements/login/logout';
 import AccountAvatar from '../components/elements/account/avatar';
 import TimeAgoWrapper from '../utils/TimeAgoWrapper';
+import AddImageDialog from '../components/dialogs/image';
 
 class Messages extends React.Component {
  
@@ -33,6 +34,7 @@ class Messages extends React.Component {
             contactToAdd: '',
             authorLookup: [],
             showConfirm: false,
+            showImageDialog: false,
         };
         if (props.account.memoKey) {
             this.load(props);
@@ -328,6 +330,33 @@ class Messages extends React.Component {
         }
     };
 
+    onButtonImageClicked = (event) => {
+        this.setState({
+            showImageDialog: true,
+        });
+    };
+
+    closeImageDialog = () => {
+        this.setState({
+            showImageDialog: false,
+        }, () => {
+            this.focusInput();
+        });
+    };
+
+    onImageDialogResult = (result) => {
+        if (result) {
+            this.closeImageDialog();
+
+            const { account, messages } = this.props;
+            this.props.actions.addMessage(account, this.state.to, messages.to.memo_key, result.link, 'image');
+        }
+    };
+
+    onImageDialogClose = (event) => {
+        this.closeImageDialog();
+    };
+
     _renderMessagesTopCenter = () => {
         let messagesTopCenter = [];
         const { to } = this.props.messages;
@@ -405,6 +434,7 @@ class Messages extends React.Component {
                     onPanelDeleteClick={this.onPanelDeleteClick}
                     onPanelEditClick={this.onPanelEditClick}
                     onPanelCloseClick={this.onPanelCloseClick}
+                    onButtonImageClicked={this.onButtonImageClicked}
                     />
                 <Modal size='small' open={this.state.addContactShow}>
                         <Modal.Header>Добавить контакт</Modal.Header>
@@ -423,6 +453,9 @@ class Messages extends React.Component {
                             <Button color='orange' onClick={this.addContactCancel}>{tt('g.cancel')}</Button>
                         </Modal.Content>
                 </Modal>
+                <AddImageDialog open={this.state.showImageDialog}
+                    onResult={this.onImageDialogResult}
+                    onClose={this.onImageDialogClose} />
             </div>
         );
     }

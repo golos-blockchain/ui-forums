@@ -2,6 +2,8 @@ import golos from 'golos-classic-js';
 
 import * as types from '../actions/actionTypes';
 
+import { assignDecodedMessageFields } from '../utils/MessageUtils';
+
 const initialState = {
     messages: [],
     messageUpdate: '0',
@@ -61,7 +63,8 @@ export default function messages(state = initialState, action) {
                 publicKey = message.from_memo_key;
             }
             golos.messages.decode(account.memoKey, publicKey, [message], (msg) => {
-                msg.message = JSON.parse(msg.message).body;
+                let jsonMessage = JSON.parse(msg.message);
+                assignDecodedMessageFields(msg, jsonMessage);
             });
 
             // updating state
