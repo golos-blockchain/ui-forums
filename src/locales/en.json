@@ -283,6 +283,7 @@
     "should_be_email": "E-mail is wrong.",
     "enter_code": "You received verification code at your e-mail. Enter it below (instead of e-mail):",
     "search": "Search",
-    "messages": "Messages"
+    "messages": "Messages",
+    "modified": " (updated)"
   }
 }

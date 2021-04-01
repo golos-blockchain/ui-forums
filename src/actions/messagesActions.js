@@ -10,7 +10,7 @@ import { getAccountAvatarSrc } from '../utils/accountMetaUtils';
 import { assignDecodedMessageFields } from '../utils/MessageUtils';
 import { fitToPreview } from '../utils/ImageUtils';
 
-export function addMessage(account, to, toMemoKey, body, type = 'text', meta = {}) {
+export function sendMessage(account, to, toMemoKey, body, editInfo = undefined, type = 'text', meta = {}) {
     return async dispatch => {
         let message = {
             app: 'golos-id',
@@ -33,16 +33,16 @@ export function addMessage(account, to, toMemoKey, body, type = 'text', meta = {
 
         const memoKey = account.memoKey;
 
-        const data = golos.messages.encode(memoKey, toMemoKey, message);
+        const data = golos.messages.encode(memoKey, toMemoKey, message, editInfo ? editInfo.nonce : undefined);
 
         const json = JSON.stringify(['private_message', {
             from: account.name,
             to,
-            nonce: data.nonce.toString(),
+            nonce: editInfo ? editInfo.nonce : data.nonce.toString(),
             from_memo_key: account.data.memo_key,
             to_memo_key: toMemoKey,
             checksum: data.checksum,
-            update: false,
+            update: editInfo ? true : false,
             encrypted_message: data.encrypted_message,
         }]);
         golos.broadcast.customJson(account.key, [], [account.name], 'private_message', json, (err, result) => {
@@ -50,6 +50,10 @@ export function addMessage(account, to, toMemoKey, body, type = 'text', meta = {
                 alert(err);
                 return;
             }
+
+            if (!!editInfo)
+                return;
+
             const now = new Date().toISOString().split('.')[0];
 
             let msg = {
@@ -77,9 +81,6 @@ export function addMessage(account, to, toMemoKey, body, type = 'text', meta = {
 }
 
 export function addMessageResolved(payload) {
-    // TODO: remove
-    const input = document.getElementsByClassName('compose-input');
-    if (input[0]) input[0].value = '';
     return {
         type: types.MESSAGES_ADD_RESOLVED,
         payload: payload,
@@ -242,9 +243,23 @@ export function messaged(message, updateMessage, isMine, account) {
     };
 }
 
+export function messageEdited(message, updateMessage, isMine, account) {
+    return {
+        type: types.MESSAGES_EDITED,
+        payload: {message, updateMessage, isMine, account},
+    };
+}
+
 export function messageRead(message, updateMessage, isMine) {
     return {
-        type: types.MESSAGES_MESSAGE_READ,
+        type: types.MESSAGES_READ,
+        payload: {message, updateMessage, isMine},
+    };
+}
+
+export function messageDeleted(message, updateMessage, isMine) {
+    return {
+        type: types.MESSAGES_DELETED,
         payload: {message, updateMessage, isMine},
     };
 }

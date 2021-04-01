@@ -1,4 +1,5 @@
 import React from 'react';
+import tt from 'counterpart';
 
 import * as CONFIG from '../../../../../config';
 
@@ -84,7 +85,7 @@ export default class Message extends React.Component {
 
                 <div className={'bubble-container' + (selected ? ' selected' : '')}>
                     {isMine ? unread : null}
-                    <div className={'bubble' + loading} onClick={this.onMessageSelect} title={friendlyDate}>
+                    <div className={'bubble' + loading} onClick={this.onMessageSelect} title={friendlyDate + (modified ? tt('g.modified') : '')}>
                         { content }
                     </div>
                     {!isMine ? unread : null}

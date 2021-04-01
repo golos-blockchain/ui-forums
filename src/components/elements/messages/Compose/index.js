@@ -123,7 +123,7 @@ export default class Compose extends React.Component {
         const selectedMessages = Object.entries(this.props.selectedMessages);
         let selectedMessagesCount = 0;
         let selectedEditablesCount = 0;
-        for (let [nonce, info] of selectedMessages) {
+        for (let [, info] of selectedMessages) {
             selectedMessagesCount++;
             if (info.editable) {
                 selectedEditablesCount++;
@@ -145,7 +145,7 @@ export default class Compose extends React.Component {
                         icon='remove'
                         inverted
                         color='red'
-                        content={tt('g.remove') + ' (' + selectedMessagesCount + ')'}
+                        content={tt('g.remove')}
                         onClick={onPanelDeleteClick} />
                     {(selectedMessagesCount === 1 && selectedEditablesCount === 1) ? (<Button
                         icon='pencil'

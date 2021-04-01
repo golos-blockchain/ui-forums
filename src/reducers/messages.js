@@ -107,7 +107,52 @@ export default function messages(state = initialState, action) {
             });
             return newState;
         }
-        case types.MESSAGES_MESSAGE_READ: {
+        case types.MESSAGES_EDITED: {
+            let { message, updateMessage, isMine, account } = action.payload;
+
+            if (!updateMessage)
+                return state;
+
+            // adding fields
+            message.author = message.from;
+            message.date = new Date(message.receive_date + 'Z');
+            if (isMine) {
+                if (message.read_date.startsWith('19')) {
+                    message.unread = true;
+                }
+            } else {
+                if (message.read_date.startsWith('19')) {
+                    message.toMark = true;
+                }
+            }
+
+            // decoding
+            let publicKey;
+            if (message.from === account.data.name) {
+                publicKey = message.to_memo_key;
+            } else {
+                publicKey = message.from_memo_key;
+            }
+            golos.messages.decode(account.memoKey, publicKey, [message], (msg) => {
+                let jsonMessage = JSON.parse(msg.message);
+                assignDecodedMessageFields(msg, jsonMessage);
+            });
+
+            // updating state
+            let newState = Object.assign({}, state);
+
+            let messagesUpdate = message.nonce;
+
+            const idx = newState.messages.findIndex(i => i.nonce === message.nonce);
+            if (idx !== -1) {
+                newState.messages[idx] = message;
+            }
+
+            newState.messagesUpdate = messagesUpdate + 2;
+
+            return newState;
+        }
+        case types.MESSAGES_READ: {
             let { message, updateMessage, isMine } = action.payload;
             let newState = Object.assign({}, state);
             let messagesUpdate = message.nonce;
@@ -129,6 +174,17 @@ export default function messages(state = initialState, action) {
                 if (cidx !== -1) {
                     const { size } = newState.contacts[cidx];
                     size.unread_inbox_messages = Math.max(size.unread_inbox_messages - 1, 0);
+                }
+            }
+            return newState;
+        }
+        case types.MESSAGES_DELETED: {
+            let { message, updateMessage/*, isMine*/ } = action.payload;
+            let newState = Object.assign({}, state);
+            if (updateMessage) {
+                const idx = newState.messages.findIndex(i => i.nonce === message.nonce);
+                if (idx !== -1) {
+                    newState.messages.splice(idx, 1);
                 }
             }
             return newState;

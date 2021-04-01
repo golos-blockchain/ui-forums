@@ -28,7 +28,6 @@ class Messages extends React.Component {
         const { to } = this.props.match.params;
         this.state = {
             to: to ? to.replace('@', '') : '',
-            messages: [],
             selectedMessages: {},
             addContactShow: false,
             contactToAdd: '',
@@ -80,12 +79,16 @@ class Messages extends React.Component {
                     result.message.to === this.state.to;
                 const isMine = account.data.name === result.message.from;
                 if (result.type === 'message') {
-                    if (this.nonce !== result.message.nonce) {
+                    if (result.message.create_date !== result.message.receive_date) {
+                        this.props.actions.messageEdited(result.message, updateMessage, isMine, account);
+                    } else if (this.nonce !== result.message.nonce) {
                         this.props.actions.messaged(result.message, updateMessage, isMine, account);
                         this.nonce = result.message.nonce
                     }
                 } else if (result.type === 'mark') {
                     this.props.actions.messageRead(result.message, updateMessage, isMine);
+                } else if (result.type === 'remove_outbox' || result.type === 'remove_inbox') {
+                    this.props.actions.messageDeleted(result.message, updateMessage, isMine);
                 }
             });
     }
@@ -213,7 +216,21 @@ class Messages extends React.Component {
             });
             return;
         }
-        this.props.actions.addMessage(account, this.state.to, messages.to.memo_key, message);
+
+        let editInfo;
+        if (this.editNonce) {
+            editInfo = { nonce: this.editNonce };
+        }
+
+        this.props.actions.sendMessage(account, this.state.to, messages.to.memo_key, message, editInfo);
+
+        if (this.editNonce) {
+            this.restoreInput();
+            this.focusInput();
+            this.editNonce = undefined;
+        } else {
+            this.setInput('');
+        }
     };
 
     onMessageSelect = (message, isSelected, event) => {
@@ -225,14 +242,13 @@ class Messages extends React.Component {
             this.presaveInput();
             const { account } = this.props;
             const isMine = account.name === message.from;
+            const isImage = message.type === 'image';
             this.setState({
-                selectedMessages: {...this.state.selectedMessages, [message.nonce]: { editable: isMine }},
+                selectedMessages: {[message.nonce]: { editable: isMine && !isImage }},
             });
         } else {
-            let selectedMessages = {...this.state.selectedMessages};
-            delete selectedMessages[message.nonce];
             this.setState({
-                selectedMessages,
+                selectedMessages: {},
             }, () => {
                 this.restoreInput();
                 this.focusInput();
@@ -241,15 +257,14 @@ class Messages extends React.Component {
     };
 
     onPanelDeleteClick = (event) => {
-        const { messages } = this.state;
+        const { selectedMessages } = this.state;
 
-        const { account, accounts, to } = this.props;
+        const { account, messages } = this.props;
 
-        // TODO: use makeGroups
+        let OPERATIONS = [];
 
-        /*let OPERATIONS = [];
-        for (let message_object of messages) {
-            if (!this.state.selectedMessages[message_object.nonce]) {
+        for (let message_object of messages.messages) {
+            if (!selectedMessages[message_object.nonce]) {
                 continue;
             }
             const json = JSON.stringify(['private_delete_message', {
@@ -267,9 +282,11 @@ class Messages extends React.Component {
                     json,
                 }
             ]);
+            break; // Currently processes only 1 message
         }
 
-        this.props.sendOperations(account, accounts[to], OPERATIONS);*/
+        if (OPERATIONS.length)
+            this.props.actions.sendOperations(account, this.state.to, OPERATIONS);
 
         this.setState({
             selectedMessages: {},
@@ -308,7 +325,7 @@ class Messages extends React.Component {
     };
 
     presaveInput = () => {
-        if (!this.presavedInput) {
+        if (this.presavedInput === undefined) {
             const input = document.getElementsByClassName('compose-input')[0];
             if (input) {
                 this.presavedInput = input.value;
@@ -324,7 +341,7 @@ class Messages extends React.Component {
     };
 
     restoreInput = () => {
-        if (this.presavedInput) {
+        if (this.presavedInput !== undefined) {
             this.setInput(this.presavedInput);
             this.presavedInput = undefined;
         }
@@ -354,7 +371,7 @@ class Messages extends React.Component {
             };
 
             const { account, messages } = this.props;
-            this.props.actions.addMessage(account, this.state.to, messages.to.memo_key, result.link, 'image', meta);
+            this.props.actions.sendMessage(account, this.state.to, messages.to.memo_key, result.link, undefined, 'image', meta);
         }
     };
 
