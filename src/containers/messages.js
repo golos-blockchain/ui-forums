@@ -348,8 +348,13 @@ class Messages extends React.Component {
         if (result) {
             this.closeImageDialog();
 
+            let meta = {
+                width: result.width,
+                height: result.height,
+            };
+
             const { account, messages } = this.props;
-            this.props.actions.addMessage(account, this.state.to, messages.to.memo_key, result.link, 'image');
+            this.props.actions.addMessage(account, this.state.to, messages.to.memo_key, result.link, 'image', meta);
         }
     };
 

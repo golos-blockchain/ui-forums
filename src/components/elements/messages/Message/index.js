@@ -35,9 +35,12 @@ export default class Message extends React.Component {
         let content;
         if (data.type === 'image') {
             const src = CONFIG.STM_Config.img_proxy_prefix + '0x0/' + data.message;
-            const src_preview = CONFIG.STM_Config.img_proxy_prefix + '600x300/' + data.message;
+            const srcPreview = CONFIG.STM_Config.img_proxy_prefix + '600x300/' + data.message;
+            const previewWidth = data.previewWidth ? data.previewWidth + 'px' : 'auto';
+            const previewHeight = data.previewHeight ? data.previewHeight + 'px' : 'auto';
+
             content = (<a href={src} target='_blank' rel='noopener noreferrer' tabIndex='-1' onClick={this.doNotSelectMessage}>
-                <img src={src_preview} alt={src} />
+                <img src={srcPreview} alt={src} style={{width: previewWidth, height: previewHeight, objectFit: 'cover'}} />
             </a>);
         } else {
             content = data.message.split('\n').map(line => {
@@ -50,7 +53,7 @@ export default class Message extends React.Component {
                         if (!href.startsWith('http://') && !href.startsWith('https://')) {
                             href = 'http://' + href;
                         }
-                        spans.push(<a href={href} target='_blank' rel='noopener noreferrer'>{word}</a>);
+                        spans.push(<a href={href} target='_blank' rel='noopener noreferrer' tabIndex='-1' onClick={this.doNotSelectMessage}>{word}</a>);
                         spans.push(' ');
                     } else if (word.length <= 2 && /\p{Extended_Pictographic}/u.test(word)) {
                         spans.push(<span style={{fontSize: '20px'}}>{word}</span>);

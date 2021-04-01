@@ -8,19 +8,22 @@ import * as CONFIG from '../../config';
 //import TimeAgoWrapper from '../utils/TimeAgoWrapper';
 import { getAccountAvatarSrc } from '../utils/accountMetaUtils';
 import { assignDecodedMessageFields } from '../utils/MessageUtils';
+import { fitToPreview } from '../utils/ImageUtils';
 
-export function addMessage(account, to, toMemoKey, body, type = 'text') {
+export function addMessage(account, to, toMemoKey, body, type = 'text', meta = {}) {
     return async dispatch => {
         let message = {
             app: 'golos-id',
             version: 1,
             body,
+            ...meta,
         };
         if (type !== 'text') {
             message.type = type;
             if (type === 'image') {
                 // For clients who don't want use img proxy by themself
                 message.preview = CONFIG.STM_Config.img_proxy_prefix + '600x300/' + body;
+                message = { ...message, ...fitToPreview(600, 300, meta.width, meta.height), };
             } else {
                 throw new Error('Unknown message type: ' + type);
             }
