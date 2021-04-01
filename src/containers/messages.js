@@ -20,6 +20,8 @@ import LogoutItem from '../components/elements/login/logout';
 import AccountAvatar from '../components/elements/account/avatar';
 import TimeAgoWrapper from '../utils/TimeAgoWrapper';
 import AddImageDialog from '../components/dialogs/image';
+import PageFocus from '../components/elements/messages/PageFocus';
+import { flash, unflash } from '../components/elements/messages/FlashTitle';
 
 class Messages extends React.Component {
  
@@ -38,6 +40,8 @@ class Messages extends React.Component {
         if (props.account.memoKey) {
             this.load(props);
         }
+        this.windowFocused = true;
+        this.newMessages = 0;
     }
 
     load(props) {
@@ -48,7 +52,8 @@ class Messages extends React.Component {
         }
         props.actions.fetchContacts(props.account);
         setInterval(() =>{
-            props.actions.clearAccountNotifications(props.account.name);
+            if (this.windowFocused)
+                props.actions.clearAccountNotifications(props.account.name);
         }, 5000);
     }
 
@@ -83,7 +88,26 @@ class Messages extends React.Component {
                         this.props.actions.messageEdited(result.message, updateMessage, isMine, account);
                     } else if (this.nonce !== result.message.nonce) {
                         this.props.actions.messaged(result.message, updateMessage, isMine, account);
-                        this.nonce = result.message.nonce
+                        this.nonce = result.message.nonce;
+                        if (!isMine && !this.windowFocused) {
+                            ++this.newMessages;
+
+                            let title = this.newMessages;
+                            const plural = this.newMessages % 10;
+
+                            if (plural === 1) {
+                                if (this.newMessages === 11)
+                                    title += tt('messages.new_message5');
+                                else
+                                    title += tt('messages.new_message1');
+                            } else if ((plural === 2 || plural === 3 || plural === 4) && (this.newMessages < 10 || this.newMessages > 20)) {
+                                title += tt('messages.new_message234');
+                            } else {
+                                title += tt('messages.new_message5');
+                            }
+
+                            flash(title);
+                        }
                     }
                 } else if (result.type === 'mark') {
                     this.props.actions.messageRead(result.message, updateMessage, isMine);
@@ -379,6 +403,18 @@ class Messages extends React.Component {
         this.closeImageDialog();
     };
 
+    handleFocusChange = isFocused => {
+        this.windowFocused = isFocused;
+        if (!isFocused) {
+            if (this.newMessages) {
+                flash();
+            }
+        } else {
+            this.newMessages = 0;
+            unflash();
+        }
+    }
+
     _renderMessagesTopCenter = () => {
         let messagesTopCenter = [];
         const { to } = this.props.messages;
@@ -435,6 +471,8 @@ class Messages extends React.Component {
         return (
             <div>
                 <LoginModal authType='memo' noButton={true} open={this.state.showConfirm} actions={{...actions, onClose: this.onConfirmClose}}/>
+                <PageFocus onChange={this.handleFocusChange}>
+                </PageFocus>
                 <Messenger
                     account={this.props.account}
                     to={this.state.to}
