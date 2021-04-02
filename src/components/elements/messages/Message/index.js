@@ -71,7 +71,7 @@ export default class Message extends React.Component {
 
         return (
             <div className={[
-                'message',
+                'msgs-message',
                 `${isMine ? 'mine' : ''}`,
                 `${startsSequence ? 'start' : ''}`,
                 `${endsSequence ? 'end' : ''}`

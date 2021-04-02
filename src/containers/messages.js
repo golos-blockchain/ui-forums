@@ -156,13 +156,13 @@ class Messages extends React.Component {
             || nextProps.messages.messagesUpdate !== this.props.messages.messagesUpdate;
         if (msgsUpdated || anotherChat) {
             setTimeout(() => {
-                const scroll = document.getElementsByClassName('scrollable')[1];
+                const scroll = document.getElementsByClassName('msgs-scrollable')[1];
                 if (scroll) scroll.scrollTo(0,scroll.scrollHeight);
             }, 1);
         }
         if (anotherChat && !nextProps.messages.searchContacts) {
             setTimeout(() => {
-                const input = document.getElementsByClassName('compose-input')[0];
+                const input = document.getElementsByClassName('msgs-compose-input')[0];
                 if (input) input.focus();
             }, 1);
         }
@@ -344,13 +344,13 @@ class Messages extends React.Component {
     };
 
     focusInput = () => {
-        const input = document.getElementsByClassName('compose-input')[0];
+        const input = document.getElementsByClassName('msgs-compose-input')[0];
         if (input) input.focus();
     };
 
     presaveInput = () => {
         if (this.presavedInput === undefined) {
-            const input = document.getElementsByClassName('compose-input')[0];
+            const input = document.getElementsByClassName('msgs-compose-input')[0];
             if (input) {
                 this.presavedInput = input.value;
             }
@@ -358,7 +358,7 @@ class Messages extends React.Component {
     };
 
     setInput = (value) => {
-        const input = document.getElementsByClassName('compose-input')[0];
+        const input = document.getElementsByClassName('msgs-compose-input')[0];
         if (input) {
             input.value = value;
         }
