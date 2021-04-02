@@ -10,6 +10,7 @@ import debounce from 'lodash/debounce';
 import { Button, Modal, Dropdown } from 'semantic-ui-react';
 
 import * as accountActions from '../actions/accountActions';
+import * as accountsActions from '../actions/accountsActions';
 import * as messagesActions from '../actions/messagesActions';
 
 import Messenger from './messages/Messenger';
@@ -34,10 +35,11 @@ class Messages extends React.Component {
             addContactShow: false,
             contactToAdd: '',
             authorLookup: [],
-            showConfirm: false,
+            showLogin: this.needsLogin(props),
+            showLoginMemo: props.account && props.account.name && !props.account.memoKey,
             showImageDialog: false,
         };
-        if (props.account.memoKey) {
+        if (props.account && props.account.memoKey) {
             this.load(props);
         }
         this.windowFocused = true;
@@ -58,12 +60,6 @@ class Messages extends React.Component {
     }
 
     componentDidMount() {
-        const { account } = this.props;
-        if (!account.memoKey) {
-            this.setState({
-                showConfirm: true
-            });
-        }
         const script = document.createElement('script');
         script.src = 'https://unpkg.com/ionicons@5.4.0/dist/ionicons.js';
         script.async = true;
@@ -143,8 +139,28 @@ class Messages extends React.Component {
 
     markMessages2 = debounce(this.markMessages, 1000);
 
+    needsLogin = (props) => {
+        return !props.account || !props.account.name;
+    }
+
     componentWillReceiveProps(nextProps) {
-        if (nextProps.account && nextProps.account.memoKey && !this.callbackSet) {
+        if (this.needsLogin(nextProps)) {
+            this.setState({
+                showLogin: true
+            });
+            return;
+        }
+        if (!nextProps.account.data) {
+            console.debug('No account data, re-render page');
+            return;
+        }
+        if (!nextProps.account.memoKey) {
+            this.setState({
+                showLoginMemo: true
+            });
+            return;
+        }
+        if (!this.callbackSet) {
             this.load(nextProps);
             this.callbackSet = true;
             const { account } = nextProps;
@@ -171,9 +187,15 @@ class Messages extends React.Component {
         }
     }
 
-    onConfirmClose = () => {
+    onLoginClose = () => {
         this.setState({
-            showConfirm: false
+            showLogin: false
+        });
+    };
+
+    onLoginMemoClose = () => {
+        this.setState({
+            showLoginMemo: false
         });
     };
 
@@ -236,7 +258,7 @@ class Messages extends React.Component {
         const { account, messages } = this.props;
         if (!account.memoKey) {
             this.setState({
-                showConfirm: true
+                showLoginMemo: true
             });
             return;
         }
@@ -455,7 +477,7 @@ class Messages extends React.Component {
         );
         return (<Dropdown title={'@' + name} style={{padding: '0 1.1em'}} item trigger={avatar} pointing='top right' icon={null} className='icon'>
             <Dropdown.Menu>
-                <Dropdown.Item target='_blank' icon='user' content={<a href={`/@${name}`}>{tt('account.profile')}</a>} />
+                <Dropdown.Item target='_blank' icon='user' content={<a href={`/@${name}`} style={{ color: 'black' }}>{tt('account.profile')}</a>} />
                 <LogoutItem {...this.props} />
             </Dropdown.Menu>
         </Dropdown>)
@@ -464,13 +486,14 @@ class Messages extends React.Component {
     render() {
         const { account, actions } = this.props;
         const { contacts, searchContacts, messages } = this.props.messages;
-        if (!account.name) {
-            window.location.href = '/';
+        /*if (account.name && account.name === this.state.to) {
+            window.location.href = '/msgs/';
             return (<div></div>);
-        }
+        }*/
         return (
             <div>
-                <LoginModal authType='memo' noButton={true} open={this.state.showConfirm} actions={{...actions, onClose: this.onConfirmClose}}/>
+                <LoginModal noButton={true} open={this.state.showLogin} actions={{...actions, onClose: this.onLoginClose}}/>
+                <LoginModal authType='memo' noButton={true} open={this.state.showLoginMemo} actions={{...actions, onClose: this.onLoginMemoClose}}/>
                 <PageFocus onChange={this.handleFocusChange}>
                 </PageFocus>
                 <Messenger
@@ -531,6 +554,7 @@ function mapStateToProps(state, ownProps) {
 function mapDispatchToProps(dispatch) {
     return {actions: bindActionCreators({
         ...accountActions,
+        ...accountsActions,
         ...messagesActions,
     }, dispatch)};
 }

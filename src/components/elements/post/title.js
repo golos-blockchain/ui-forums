@@ -32,7 +32,7 @@ export default class PostTitle extends React.Component {
 
     render() {
         const { content, account } = this.props;
-        const withMsgsButton = account && account.name && account.name !== content.author;
+        const withMsgsButton = (account && account.name && account.name !== content.author) || (!account || !account.name);
         let rootTitle = false;
         if (this.props.op) {
             rootTitle = (

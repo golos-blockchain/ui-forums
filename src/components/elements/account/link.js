@@ -15,18 +15,19 @@ export default class AccountLink extends React.Component {
                 {content}
             </Link>
         );
-        if (withMsgsButton) {
-            link = (
-                <span>
-                    {link}
-                    &nbsp;
-                    <Link to={`/msgs/@${username}`} target='_blank'>
-                        <Icon name='envelope outline' color='blue' title={tt('g.write')} />
-                    </Link>
-                </span>
-            );
+        if (noPopup) {
+            if (withMsgsButton)
+                link = (
+                    <span>
+                        {link}
+                        &nbsp;
+                        <Link to={`/msgs/@${username}`} target='_blank'>
+                            <Icon name='envelope outline' color='blue' title={tt('g.write')} />
+                        </Link>
+                    </span>
+                );
+            return link;
         }
-        if (noPopup) return link;
         return (<span>
                 <AccountCard
                     username={username}

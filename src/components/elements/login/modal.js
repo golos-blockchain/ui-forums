@@ -11,7 +11,7 @@ class LoginModal extends React.Component {
         super(props);
         this.state = {
             warningOpen: false, // Warning about active key. Disabled currently
-            loginOpen: false,
+            loginOpen: props.open,
             error: false,
             loading: false,
             account: props.account,

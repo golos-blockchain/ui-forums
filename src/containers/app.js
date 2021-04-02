@@ -25,7 +25,7 @@ import '../../node_modules/noty/lib/noty.css';
 import loadable from 'loadable-components';
 const IndexLayout = loadable(() => import('../components/layouts/index'));
 const FeedLayout = loadable(() => import('../components/layouts/feed'));
-const Messages = loadable(() => import('../containers/messages'));
+const MessagesLayout = loadable(() => import('../components/layouts/messages'));
 const ForumLayout = loadable(() => import('../components/layouts/forum'));
 const ForumCreateLayout = loadable(() => import('../components/layouts/forum/create'));
 const ForumsLayout = loadable(() => import('../components/layouts/forums'));
@@ -67,7 +67,6 @@ class App extends React.Component {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        alert(JSON.stringify(nextProps))
         return true;
     }
 
@@ -123,7 +122,7 @@ class App extends React.Component {
                     <Route path='/create_account' component={CreateAccount} />
                     <Route path='/create/forum' component={ForumCreateLayout} />
                     <Route path='/feed' component={FeedLayout} />
-                    <Route path='/msgs/:to?' component={Messages} />
+                    <Route path='/msgs/:to?' component={MessagesLayout} />
                     <Route path='/forums' component={ForumsLayout} />
                     <Route path='/forums/:group' component={IndexLayout} />
                     <Route path='/f/:id/:section?' component={(props) => <ForumLayout {...props} {...this.props.ssrState} />} />
