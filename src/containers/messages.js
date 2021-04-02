@@ -4,13 +4,11 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import golos from 'golos-classic-js';
 import tt from 'counterpart';
-import ttGetByKey from '../utils/ttGetByKey';
 import max from 'lodash/max';
 import debounce from 'lodash/debounce';
 
 import { Button, Modal, Dropdown } from 'semantic-ui-react';
 
-import * as CONFIG from '../../config';
 import * as accountActions from '../actions/accountActions';
 import * as messagesActions from '../actions/messagesActions';
 
@@ -22,6 +20,8 @@ import TimeAgoWrapper from '../utils/TimeAgoWrapper';
 import AddImageDialog from '../components/dialogs/image';
 import PageFocus from '../components/elements/messages/PageFocus';
 import { flash, unflash } from '../components/elements/messages/FlashTitle';
+
+import './messages.css';
 
 class Messages extends React.Component {
  
@@ -479,7 +479,7 @@ class Messages extends React.Component {
                     contacts={searchContacts || contacts}
                     conversationTopLeft={[
                         <a href='/'>
-                            <h3 dangerouslySetInnerHTML={{__html: ttGetByKey(CONFIG.FORUM, 'logo_title')}}></h3>
+                            <img className='msgs-logo' src='/images/messenger.png' alt='Golos Messenger' />
                         </a>
                     ]}
                     conversationLinkPattern='/msgs/@*'
