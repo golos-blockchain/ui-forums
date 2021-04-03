@@ -161,14 +161,19 @@
     "key_warn": "Please use your keys responsibly.",
     "key_warn_description": "As with all Steem powered applications, please be aware of what website you're on and if you trust the organization running it. Make sure you are only using your posting key and your active/owner keys remain safe (preferrably in a wallet or offline). Use active key only if cases when you want transfer some tokens, etc.",
     "account_name": "Account Name",
-    "password": "Password (or Posting Private Key)",
+    "password_": "Password (or Posting Private Key)",
     "password_active": "Password (or Active Private Key)",
+    "password_memo": "Password (or Memo Private Key)",
+    "_title": "Login",
     "active_title": "Please authorize",
     "active_description": "This operation requires your Active key or password.",
+    "memo_title": "Please authorize",
+    "memo_description": "This operation requires your Memo key or password.",
     "no_such_account_name": "No such account name",
     "wrong_password_format": "Invalid format of password/key",
     "wrong_password": "Wrong password/key",
-    "wrong_password_not_active": "This operation requires active-ключ, not posting or owner",
+    "wrong_password_not_active": "This operation requires active-key, not posting or owner",
+    "wrong_password_not_memo": "This operation requires memo-key, not posting or active",
     "wrong_password_active": "Cannot login with active key (even if posting key is same)",
     "wrong_password_owner": "Cannot login with owner key (even if posting key is same)",
     "sign_up": "Register",
@@ -218,6 +223,49 @@
     "where_anywhere": "Everywhere",
     "alltime": "All time"
   },
+  "messages": {
+    "last_seen": "last seen ",
+    "search": "Search people",
+    "search_not_found": "Nobody found",
+    "type_a_message_NAME": "Type a message, @%(NAME)s",
+    "new_message1": " notification",
+    "new_message234": " notifications",
+    "new_message5": " notifications"
+  },
+  "emoji_i18n": {
+    "categoriesLabel": "Categories",
+    "emojiUnsupportedMessage": "Your browser does not support color emoji.",
+    "favoritesLabel": "Favorites",
+    "loadingMessage": "Loading…",
+    "networkErrorMessage": "Could not load emoji. Try refreshing.",
+    "regionLabel": "Emoji picker",
+    "searchDescription": "When search results are available, press up or down to select and enter to choose.",
+    "searchLabel": "Search",
+    "searchResultsLabel": "Search results",
+    "skinToneDescription": "When expanded, press up or down to select and enter to choose.",
+    "skinToneLabel": "Choose a skin tone (currently {skinTone})",
+    "skinTonesLabel": "Skin tones",
+    "skinTones": [
+      "Default",
+      "Light",
+      "Medium-Light",
+      "Medium",
+      "Medium-Dark",
+      "Dark"
+    ],
+    "categories": {
+      "custom": "Custom",
+      "smileys-emotion": "Smileys and emoticons",
+      "people-body": "People and body",
+      "animals-nature": "Animals and nature",
+      "food-drink": "Food and drink",
+      "travel-places": "Travel and places",
+      "activities": "Activities",
+      "objects": "Objects",
+      "symbols": "Symbols",
+      "flags": "Flags"
+    }
+  },
   "g": {
     "and": "and",
     "author": "Author",
@@ -237,6 +285,9 @@
     "this_field_required": "This field is required.",
     "should_be_email": "E-mail is wrong.",
     "enter_code": "You received verification code at your e-mail. Enter it below (instead of e-mail):",
-    "search": "Search"
+    "search": "Search",
+    "messages": "Messages",
+    "modified": " (updated)",
+    "write": "Write"
   }
 }

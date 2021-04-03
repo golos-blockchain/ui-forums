@@ -194,10 +194,10 @@ export default class MarkdownEditor extends PureComponent {
 
         this.setState({ uploading: true });
 
-        const url = await imgurUpload(file);
-        if (url) {
+        const uploaded = await imgurUpload(file);
+        if (uploaded && uploaded.link) {
             const imageUrl = `![${file.name}](${
-                url
+                uploaded.link
             })`;
 
             this._cm.replaceRange(imageUrl, this._cm.getCursor());

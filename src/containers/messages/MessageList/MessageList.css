@@ -1,0 +1,16 @@
+.message-list-container {
+    padding: 10px;
+    padding-bottom: 70px;
+}
+
+.msgs-emoji-picker-tooltip {
+    display: block !important;
+    position: absolute;
+    z-index: 1;
+    bottom: 80%;
+    left: 0px;
+}
+
+.msgs-emoji-picker-tooltip:not(.shown) {
+    display: none !important;
+}

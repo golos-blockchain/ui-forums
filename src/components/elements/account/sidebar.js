@@ -26,6 +26,8 @@ export default class AccountSidebar extends React.Component {
 
     render() {
         const { username } = this.state;
+        const { account } = this.props;
+        const withMsgsButton = (account && account.name && account.name !== username) || (!account || !account.name);
         const { isBanned, canIBan } = this.props;
         let sidebar = (<Segment padded='very' loading />);
         if (this.props.chainstate && this.props.chainstate.accounts && this.props.chainstate.accounts[username]) {
@@ -45,6 +47,7 @@ export default class AccountSidebar extends React.Component {
                             noPopup={true}
                             username={username}
                             isBanned={isBanned}
+                            withMsgsButton={withMsgsButton}
                         />
                     </Header>
                     {/*<AccountFollow

@@ -12,7 +12,7 @@
     "atob": "^2.1.2",
     "btoa": "^1.2.1",
     "gmail-send": "^1.8.10",
-    "golos-classic-js": "0.7.83",
+    "golos-classic-js": "0.7.98",
     "koa": "^2.13.0",
     "koa-bodyparser": "latest",
     "koa-compress": "^5.0.1",
@@ -24,7 +24,8 @@
     "passport-facebook": "latest",
     "passport-mail": "latest",
     "passport-vk": "latest",
-    "passport-yandex": "latest"
+    "passport-yandex": "latest",
+    "tarantool-driver": "^2.0.1"
   },
   "devDependencies": {
     "nodemon": "^2.0.6"

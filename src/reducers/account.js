@@ -4,36 +4,43 @@ import uniq from 'lodash/uniq';
 import * as types from '../actions/actionTypes';
 
 export default function account(state = false, action) {
-    switch(action.type) {
+    switch (action.type) {
         case types.ACCOUNT_FOLLOWING_APPEND: {
             const existingFollowers = state.following || [];
             const following = action.following;
             return Object.assign({}, state, {
-                following: uniq(existingFollowers.concat(following))
+                following: uniq(existingFollowers.concat(following)),
             });
         }
         case types.ACCOUNT_FOLLOWING_REMOVE: {
             const existingFollowers = state.following || [];
             return Object.assign({}, state, {
-                following: uniq(pull(existingFollowers, action.account))
+                following: uniq(pull(existingFollowers, action.account)),
             });
         }
         case types.ACCOUNT_FETCH: {
             return Object.assign({}, state, {
-                data: action.payload.data
+                data: action.payload.data,
+            });
+        }
+        case types.ACCOUNT_NOTIFICATIONS_FETCH: {
+            return Object.assign({}, state, {
+                notifications: action.payload,
             });
         }
         case types.ACCOUNT_SIGNOUT:
             return {
                 isUser: false,
                 name: '',
-                key: ''
+                key: '',
+                memoKey: '',
             };
         case types.ACCOUNT_SIGNIN:
             return Object.assign({}, state, {
                 isUser: true,
                 name: action.payload.account,
-                key: action.payload.key,
+                key: action.payload.key || state.key,
+                memoKey: action.payload.memoKey || state.memoKey
             });
         default:
             return state;

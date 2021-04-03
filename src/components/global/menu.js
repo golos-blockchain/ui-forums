@@ -6,7 +6,7 @@ import tt from 'counterpart';
 import ttGetByKey from '../../utils/ttGetByKey';
 import { Asset } from 'golos-classic-js/lib/utils';
 
-import { Button, Container, Dropdown, Grid, Header, Icon, Menu, Popup } from 'semantic-ui-react';
+import { Button, Container, Dropdown, Grid, Header, Icon, Label, Menu, Popup } from 'semantic-ui-react';
 
 import * as CONFIG from '../../../config';
 import * as accountActions from '../../actions/accountActions';
@@ -28,10 +28,12 @@ class HeaderMenu extends Component {
             this.props.actions.fetchAccount(this.props.account.name);
         }
         this.interval = setInterval(() => this.props.actions.fetchAccount(this.props.account.name), 60000);
+        this.intervalNotify = setInterval(() => this.props.actions.fetchAccountNotifications(this.props.account.name), 5000);
     }
 
     componentWillUnmount() {
         clearInterval(this.interval);
+        clearInterval(this.intervalNotify);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -69,7 +71,9 @@ class HeaderMenu extends Component {
 
     render() {
         const { account } = this.props;
-        const { name } = account;
+        const { name, notifications } = account;
+        const notifiLabel = notifications && notifications.message > 0 ?
+            (<Label content={notifications.message} color='red' />) : null
         const { hasBalance } = this.state;
         let data = {};
         let avatar = false;
@@ -132,6 +136,7 @@ class HeaderMenu extends Component {
                     size={35}
                     style={{margin: 0}}
                     username={name}
+                    notifications={notifications ? Math.max(notifications.message, 0) : 0}
                 />
             );
             /*userItem = (
@@ -148,6 +153,7 @@ class HeaderMenu extends Component {
                     <Dropdown.Menu>
                         <Dropdown.Item as={Link} to={`/@${name}`} icon='user' content={tt('account.profile')} />
                         <Dropdown.Item as={Link} to={`/@${name}/responses`} icon='comments' content={tt('account.responses')} />
+                        <Dropdown.Item as={Link} label={notifiLabel} target='_blank' to={`/msgs/`} icon='envelope outline' content={tt('g.messages')} />
                         <Dropdown.Item as={Link} target='_blank' to={`https://golos.id/@${name}`} icon='users' content={tt('account.blogs')} />
                         <LogoutItem {...this.props} />
                     </Dropdown.Menu>

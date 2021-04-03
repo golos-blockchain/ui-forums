@@ -383,3 +383,7 @@
   height: 25%;
   display: block;
 }
+
+.notifi-label {
+  top: 0px !important;
+}

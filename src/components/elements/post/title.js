@@ -31,7 +31,8 @@ export default class PostTitle extends React.Component {
     };
 
     render() {
-        const { content } = this.props;
+        const { content, account } = this.props;
+        const withMsgsButton = (account && account.name && account.name !== content.author) || (!account || !account.name);
         let rootTitle = false;
         if (this.props.op) {
             rootTitle = (
@@ -54,7 +55,10 @@ export default class PostTitle extends React.Component {
                             <Grid.Column tablet={8} computer={8} mobile={14}>
                                 <Header size='medium'>
                                     <AccountAvatar username={content.author} />
-                                    <AccountLink username={content.author} reputation={this.repLog10(content.author_reputation)} isBanned={content.author_banned} />
+                                    <AccountLink username={content.author}
+                                        reputation={this.repLog10(content.author_reputation)}
+                                        isBanned={content.author_banned}
+                                        withMsgsButton={withMsgsButton} />
                                     <Header.Subheader>
                                         {'↳ '}
                                         <a href={!this.props.op ? ('#@' + content.author + '/' + content.permlink) : '#'}><TimeAgoWrapper date={`${content.created}Z`} live={false} /></a>

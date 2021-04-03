@@ -2,6 +2,10 @@
   background: #fcfcfc;
 }
 
+.AppContainer > .noPadding {
+  padding: 0px;
+}
+
 .AppContainer > .ui.menu {
   border-radius: 0;
 }

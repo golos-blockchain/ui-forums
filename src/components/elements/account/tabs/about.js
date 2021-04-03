@@ -29,12 +29,12 @@ export default class AccountAbout extends React.Component {
     onValidSubmit = async (formData) => {
         let profile_image = formData.profile_image;
         if (formData.profile_image && !formData.profile_image.includes('imgur')) {
-            profile_image = await imgurUpload(formData.profile_image, CONFIG.STM_Config.max_upload_avatar_bytes);
-            if (!profile_image) {
+            let uploaded = await imgurUpload(formData.profile_image, CONFIG.STM_Config.max_upload_avatar_bytes);
+            if (!uploaded) {
                 return;
             }
             this.setState({
-                profile_image
+                profile_image: uploaded.link,
             });
         }
 
@@ -79,10 +79,10 @@ export default class AccountAbout extends React.Component {
 
         this.setState({ avatarUploading: true });
 
-        const profile_image = await imgurUpload(file, CONFIG.STM_Config.max_upload_avatar_bytes);
-        if (profile_image) {
+        const uploaded = await imgurUpload(file, CONFIG.STM_Config.max_upload_avatar_bytes);
+        if (uploaded) {
             this.setState({
-                profile_image
+                profile_image: uploaded.link,
             });
         }
 
