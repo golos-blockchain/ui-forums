@@ -544,6 +544,20 @@ router.get('/@:author/donates/:direction', async (ctx) => {
     }
 })
 
+router.get('/invite/:public_key', async (ctx) => {
+    try {
+        let res = await golos.api.getInvite(ctx.params.public_key);
+        if (!res) // no invite
+            return returnError(ctx, res);
+        ctx.body = {
+            data: res,
+            "status": "ok",
+        }
+    } catch (err) {
+        return returnError(ctx, err);
+    }
+});
+
 app.use(livereload());
 app.use(cors({ credentials: true }));
 app.keys = ['your-session-secret'];

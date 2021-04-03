@@ -196,6 +196,7 @@ function useAuthApi(app) {
         let verCodePath = "";
 
         let toRegister = null;
+        let inviteCase = false;
         if (!ctx.params.username) { // email case
             verCodePath = 'verification_codes/' + btoa(ctx.params.email) + '.txt';
             try {
@@ -206,15 +207,18 @@ function useAuthApi(app) {
             if (toRegister.code != ctx.params.code) {
                 return returnError(ctx, 'Wrong code');
             }
-        } else {
+        } else if (ctx.params.email === '.invite') { // invite code
+            toRegister = ctx.params;
+            inviteCase = true;
+        } else { // social case
             toRegister = ctx.params;
             if (!toRegister || !toRegister.username || !ctx.session.soc_id || !ctx.session.soc_id_type) {
                 return returnError(ctx, 'Wrong toRegister in session');
             }
         }
 
-        let aro = undefined;
-        if (CONFIG_SEC.registrar.referer) {
+        let aro = [];
+        if (CONFIG_SEC.registrar.referer && !inviteCase) {
             let max_referral_interest_rate;
             let max_referral_term_sec;
             let max_referral_break_fee;
@@ -237,28 +241,31 @@ function useAuthApi(app) {
                 }
             ]];
         }
-        let accs = null;
         try {
             let meta = {};
-            if (ctx.session.soc_id_type && ctx.session.soc_id) {
+            if (!inviteCase && ctx.session.soc_id_type && ctx.session.soc_id) {
                 meta[ctx.session.soc_id_type] = ctx.session.soc_id;
             }
-            await golos.broadcast.accountCreateWithDelegationAsync(CONFIG_SEC.registrar.signing_key,
-              CONFIG_SEC.registrar.fee, CONFIG_SEC.registrar.delegation,
-              CONFIG_SEC.registrar.account, toRegister.username, 
-                {weight_threshold: 1, account_auths: [], key_auths: [[toRegister.owner, 1]]},
-                {weight_threshold: 1, account_auths: [], key_auths: [[toRegister.active, 1]]},
-                {weight_threshold: 1, account_auths: [], key_auths: [[toRegister.posting, 1]]},
-                toRegister.memo,
-              JSON.stringify(meta), aro);
-            await new Promise(resolve => setTimeout(resolve, 1000));
-            accs = await golos.api.getAccountsAsync([toRegister.username]);
+            const owner = {weight_threshold: 1, account_auths: [], key_auths: [[toRegister.owner, 1]]};
+            const active = {weight_threshold: 1, account_auths: [], key_auths: [[toRegister.active, 1]]};
+            const posting = {weight_threshold: 1, account_auths: [], key_auths: [[toRegister.posting, 1]]};
+            if (inviteCase) {
+                await golos.broadcast.accountCreateWithInviteAsync(CONFIG_SEC.registrar.signing_key,
+                    toRegister.code,
+                    CONFIG_SEC.registrar.account, toRegister.username, 
+                    owner, active, posting,
+                    toRegister.memo,
+                    JSON.stringify(meta), []);
+            } else {
+                await golos.broadcast.accountCreateWithDelegationAsync(CONFIG_SEC.registrar.signing_key,
+                    CONFIG_SEC.registrar.fee, CONFIG_SEC.registrar.delegation,
+                    CONFIG_SEC.registrar.account, toRegister.username, 
+                    owner, active, posting,
+                    toRegister.memo,
+                    JSON.stringify(meta), aro);
+            }
         } catch (err) {
             return returnError(ctx, err.toString())
-        }
-
-        if (!accs || !accs.length) {
-            return returnError(ctx, 'unknown reason');
         }
 
         if (verCodePath) fs.unlinkSync(verCodePath);
@@ -316,6 +323,12 @@ function useAuthApi(app) {
 
     router.get('/success', (ctx) => {
         ctx.body = '<script>window.close();</script>';
+    });
+
+    router.get('/check_soc_auth', (ctx) => {
+        ctx.body = {
+            soc_id_type: ctx.session.soc_id_type || null,
+        };
     });
 }
 

@@ -1,0 +1,28 @@
+
+.votebtn-result {
+    margin-top: 8px;
+    margin-left: 10px;
+    display: inline-block;
+    vertical-align: top;
+    width: 40px;
+    text-align: center;
+}
+
+.votebtn-range {
+    margin-top: 10px !important;
+    margin-left: 5px !important;
+    width: 200px;
+}
+
+@supports (-moz-appearance:none) {
+    .votebtn-range {
+        margin-top: 7px !important;
+    }
+}
+
+.votebtn-icon {
+    margin-top: 7px !important;
+    margin-left: 5px !important;
+    vertical-align: top !important;
+    cursor: pointer;
+}
