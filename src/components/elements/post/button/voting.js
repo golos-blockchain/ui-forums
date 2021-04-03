@@ -3,7 +3,7 @@ import tt from 'counterpart';
 
 import { Button, Popup, Dropdown } from 'semantic-ui-react';
 
-//import VoteButtonOptions from './vote/options';
+import VoteButton from './vote/button';
 import translateError from '../../../../utils/translateError';
 
 import './voting.css';
@@ -86,7 +86,7 @@ export default class Voting extends React.Component {
                 />
                 <Dropdown
                     floating
-                    className="VoteList"
+                    className='voting__dropdown'
                     text={totalVotes.toString()}
                     icon={null}>
                     <Dropdown.Menu>
@@ -111,32 +111,20 @@ export default class Voting extends React.Component {
         }
         // If an account exists, setup the actual button
         if (this.props.account.isUser) {
-            //const { voting_power } = this.props.account.data || 10000;
-            /*adjuster = (
-                <VoteButtonOptions
-                    account={this.props.account}
-                    status={this.props.status}
-                    effectiveness={`${voting_power / 100}%`}
-                    onWeightChange={this.props.onWeightChange}
-                    weight={weight}/>
-            )*/
             // Set the display
             display = (<div>
                 <span>
-                    <Button
+                    <VoteButton
+                        up={true}
+                        voted={iUpvoted}
+                        loading={this.props.loading}
                         onClick={onClick}
-                        weight={100}
-                        disabled={this.props.loading}
-                        basic={!iUpvoted}
-                        icon='thumbs up'
-                        color={'green'}
-                        floated='left'
                     />
                 </span>
                 <span>
                     <Dropdown
                         floating
-                        className="VoteList"
+                        className='voting__dropdown'
                         loading={this.props.loading}
                         text={this.props.loading ? '' : totalVotes.toString()}
                         icon={this.props.loading ? '' : null}>
@@ -146,14 +134,11 @@ export default class Voting extends React.Component {
                     </Dropdown>
                 </span>
                 <span>
-                    <Button
+                    <VoteButton
+                        up={false}
+                        voted={iDownvoted}
+                        loading={this.props.loading}
                         onClick={onClick}
-                        weight={-100}
-                        disabled={this.props.loading}
-                        basic={!iDownvoted}
-                        icon='thumbs down'
-                        color={'red'}
-                        floated='left'
                     />
                 </span>
                 </div>
