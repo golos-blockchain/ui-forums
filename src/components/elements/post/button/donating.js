@@ -7,7 +7,6 @@ import { Form } from 'formsy-semantic-ui-react';
 
 import * as CONFIG from '../../../../../config';
 
-//import VoteButtonOptions from './vote/options';
 import translateError from '../../../../utils/translateError';
 
 export default class Donating extends React.Component {
