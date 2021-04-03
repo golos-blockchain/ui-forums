@@ -241,7 +241,6 @@ function useAuthApi(app) {
                 }
             ]];
         }
-        let accs = null;
         try {
             let meta = {};
             if (!inviteCase && ctx.session.soc_id_type && ctx.session.soc_id) {
@@ -265,14 +264,8 @@ function useAuthApi(app) {
                     toRegister.memo,
                     JSON.stringify(meta), aro);
             }
-            await new Promise(resolve => setTimeout(resolve, 1000));
-            accs = await golos.api.getAccountsAsync([toRegister.username]);
         } catch (err) {
             return returnError(ctx, err.toString())
-        }
-
-        if (!accs || !accs.length) {
-            return returnError(ctx, 'unknown reason');
         }
 
         if (verCodePath) fs.unlinkSync(verCodePath);
