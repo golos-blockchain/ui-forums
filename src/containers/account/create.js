@@ -6,15 +6,17 @@ import { goToTop } from 'react-scrollable-anchor';
 import tt from 'counterpart';
 import ttGetByKey from '../../utils/ttGetByKey';
 import golos from 'golos-classic-js';
-import { key_utils } from 'golos-classic-js/lib/auth/ecc';
+import { PrivateKey, key_utils } from 'golos-classic-js/lib/auth/ecc';
 import { validateAccountName } from 'golos-classic-js/lib/utils';
 import { jsPDF } from 'jspdf';
 
-import { Header, Label, Button, Icon } from 'semantic-ui-react';
+import { Header, Label, Button, Icon, Loader } from 'semantic-ui-react';
 import { Form } from 'formsy-semantic-ui-react';
 
 import * as CONFIG from '../../../config';
 import * as breadcrumbActions from '../../actions/breadcrumbActions';
+
+import './create.css';
 
 class CreateAccount extends React.Component {
 
@@ -23,11 +25,14 @@ class CreateAccount extends React.Component {
         if (process.browser) goToTop();
         this.state = {
             alreadyExists: false,
+            wrongInviteCode: false,
             generatedPassword: 'P' + key_utils.get_random_key().toWif(),
             code: null,
             email: null,
             authType: 'email',
-            methods: []
+            authSuccessType: null,
+            methods: [],
+            allValid: false,
         };
         this.getMethods = this.getMethods.bind(this);
         this.getMethods()
@@ -117,6 +122,8 @@ class CreateAccount extends React.Component {
             let uri;
             if (authType === 'email') {
                 uri = CONFIG.REST_API + '/auth/send_email/' + data.email + '/' + tt.getLocale() + '/';
+            } else if (authType === 'invite') {
+                uri = CONFIG.REST_API + '/auth/verify_email/.invite/' + data.invite + '/';
             } else {
                 uri = CONFIG.REST_API + '/auth/verify_email/-/-/';
             }
@@ -168,12 +175,34 @@ class CreateAccount extends React.Component {
         }
     };
 
+    checkSocAuth = async (event) => {
+        console.log('check');
+        window.addEventListener('focus', this.checkSocAuth, {once: true});
+
+        const response = await fetch(CONFIG.REST_API + '/auth/check_soc_auth', { credentials: 'include'});
+        if (response.ok) {
+            const result = await response.json();
+            if (result.soc_id_type) {
+                this.setState({
+                    authSuccessType: result.soc_id_type,
+                    wrongInviteCode: false,
+                });
+                window.removeEventListener('focus', this.checkSocAuth);
+            } else if (!event) {
+                setTimeout(this.checkSocAuth, 5000);
+            } else {
+                console.log('event from focus');
+            }
+        }
+    };
+
     useVk = (e) => {
         e.preventDefault();
         this.setState({
             authType: 'ВКонтакте'
         });
         window.open(CONFIG.REST_API + '/auth/vk', '_blank');
+        this.checkSocAuth();
         document.getElementsByName('username')[0].focus();
         return false;
     };
@@ -184,6 +213,7 @@ class CreateAccount extends React.Component {
             authType: 'Facebook'
         });
         window.open(CONFIG.REST_API + '/auth/facebook', '_blank');
+        this.checkSocAuth();
         document.getElementsByName('username')[0].focus();
         return false;
     };
@@ -194,6 +224,7 @@ class CreateAccount extends React.Component {
             authType: 'Mail.Ru'
         });
         window.open(CONFIG.REST_API + '/auth/mailru', '_blank');
+        this.checkSocAuth();
         document.getElementsByName('username')[0].focus();
         return false;
     };
@@ -204,19 +235,43 @@ class CreateAccount extends React.Component {
             authType: 'Яндекс'
         });
         window.open(CONFIG.REST_API + '/auth/yandex', '_blank');
+        this.checkSocAuth();
         document.getElementsByName('username')[0].focus();
         return false;
     };
 
+    toggleInvite = (e) => {
+        e.preventDefault();
+        this.setState({
+            authType: this.state.authType === 'invite' ? 'email' : 'invite',
+            wrongInviteCode: false,
+        });
+    };
+
+    onValid = () => {
+        this.setState({ allValid: true });
+    };
+
+    onInvalid = () => {
+        this.setState({ allValid: false });
+    };
+
     render() {
-        const { methods, authType } = this.state;
+        const { methods, authType, authSuccessType, alreadyExists, wrongInviteCode, allValid } = this.state;
         const errorLabel = (<Label color='red' pointing/>);
         let form = null;
         if (!this.state.code) {
             form = (
                 <Form
                     ref={ref => this.form = ref }
-                    onValidSubmit={this.onValidSubmit}>
+                    onValid={this.onValid}
+                    onInvalid={this.onInvalid}
+                    onValidSubmit={this.onValidSubmit}
+                    >
+                    {(authType === 'email' || authType === 'invite') ? (<div>
+                        <a href='#' onClick={this.toggleInvite}>{tt(
+                            authType === 'email' ? 'login.i_have_invite_key' : 'login.i_have_no_invite_key')}</a>
+                    </div>) : null}
                     {authType === 'email' ? <Form.Input
                         name='email'
                         label={tt('login.enter_email')}
@@ -230,6 +285,50 @@ class CreateAccount extends React.Component {
                         }}
                         errorLabel={ errorLabel }
                     /> : null}
+                    {authType === 'invite' ? <Form.Input
+                        name='invite'
+                        label={tt('login.enter_invite')}
+                        autoFocus
+                        focus
+                        required
+                        validations={{
+                            isInviteKey: (values, value) => {
+                                // the workaround with wrongInviteCode is need because validations aren't support async fetch
+                                if (!value) {
+                                    this.setState({
+                                        wrongInviteCode: false,
+                                    });
+                                    return true;
+                                }
+                                let pk;
+                                try {
+                                    pk = PrivateKey.fromWif(value);
+                                } catch (e) {
+                                    this.setState({
+                                        wrongInviteCode: false,
+                                    });
+                                    return tt('login.invite_wrong_format');
+                                }
+                                fetch(CONFIG.REST_API + '/invite/' + pk.toPublicKey().toString())
+                                    .then(response => {
+                                        return response.json();
+                                    })
+                                    .then(data => {
+                                        this.setState({
+                                            wrongInviteCode: data.status !== 'ok',
+                                        });
+                                    });
+                                return true;
+                            },
+                        }}
+                        validationErrors={{
+                            isDefaultRequiredValue: tt('g.this_field_required'),
+                        }}
+                        errorLabel={ errorLabel }
+                    /> : null}
+                    {wrongInviteCode ? <div>
+                            <Label color='red' pointing>{tt('login.invite_no_such')}</Label>
+                        </div> : ''}
                     {tt('login.authorized_with_socials')}<br/>
                     {methods.includes('vk') ? (<Button color='vk' onClick={this.useVk}>
                         <Icon name='vk' /> ВКонтакте
@@ -243,7 +342,14 @@ class CreateAccount extends React.Component {
                     {methods.includes('yandex') ? (<Button color='white' onClick={this.useYandex}>
                         <Icon name='yahoo' color='red' /> Yandex
                     </Button>) : null }
-                    {authType !== 'email' ? (<div><br/><Icon color='green' name='checkmark' /><b>{tt('login.authorized_with') + authType}.</b></div>) : null}
+                    {authType !== 'email' && authType !== 'invite' && !authSuccessType ? (<div><br/>
+                        <Loader inline active size='tiny' />
+                        <b className='createacc-authorizing'>{tt('login.authorizing_with') + authType}...</b>
+                    </div>) : null}
+                    {authSuccessType ? (<div><br/>
+                        <Icon color='green' name='checkmark' />
+                        <b className='createacc-authorized'>{tt('login.authorized_with') + authType}.</b>
+                    </div>) : null}
                     {methods.length > 1 ? (<div style={{height: '20px'}} />) : null}
                     <Form.Input
                         name='username'
@@ -266,7 +372,7 @@ class CreateAccount extends React.Component {
                         }}
                         errorLabel={ errorLabel }
                         />
-                    {this.state.alreadyExists ? <Label color='red' pointing>{tt('validation.account_name_used')}</Label> : ''}
+                    {alreadyExists ? <Label color='red' pointing>{tt('validation.account_name_used')}</Label> : ''}
                     <Form.Input
                         name='gen_pass'
                         label={tt('login.generate_password')}
@@ -292,7 +398,9 @@ class CreateAccount extends React.Component {
                         type='checkbox'
                         validations='isTrue'
                         />
-                    <Form.Button color='green'>{tt('login.create_account')}</Form.Button>
+                    <Form.Button
+                        disabled={!allValid || alreadyExists || wrongInviteCode || (authType !== 'email' && authType !== 'invite' && !authSuccessType)}
+                        color='green'>{tt('login.create_account')}</Form.Button>
                     <br/>
                 </Form>);
         } else {
