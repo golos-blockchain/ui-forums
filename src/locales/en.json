@@ -290,7 +290,7 @@
     "too_big_file": "Too big file.",
     "this_field_required": "This field is required.",
     "should_be_email": "E-mail is wrong.",
-    "enter_code": "You received verification code at your e-mail. Enter it below (instead of e-mail):",
+    "enter_code": "You received verification code at your e-mail. Enter it below:",
     "search": "Search",
     "messages": "Messages",
     "modified": " (updated)",
