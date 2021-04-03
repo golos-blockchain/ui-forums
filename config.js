@@ -1,7 +1,7 @@
 module.exports = {
-    GOLOS_NODE: 'https://apibeta.golos.today', // http://144.91.110.80:3000
-    GOLOS_MSGS_NODE: 'wss://apibeta.golos.today/ws', // http://144.91.110.80:3000
-    REST_API: 'https://restdev.golostalk.com', // http://144.91.110.80:5000
+    GOLOS_NODE: 'https://apibeta.golos.today',
+    GOLOS_MSGS_NODE: 'wss://apibeta.golos.today/ws',
+    REST_API: 'https://restdev.golostalk.com',
     FORUM: {
         _id: 'golostalk',
         creator: 'golostalk',
@@ -33,7 +33,7 @@ module.exports = {
             footer_description: 'GolosTalk — forum on the <a href="https://golos.id" target="_new">Golos blockchain</a> platform (developed by <a href="https://golos.id/@id-raccoon-hater" target="_new">@id-raccoon-hater</a>).'
         },
         posts_per_page: 20,
-        replies_per_page: 20,
+        replies_per_page: 15,
         votes_per_page: 10,
         donates_per_page: 10,
         account_donates_per_page: 10
