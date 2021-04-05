@@ -176,6 +176,8 @@
     "wrong_password_not_memo": "Для этой операции нужен memo-ключ, а не posting или active",
     "wrong_password_active": "Нельзя входить с active-ключом (даже если такой же ключ служит и posting-ключом)",
     "wrong_password_owner": "Нельзя входить с owner-ключом (даже если такой же ключ служит и posting-ключом)",
+    "remember_me": "Запомнить",
+    "remember_memo": "Запомнить мой memo-ключ",
     "sign_up": "Регистрация",
     "enter_email": "Введите ваш e-mail",
     "enter_invite": "Введите ваш инвайт-код",
@@ -294,6 +296,6 @@
     "search": "Поиск",
     "messages": "Сообщения",
     "modified": " (изменено)",
-    "write": "Написать"
+    "write_message": "Написать сообщение"
   }
 }

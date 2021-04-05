@@ -3,7 +3,7 @@ import golos from 'golos-classic-js';
 import tt from 'counterpart';
 import { connect } from 'react-redux';
 
-import { Button, Form, Header, Icon, Message, Modal } from 'semantic-ui-react';
+import { Button, Checkbox, Form, Header, Icon, Message, Modal } from 'semantic-ui-react';
 
 class LoginModal extends React.Component {
 
@@ -15,7 +15,8 @@ class LoginModal extends React.Component {
             error: false,
             loading: false,
             account: props.account,
-            key: ''
+            key: '',
+            rememberMe: true,
         };
     }
 
@@ -51,7 +52,7 @@ class LoginModal extends React.Component {
         if (this.props.actions.onClose) this.props.actions.onClose();
     });
 
-    handleChange = (e, { name, value }) => this.setState({ [name]: value });
+    handleChange = (e, { name, value, checked }) => this.setState({ [name]: value || checked });
 
     handleSubmit = async e => {
         e.preventDefault();
@@ -137,6 +138,8 @@ class LoginModal extends React.Component {
             isActive,
             isMemo,
             authType,
+            cancelIsRegister,
+            rememberMe,
         } = this.props;
         let modal = (
             <Modal
@@ -206,9 +209,18 @@ class LoginModal extends React.Component {
                                 content={this.state.error}
                             />
                         </Form>
+                        { rememberMe ? (<Checkbox
+                            label={tt(`login.remember_${authType}`, {fallback: tt('login.remember_me')})}
+                            name='rememberMe'
+                            checked={this.state.rememberMe}
+                            onChange={this.handleChange}
+                            />) : null }
                     </Modal.Content>
                     <Modal.Actions>
-                        <Button color='orange' onClick={this.handleClose}>{tt('g.cancel')}</Button>
+                        {cancelIsRegister && !isMemo ?
+                            (<Button as='a' href='/create_account' target='_blank' color='orange'>{tt('login.sign_up')}</Button>) : null}
+                        {!cancelIsRegister && !isMemo ?
+                            (<Button color='orange' onClick={this.handleClose}>{tt('g.cancel')}</Button>) : null}
                         <Button color='blue' icon onClick={this.handleSubmit}>{tt('login.sign_in')} <Icon name='right chevron' /></Button>
                     </Modal.Actions>
                 </Modal>

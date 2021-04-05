@@ -492,11 +492,11 @@ class Messages extends React.Component {
         }*/
         return (
             <div>
-                <LoginModal noButton={true} open={this.state.showLogin} actions={{...actions, onClose: this.onLoginClose}}/>
-                <LoginModal authType='memo' noButton={true} open={this.state.showLoginMemo} actions={{...actions, onClose: this.onLoginMemoClose}}/>
+                <LoginModal cancelIsRegister={true} noButton={true} open={this.state.showLogin} actions={{...actions, onClose: this.onLoginClose}}/>
+                <LoginModal authType='memo' rememberMe={true} noButton={true} open={this.state.showLoginMemo} actions={{...actions, onClose: this.onLoginMemoClose}}/>
                 <PageFocus onChange={this.handleFocusChange}>
                 </PageFocus>
-                <Messenger
+                { this.props.account && this.props.account.name ? (<Messenger
                     account={this.props.account}
                     to={this.state.to}
                     contacts={searchContacts || contacts}
@@ -518,7 +518,7 @@ class Messages extends React.Component {
                     onPanelEditClick={this.onPanelEditClick}
                     onPanelCloseClick={this.onPanelCloseClick}
                     onButtonImageClicked={this.onButtonImageClicked}
-                    />
+                    />) : null }
                 <Modal size='small' open={this.state.addContactShow}>
                         <Modal.Header>Добавить контакт</Modal.Header>
                         <Modal.Content>
