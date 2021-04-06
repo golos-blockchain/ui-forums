@@ -27,8 +27,27 @@ class HeaderMenu extends Component {
         if (!this.props.account || !this.props.account.data) {
             this.props.actions.fetchAccount(this.props.account.name);
         }
-        this.interval = setInterval(() => this.props.actions.fetchAccount(this.props.account.name), 60000);
-        this.intervalNotify = setInterval(() => this.props.actions.fetchAccountNotifications(this.props.account.name), 5000);
+
+        const fixMemo = (account) => {
+            const memoKey = localStorage.getItem('memoKey');
+            if (memoKey && !account.memoKey) {
+                this.props.actions.signinAccount(account.name, '', memoKey);
+            }
+        };
+        this.interval = setInterval(() => {
+            if (localStorage.getItem('notifyEnabled')) {
+                const { account} = this.props;
+                fixMemo(account);
+                this.props.actions.fetchAccount(account.name);
+            }
+        }, 60000);
+        this.intervalNotify = setInterval(() => {
+            if (localStorage.getItem('notifyEnabled')) {
+                const { account} = this.props;
+                fixMemo(account);
+                this.props.actions.fetchAccountNotifications(account.name);
+            }
+        }, 5000);
     }
 
     componentWillUnmount() {

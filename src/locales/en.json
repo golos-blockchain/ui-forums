@@ -176,6 +176,8 @@
     "wrong_password_not_memo": "This operation requires memo-key, not posting or active",
     "wrong_password_active": "Cannot login with active key (even if posting key is same)",
     "wrong_password_owner": "Cannot login with owner key (even if posting key is same)",
+    "remember_me": "Remember",
+    "remember_memo": "Remember my memo-key",
     "sign_up": "Register",
     "enter_email": "Enter your e-mail",
     "enter_invite": "Enter your invite code",
@@ -294,6 +296,6 @@
     "search": "Search",
     "messages": "Messages",
     "modified": " (updated)",
-    "write": "Write"
+    "write_message": "Write a message"
   }
 }

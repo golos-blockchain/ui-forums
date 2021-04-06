@@ -86,7 +86,7 @@ export default class Voting extends React.Component {
                 />
                 <Dropdown
                     floating
-                    className="VoteList"
+                    className='voting__dropdown'
                     text={totalVotes.toString()}
                     icon={null}>
                     <Dropdown.Menu>
@@ -124,7 +124,7 @@ export default class Voting extends React.Component {
                 <span>
                     <Dropdown
                         floating
-                        className="VoteList"
+                        className='voting__dropdown'
                         loading={this.props.loading}
                         text={this.props.loading ? '' : totalVotes.toString()}
                         icon={this.props.loading ? '' : null}>

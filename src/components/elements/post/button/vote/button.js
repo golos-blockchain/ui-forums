@@ -2,8 +2,6 @@ import React from 'react';
 
 import { Button, Popup, Icon } from 'semantic-ui-react';
 
-import './button.css';
-
 export default class VoteButton extends React.Component {
 
     constructor(props) {
@@ -17,7 +15,7 @@ export default class VoteButton extends React.Component {
     onPopupOpen = (event, data) => {
         this.setState({
             popupOpen: true,
-        })
+        });
     };
 
     onPopupClose = (event, data) => {
@@ -47,16 +45,15 @@ export default class VoteButton extends React.Component {
     render() {
         const { up, voted, loading } = this.props;
 
-        let actualButton = 
-            (<Button
-                onClick={this.onClick}
-                weight={(up ? 1 : -1) * this.state.weight}
-                disabled={loading}
-                basic={!voted}
-                icon={up ? 'thumbs up' : 'thumbs down'}
-                color={up ? 'green' : 'red'}
-                floated='left'
-            />);
+        let actualButton = (<Button
+            onClick={this.onClick}
+            weight={(up ? 1 : -1) * this.state.weight}
+            disabled={loading}
+            basic={!voted}
+            icon={up ? 'thumbs up' : 'thumbs down'}
+            color={up ? 'green' : 'red'}
+            floated='left'
+        />);
 
         if (voted)
             return actualButton;
@@ -80,11 +77,11 @@ export default class VoteButton extends React.Component {
             onClose={this.onPopupClose}
         >
             {actualButton}
-            <span className='votebtn-result'>{(up ? '' : '-') + this.state.weight}%</span>
-            <input type='range' className='votebtn-range'
+            <span className='voting__range-result'>{(up ? '' : '-') + this.state.weight}%</span>
+            <input type='range' className='voting__range'
                 min={'0'} max={'100'} step='10'
                 value={this.state.weight} onChange={this.onWeightChange} />
-            <Icon name='close' size='large' color='grey' className='votebtn-icon'
+            <Icon name='close' size='large' color='grey' className='voting__close-button'
                 onClick={this.onPopupClose} />
         </Popup>);
     }

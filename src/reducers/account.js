@@ -29,6 +29,8 @@ export default function account(state = false, action) {
             });
         }
         case types.ACCOUNT_SIGNOUT:
+            localStorage.setItem('notifyEnabled', '');
+            localStorage.setItem('memoKey', '');
             return {
                 isUser: false,
                 name: '',
@@ -36,6 +38,9 @@ export default function account(state = false, action) {
                 memoKey: '',
             };
         case types.ACCOUNT_SIGNIN:
+            localStorage.setItem('notifyEnabled', '1');
+            if (action.payload.memoKey)
+                localStorage.setItem('memoKey', action.payload.memoKey);
             return Object.assign({}, state, {
                 isUser: true,
                 name: action.payload.account,
