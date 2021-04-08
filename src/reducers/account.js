@@ -3,6 +3,8 @@ import uniq from 'lodash/uniq';
 
 import * as types from '../actions/actionTypes';
 
+import { saveMemoKeyInSession } from '../utils/MessageUtils';
+
 export default function account(state = false, action) {
     switch (action.type) {
         case types.ACCOUNT_FOLLOWING_APPEND: {
@@ -31,6 +33,7 @@ export default function account(state = false, action) {
         case types.ACCOUNT_SIGNOUT:
             localStorage.setItem('notifyEnabled', '');
             localStorage.setItem('memoKey', '');
+            saveMemoKeyInSession('');
             return {
                 isUser: false,
                 name: '',

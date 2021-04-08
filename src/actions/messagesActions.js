@@ -7,7 +7,7 @@ import * as CONFIG from '../../config';
 
 //import TimeAgoWrapper from '../utils/TimeAgoWrapper';
 import { getAccountAvatarSrc } from '../utils/accountMetaUtils';
-import { assignDecodedMessageFields } from '../utils/MessageUtils';
+import { assignDecodedMessageFields, getMemoKey } from '../utils/MessageUtils';
 import { fitToPreview } from '../utils/ImageUtils';
 
 export function sendMessage(account, to, toMemoKey, body, editInfo = undefined, type = 'text', meta = {}) {
@@ -31,7 +31,7 @@ export function sendMessage(account, to, toMemoKey, body, editInfo = undefined, 
         const jsonMessage = message;
         message = JSON.stringify(message);
 
-        const memoKey = account.memoKey;
+        const memoKey = getMemoKey(account);
 
         const data = golos.messages.encode(memoKey, toMemoKey, message, editInfo ? editInfo.nonce : undefined);
 
@@ -95,7 +95,7 @@ export function fetchMessages(account, to) {
         if (response.ok) {
             const result = await response.json();
 
-            const memoKey = account.memoKey;
+            const memoKey = getMemoKey(account);
 
             let public_key = result.data.accounts[to].memo_key;
 
@@ -155,7 +155,7 @@ export function fetchContacts(account) {
         if (response.ok) {
             const result = await response.json();
 
-            const memoKey = account.memoKey;
+            const memoKey = getMemoKey(account);
 
             let contacts = result.data.contacts;
             for (let contact of contacts) {

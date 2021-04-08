@@ -132,18 +132,22 @@ export function signoutAccount() {
     }
 }
 
-export function signinAccount(account, key, memoKey) {
+export function signinAccount(account, key, memoKey, rememberMe = true) {
     return dispatch => {
-        let payload = {
-            account: account,
-            key: key,
-            memoKey: memoKey,
-        };
-        dispatch(AccountsActions.addAccount(account, key));
-        dispatch({
-            type: types.ACCOUNT_SIGNIN,
-            payload: payload
-        });
+        if (!rememberMe && memoKey) { // currently supported memo only
+            window.memoKey = memoKey;
+        } else {
+            let payload = {
+                account: account,
+                key: key,
+                memoKey: memoKey,
+            };
+            dispatch(AccountsActions.addAccount(account, key));
+            dispatch({
+                type: types.ACCOUNT_SIGNIN,
+                payload: payload
+            });
+        }
         dispatch(fetchAccount(account));
     }
 }

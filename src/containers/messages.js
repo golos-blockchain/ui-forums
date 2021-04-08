@@ -21,6 +21,7 @@ import TimeAgoWrapper from '../utils/TimeAgoWrapper';
 import AddImageDialog from '../components/dialogs/image';
 import PageFocus from '../components/elements/messages/PageFocus';
 import { flash, unflash } from '../components/elements/messages/FlashTitle';
+import { getMemoKey } from '../utils/MessageUtils';
 
 import './messages.css';
 
@@ -29,6 +30,7 @@ class Messages extends React.Component {
     constructor(props) {
         super(props);
         const { to } = this.props.match.params;
+        const hasMemo = getMemoKey(props.account);
         this.state = {
             to: to ? to.replace('@', '') : '',
             selectedMessages: {},
@@ -36,10 +38,10 @@ class Messages extends React.Component {
             contactToAdd: '',
             authorLookup: [],
             showLogin: this.needsLogin(props),
-            showLoginMemo: props.account && props.account.name && !props.account.memoKey,
+            showLoginMemo: props.account && props.account.name && !hasMemo,
             showImageDialog: false,
         };
-        if (props.account && props.account.memoKey) {
+        if (props.account && hasMemo) {
             this.load(props);
         }
         this.windowFocused = true;
@@ -154,7 +156,7 @@ class Messages extends React.Component {
             console.debug('No account data, re-render page');
             return;
         }
-        if (!nextProps.account.memoKey) {
+        if (!getMemoKey(nextProps.account)) {
             this.setState({
                 showLoginMemo: true
             });
@@ -256,12 +258,6 @@ class Messages extends React.Component {
     onSendMessage = (message, event) => {
         if (!message.length) return;
         const { account, messages } = this.props;
-        if (!account.memoKey) {
-            this.setState({
-                showLoginMemo: true
-            });
-            return;
-        }
 
         let editInfo;
         if (this.editNonce) {
