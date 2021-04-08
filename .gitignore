@@ -4,3 +4,7 @@
 build/
 node_modules/
 scripts/
+config.js
+configSecure.js
+configSecure.min.js
+package-lock.json

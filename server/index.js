@@ -12,8 +12,9 @@ const CONFIG_SEC = require('../configSecure');
 const { useAuthApi } = require('./api/auth');
 const { useMessagesApi } = require('./api/messages');
 const { useNotificationsApi } = require('./api/notifications');
+const { useNodeSendApi } = require('./api/node_send');
 
-golos.config.set('websocket', CONFIG.GOLOS_NODE);
+golos.config.set('websocket', CONFIG_SEC.GOLOS_SERVER_NODE);
 if (CONFIG.GOLOS_CHAIN_ID) {
     golos.config.set('chain_id', CONFIG.GOLOS_CHAIN_ID);
 }
@@ -568,5 +569,6 @@ app.use(router.allowedMethods());
 useAuthApi(app);
 useMessagesApi(app);
 useNotificationsApi(app);
+useNodeSendApi(app);
 
 app.listen(5000, () => console.log('running on port 5000'));

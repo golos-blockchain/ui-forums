@@ -1,5 +1,5 @@
 module.exports = {
-    GOLOS_NODE: 'https://apibeta.golos.today',
+    GOLOS_NODE: 'https://restdev.golostalk.com/node_send',
     GOLOS_MSGS_NODE: 'wss://apibeta.golos.today/ws',
     REST_API: 'https://restdev.golostalk.com',
     FORUM: {

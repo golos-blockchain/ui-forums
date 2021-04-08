@@ -9,7 +9,7 @@ import ttGetByKey from '../utils/ttGetByKey';
 import { Container } from 'semantic-ui-react';
 
 import * as CONFIG from '../../config';
-import * as CONFIG_SEC from '../../configSecure';
+import * as CONFIG_SEC from '../../configSecure.min';
 
 import Account from '../containers/account';
 import CreateAccount from '../containers/account/create';
