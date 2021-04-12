@@ -57,7 +57,7 @@ class LoginModal extends React.Component {
     handleSubmit = async e => {
         e.preventDefault();
         const { isActive, isMemo } = this.props;
-        const { account, key } = this.state,
+        const { account, key, rememberMe } = this.state,
               t = this;
         // Indicate we're loading
         t.setState({
@@ -78,7 +78,7 @@ class LoginModal extends React.Component {
         }
         if (isMemo) {
             if (res.memo) {
-                t.props.actions.signinAccount(account, '', res.memo);
+                t.props.actions.signinAccount(account, '', res.memo, rememberMe);
                 t.handleClose();
                 return;
             } else if (res.posting || res.owner || res.active) {

@@ -2,7 +2,7 @@ import golos from 'golos-classic-js';
 
 import * as types from '../actions/actionTypes';
 
-import { assignDecodedMessageFields } from '../utils/MessageUtils';
+import { assignDecodedMessageFields, getMemoKey } from '../utils/MessageUtils';
 
 const initialState = {
     messages: [],
@@ -62,7 +62,7 @@ export default function messages(state = initialState, action) {
             } else {
                 publicKey = message.from_memo_key;
             }
-            golos.messages.decode(account.memoKey, publicKey, [message], (msg) => {
+            golos.messages.decode(getMemoKey(account), publicKey, [message], (msg) => {
                 let jsonMessage = JSON.parse(msg.message);
                 assignDecodedMessageFields(msg, jsonMessage);
             });
@@ -133,7 +133,7 @@ export default function messages(state = initialState, action) {
             } else {
                 publicKey = message.from_memo_key;
             }
-            golos.messages.decode(account.memoKey, publicKey, [message], (msg) => {
+            golos.messages.decode(getMemoKey(account), publicKey, [message], (msg) => {
                 let jsonMessage = JSON.parse(msg.message);
                 assignDecodedMessageFields(msg, jsonMessage);
             });

@@ -1,4 +1,5 @@
 module.exports = {
+    GOLOS_SERVER_NODE: 'https://apibeta.golos.today',
     registrar: {
         account: 'lex',
         referer: 'lex',

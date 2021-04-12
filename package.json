@@ -85,9 +85,10 @@
     }
   },
   "scripts": {
-    "start": "react-app-rewired start",
+    "pre-build": "node ./src/minifyImport.js",
+    "start": "npm run pre-build && react-app-rewired start",
     "start:server": "NODE_ENV=development nodemon server",
-    "build": "react-app-rewired build && yarn run delete-maps",
+    "build": "npm run pre-build && react-app-rewired build && yarn run delete-maps",
     "prod": "NODE_ENV=development webpack --config webpack.server.js --mode=development && node ./server-build/index.js",
     "delete-maps": "yarn run delete-map-files && yarn run delete-references-to-map-files",
     "delete-map-files": "find ./build -name '*.map' -delete",

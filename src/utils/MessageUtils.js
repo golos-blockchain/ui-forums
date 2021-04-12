@@ -6,3 +6,11 @@ export function assignDecodedMessageFields(msg, decoded) {
     msg.previewWidth = decoded.previewWidth;
     msg.previewHeight = decoded.previewHeight;
 }
+
+export function getMemoKey(account) {
+    return account.memoKey || window.memoKey;
+};
+
+export function saveMemoKeyInSession(memoKey) {
+	window.memoKey = memoKey;
+}
