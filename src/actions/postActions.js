@@ -493,7 +493,7 @@ export function submit(account, data, parent, forum, action = 'post') {
 
         // JSON to append to the post
         const meta = {
-            app: 'chainbb/0.1',
+            app: 'golos-forum/0.1',
             format: 'markdown+html',
             tags: data.tags
         };
