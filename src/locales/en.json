@@ -238,7 +238,8 @@
     "type_a_message_NAME": "Type a message, @%(NAME)s",
     "new_message1": " notification",
     "new_message234": " notifications",
-    "new_message5": " notifications"
+    "new_message5": " notifications",
+    "invalid_message": "(This message could not be displayed in Golos Messenger)"
   },
   "emoji_i18n": {
     "categoriesLabel": "Categories",

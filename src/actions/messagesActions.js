@@ -7,7 +7,7 @@ import * as CONFIG from '../../config';
 
 //import TimeAgoWrapper from '../utils/TimeAgoWrapper';
 import { getAccountAvatarSrc } from '../utils/accountMetaUtils';
-import { assignDecodedMessageFields, getMemoKey } from '../utils/MessageUtils';
+import { getMemoKey } from '../utils/MessageUtils';
 import { fitToPreview } from '../utils/ImageUtils';
 
 export function sendMessage(account, to, toMemoKey, body, editInfo = undefined, type = 'text', meta = {}) {
@@ -16,20 +16,15 @@ export function sendMessage(account, to, toMemoKey, body, editInfo = undefined, 
             app: 'golos-messenger',
             version: 1,
             body,
-            ...meta,
         };
         if (type !== 'text') {
             message.type = type;
             if (type === 'image') {
-                // For clients who don't want use img proxy by themself
-                message.preview = CONFIG.STM_Config.img_proxy_prefix + '600x300/' + body;
                 message = { ...message, ...fitToPreview(600, 300, meta.width, meta.height), };
             } else {
                 throw new Error('Unknown message type: ' + type);
             }
         }
-        const jsonMessage = message;
-        message = JSON.stringify(message);
 
         const memoKey = getMemoKey(account);
 
@@ -73,8 +68,8 @@ export function sendMessage(account, to, toMemoKey, body, editInfo = undefined, 
                 author: account.name,
                 date: new Date(),
                 unread: true,
+                message,
             };
-            assignDecodedMessageFields(msg, jsonMessage);
             dispatch(addMessageResolved(msg));
         });
     };
@@ -99,12 +94,14 @@ export function fetchMessages(account, to) {
 
             let public_key = result.data.accounts[to].memo_key;
 
+            const tt_invalid_message = tt('messages.invalid_message');
+
             let id = 0;
             let resultsDecrypted = golos.messages.decode(memoKey, public_key, result.data.messages,
-                    (msg) => {
+                (msg, i, results) => {
                     msg.id = ++id;
                     msg.author = msg.from;
-                    msg.date = new Date(msg.receive_date + 'Z');
+                    msg.date = new Date(msg.create_date + 'Z');
 
                     if (msg.from === account.data.name) {
                         if (msg.read_date.startsWith('19')) {
@@ -115,15 +112,13 @@ export function fetchMessages(account, to) {
                             msg.toMark = true;
                         }
                     }
-
-                    const decoded = JSON.parse(msg.message);
-                    assignDecodedMessageFields(msg, decoded);
-
-                    return true;
-                }, result.data.messages.length - 1, -1,
+                },
+                undefined,
                 (msg, i, err) => {
                     console.log(err);
-                });
+                    msg.message = { body: tt_invalid_message, invalid: true, };
+                },
+                result.data.messages.length - 1, -1);
             dispatch(fetchMessagesResolved({
                 account,
                 to: result.data.accounts[to],
@@ -157,12 +152,14 @@ export function fetchContacts(account) {
 
             const memoKey = getMemoKey(account);
 
+            const tt_invalid_message = tt('messages.invalid_message');
+
             let contacts = result.data.contacts;
             for (let contact of contacts) {
                 contact.avatar = getAccountAvatarSrc(result.data.accounts[contact.contact].json_metadata);
 
-                if (contact.last_message.receive_date.startsWith('1970')) {
-                    contact.last_message.message = "";
+                if (contact.last_message.create_date.startsWith('1970')) {
+                    contact.last_message.message = { body: '' };
                     continue;
                 }
 
@@ -174,11 +171,12 @@ export function fetchContacts(account) {
                 }
 
                 golos.messages.decode(memoKey, public_key, [contact.last_message],
-                    (message_object) => {
-                        message_object.message = JSON.parse(message_object.message).body;
-                    }, 0, 1, (msg, i, err) => {
+                    undefined,
+                    undefined,
+                    (msg, i, err) => {
                         console.log(err);
-                    });
+                        msg.message = { body: tt_invalid_message, invalid: true, };
+                    }, 0, 1);
             }
             dispatch(fetchContactsResolved({
                 account,

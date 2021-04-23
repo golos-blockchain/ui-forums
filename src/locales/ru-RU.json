@@ -238,7 +238,8 @@
     "type_a_message_NAME": "Напишите сообщение, @%(NAME)s",
     "new_message1": " новое сообщение",
     "new_message234": " новых сообщения",
-    "new_message5": " новых сообщений"
+    "new_message5": " новых сообщений",
+    "invalid_message": "(Это сообщение не может быть отображено в Golos Messenger)"
   },
   "emoji_i18n": {
     "categoriesLabel": "Категории",
