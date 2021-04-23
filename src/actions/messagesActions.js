@@ -13,7 +13,7 @@ import { fitToPreview } from '../utils/ImageUtils';
 export function sendMessage(account, to, toMemoKey, body, editInfo = undefined, type = 'text', meta = {}) {
     return async dispatch => {
         let message = {
-            app: 'golos-id',
+            app: 'golos-messenger',
             version: 1,
             body,
             ...meta,
