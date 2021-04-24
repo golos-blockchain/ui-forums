@@ -1,8 +1,9 @@
 import golos from 'golos-classic-js';
+import tt from 'counterpart';
 
 import * as types from '../actions/actionTypes';
 
-import { assignDecodedMessageFields, getMemoKey } from '../utils/MessageUtils';
+import { getMemoKey } from '../utils/MessageUtils';
 
 const initialState = {
     messages: [],
@@ -44,7 +45,7 @@ export default function messages(state = initialState, action) {
 
             // adding fields
             message.author = message.from;
-            message.date = new Date(message.receive_date + 'Z');
+            message.date = new Date(message.create_date + 'Z');
             if (isMine) {
                 if (message.read_date.startsWith('19')) {
                     message.unread = true;
@@ -62,10 +63,15 @@ export default function messages(state = initialState, action) {
             } else {
                 publicKey = message.from_memo_key;
             }
-            golos.messages.decode(getMemoKey(account), publicKey, [message], (msg) => {
-                let jsonMessage = JSON.parse(msg.message);
-                assignDecodedMessageFields(msg, jsonMessage);
-            });
+            golos.messages.decode(getMemoKey(account), publicKey, [message],
+                undefined,
+                undefined,
+                (msg, i, err) => {
+                    console.log(err);
+                    const tt_invalid_message = tt('messages.invalid_message');
+                    msg.message = { body: tt_invalid_message, invalid: true, };
+                });
+
 
             // updating state
             let newState = Object.assign({}, state);
@@ -134,8 +140,6 @@ export default function messages(state = initialState, action) {
                 publicKey = message.from_memo_key;
             }
             golos.messages.decode(getMemoKey(account), publicKey, [message], (msg) => {
-                let jsonMessage = JSON.parse(msg.message);
-                assignDecodedMessageFields(msg, jsonMessage);
             });
 
             // updating state

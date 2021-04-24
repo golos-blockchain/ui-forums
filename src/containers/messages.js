@@ -119,7 +119,7 @@ class Messages extends React.Component {
         const { messages } = this.props.messages;
         const { account } = this.props;
 
-        let OPERATIONS = golos.messages.makeGroups(messages, (message_object, idx) => {
+        let OPERATIONS = golos.messages.makeDatedGroups(messages, (message_object, idx) => {
             return message_object.toMark;
         }, (group, indexes, results) => {
             const json = JSON.stringify(['private_mark_message', {
@@ -275,18 +275,24 @@ class Messages extends React.Component {
         }
     };
 
-    onMessageSelect = (message, isSelected, event) => {
-        if (message.receive_date.startsWith('19') || message.deleting) {
+    onMessageSelect = (msg, isSelected, event) => {
+        if (msg.receive_date.startsWith('19') || msg.deleting) {
             this.focusInput();
             return;
         }
         if (isSelected) {
             this.presaveInput();
             const { account } = this.props;
-            const isMine = account.name === message.from;
-            const isImage = message.type === 'image';
+            const isMine = account.name === msg.from;
+            let isImage = false;
+            let isInvalid = true;
+            const { message } = msg;
+            if (message) {
+                isImage = message.type === 'image';
+                isInvalid = !!message.invalid;
+            }
             this.setState({
-                selectedMessages: {[message.nonce]: { editable: isMine && !isImage }},
+                selectedMessages: {[msg.nonce]: { editable: isMine && !isImage && !isInvalid }},
             });
         } else {
             this.setState({
@@ -343,11 +349,14 @@ class Messages extends React.Component {
         let message = this.props.messages.messages.filter(message => {
             return message.nonce === nonce;
         });
+        // (additional protection - normally invalid messages shouldn't be available for edit)
+        if (!message[0].message)
+            return;
         this.setState({
             selectedMessages: {},
         }, () => {
             this.editNonce = message[0].nonce;
-            this.setInput(message[0].message);
+            this.setInput(message[0].message.body);
             this.focusInput();
         });
     };
@@ -480,7 +489,7 @@ class Messages extends React.Component {
     };
 
     render() {
-        const { account, actions } = this.props;
+        const { actions } = this.props;
         const { contacts, searchContacts, messages } = this.props.messages;
         /*if (account.name && account.name === this.state.to) {
             window.location.href = '/msgs/';
