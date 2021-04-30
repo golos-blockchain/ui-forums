@@ -9,6 +9,7 @@ import debounce from 'lodash/debounce';
 
 import { Button, Modal, Dropdown } from 'semantic-ui-react';
 
+import * as CONFIG from '../../config';
 import * as accountActions from '../actions/accountActions';
 import * as accountsActions from '../actions/accountsActions';
 import * as messagesActions from '../actions/messagesActions';
@@ -68,51 +69,97 @@ class Messages extends React.Component {
         document.body.appendChild(script);
     }
 
-    setCallback(account) {
-        golos.api.setPrivateMessageCallback({select_accounts: [account.data.name]},
-            (err, result) => {
-                if (err) {
-                    this.setCallback(this.props.account || account);
-                    return;
+    async subscribeIfNeed(account) {
+        if (!window.__subscriber_id) {
+            try {
+                let url = `${ CONFIG.REST_API }/notifications/subscribe/${account.data.name}/`;
+                let response = await fetch(url);
+                if (response.ok) {
+                    const result = await response.json();
+                    window.__subscriber_id = result.subscriber_id;
                 }
-                if (!result || !result.message) {
-                    return;
-                }
-                const updateMessage = result.message.from === this.state.to || 
-                    result.message.to === this.state.to;
-                const isMine = account.data.name === result.message.from;
-                if (result.type === 'message') {
-                    if (result.message.create_date !== result.message.receive_date) {
-                        this.props.actions.messageEdited(result.message, updateMessage, isMine, account);
-                    } else if (this.nonce !== result.message.nonce) {
-                        this.props.actions.messaged(result.message, updateMessage, isMine, account);
-                        this.nonce = result.message.nonce;
-                        if (!isMine && !this.windowFocused) {
-                            ++this.newMessages;
+            } catch (ex) {
+                console.error(ex)
+            }
+        }
+        if (!window.__subscriber_id) {
+            throw new Error('Cannot subscribe');
+        }
+    }
 
-                            let title = this.newMessages;
-                            const plural = this.newMessages % 10;
+    flashMessage() {
+        ++this.newMessages;
 
-                            if (plural === 1) {
-                                if (this.newMessages === 11)
-                                    title += tt('messages.new_message5');
-                                else
-                                    title += tt('messages.new_message1');
-                            } else if ((plural === 2 || plural === 3 || plural === 4) && (this.newMessages < 10 || this.newMessages > 20)) {
-                                title += tt('messages.new_message234');
-                            } else {
-                                title += tt('messages.new_message5');
+        let title = this.newMessages;
+        const plural = this.newMessages % 10;
+
+        if (plural === 1) {
+            if (this.newMessages === 11)
+                title += tt('messages.new_message5');
+            else
+                title += tt('messages.new_message1');
+        } else if ((plural === 2 || plural === 3 || plural === 4) && (this.newMessages < 10 || this.newMessages > 20)) {
+            title += tt('messages.new_message234');
+        } else {
+            title += tt('messages.new_message5');
+        }
+
+        flash(title);
+    }
+
+    async setCallback(account, removeTaskIds) {
+        await this.subscribeIfNeed(account);
+
+        let url = `${ CONFIG.REST_API }/notifications/take/${account.data.name}/${window.__subscriber_id}`;
+        if (removeTaskIds)
+            url += '/' + removeTaskIds;
+        let response = null;
+        try {
+            response = await fetch(url);
+            if (response && response.ok) {
+                const result = await response.json();
+                if (Array.isArray(result.tasks)) {
+                    removeTaskIds = '';
+
+                    let removeTaskIdsArr = [];
+                    for (let task of result.tasks) {
+                        const task_id = task[0];
+                        const { data, timestamp } = task[2];
+                        const [ type, op ] = data;
+
+                        const updateMessage = op.from === this.state.to || 
+                            op.to === this.state.to;
+                        const isMine = account.data.name === op.from;
+                        if (type === 'private_message') {
+                            if (op.update) {
+                                this.props.actions.messageEdited(op, timestamp, updateMessage, isMine, account);
+                            } else if (this.nonce !== op.nonce) {
+                                this.props.actions.messaged(op, timestamp, updateMessage, isMine, account);
+                                this.nonce = op.nonce;
+                                if (!isMine && !this.windowFocused) {
+                                    this.flashMessage();
+                                }
                             }
-
-                            flash(title);
+                        } else if (type === 'private_delete_message') {
+                            this.props.actions.messageDeleted(op, updateMessage, isMine);
+                        } else if (type === 'private_mark_message') {
+                            this.props.actions.messageRead(op, timestamp, updateMessage, isMine);
                         }
+
+                        removeTaskIdsArr.push(task_id.toString());
                     }
-                } else if (result.type === 'mark') {
-                    this.props.actions.messageRead(result.message, updateMessage, isMine);
-                } else if (result.type === 'remove_outbox' || result.type === 'remove_inbox') {
-                    this.props.actions.messageDeleted(result.message, updateMessage, isMine);
+                    removeTaskIds = removeTaskIdsArr.join('-');
+
+                    this.setCallback(this.props.account || account, removeTaskIds);
+                    return;
                 }
-            });
+            }
+        } catch (ex) {
+            console.error(ex);
+            setTimeout(() => {
+                this.setCallback(this.props.account || account, removeTaskIds);
+            }, 100);
+        }
     }
 
     markMessages() {
