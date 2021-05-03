@@ -12,6 +12,32 @@ const initialState = {
     searchContacts: null,
 };
 
+function processDatedGroup(group, messages, for_each) {
+    if (group.nonce) {
+        const idx = messages.findIndex(i => i.nonce === group.nonce);
+        if (idx !== -1) {
+            const msg = messages[idx];
+            for_each(msg, idx);
+        }
+    } else {
+        let inRange = false;
+        const start_date = new Date(group.start_date + 'Z');
+        const stop_date = new Date(group.stop_date + 'Z');
+        for (let idx = messages.length - 1; idx >= 0; --idx) {
+            const msg = messages[idx];
+            if (!inRange && msg.date <= stop_date) {
+                inRange = true;
+            }
+            if (msg.date <= start_date) {
+                break;
+            }
+            if (inRange) {
+                for_each(msg, idx);
+            }
+        }
+    }
+}
+
 export default function messages(state = initialState, action) {
     switch (action.type) {
         case types.MESSAGES_LOAD_RESOLVED: {
@@ -41,19 +67,18 @@ export default function messages(state = initialState, action) {
             });
         }
         case types.MESSAGES_MESSAGED: {
-            let { message, updateMessage, isMine, account } = action.payload;
+            let { message, timestamp, updateMessage, isMine, account } = action.payload;
 
             // adding fields
-            message.author = message.from;
+            message.create_date = timestamp;
+            message.receive_date = timestamp;
+
             message.date = new Date(message.create_date + 'Z');
+            message.author = message.from;
             if (isMine) {
-                if (message.read_date.startsWith('19')) {
-                    message.unread = true;
-                }
+                message.unread = true;
             } else {
-                if (message.read_date.startsWith('19')) {
-                    message.toMark = true;
-                }
+                message.toMark = true;
             }
 
             // decoding
@@ -77,6 +102,7 @@ export default function messages(state = initialState, action) {
             let newState = Object.assign({}, state);
 
             let messagesUpdate = message.nonce;
+
             if (updateMessage) {
                 const idx = newState.messages.findIndex(i => i.nonce === message.nonce);
                 if (idx === -1) {
@@ -114,23 +140,10 @@ export default function messages(state = initialState, action) {
             return newState;
         }
         case types.MESSAGES_EDITED: {
-            let { message, updateMessage, isMine, account } = action.payload;
+            let { message, timestamp, updateMessage/*, isMine*/, account } = action.payload;
 
             if (!updateMessage)
                 return state;
-
-            // adding fields
-            message.author = message.from;
-            message.date = new Date(message.receive_date + 'Z');
-            if (isMine) {
-                if (message.read_date.startsWith('19')) {
-                    message.unread = true;
-                }
-            } else {
-                if (message.read_date.startsWith('19')) {
-                    message.toMark = true;
-                }
-            }
 
             // decoding
             let publicKey;
@@ -149,7 +162,12 @@ export default function messages(state = initialState, action) {
 
             const idx = newState.messages.findIndex(i => i.nonce === message.nonce);
             if (idx !== -1) {
-                newState.messages[idx] = message;
+                let dest = newState.messages[idx];
+                dest.receive_date = timestamp;
+                dest.checksum = message.checksum;
+                dest.encrypted_message = message.encrypted_message;
+                dest.raw_message = message.raw_message;
+                dest.message = message.message;
             }
 
             newState.messagesUpdate = messagesUpdate + 2;
@@ -157,17 +175,16 @@ export default function messages(state = initialState, action) {
             return newState;
         }
         case types.MESSAGES_READ: {
-            let { message, updateMessage, isMine } = action.payload;
+            let { message, timestamp, updateMessage, isMine } = action.payload;
             let newState = Object.assign({}, state);
             let messagesUpdate = message.nonce;
 
             if (updateMessage) {
-                const idx = newState.messages.findIndex(i => i.nonce === message.nonce);
-                if (idx !== -1) {
-                    newState.messages[idx].read_date = message.read_date;
-                    newState.messages[idx].unread = false;
-                    newState.messages[idx].toMark = false;
-                }
+                processDatedGroup(message, newState.messages, (msg, idx) => {
+                    msg.read_date = timestamp;
+                    msg.unread = false;
+                    msg.toMark = false;
+                });
             }
 
             newState.messagesUpdate = messagesUpdate + 1;
@@ -177,7 +194,7 @@ export default function messages(state = initialState, action) {
                     i.contact === message.from);
                 if (cidx !== -1) {
                     const { size } = newState.contacts[cidx];
-                    size.unread_inbox_messages = Math.max(size.unread_inbox_messages - 1, 0);
+                    size.unread_inbox_messages = 0;
                 }
             }
             return newState;

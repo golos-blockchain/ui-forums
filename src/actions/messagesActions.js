@@ -234,24 +234,24 @@ export function searchContactsResolved(payload) {
     };
 }
 
-export function messaged(message, updateMessage, isMine, account) {
+export function messaged(message, timestamp, updateMessage, isMine, account) {
     return {
         type: types.MESSAGES_MESSAGED,
-        payload: {message, updateMessage, isMine, account},
+        payload: {message, timestamp, updateMessage, isMine, account},
     };
 }
 
-export function messageEdited(message, updateMessage, isMine, account) {
+export function messageEdited(message, timestamp, updateMessage, isMine, account) {
     return {
         type: types.MESSAGES_EDITED,
-        payload: {message, updateMessage, isMine, account},
+        payload: {message, timestamp, updateMessage, isMine, account},
     };
 }
 
-export function messageRead(message, updateMessage, isMine) {
+export function messageRead(message, timestamp, updateMessage, isMine) {
     return {
         type: types.MESSAGES_READ,
-        payload: {message, updateMessage, isMine},
+        payload: {message, timestamp, updateMessage, isMine},
     };
 }
 
