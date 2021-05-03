@@ -26,7 +26,7 @@ services:
             - "5000:5000"
     
     datastore:
-        image: golosblockchain/web-ui:datastore
+        image: golosblockchain/notify:datastore
         build:
             context: https://github.com/golos-blockchain/golosnotify.git
             dockerfile: Dockerfile-datastore
@@ -36,7 +36,7 @@ services:
             - "3301:3301"
     
     datafeed:
-        image: golosblockchain/web-ui:datafeed
+        image: golosblockchain/notify:datafeed
         build:
             context: https://github.com/golos-blockchain/golosnotify.git
             dockerfile: Dockerfile-datafeed
