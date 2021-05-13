@@ -49,7 +49,7 @@ sudo docker run -d -p 3000:3000 --name chainbb local/chainbb
 
 ## Manual
 
-Requires [Node.js 10 or newer](https://github.com/nodesource/distributions/blob/master/README.md).
+Requires [Node.js 16 or newer](https://github.com/nodesource/distributions/blob/master/README.md).
 
 ```
 cd server
@@ -57,7 +57,6 @@ npm install
 node index.js & disown
 cd ..
 npm install --global gulp-cli
-npm install fsevents@latest -f --save-optional
 npm install
 npm start
 ```
