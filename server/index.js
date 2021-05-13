@@ -128,8 +128,11 @@ async function getLastActivity(data, lastPosts, lastReplies, _id, forum, isRootC
         }
     }
     if (isRootCall) {
-        lastPosts.sort((a, b) => a.created < b.created);
-        lastReplies.sort((a, b) => a.created < b.created);
+        const sortByCreated = (a, b) => {
+            return b.created < a.created ? -1 : (b.created > a.created ? 1 : 0);
+        };
+        lastPosts.sort(sortByCreated);
+        lastReplies.sort(sortByCreated);
     }
 }
 
