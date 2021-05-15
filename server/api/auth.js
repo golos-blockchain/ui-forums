@@ -65,7 +65,7 @@ function useAuthApi(app) {
               {
                   clientID: CONFIG_SEC.registrar.facebook.client_id,
                   clientSecret: CONFIG_SEC.registrar.facebook.client_secret,
-                  callbackURL: '/auth/facebook/callback',
+                  callbackURL: 'https://rest.golostalk.com/auth/facebook/callback',
                   passReqToCallback: true
               },
               (req, accessToken, refreshToken, params, profile, done) => {
