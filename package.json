@@ -46,7 +46,7 @@
     "redux-persist": "^5.4.0",
     "redux-thunk": "^2.2.0",
     "remarkable": "1.6.2",
-    "sanitize-html": "^1.11.4",
+    "sanitize-html": "^2.3.2",
     "semantic-ui-react": "^0.76.0",
     "simplemde": "1.11.2",
     "speakingurl": "^14.0.1",
