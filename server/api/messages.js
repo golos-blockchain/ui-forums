@@ -83,4 +83,4 @@ function useMessagesApi(app) {
 
 }
 
-module.exports = { useMessagesApi };
+module.exports = useMessagesApi;

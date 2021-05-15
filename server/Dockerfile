@@ -1,4 +1,4 @@
-FROM node:dubnium
+FROM node:16.1
 
 RUN mkdir -p /server
 WORKDIR /server

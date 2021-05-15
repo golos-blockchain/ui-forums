@@ -9,10 +9,11 @@ const golos = require('golos-classic-js');
 const CONFIG = require('../config');
 const CONFIG_SEC = require('../configSecure');
 
-const { useAuthApi } = require('./api/auth');
-const { useMessagesApi } = require('./api/messages');
-const { useNotificationsApi } = require('./api/notifications');
-const { useNodeSendApi } = require('./api/node_send');
+const useLogger = require('./logger');
+const useAuthApi = require('./api/auth');
+const useMessagesApi = require('./api/messages');
+const useNotificationsApi = require('./api/notifications');
+const useNodeSendApi = require('./api/node_send');
 
 golos.config.set('websocket', CONFIG_SEC.GOLOS_SERVER_NODE);
 if (CONFIG.GOLOS_CHAIN_ID) {
@@ -20,6 +21,8 @@ if (CONFIG.GOLOS_CHAIN_ID) {
 }
 
 const app = new koa();
+
+useLogger(app);
 
 app.use(compress({
     filter(contentType) {
@@ -128,8 +131,11 @@ async function getLastActivity(data, lastPosts, lastReplies, _id, forum, isRootC
         }
     }
     if (isRootCall) {
-        lastPosts.sort((a, b) => a.created < b.created);
-        lastReplies.sort((a, b) => a.created < b.created);
+        const sortByCreated = (a, b) => {
+            return b.created < a.created ? -1 : (b.created > a.created ? 1 : 0);
+        };
+        lastPosts.sort(sortByCreated);
+        lastReplies.sort(sortByCreated);
     }
 }
 

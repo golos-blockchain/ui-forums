@@ -35,25 +35,26 @@ async function fillStats(stats, cats, hidden, banned, parentStats = []) {
             [tag],
             0, 0);
 
-        for (let post of posts[tag]) {
-            const good = !banned[post.author] && !hidden[post.id];
+        if (posts[tag])
+            for (let post of posts[tag]) {
+                const good = !banned[post.author] && !hidden[post.id];
 
-            ++stat.total_posts;
-            if (good) {
-                ++stat.posts;
-                stat.total_comments += post.children;
-                stat.comments += post.children;
-            }
-
-            for (const parentStat of parentStats) {
-                ++parentStat.total_posts;
+                ++stat.total_posts;
                 if (good) {
-                    ++parentStat.posts;
-                    parentStat.total_comments += post.children;
-                    parentStat.comments += post.children;
+                    ++stat.posts;
+                    stat.total_comments += post.children;
+                    stat.comments += post.children;
+                }
+
+                for (const parentStat of parentStats) {
+                    ++parentStat.total_posts;
+                    if (good) {
+                        ++parentStat.posts;
+                        parentStat.total_comments += post.children;
+                        parentStat.comments += post.children;
+                    }
                 }
             }
-        }
 
         await fillStats(stats, cats[_id].children, hidden, banned, [...parentStats, stat]);
 
