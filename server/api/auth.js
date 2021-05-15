@@ -44,7 +44,7 @@ function useAuthApi(app) {
               {
                   clientID: CONFIG_SEC.registrar.vk.client_id,
                   clientSecret: CONFIG_SEC.registrar.vk.client_secret,
-                  callbackURL: '/auth/vk/callback',
+                  callbackURL: CONFIG.REST_API + '/auth/vk/callback',
                   passReqToCallback: true
               },
               (req, accessToken, refreshToken, params, profile, done) => {
@@ -65,7 +65,7 @@ function useAuthApi(app) {
               {
                   clientID: CONFIG_SEC.registrar.facebook.client_id,
                   clientSecret: CONFIG_SEC.registrar.facebook.client_secret,
-                  callbackURL: '/auth/facebook/callback',
+                  callbackURL: CONFIG.REST_API + '/auth/facebook/callback',
                   passReqToCallback: true
               },
               (req, accessToken, refreshToken, params, profile, done) => {
@@ -86,7 +86,7 @@ function useAuthApi(app) {
               {
                   clientID: CONFIG_SEC.registrar.mailru.client_id,
                   clientSecret: CONFIG_SEC.registrar.mailru.client_secret,
-                  callbackURL: '/auth/mailru/callback',
+                  callbackURL: CONFIG.REST_API + '/auth/mailru/callback',
                   passReqToCallback: true
               },
               (req, accessToken, refreshToken, params, profile, done) => {
@@ -107,7 +107,7 @@ function useAuthApi(app) {
               {
                   clientID: CONFIG_SEC.registrar.yandex.client_id,
                   clientSecret: CONFIG_SEC.registrar.yandex.client_secret,
-                  callbackURL: '/auth/yandex/callback',
+                  callbackURL: CONFIG.REST_API + '/auth/yandex/callback',
                   passReqToCallback: true
               },
               (req, accessToken, refreshToken, params, profile, done) => {
