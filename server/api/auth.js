@@ -332,4 +332,4 @@ function useAuthApi(app) {
     });
 }
 
-module.exports = { useAuthApi };
+module.exports = useAuthApi;

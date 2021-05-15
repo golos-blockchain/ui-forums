@@ -84,4 +84,4 @@ function useNotificationsApi(app) {
     });
 }
 
-module.exports = { useNotificationsApi };
+module.exports = useNotificationsApi;

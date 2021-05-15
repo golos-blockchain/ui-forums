@@ -2,6 +2,8 @@ const koaRouter = require('koa-router');
 const golos = require('golos-classic-js');
 const JsonRPC = require('simple-jsonrpc-js');
 
+// WARNING: If changing some route path here, don't forget to fix the logger
+
 function useNodeSendApi(app) {
 
     const router = koaRouter({prefix: '/node_send'});
@@ -56,4 +58,4 @@ function useNodeSendApi(app) {
     });
 }
 
-module.exports = { useNodeSendApi };
+module.exports = useNodeSendApi;
