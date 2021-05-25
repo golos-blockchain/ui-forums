@@ -24,7 +24,7 @@
     "koa-livereload": "^0.2.0",
     "koa-router": "^10.0.0",
     "koa-static": "^5.0.0",
-    "loadable-components": "2.0.0",
+    "loadable-components": "2.2.3",
     "lodash": "^4.17.11",
     "noty": "^3.1.0",
     "prop-types": "15.6.0",
