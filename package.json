@@ -37,7 +37,7 @@
     "react-input-range": "^1.1.2",
     "react-redux": "^5.0.3",
     "react-router": "^4.2.0",
-    "react-router-dom": "^4.2.0",
+    "react-router-dom": "^5.2.0",
     "react-scrollable-anchor": "^0.6.1",
     "react-timeago": "^3.2.0",
     "react-truncate": "^2.2.2",
