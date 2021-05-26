@@ -507,7 +507,7 @@ export function submit(account, data, parent, forum, action = 'post') {
             const allow_curation_rewards = true;
             const allow_votes = true;
             const extensions = [];
-            let max_accepted_payout = '1000000.000 GBG';
+            let max_accepted_payout = '1000.000 GBG';
             let percent_steem_dollars = 10000;
             // Modify payout parameters based on reward option choosen
             switch (data.rewards) {
