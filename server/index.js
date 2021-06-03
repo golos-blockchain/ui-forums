@@ -16,9 +16,7 @@ const useNotificationsApi = require('./api/notifications');
 const useNodeSendApi = require('./api/node_send');
 
 golos.config.set('websocket', CONFIG_SEC.GOLOS_SERVER_NODE);
-if (CONFIG.GOLOS_CHAIN_ID) {
-    golos.config.set('chain_id', CONFIG.GOLOS_CHAIN_ID);
-}
+golos.config.set('chain_id', CONFIG.GOLOS_CHAIN_ID);
 
 const app = new koa();
 

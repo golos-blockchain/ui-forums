@@ -1,6 +1,7 @@
 module.exports = {
     GOLOS_NODE: 'https://restdev.golostalk.com/node_send',
     GOLOS_MSGS_NODE: 'wss://apibeta.golos.today/ws',
+    GOLOS_CHAIN_ID: '782a3039b478c839e4cb0c941ff4eaeb7df40bdd68bd441afd444b9da763de12',
     REST_API: 'https://restdev.golostalk.com',
     FORUM: {
         _id: 'golostalk',

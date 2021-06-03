@@ -4,7 +4,7 @@ const golos = require('golos-classic-js');
 const CONFIG = require('../config');
 
 golos.config.set('websocket', CONFIG.GOLOS_NODE);
-if (CONFIG.GOLOS_CHAIN_ID) golos.config.set('chain_id', CONFIG.GOLOS_CHAIN_ID);
+golos.config.set('chain_id', CONFIG.GOLOS_CHAIN_ID);
 
 const PREFIX = 'g.f.';
 const PREFIX_PST = 'g.pst.f.';
