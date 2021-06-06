@@ -17,21 +17,9 @@ export default class PostSidebar extends React.Component {
           <Menu color='blue' inverted fluid vertical>
             <Dropdown color='blue' text='View this post on...' size='small' pointing='left' className='link item'>
               <Dropdown.Menu>
-                <a href={`https://steemit.com${post.url}`} target='_blank' className='item'>
+                <a href={`https://golos.id${post.url}`} className='item'>
                   <Icon name='external' />
                   steemit.com
-                </a>
-                <a href={`https://busy.org${post.url}`} target='_blank' className='item'>
-                  <Icon name='external' />
-                  busy.org
-                </a>
-                <a href={`https://steemdb.com${post.url}`} target='_blank' className='item'>
-                  <Icon name='external' />
-                  steemdb.com
-                </a>
-                <a href={`https://phist.steemdata.com/history?identifier=steemit.com${post.url}`} target='_blank' className='item'>
-                  <Icon name='external' />
-                  phist.steemdata.com
                 </a>
               </Dropdown.Menu>
             </Dropdown>

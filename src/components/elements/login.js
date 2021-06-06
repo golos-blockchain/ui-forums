@@ -48,7 +48,7 @@ const Login = (props) => {
                 <Segment attached>
                     <p>Currently, account details and management can be found on steemit.com using the button below.</p>
                     <Divider></Divider>
-                    <Link to={`https://steemit.com/@${account.name}`} rel='nofollow' target='_blank' className='ui primary icon mini button'>
+                    <Link to={`https://golos.id/@${account.name}`} className='ui primary icon mini button'>
                         <Icon name='external'></Icon>
                         {' '}
                         Manage Account

@@ -196,13 +196,6 @@ class LoginModal extends React.Component {
                             loading={this.state.loading}>
                             <Form.Input placeholder={tt('login.account_name')} autoFocus={!isActive && !isMemo} disabled={isActive || isMemo} name='account' value={this.state.account} onChange={this.handleChange} />
                             <Form.Input placeholder={tt(`login.password_${authType}`)} autoFocus={isActive || isMemo} type='password' name='key' value={this.state.key} onChange={this.handleChange} />
-                            {/*<p>
-                                Need help finding your <strong>Posting (Private Key)</strong>?
-                                {' '}
-                                <a rel='nofollow' target='_blank' href='https://steemit.com/steemit-guides/@rgeddes/getting-your-posting-key---made-easy'>
-                                    Read this post by @rgeddes on steemit.com.
-                                </a>
-                            </p>*/}
                             <Message
                                 error
                                 header={tt('g.error')}
