@@ -183,6 +183,7 @@
     "enter_invite": "Enter your invite code",
     "invite_wrong_format": "Wrong invite code",
     "invite_no_such": "No such invite",
+    "invite_new_account_will_receive": "Account will have %(amount)s in Golos Power",
     "authorized_with_socials": "...or log in using your account",
     "enter_username": "Enter your name username",
     "generate_password": "Get your generated password",

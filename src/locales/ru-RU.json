@@ -183,6 +183,7 @@
     "enter_invite": "Введите ваш инвайт-код",
     "invite_wrong_format": "Неверно указан инвайт-код",
     "invite_no_such": "Такого чека нет",
+    "invite_new_account_will_receive": "Созданный аккаунт получит %(amount)s в Силу Голоса",
     "authorized_with_socials": "...или авторизуйтесь через свой аккаунт",
     "enter_username": "Введите имя пользователя, которое хотите зарегистрировать",
     "generate_password": "Получите ваш сгенерированный пароль",
