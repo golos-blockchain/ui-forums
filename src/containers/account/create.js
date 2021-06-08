@@ -7,7 +7,7 @@ import tt from 'counterpart';
 import ttGetByKey from '../../utils/ttGetByKey';
 import golos from 'golos-classic-js';
 import { PrivateKey, key_utils } from 'golos-classic-js/lib/auth/ecc';
-import { validateAccountName } from 'golos-classic-js/lib/utils';
+import { validateAccountName, Asset } from 'golos-classic-js/lib/utils';
 import { jsPDF } from 'jspdf';
 
 import { Header, Label, Button, Icon, Loader } from 'semantic-ui-react';
@@ -25,7 +25,7 @@ class CreateAccount extends React.Component {
         if (process.browser) goToTop();
         this.state = {
             alreadyExists: false,
-            wrongInviteCode: false,
+            inviteData: null,
             generatedPassword: 'P' + key_utils.get_random_key().toWif(),
             code: null,
             email: null,
@@ -62,6 +62,16 @@ class CreateAccount extends React.Component {
                 link: `/create_account`
             }
         ]);
+    }
+
+    componentDidMount() {
+        const invite = new URLSearchParams(window.location.search).get('invite');
+        if (invite) {
+            this.setState({
+                authType: 'invite',
+                defaultInviteCode: invite,
+            });
+        }
     }
 
     getRandomArbitrary = (min, max) => {
@@ -185,7 +195,7 @@ class CreateAccount extends React.Component {
             if (result.soc_id_type) {
                 this.setState({
                     authSuccessType: result.soc_id_type,
-                    wrongInviteCode: false,
+                    inviteData: null,
                 });
                 window.removeEventListener('focus', this.checkSocAuth);
             } else if (!event) {
@@ -244,7 +254,7 @@ class CreateAccount extends React.Component {
         e.preventDefault();
         this.setState({
             authType: this.state.authType === 'invite' ? 'email' : 'invite',
-            wrongInviteCode: false,
+            inviteData: null,
         });
     };
 
@@ -257,7 +267,7 @@ class CreateAccount extends React.Component {
     };
 
     render() {
-        const { methods, authType, authSuccessType, alreadyExists, wrongInviteCode, allValid } = this.state;
+        const { methods, authType, authSuccessType, alreadyExists, inviteData, defaultInviteCode, allValid } = this.state;
         const errorLabel = (<Label color='red' pointing/>);
         let form = null;
         if (!this.state.code) {
@@ -290,13 +300,14 @@ class CreateAccount extends React.Component {
                         label={tt('login.enter_invite')}
                         autoFocus
                         focus
+                        defaultValue={defaultInviteCode}
                         required
                         validations={{
                             isInviteKey: (values, value) => {
-                                // the workaround with wrongInviteCode is need because validations aren't support async fetch
+                                // the workaround with inviteData is need because validations aren't support async fetch
                                 if (!value) {
                                     this.setState({
-                                        wrongInviteCode: false,
+                                        inviteData: null,
                                     });
                                     return true;
                                 }
@@ -305,7 +316,7 @@ class CreateAccount extends React.Component {
                                     pk = PrivateKey.fromWif(value);
                                 } catch (e) {
                                     this.setState({
-                                        wrongInviteCode: false,
+                                        inviteData: null,
                                     });
                                     return tt('login.invite_wrong_format');
                                 }
@@ -315,7 +326,7 @@ class CreateAccount extends React.Component {
                                     })
                                     .then(data => {
                                         this.setState({
-                                            wrongInviteCode: data.status !== 'ok',
+                                            inviteData: data.status === 'ok' ? data.data : false,
                                         });
                                     });
                                 return true;
@@ -326,8 +337,15 @@ class CreateAccount extends React.Component {
                         }}
                         errorLabel={ errorLabel }
                     /> : null}
-                    {wrongInviteCode ? <div>
-                            <Label color='red' pointing>{tt('login.invite_no_such')}</Label>
+                    {inviteData === false ? <div>
+                            <Label color='red' pointing style={{marginTop: '0em', marginBottom: '1em'}}>
+                                {tt('login.invite_no_such')}
+                            </Label>
+                        </div> : ''}
+                    {inviteData ? <div>
+                            <Label color='green' pointing style={{marginTop: '0em', marginBottom: '1em'}}>
+                                {tt('login.invite_new_account_will_receive', {amount: Asset(inviteData.balance).toString(0)})}
+                            </Label>
                         </div> : ''}
                     {tt('login.authorized_with_socials')}<br/>
                     {methods.includes('vk') ? (<Button color='vk' onClick={this.useVk}>
@@ -399,7 +417,7 @@ class CreateAccount extends React.Component {
                         validations='isTrue'
                         />
                     <Form.Button
-                        disabled={!allValid || alreadyExists || wrongInviteCode || (authType !== 'email' && authType !== 'invite' && !authSuccessType)}
+                        disabled={!allValid || alreadyExists || (inviteData === false) || (authType !== 'email' && authType !== 'invite' && !authSuccessType)}
                         color='green'>{tt('login.create_account')}</Form.Button>
                     <br/>
                 </Form>);
