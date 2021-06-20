@@ -35,6 +35,7 @@ class AccountAvatar extends React.Component {
 
   render() {
     const { username, noPopup, noLink } = this.props;
+    const size = this.props.size || 35;
     let src = '/images/userpic.png';
     if (this.props.chainstate && this.props.chainstate.accounts) {
       const acc = this.props.chainstate.accounts[username];
@@ -46,11 +47,10 @@ class AccountAvatar extends React.Component {
         }
         if (meta && meta.profile && meta.profile.profile_image) {
           src = meta.profile.profile_image;
-          src = proxifyImageUrl(src);
+          src = proxifyImageUrl(src, size > 75 ? '200x200' : '75x75');
         }
       }
     }
-    const size = this.props.size || 35;
     const style = this.props.style || { minHeight: `${size}px`, minWidth: `${size}px` };
     const className = this.props.className || "ui rounded floated left mini image";
     const label = this.props.notifications ?
