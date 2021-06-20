@@ -360,8 +360,6 @@ export default class MarkdownEditor extends PureComponent {
             widget.url = url;
             this._lineWidgets.push(widget);
         });
-
-        //img.src = $STM_Config.img_proxy_prefix + '0x0/' + url;
     }
 
     _onPaste = async (cm, e) => {

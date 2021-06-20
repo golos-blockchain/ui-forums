@@ -6,9 +6,8 @@ import invoke from 'lodash/invoke';
 import { Button, Icon, Modal, Divider, Dimmer, Loader, Label } from 'semantic-ui-react';
 import { Form } from 'formsy-semantic-ui-react';
 
-import * as CONFIG from '../../../config';
-
 import { imgurUpload } from '../../utils/imgurUpload';
+import { proxifyImageUrl } from '../../utils/ProxifyUrl';
 
 export default class AddImageDialog extends React.Component {
 
@@ -61,7 +60,7 @@ export default class AddImageDialog extends React.Component {
     _onAddImage = (formData) => {
         this._showPreloading(true);
 
-        let url = CONFIG.STM_Config.img_proxy_prefix + '0x0/' + formData.link;
+        let url = proxifyImageUrl(formData.link);
         let img = new Image();
         img.onerror = img.onabort = () => {
             alert(tt('account.cannot_load_image_try_again'));

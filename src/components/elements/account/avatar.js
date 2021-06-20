@@ -1,12 +1,13 @@
 import React from 'react';
 import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux'
+import { connect } from 'react-redux';
 
-import { Image, Label } from 'semantic-ui-react'
-import AccountLink from './link'
+import { Image, Label } from 'semantic-ui-react';
 
-import * as CONFIG from '../../../../config';
-import * as chainstateActions from '../../../actions/chainstateActions'
+import * as chainstateActions from '../../../actions/chainstateActions';
+
+import AccountLink from './link';
+import { proxifyImageUrl } from '../../../utils/ProxifyUrl';
 
 class AccountAvatar extends React.Component {
   constructor(props) {
@@ -45,7 +46,7 @@ class AccountAvatar extends React.Component {
         }
         if (meta && meta.profile && meta.profile.profile_image) {
           src = meta.profile.profile_image;
-          src = CONFIG.STM_Config.img_proxy_prefix ? (CONFIG.STM_Config.img_proxy_prefix + '0x0/' + src) : src;
+          src = proxifyImageUrl(src);
         }
       }
     }
