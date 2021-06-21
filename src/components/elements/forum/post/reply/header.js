@@ -42,17 +42,8 @@ export default class PostReplyHeader extends React.Component {
                                 header='View this post on...'
                                 content={(
                                     <List>
-                                        <List.Item as='a' href={`https://steemit.com/${reply.category}/@${reply.author}/${reply.permlink}`} target='_blank'>
-                                            steemit.com
-                                        </List.Item>
-                                        <List.Item as='a' href={`https://busy.org/${reply.category}/@${reply.author}/${reply.permlink}`} target='_blank'>
-                                            busy.org
-                                        </List.Item>
-                                        <List.Item as='a' href={`https://steemd.com/${reply.category}/@${reply.author}/${reply.permlink}`} target='_blank'>
-                                            steemd.com (explorer)
-                                        </List.Item>
-                                        <List.Item as='a' href={`https://steemdb.com/${reply.category}/@${reply.author}/${reply.permlink}`} target='_blank'>
-                                            steemdb.com (explorer)
+                                        <List.Item as='a' href={`https://golos.id/${reply.category}/@${reply.author}/${reply.permlink}`}>
+                                            golos.id
                                         </List.Item>
                                     </List>
                                 )}

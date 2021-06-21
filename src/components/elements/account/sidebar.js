@@ -63,19 +63,19 @@ export default class AccountSidebar extends React.Component {
                 <Menu color='blue' inverted fluid vertical>
                     <Dropdown color='blue' text={tt('sidebar.view_this_account')} size='small' pointing='left' className='link item'>
                         <Dropdown.Menu>
-                            <a href={`https://golos.id/@${username}`} target='_blank' rel='noreferrer' className='item'>
+                            <a href={`https://golos.id/@${username}`} target='_blank' className='item'>
                                 <Icon name='external' />
                                 golos.id
                             </a>
-                            <a href={`https://golos.in/@${username}`} target='_blank' rel='noreferrer' className='item'>
+                            <a href={`https://golos.in/@${username}`} target='_blank' className='item'>
                                 <Icon name='external' />
                                 golos.in
                             </a>
-                            <a href={`https://dpos.space/golos/profiles/${username}`} target='_blank' rel='noreferrer' className='item'>
+                            <a href={`https://dpos.space/golos/profiles/${username}`} target='_blank' className='item'>
                                 <Icon name='external' />
                                 dpos.space
                             </a>
-                            <a href={`https://golos.cf/@${username}`} target='_blank' rel='noreferrer' className='item'>
+                            <a href={`https://golos.cf/@${username}`} target='_blank' className='item'>
                                 <Icon name='external' />
                                 golos.cf
                             </a>

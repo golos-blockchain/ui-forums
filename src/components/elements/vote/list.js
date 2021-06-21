@@ -18,7 +18,7 @@ export default class VoterAvatars extends React.Component {
         wide='very'
         content={accounts.slice(9,-1).map((account, i) => <span key={i}>
           {!!i && ", "}
-          <a href={`https://steemit.com/@${account}`} target='_blank' key={i}>
+          <a href={`https://golos.id/@${account}`} key={i}>
             @{account} ({votes[account]/100}%)
           </a>
         </span>)}

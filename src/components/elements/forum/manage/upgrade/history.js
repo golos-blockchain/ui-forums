@@ -12,7 +12,7 @@ export default class ForumUpgradeHistory extends React.Component {
                 return (
                     <Table.Row key={event['_id']}>
                         <Table.Cell>
-                            <a href={`https://steemd.com/b/${event['height']}#${event['txid']}`} target='_blank'>
+                            <a href={`https://golos.id/b/${event['height']}#${event['txid']}`}>
                                 <small>{event['height']}</small>
                             </a>
                         </Table.Cell>
