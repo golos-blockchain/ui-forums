@@ -1,6 +1,9 @@
-import xmldom from 'xmldom'
-import linksRe from '../utils/Links'
+import xmldom from 'xmldom';
+
 import * as CONFIG from '../../config';
+
+import linksRe from '../utils/Links';
+import { proxifyImageUrl } from '../utils/ProxifyUrl';
 
 const noop = () => {}
 const DOMParser = new xmldom.DOMParser({
@@ -187,14 +190,14 @@ function header(tag, state, child) {
 
 // For all img elements with non-local URLs, prepend the proxy URL (e.g. `https://img0.steemit.com/0x0/`)
 function proxifyImages(doc) {
-    if (!CONFIG.STM_Config.img_proxy_prefix) return
+    if (!CONFIG.STM_Config.img_proxy_prefix && !CONFIG.STM_Config.img_proxy_backup_prefix) return
     if (!doc) return;
     const imgs = doc.getElementsByTagName('img');
     for (let i = 0; i < imgs.length; ++i) {
         const node = imgs.item(i);
         const url = node.getAttribute('src')
         if(! linksRe.local.test(url))
-            node.setAttribute('src', CONFIG.STM_Config.img_proxy_prefix + '0x0/' + url)
+            node.setAttribute('src', proxifyImageUrl(url))
     }
 }
 
