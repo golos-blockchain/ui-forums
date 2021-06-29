@@ -81,9 +81,9 @@ export default class MessageList extends React.Component {
     };
 
     render() {
-        const { account, to, topCenter, topRight, onSendMessage, selectedMessages,
+        const { account, to, topCenter, topRight, replyingMessage, onCancelReply, onSendMessage, selectedMessages,
             onButtonImageClicked,
-            onPanelDeleteClick, onPanelEditClick, onPanelCloseClick } = this.props;
+            onPanelDeleteClick, onPanelReplyClick, onPanelEditClick, onPanelCloseClick } = this.props;
         return (
             <div className='message-list'>
                 <Toolbar
@@ -95,6 +95,8 @@ export default class MessageList extends React.Component {
 
                 {to ? (<Compose
                     account={account}
+                    replyingMessage={replyingMessage}
+                    onCancelReply={onCancelReply}
                     onSendMessage={onSendMessage}
                     rightItems={[
                         (<ToolbarButton key='image' icon='image-outline' onClick={onButtonImageClicked} />),
@@ -105,6 +107,7 @@ export default class MessageList extends React.Component {
                     ]}
                     selectedMessages={selectedMessages}
                     onPanelDeleteClick={onPanelDeleteClick}
+                    onPanelReplyClick={onPanelReplyClick}
                     onPanelEditClick={onPanelEditClick}
                     onPanelCloseClick={onPanelCloseClick}
                     />) : null}

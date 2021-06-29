@@ -10,7 +10,7 @@ import { getAccountAvatarSrc } from '../utils/accountMetaUtils';
 import { getMemoKey } from '../utils/MessageUtils';
 import { fitToPreview } from '../utils/ImageUtils';
 
-export function sendMessage(account, to, toMemoKey, body, editInfo = undefined, type = 'text', meta = {}) {
+export function sendMessage(account, to, toMemoKey, body, editInfo = undefined, type = 'text', meta = {}, replyingMessage = null) {
     return async dispatch => {
         let message = {
             app: 'golos-messenger',
@@ -24,6 +24,9 @@ export function sendMessage(account, to, toMemoKey, body, editInfo = undefined, 
             } else {
                 throw new Error('Unknown message type: ' + type);
             }
+        }
+        if (replyingMessage) {
+            message = {...message, ...replyingMessage};
         }
 
         const memoKey = getMemoKey(account);

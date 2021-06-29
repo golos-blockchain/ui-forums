@@ -2,7 +2,9 @@ import React from 'react';
 import tt from 'counterpart';
 import { Picker } from 'emoji-picker-element';
 
-import { Button } from 'semantic-ui-react';
+import { Button, Icon } from 'semantic-ui-react';
+
+import { displayQuoteMsg } from '../../../../utils/MessageUtils';
 
 import './Compose.css';
 
@@ -104,6 +106,12 @@ export default class Compose extends React.Component {
         }
     }
 
+    onPanelReplyClick = (event) => {
+        if (this.props.onPanelReplyClick) {
+            this.props.onPanelReplyClick(event);
+        }
+    }
+
     onPanelEditClick = (event) => {
         if (this.props.onPanelEditClick) {
             this.props.onPanelEditClick(event);
@@ -116,9 +124,15 @@ export default class Compose extends React.Component {
         }
     }
 
+    onCancelReply = (event) => {
+        if (this.props.onCancelReply) {
+            this.props.onCancelReply(event);
+        }
+    }
+
     render() {
-        const { account, rightItems } = this.props;
-        const { onPanelDeleteClick, onPanelEditClick, onPanelCloseClick } = this;
+        const { account, rightItems, replyingMessage } = this.props;
+        const { onPanelDeleteClick, onPanelReplyClick, onPanelEditClick, onPanelCloseClick } = this;
 
         const selectedMessages = Object.entries(this.props.selectedMessages);
         let selectedMessagesCount = 0;
@@ -130,34 +144,53 @@ export default class Compose extends React.Component {
             }
         }
 
+        let quote = null;
+        if (replyingMessage) {
+            quote = (<div className='msgs-compose-reply'>
+                    <div className='msgs-compose-reply-from'>
+                        {replyingMessage.quote.from}
+                    </div>
+                    {displayQuoteMsg(replyingMessage.quote.body)}
+                    <Icon name='close' className='msgs-compose-reply-close' onClick={this.onCancelReply} />
+                </div>);
+        }
+
         return (
             <div className='msgs-compose'>
                 {
                     !selectedMessagesCount ? rightItems : null
                 }
-                {!selectedMessagesCount ? (<textarea
-                    className='msgs-compose-input'
-                    placeholder={tt('messages.type_a_message_NAME', {NAME: account.name})}
-                    onKeyDown={this.onSendMessage}
-                />) : null}
+                {!selectedMessagesCount ? (<div className='msgs-compose-input-panel'>
+                        {quote}
+                        <textarea
+                            className='msgs-compose-input'
+                            placeholder={tt('messages.type_a_message_NAME', {NAME: account.name})}
+                            onKeyDown={this.onSendMessage}
+                        />
+                    </div>) : null}
                 {selectedMessagesCount ? (<div className='msgs-compose-panel'>
-                    <Button
-                        icon='remove'
-                        inverted
-                        color='red'
-                        content={tt('g.remove')}
-                        onClick={onPanelDeleteClick} />
-                    {(selectedMessagesCount === 1 && selectedEditablesCount === 1) ? (<Button
-                        icon='pencil'
-                        inverted
+                    {(selectedMessagesCount === 1) ? (<Button
+                        icon='chat'
                         color='blue'
-                        content={tt('g.edit')}
-                        onClick={onPanelEditClick} />) : null}
+                        content={tt('g.reply')}
+                        onClick={onPanelReplyClick} />) : null}
                     <Button
                         color='blue'
                         inverted
                         icon='triangle left'
                         className='cancel-button' onClick={onPanelCloseClick}>{tt('g.cancel')}</Button>
+                    <Button
+                        icon='remove'
+                        inverted
+                        color='red'
+                        content={tt('g.remove')}
+                        className='delete-button' onClick={onPanelDeleteClick} />
+                    {(selectedMessagesCount === 1 && selectedEditablesCount === 1) ? (<Button
+                        icon='pencil'
+                        inverted
+                        color='blue'
+                        content={tt('g.edit')}
+                        className='edit-button' onClick={onPanelEditClick} />) : null}
                 </div>) : null}
             </div>
         );
