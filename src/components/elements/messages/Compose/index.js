@@ -11,7 +11,7 @@ import './Compose.css';
 
 export default class Compose extends React.Component {
     onKeyDown = (e) => {
-        if (e.keyCode === 13) {
+        if (!window.IS_MOBILE && e.keyCode === 13) {
             if (e.shiftKey) {
             } else {
                 e.preventDefault();
@@ -149,14 +149,14 @@ export default class Compose extends React.Component {
             const delta = newPB - oldPB;
 
             if (delta > 0) {
-                const scroll = document.getElementsByClassName('msgs-scrollable')[1];
+                const scroll = document.getElementsByClassName('msgs-content')[0];
                 if (scroll) scroll.scrollTop += delta;
             }
         }
     }
 
     render() {
-        const { account, rightItems, replyingMessage } = this.props;
+        const { rightItems, replyingMessage } = this.props;
         const { onPanelDeleteClick, onPanelReplyClick, onPanelEditClick, onPanelCloseClick } = this;
 
         const selectedMessages = Object.entries(this.props.selectedMessages);
@@ -195,7 +195,7 @@ export default class Compose extends React.Component {
                         {quote}
                         <TextareaAutosize
                             className='msgs-compose-input'
-                            placeholder={tt('messages.type_a_message_NAME', {NAME: account.name})}
+                            placeholder={tt('messages.type_a_message')}
                             onKeyDown={this.onKeyDown}
                             minRows={2}
                             maxRows={14}

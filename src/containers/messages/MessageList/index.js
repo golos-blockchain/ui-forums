@@ -81,13 +81,14 @@ export default class MessageList extends React.Component {
     };
 
     render() {
-        const { account, to, topCenter, topRight, replyingMessage, onCancelReply, onSendMessage, selectedMessages,
+        const { account, to, topLeft, topCenter, topRight, replyingMessage, onCancelReply, onSendMessage, selectedMessages,
             onButtonImageClicked,
             onPanelDeleteClick, onPanelReplyClick, onPanelEditClick, onPanelCloseClick } = this.props;
         return (
             <div className='message-list'>
                 <Toolbar
                     title={topCenter}
+                    leftItems={topLeft}
                     rightItems={topRight}
                 />
 

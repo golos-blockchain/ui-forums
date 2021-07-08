@@ -6,7 +6,9 @@ tt.registerTranslations('ru', require('../locales/ru-RU.json'));
 tt.setLocale((typeof(localStorage) !== 'undefined' && localStorage.getItem('locale')) || 'ru');
 tt.setFallbackLocale('en');
 
-var _isMobile = typeof(navigator) === 'undefined' ? true : /Mobi/.test(navigator.userAgent);
+if (typeof(window) !== 'undefined') {
+    window.IS_MOBILE = typeof(navigator) === 'undefined' ? false : /Mobi/.test(navigator.userAgent) || window.innerWidth < 765;
+}
 
 export default function ttGetByKey(config, key) {
     let loc = tt.getLocale();

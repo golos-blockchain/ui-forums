@@ -7,7 +7,7 @@ import tt from 'counterpart';
 import max from 'lodash/max';
 import debounce from 'lodash/debounce';
 
-import { Button, Modal, Dropdown } from 'semantic-ui-react';
+import { Button, Icon, Modal, Dropdown } from 'semantic-ui-react';
 
 import * as CONFIG from '../../config';
 import * as accountActions from '../actions/accountActions';
@@ -62,11 +62,24 @@ class Messages extends React.Component {
         }, 5000);
     }
 
+    onWindowResize = (e) => {
+        const isMobile = window.matchMedia('screen and (max-width: 39.9375em)').matches;
+        if (isMobile !== this.isMobile) {
+            this.forceUpdate();
+        }
+        this.isMobile = isMobile;
+    };
+
     componentDidMount() {
         const script = document.createElement('script');
         script.src = 'https://unpkg.com/ionicons@5.4.0/dist/ionicons.js';
         script.async = true;
         document.body.appendChild(script);
+        window.addEventListener('resize', this.onWindowResize)
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener('resize', this.onWindowResize);
     }
 
     async subscribeIfNeed(account) {
@@ -221,7 +234,7 @@ class Messages extends React.Component {
             || nextProps.messages.messagesUpdate !== this.props.messages.messagesUpdate;
         if (msgsUpdated || anotherChat) {
             setTimeout(() => {
-                const scroll = document.getElementsByClassName('msgs-scrollable')[1];
+                const scroll = document.getElementsByClassName('msgs-content')[0];
                 if (scroll) scroll.scrollTo(0,scroll.scrollHeight);
             }, 1);
         }
@@ -466,7 +479,8 @@ class Messages extends React.Component {
         });
     };
 
-    focusInput = () => {
+    focusInput = (workOnMobile = false) => {
+        if (!workOnMobile && window.IS_MOBILE) return;
         const input = document.getElementsByClassName('msgs-compose-input')[0];
         if (input) input.focus();
     };
@@ -543,6 +557,15 @@ class Messages extends React.Component {
         }
     }
 
+   _renderMessagesTopLeft = () => {
+        let messagesTopLeft = [];
+        // mobile only
+        messagesTopLeft.push(<a href='/msgs/' className='msgs-back-btn'>
+            <Icon key='back-btn' name='chevron left' />
+        </a>);
+        return messagesTopLeft;
+    };
+
     _renderMessagesTopCenter = () => {
         let messagesTopCenter = [];
         const { to } = this.props.messages;
@@ -615,6 +638,7 @@ class Messages extends React.Component {
                     onConversationSearch={this.onConversationSearch}
                     onConversationSelect={this.onConversationSelect}
                     messages={messages}
+                    messagesTopLeft={this._renderMessagesTopLeft()}
                     messagesTopCenter={this._renderMessagesTopCenter()}
                     messagesTopRight={this._renderMessagesTopRight()}
                     replyingMessage={this.state.replyingMessage}
