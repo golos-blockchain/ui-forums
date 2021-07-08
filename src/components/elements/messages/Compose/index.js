@@ -209,24 +209,24 @@ export default class Compose extends React.Component {
                     {(selectedMessagesCount === 1) ? (<Button
                         icon='chat'
                         color='blue'
-                        content={tt('g.reply')}
+                        content={!window.IS_MOBILE ? tt('g.reply') : null}
                         onClick={onPanelReplyClick} />) : null}
                     <Button
                         color='blue'
+                        content={tt('g.cancel')}
                         inverted
-                        icon='triangle left'
-                        className='cancel-button' onClick={onPanelCloseClick}>{tt('g.cancel')}</Button>
+                        className='cancel-button' onClick={onPanelCloseClick} />
                     <Button
                         icon='remove'
                         inverted
                         color='red'
-                        content={tt('g.remove')}
+                        content={!window.IS_MOBILE ? tt('g.remove') : null}
                         className='delete-button' onClick={onPanelDeleteClick} />
                     {(selectedMessagesCount === 1 && selectedEditablesCount === 1) ? (<Button
                         icon='pencil'
                         inverted
                         color='blue'
-                        content={tt('g.edit')}
+                        content={!window.IS_MOBILE ? tt('g.edit') : null}
                         className='edit-button' onClick={onPanelEditClick} />) : null}
                 </div>) : null}
             </div>
