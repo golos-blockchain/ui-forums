@@ -21,6 +21,14 @@
     flex: 1;
 }
 
+.msgs-compose-send {
+    margin-left: 1rem !important;
+}
+
+.msgs-compose-send .icon {
+    vertical-align: top !important;
+}
+
 .msgs-compose-reply {
     margin-left: 0.5rem;
     padding-left: 0.5rem;

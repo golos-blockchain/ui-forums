@@ -10,7 +10,7 @@ import { displayQuoteMsg } from '../../../../utils/MessageUtils';
 import './Compose.css';
 
 export default class Compose extends React.Component {
-    onSendMessage = (e) => {
+    onKeyDown = (e) => {
         if (e.keyCode === 13) {
             if (e.shiftKey) {
             } else {
@@ -19,6 +19,14 @@ export default class Compose extends React.Component {
                 onSendMessage(e.target.value, e);
             }
         }
+    };
+
+    onSendClick = (e) => {
+        e.preventDefault();
+        const { onSendMessage } = this.props;
+        const input = document.getElementsByClassName('msgs-compose-input')[0];
+        input.focus();
+        onSendMessage(input.value, e);
     };
 
     init = () => {
@@ -172,6 +180,12 @@ export default class Compose extends React.Component {
                 </div>);
         }
 
+        const sendButton = selectedMessagesCount ? null :
+            (<Button primary circular icon='envelope' className='msgs-compose-send' title={tt('g.submit')}
+                    onClick={this.onSendClick}
+                >
+            </Button>);
+
         return (
             <div className='msgs-compose'>
                 {
@@ -182,12 +196,15 @@ export default class Compose extends React.Component {
                         <TextareaAutosize
                             className='msgs-compose-input'
                             placeholder={tt('messages.type_a_message_NAME', {NAME: account.name})}
-                            onKeyDown={this.onSendMessage}
+                            onKeyDown={this.onKeyDown}
                             minRows={2}
                             maxRows={14}
                             onHeightChange={this.onHeightChange}
                         />
                     </div>) : null}
+
+                {sendButton}
+
                 {selectedMessagesCount ? (<div className='msgs-compose-panel'>
                     {(selectedMessagesCount === 1) ? (<Button
                         icon='chat'
