@@ -1,14 +1,17 @@
 import React from 'react';
 import tt from 'counterpart';
 import { Picker } from 'emoji-picker-element';
+import TextareaAutosize from 'react-textarea-autosize';
 
-import { Button } from 'semantic-ui-react';
+import { Button, Icon } from 'semantic-ui-react';
+
+import { displayQuoteMsg } from '../../../../utils/MessageUtils';
 
 import './Compose.css';
 
 export default class Compose extends React.Component {
-    onSendMessage = (e) => {
-        if (e.keyCode === 13) {
+    onKeyDown = (e) => {
+        if (!window.IS_MOBILE && e.keyCode === 13) {
             if (e.shiftKey) {
             } else {
                 e.preventDefault();
@@ -16,6 +19,14 @@ export default class Compose extends React.Component {
                 onSendMessage(e.target.value, e);
             }
         }
+    };
+
+    onSendClick = (e) => {
+        e.preventDefault();
+        const { onSendMessage } = this.props;
+        const input = document.getElementsByClassName('msgs-compose-input')[0];
+        input.focus();
+        onSendMessage(input.value, e);
     };
 
     init = () => {
@@ -104,6 +115,12 @@ export default class Compose extends React.Component {
         }
     }
 
+    onPanelReplyClick = (event) => {
+        if (this.props.onPanelReplyClick) {
+            this.props.onPanelReplyClick(event);
+        }
+    }
+
     onPanelEditClick = (event) => {
         if (this.props.onPanelEditClick) {
             this.props.onPanelEditClick(event);
@@ -116,9 +133,31 @@ export default class Compose extends React.Component {
         }
     }
 
+    onCancelReply = (event) => {
+        if (this.props.onCancelReply) {
+            this.props.onCancelReply(event);
+        }
+    }
+
+    onHeightChange = (height) => {
+        const cont = document.getElementsByClassName('message-list-container')[0];
+        if (cont) {
+            const oldPB = parseInt(cont.style.paddingBottom, 10) || 0; // if NaN, will be 0
+            const newPB = 30 + height;
+            cont.style.paddingBottom = newPB + 'px';
+
+            const delta = newPB - oldPB;
+
+            if (delta > 0) {
+                const scroll = document.getElementsByClassName('msgs-content')[0];
+                if (scroll) scroll.scrollTop += delta;
+            }
+        }
+    }
+
     render() {
-        const { account, rightItems } = this.props;
-        const { onPanelDeleteClick, onPanelEditClick, onPanelCloseClick } = this;
+        const { rightItems, replyingMessage } = this.props;
+        const { onPanelDeleteClick, onPanelReplyClick, onPanelEditClick, onPanelCloseClick } = this;
 
         const selectedMessages = Object.entries(this.props.selectedMessages);
         let selectedMessagesCount = 0;
@@ -130,34 +169,65 @@ export default class Compose extends React.Component {
             }
         }
 
+        let quote = null;
+        if (replyingMessage) {
+            quote = (<div className='msgs-compose-reply'>
+                    <div className='msgs-compose-reply-from'>
+                        {replyingMessage.quote.from}
+                    </div>
+                    {displayQuoteMsg(replyingMessage.quote.body)}
+                    <Icon name='close' className='msgs-compose-reply-close' onClick={this.onCancelReply} />
+                </div>);
+        }
+
+        const sendButton = selectedMessagesCount ? null :
+            (<Button primary circular icon='envelope' className='msgs-compose-send' title={tt('g.submit')}
+                    onClick={this.onSendClick}
+                >
+            </Button>);
+
         return (
             <div className='msgs-compose'>
                 {
                     !selectedMessagesCount ? rightItems : null
                 }
-                {!selectedMessagesCount ? (<textarea
-                    className='msgs-compose-input'
-                    placeholder={tt('messages.type_a_message_NAME', {NAME: account.name})}
-                    onKeyDown={this.onSendMessage}
-                />) : null}
+                {!selectedMessagesCount ? (<div className='msgs-compose-input-panel'>
+                        {quote}
+                        <TextareaAutosize
+                            className='msgs-compose-input'
+                            placeholder={tt('messages.type_a_message')}
+                            onKeyDown={this.onKeyDown}
+                            minRows={2}
+                            maxRows={14}
+                            onHeightChange={this.onHeightChange}
+                        />
+                    </div>) : null}
+
+                {sendButton}
+
                 {selectedMessagesCount ? (<div className='msgs-compose-panel'>
+                    {(selectedMessagesCount === 1) ? (<Button
+                        icon='chat'
+                        color='blue'
+                        content={!window.IS_MOBILE ? tt('g.reply') : null}
+                        onClick={onPanelReplyClick} />) : null}
+                    <Button
+                        color='blue'
+                        content={tt('g.cancel')}
+                        inverted
+                        className='cancel-button' onClick={onPanelCloseClick} />
                     <Button
                         icon='remove'
                         inverted
                         color='red'
-                        content={tt('g.remove')}
-                        onClick={onPanelDeleteClick} />
+                        content={!window.IS_MOBILE ? tt('g.remove') : null}
+                        className='delete-button' onClick={onPanelDeleteClick} />
                     {(selectedMessagesCount === 1 && selectedEditablesCount === 1) ? (<Button
                         icon='pencil'
                         inverted
                         color='blue'
-                        content={tt('g.edit')}
-                        onClick={onPanelEditClick} />) : null}
-                    <Button
-                        color='blue'
-                        inverted
-                        icon='triangle left'
-                        className='cancel-button' onClick={onPanelCloseClick}>{tt('g.cancel')}</Button>
+                        content={!window.IS_MOBILE ? tt('g.edit') : null}
+                        className='edit-button' onClick={onPanelEditClick} />) : null}
                 </div>) : null}
             </div>
         );

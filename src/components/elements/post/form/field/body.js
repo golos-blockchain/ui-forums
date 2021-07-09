@@ -51,10 +51,10 @@ export default class PostFormFieldBody extends React.Component {
         const errorLabel = (<Label color='red' pointing />);
         return (
             <div>
-            {window._isMobile ? <div><a onClick={this.toggleMarkupGuide}>{tt('post_form.how_to_markup')}</a>
+            {window.IS_MOBILE ? <div><a onClick={this.toggleMarkupGuide}>{tt('post_form.how_to_markup')}</a>
             {this.state.showMarkupGuide ? (<div dangerouslySetInnerHTML={{__html: tt('post_form.how_to_markup_html')}}></div>): null}
             </div> : null}
-            {!window._isMobile ? <MarkdownEditor
+            {!window.IS_MOBILE ? <MarkdownEditor
                 ref='editor'
                 initialValue={this.props.value}
                 placeholder={tt('post_form.body')}

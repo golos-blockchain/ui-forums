@@ -360,7 +360,7 @@ class PostForm extends React.Component {
                             handleChange={this.handleChange}
                             rootUsage={action !== 'threadReply'}
                             previewEnabled={previewEnabled}
-                            value={ window._isMobile ? replyQuote : ((draft.body) ? draft.body : (existingPost) ? existingPost.body : '') }
+                            value={ window.IS_MOBILE ? replyQuote : ((draft.body) ? draft.body : (existingPost) ? existingPost.body : '') }
                         />
                     </Segment>
                     <Segment attached='bottom' padded className={`${activeItem === tt('post_form.tab_rewards') ? 'active ' : ''}tab`}>
@@ -383,7 +383,7 @@ class PostForm extends React.Component {
                     handleChange={this.handleChange}
                     rootUsage={action !== 'threadReply'}
                     previewEnabled={previewEnabled}
-                    value={ window._isMobile ? replyQuote : ((draft.body) ? draft.body : (existingPost) ? existingPost.body : '') }
+                    value={ window.IS_MOBILE ? replyQuote : ((draft.body) ? draft.body : (existingPost) ? existingPost.body : '') }
                 />
                 </div>
             );
@@ -419,7 +419,7 @@ class PostForm extends React.Component {
                     <Divider hidden />
                     <Button color='orange' style={{opacity: (action !== 'threadReply' ? 1 : 0)}} onClick={this.handleCancel}>{tt('post_form.cancel')}</Button>
                     
-                    {window._isMobile ? null : <Button color={previewEnabled? 'blue' : 'gray'} floated='right' icon='eye' onClick={this.handlePreview}></Button>}
+                    {window.IS_MOBILE ? null : <Button color={previewEnabled? 'blue' : 'gray'} floated='right' icon='eye' onClick={this.handlePreview}></Button>}
                     <Button
                         ref={ref => this.formSubmit = ref}
                         floated='right'

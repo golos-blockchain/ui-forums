@@ -7,7 +7,7 @@ import tt from 'counterpart';
 import max from 'lodash/max';
 import debounce from 'lodash/debounce';
 
-import { Button, Modal, Dropdown } from 'semantic-ui-react';
+import { Button, Icon, Modal, Dropdown } from 'semantic-ui-react';
 
 import * as CONFIG from '../../config';
 import * as accountActions from '../actions/accountActions';
@@ -62,11 +62,24 @@ class Messages extends React.Component {
         }, 5000);
     }
 
+    onWindowResize = (e) => {
+        const isMobile = window.matchMedia('screen and (max-width: 39.9375em)').matches;
+        if (isMobile !== this.isMobile) {
+            this.forceUpdate();
+        }
+        this.isMobile = isMobile;
+    };
+
     componentDidMount() {
         const script = document.createElement('script');
         script.src = 'https://unpkg.com/ionicons@5.4.0/dist/ionicons.js';
         script.async = true;
         document.body.appendChild(script);
+        window.addEventListener('resize', this.onWindowResize)
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener('resize', this.onWindowResize);
     }
 
     async subscribeIfNeed(account) {
@@ -221,7 +234,7 @@ class Messages extends React.Component {
             || nextProps.messages.messagesUpdate !== this.props.messages.messagesUpdate;
         if (msgsUpdated || anotherChat) {
             setTimeout(() => {
-                const scroll = document.getElementsByClassName('msgs-scrollable')[1];
+                const scroll = document.getElementsByClassName('msgs-content')[0];
                 if (scroll) scroll.scrollTo(0,scroll.scrollHeight);
             }, 1);
         }
@@ -233,6 +246,11 @@ class Messages extends React.Component {
         }
         if (anotherChat || msgsUpdated) {
             this.markMessages2();
+        }
+        if (anotherChat) {
+            this.setState({
+                replyingMessage: null,
+            });
         }
     }
 
@@ -302,6 +320,19 @@ class Messages extends React.Component {
         });
     };
 
+    onCancelReply = (event) => {
+        this.setState({
+            replyingMessage: null,
+        }, () => {
+            // if editing - cancel edit at all, not just remove reply
+            if (this.editNonce) {
+                this.restoreInput();
+                this.editNonce = undefined;
+            }
+            this.focusInput();
+        });
+    };
+
     onSendMessage = (message, event) => {
         if (!message.length) return;
         const { account, messages } = this.props;
@@ -311,7 +342,7 @@ class Messages extends React.Component {
             editInfo = { nonce: this.editNonce };
         }
 
-        this.props.actions.sendMessage(account, this.state.to, messages.to.memo_key, message, editInfo);
+        this.props.actions.sendMessage(account, this.state.to, messages.to.memo_key, message, editInfo, 'text', {}, this.state.replyingMessage);
 
         if (this.editNonce) {
             this.restoreInput();
@@ -320,6 +351,10 @@ class Messages extends React.Component {
         } else {
             this.setInput('');
         }
+        if (this.state.replyingMessage)
+            this.setState({
+                replyingMessage: null,
+            });
     };
 
     onMessageSelect = (msg, isSelected, event) => {
@@ -391,6 +426,24 @@ class Messages extends React.Component {
         });
     };
 
+    onPanelReplyClick = (event) => {
+        const nonce = Object.keys(this.state.selectedMessages)[0];
+        let message = this.props.messages.messages.filter(message => {
+            return message.nonce === nonce;
+        });
+        // (additional protection - normally invalid messages shouldn't be available for select)
+        if (!message[0].message)
+            return;
+        let quote = golos.messages.makeQuoteMsg({}, message[0]);
+        this.setState({
+            selectedMessages: {},
+            replyingMessage: quote,
+        }, () => {
+            this.restoreInput();
+            this.focusInput();
+        });
+    };
+
     onPanelEditClick = (event) => {
         const nonce = Object.keys(this.state.selectedMessages)[0];
         let message = this.props.messages.messages.filter(message => {
@@ -403,6 +456,15 @@ class Messages extends React.Component {
             selectedMessages: {},
         }, () => {
             this.editNonce = message[0].nonce;
+            if (message[0].message.quote) {
+                this.setState({
+                    replyingMessage: {quote: message[0].message.quote},
+                });
+            } else {
+                this.setState({
+                    replyingMessage: null,
+                });
+            }
             this.setInput(message[0].message.body);
             this.focusInput();
         });
@@ -417,7 +479,8 @@ class Messages extends React.Component {
         });
     };
 
-    focusInput = () => {
+    focusInput = (workOnMobile = false) => {
+        if (!workOnMobile && window.IS_MOBILE) return;
         const input = document.getElementsByClassName('msgs-compose-input')[0];
         if (input) input.focus();
     };
@@ -469,7 +532,12 @@ class Messages extends React.Component {
             };
 
             const { account, messages } = this.props;
-            this.props.actions.sendMessage(account, this.state.to, messages.to.memo_key, result.link, undefined, 'image', meta);
+            this.props.actions.sendMessage(account, this.state.to, messages.to.memo_key, result.link, undefined, 'image', meta, this.state.replyingMessage);
+
+            if (this.state.replyingMessage)
+                this.setState({
+                    replyingMessage: null,
+                });
         }
     };
 
@@ -488,6 +556,15 @@ class Messages extends React.Component {
             unflash();
         }
     }
+
+   _renderMessagesTopLeft = () => {
+        let messagesTopLeft = [];
+        // mobile only
+        messagesTopLeft.push(<a href='/msgs/' className='msgs-back-btn'>
+            <Icon key='back-btn' name='chevron left' />
+        </a>);
+        return messagesTopLeft;
+    };
 
     _renderMessagesTopCenter = () => {
         let messagesTopCenter = [];
@@ -561,12 +638,16 @@ class Messages extends React.Component {
                     onConversationSearch={this.onConversationSearch}
                     onConversationSelect={this.onConversationSelect}
                     messages={messages}
+                    messagesTopLeft={this._renderMessagesTopLeft()}
                     messagesTopCenter={this._renderMessagesTopCenter()}
                     messagesTopRight={this._renderMessagesTopRight()}
+                    replyingMessage={this.state.replyingMessage}
+                    onCancelReply={this.onCancelReply}
                     onSendMessage={this.onSendMessage}
                     selectedMessages={this.state.selectedMessages}
                     onMessageSelect={this.onMessageSelect}
                     onPanelDeleteClick={this.onPanelDeleteClick}
+                    onPanelReplyClick={this.onPanelReplyClick}
                     onPanelEditClick={this.onPanelEditClick}
                     onPanelCloseClick={this.onPanelCloseClick}
                     onButtonImageClicked={this.onButtonImageClicked}
