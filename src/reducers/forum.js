@@ -1,5 +1,4 @@
 import * as types from '../actions/actionTypes';
-import * as CONFIG from '../../config';
 
 export default function forum(state = {last: null}, action) {
     switch (action.type) {
@@ -20,7 +19,8 @@ export default function forum(state = {last: null}, action) {
 }
 
 export function setProgression(forum) {
-    const { increment, steps } = CONFIG.PROGRESSION;
+    const increment = 25;
+    const steps = [1.375, 4.050, 7.959, 14.300, 23.587, 35.625, 50.225, 67.200, 86.362, 107.525, 130.500, 155.100, 178.450, 200.550];
     const initialCost = 2;
     if (!forum) return forum;
     let { funded } = forum;

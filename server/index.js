@@ -244,7 +244,7 @@ router.get('/forum/:slug', async (ctx) => {
     const hidden = vals[NOTE_PST_HIDMSG_LST];
     const banned = vals[NOTE_PST_HIDACC_LST];
     for (let post of data[tag] || []) {
-        if (ctx.query.filter !== 'all' && post.net_rshares < CONFIG.MODERATION.hide_threshold) continue;
+        if (ctx.query.filter !== 'all' && post.net_rshares < -9999999999) continue;
         post.post_hidden = !!hidden[post.id];
         post.author_banned = !!banned[post.author];
         post.url = getUrl(post.url, _id);

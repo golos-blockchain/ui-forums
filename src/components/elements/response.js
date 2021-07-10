@@ -6,7 +6,6 @@ import tt from 'counterpart';
 
 import { Button, Dimmer, Divider, Grid, Header, Icon, Label, Loader, Segment } from 'semantic-ui-react'
 
-import * as CONFIG from '../../../config';
 import * as accountActions from '../../actions/accountActions'
 import * as breadcrumbActions from '../../actions/breadcrumbActions'
 import * as postActions from '../../actions/postActions'
@@ -74,7 +73,7 @@ class Response extends React.Component {
             (this.props.post.forum.moders.includes(this.props.account.name) 
             || this.props.post.forum.supers.includes(this.props.account.name));
         display = responses.map((post, index) => {
-          let hidden = (post.net_rshares < CONFIG.MODERATION.hide_threshold),
+          let hidden = (post.net_rshares < -9999999999),
               parent_post = this.getParent(post),
               quote = ''
           if(parent_post['_id']) {
