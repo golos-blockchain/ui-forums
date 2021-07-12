@@ -19,6 +19,7 @@ import BannerMenu from '../components/global/banner';
 import FooterMenu from '../components/global/footer';
 import HeaderMenu from '../components/global/menu';
 import GlobalNotice from '../components/global/notice';
+import NotifiAuthorizer from '../components/global/NotifiAuthorizer';
 
 import './app.css';
 import '../../node_modules/noty/lib/noty.css';
@@ -137,6 +138,7 @@ class App extends React.Component {
             {!isBlank ? (<BreadcrumbMenu {...this.props.ssrState} withSearch={true} />) : null}
             {!isBlank ? (<BannerMenu />) : null}
             {!isBlank ? (<FooterMenu />) : null}
+            <NotifiAuthorizer />
         </div>);
         if (this.props.ssrRoute) {
             const context = {};

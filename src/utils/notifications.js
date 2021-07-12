@@ -4,6 +4,8 @@ import { notifyApiLogin, notifyApiLogout } from './NotifyApiClient';
 
 export async function notifyLogin(account, posting_key) {
     const res = await notifyApiLogin(account, null);
+    if (res.already_authorized === account)
+        return;
     console.log('login_challenge', res.login_challenge);
 
     const signatures = {};
