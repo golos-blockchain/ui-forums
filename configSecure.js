@@ -62,11 +62,5 @@ module.exports = {
             'coins.black',
             'golos.chatbro.com'
         ]
-    },
-    tarantool: {
-        host: '127.0.0.1',
-        password: '',
-        port: '3301',
-        username: 'guest'
     }
 };

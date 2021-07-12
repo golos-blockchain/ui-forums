@@ -47,7 +47,7 @@ module.exports = {
         max_upload_file_bytes: 1 * 1024 * 1024,
         client_id: 'b4d78455f0d5fca'
     },
-    notify_service: {
+    NOTIFY_SERVICE: {
         host: 'https://devnotify.golos.today/'
     },
     ELASTIC_SEARCH: {
