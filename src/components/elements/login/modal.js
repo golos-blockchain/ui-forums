@@ -5,6 +5,8 @@ import { connect } from 'react-redux';
 
 import { Button, Checkbox, Form, Header, Icon, Message, Modal } from 'semantic-ui-react';
 
+import { notifyLogin } from '../../../utils/notifications';
+
 class LoginModal extends React.Component {
 
     constructor(props) {
@@ -117,6 +119,11 @@ class LoginModal extends React.Component {
             }
             if (res.posting) {
                 t.props.actions.signinAccount(account, res.posting, res.memo);
+                try {
+                    await notifyLogin(account, res.posting);
+                } catch (error) {
+                    console.error('notifyLogin fail', error);
+                }
                 t.handleClose();
                 return;
             }

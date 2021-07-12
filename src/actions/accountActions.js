@@ -1,11 +1,11 @@
 import golos from 'golos-classic-js';
 
 import * as types from './actionTypes';
-import * as CONFIG from '../../config';
 import * as AccountsActions from './accountsActions';
 import * as chainstateActions from './chainstateActions';
 
 import importNoty from '../utils/importNoty';
+import { getNotifications, markNotificationRead } from '../utils/NotifyApiClient';
 
 export function claimRewards(params) {
     return dispatch => {
@@ -71,18 +71,17 @@ export function fetchAccount(account) {
 export function fetchAccountNotifications(account) {
     return async dispatch => {
         if (account) {
-            let url = `${ CONFIG.REST_API }/notifications/` + account;
-            const response = await fetch(url);
-            if (response.ok) {
-                const result = await response.json();
+            try {
+                const result = await getNotifications(account);
                 dispatch({
                     type: types.ACCOUNT_NOTIFICATIONS_FETCH,
                     payload: {
-                        all: result[0],
-                        message: result[10],
+                        all: result.counters[0],
+                        message: result.counters[10],
                     },
                 });
-                return;
+            } catch (error) {
+                console.error(error, 'getNotifications');
             }
         }
     }
@@ -91,8 +90,11 @@ export function fetchAccountNotifications(account) {
 export function clearAccountNotifications(account) {
     return async dispatch => {
         if (account) {
-            let url = `${ CONFIG.REST_API }/notifications/` + account + `/10`;
-            await fetch(url);
+            try {
+                await markNotificationRead(account, '10');
+            } catch (error) {
+                console.error(error, 'markNotificationRead');
+            }
         }
     }
 }

@@ -9,7 +9,6 @@ import debounce from 'lodash/debounce';
 
 import { Button, Icon, Modal, Dropdown } from 'semantic-ui-react';
 
-import * as CONFIG from '../../config';
 import * as accountActions from '../actions/accountActions';
 import * as accountsActions from '../actions/accountsActions';
 import * as messagesActions from '../actions/messagesActions';
@@ -23,6 +22,7 @@ import AddImageDialog from '../components/dialogs/image';
 import PageFocus from '../components/elements/messages/PageFocus';
 import { flash, unflash } from '../components/elements/messages/FlashTitle';
 import { getMemoKey } from '../utils/MessageUtils';
+import { notificationSubscribe, notificationTake } from '../utils/NotifyApiClient';
 
 import './messages.css';
 
@@ -83,20 +83,10 @@ class Messages extends React.Component {
     }
 
     async subscribeIfNeed(account) {
-        if (!window.__subscriber_id) {
-            try {
-                let url = `${ CONFIG.REST_API }/notifications/subscribe/${account.data.name}/`;
-                let response = await fetch(url);
-                if (response.ok) {
-                    const result = await response.json();
-                    window.__subscriber_id = result.subscriber_id;
-                }
-            } catch (ex) {
-                console.error(ex)
-            }
-        }
-        if (!window.__subscriber_id) {
-            throw new Error('Cannot subscribe');
+        try {
+            await notificationSubscribe(account.data.name);
+        } catch (error) {
+            console.error('notificationSubscribe', error)
         }
     }
 
@@ -123,56 +113,36 @@ class Messages extends React.Component {
     async setCallback(account, removeTaskIds) {
         await this.subscribeIfNeed(account);
 
-        let url = `${ CONFIG.REST_API }/notifications/take/${account.data.name}/${window.__subscriber_id}`;
-        if (removeTaskIds)
-            url += '/' + removeTaskIds;
-        let response = null;
         try {
-            response = await fetch(url);
-            if (response && response.ok) {
-                const result = await response.json();
-                if (Array.isArray(result.tasks)) {
-                    removeTaskIds = '';
-
-                    let removeTaskIdsArr = [];
-                    for (let task of result.tasks) {
-                        const task_id = task[0];
-                        const { data, timestamp } = task[2];
-                        const [ type, op ] = data;
-
-                        const updateMessage = op.from === this.state.to || 
-                            op.to === this.state.to;
-                        const isMine = account.data.name === op.from;
-                        if (type === 'private_message') {
-                            if (op.update) {
-                                this.props.actions.messageEdited(op, timestamp, updateMessage, isMine, account);
-                            } else if (this.nonce !== op.nonce) {
-                                this.props.actions.messaged(op, timestamp, updateMessage, isMine, account);
-                                this.nonce = op.nonce;
-                                if (!isMine && !this.windowFocused) {
-                                    this.flashMessage();
-                                }
-                            }
-                        } else if (type === 'private_delete_message') {
-                            this.props.actions.messageDeleted(op, updateMessage, isMine);
-                        } else if (type === 'private_mark_message') {
-                            this.props.actions.messageRead(op, timestamp, updateMessage, isMine);
+            removeTaskIds = await notificationTake(account.data.name, removeTaskIds, (type, op, timestamp, task_id) => {
+                const updateMessage = op.from === this.state.to || 
+                    op.to === this.state.to;
+                const isMine = account.data.name === op.from;
+                if (type === 'private_message') {
+                    if (op.update) {
+                        this.props.actions.messageEdited(op, timestamp, updateMessage, isMine, account);
+                    } else if (this.nonce !== op.nonce) {
+                        this.props.actions.messaged(op, timestamp, updateMessage, isMine, account);
+                        this.nonce = op.nonce;
+                        if (!isMine && !this.windowFocused) {
+                            this.flashMessage();
                         }
-
-                        removeTaskIdsArr.push(task_id.toString());
                     }
-                    removeTaskIds = removeTaskIdsArr.join('-');
-
-                    this.setCallback(this.props.account || account, removeTaskIds);
-                    return;
+                } else if (type === 'private_delete_message') {
+                    this.props.actions.messageDeleted(op, updateMessage, isMine);
+                } else if (type === 'private_mark_message') {
+                    this.props.actions.messageRead(op, timestamp, updateMessage, isMine);
                 }
-            }
-        } catch (ex) {
-            console.error(ex);
+            });
+        } catch (err) {
+            console.error('notificationTake', err);
             setTimeout(() => {
                 this.setCallback(this.props.account || account, removeTaskIds);
             }, 100);
+            return;
         }
+
+        this.setCallback(this.props.account || account, removeTaskIds);
     }
 
     markMessages() {
