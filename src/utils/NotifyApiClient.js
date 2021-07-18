@@ -17,12 +17,32 @@ const notifyUrl = (pathname) => {
     return new URL(pathname, CONFIG.NOTIFY_SERVICE.host).toString();
 };
 
+function setSession(request) {
+    request.headers['X-Session'] = localStorage.getItem('X-Session');
+}
+
+function saveSession(response) {
+    let session = null;
+    for (const header of response.headers.entries()) { // Firefox Android not supports response.headers.get()
+        if (header[0].toLowerCase() === 'x-session') {
+            session = header[1];
+            break;
+        }
+    }
+    if (!session) return;
+    localStorage.setItem('X-Session', session);
+}
+
 export function notifyApiLogin(account, signatures) {
     if (!notifyAvailable()) return;
     const request = Object.assign({}, request_base, {
         body: JSON.stringify({account, signatures}),
     });
-    return fetch(notifyUrl(`/login_account`), request).then(r => r.json());
+    setSession(request);
+    return fetch(notifyUrl(`/login_account`), request).then(r => {
+        saveSession(r);
+        return r.json();
+    });
 }
 
 export function notifyApiLogout() {
@@ -30,34 +50,44 @@ export function notifyApiLogout() {
     const request = Object.assign({}, request_base, {
         method: 'get',
     });
-    fetch(notifyUrl(`/logout_account`), request);
+    setSession(request);
+    fetch(notifyUrl(`/logout_account`), request).then(r => {
+        saveSession(r);
+    });
 }
 
 export function getNotifications(account) {
     if (!notifyAvailable()) return Promise.resolve(null);
     const request = Object.assign({}, request_base, {method: 'get'});
-    return fetch(notifyUrl(`/counters/@${account}`), request).then(r => r.json()).then(res => {
-        return res;
+    setSession(request);
+    return fetch(notifyUrl(`/counters/@${account}`), request).then(r => {
+        saveSession(r);
+        return r.json();
     });
 }
 
 export function markNotificationRead(account, fields) {
     if (!notifyAvailable()) return Promise.resolve(null);
     const request = Object.assign({}, request_base, {method: 'put'});
-    return fetch(notifyUrl(`/counters/@${account}/${fields}`), request).then(r => r.json()).then(res => {
-        return res;
+    setSession(request);
+    return fetch(notifyUrl(`/counters/@${account}/${fields}`), request).then(r => {
+        saveSession(r);
+        return r.json();
     });
 }
 
-export async function notificationSubscribe(account, subscriber_id = '') {
+export async function notificationSubscribe(account, scopes = 'message') {
     if (!notifyAvailable()) return;
     if (window.__subscriber_id) return;
     try {
         const request = Object.assign({}, request_base, {method: 'get'});
-        let response = await fetch(notifyUrl(`/subscribe/@${account}/${subscriber_id}`), request);
+        setSession(request);
+        let response = await fetch(notifyUrl(`/subscribe/@${account}/${scopes}`), request);
         if (response.ok) {
+            saveSession(response);
             const result = await response.json();
             window.__subscriber_id = result.subscriber_id;
+            return window.__subscriber_id;
         }
     } catch (ex) {
         console.error(ex)
@@ -75,21 +105,21 @@ export async function notificationTake(account, removeTaskIds, forEach) {
     let response;
     try {
         const request = Object.assign({}, request_base, {method: 'get'});
+        setSession(request);
         response = await fetch(url, request);
         if (response && response.ok) {
+            saveSession(response);
             const result = await response.json();
             if (Array.isArray(result.tasks)) {
                 removeTaskIds = '';
 
                 let removeTaskIdsArr = [];
                 for (let task of result.tasks) {
-                    const task_id = task[0];
-                    const { data, timestamp } = task[2];
-                    const [ type, op ] = data;
+                    const [ type, op ] = task.data;
 
-                    forEach(type, op, timestamp, task_id);
+                    forEach(type, op, task.timestamp, task.id);
 
-                    removeTaskIdsArr.push(task_id.toString());
+                    removeTaskIdsArr.push(task.id.toString());
                 }
 
                 removeTaskIds = removeTaskIdsArr.join('-');

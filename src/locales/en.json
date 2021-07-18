@@ -240,7 +240,9 @@
     "new_message1": " notification",
     "new_message234": " notifications",
     "new_message5": " notifications",
-    "invalid_message": "(This message could not be displayed in Golos Messenger)"
+    "invalid_message": "(This message could not be displayed in Golos Messenger)",
+    "sync_error": "Sync error. To receive new messages please refresh the page.",
+    "sync_error_short": "Sync error."
   },
   "emoji_i18n": {
     "categoriesLabel": "Categories",
@@ -284,6 +286,7 @@
     "error": "Error",
     "add": "Add",
     "edit": "Edit",
+    "refresh": "Refresh",
     "remove": "Remove",
     "reply": "Reply",
     "reply_with_quote": "Reply With Quote",

@@ -41,6 +41,7 @@ class Messages extends React.Component {
             showLogin: this.needsLogin(props),
             showLoginMemo: props.account && props.account.name && !hasMemo,
             showImageDialog: false,
+            notifyErrors: 0,
         };
         if (props.account && hasMemo) {
             this.load(props);
@@ -82,14 +83,6 @@ class Messages extends React.Component {
         window.removeEventListener('resize', this.onWindowResize);
     }
 
-    async subscribeIfNeed(account) {
-        try {
-            await notificationSubscribe(account.data.name);
-        } catch (error) {
-            console.error('notificationSubscribe', error)
-        }
-    }
-
     flashMessage() {
         ++this.newMessages;
 
@@ -110,9 +103,34 @@ class Messages extends React.Component {
         flash(title);
     }
 
-    async setCallback(account, removeTaskIds) {
-        await this.subscribeIfNeed(account);
+    notifyErrorsClear = () => {
+        if (this.state.notifyErrors)
+            this.setState({
+                notifyErrors: 0,
+            });
+    };
 
+    notifyErrorsInc = (score) => {
+        this.setState({
+            notifyErrors: this.state.notifyErrors + score,
+        });
+    };
+
+    async setCallback(account, removeTaskIds) {
+        let subscribed = null;
+        try {
+            subscribed = await notificationSubscribe(account.data.name);
+        } catch (error) {
+            console.error('notificationSubscribe', error)
+            this.notifyErrorsInc(15);
+            setTimeout(() => {
+                this.setCallback(this.props.account || account, removeTaskIds);
+            }, 5000);
+            return;
+        }
+        if (subscribed) { // if was not already subscribed
+            this.notifyErrorsClear();
+        }
         try {
             removeTaskIds = await notificationTake(account.data.name, removeTaskIds, (type, op, timestamp, task_id) => {
                 const updateMessage = op.from === this.state.to || 
@@ -136,12 +154,14 @@ class Messages extends React.Component {
             });
         } catch (err) {
             console.error('notificationTake', err);
+            this.notifyErrorsInc(1);
             setTimeout(() => {
                 this.setCallback(this.props.account || account, removeTaskIds);
-            }, 100);
+            }, 1000);
             return;
         }
 
+        this.notifyErrorsClear();
         this.setCallback(this.props.account || account, removeTaskIds);
     }
 
@@ -530,8 +550,8 @@ class Messages extends React.Component {
    _renderMessagesTopLeft = () => {
         let messagesTopLeft = [];
         // mobile only
-        messagesTopLeft.push(<a href='/msgs/' className='msgs-back-btn'>
-            <Icon key='back-btn' name='chevron left' />
+        messagesTopLeft.push(<a href='/msgs/' key='back-btn' className='msgs-back-btn'>
+            <Icon name='chevron left' />
         </a>);
         return messagesTopLeft;
     };
@@ -543,21 +563,32 @@ class Messages extends React.Component {
             messagesTopCenter.push(<div style={{fontSize: '14px', width: '100%', textAlign: 'center'}}>
                 <a href={'/@' + to.name}>@{to.name}</a>
             </div>);
-            const dates = [
-                to.last_custom_json_bandwidth_update,
-                to.last_post,
-                to.last_comment,
-                to.created,
-            ];
-            let lastSeen = max(dates);
-            if (!lastSeen.startsWith('19')) {
-                messagesTopCenter.push(<div style={{fontSize: '12px', fontWeight: 'normal'}}>
+            const { notifyErrors } = this.state;
+            if (notifyErrors >= 30) {
+                messagesTopCenter.push(<div key='to-last-seen' style={{fontSize: '13px', fontWeight: 'normal', color: 'red'}}>
                     {
                         <span>
-                            <TimeAgoWrapper prefix={tt('messages.last_seen')} date={`${lastSeen}Z`} />
+                            {tt('messages.sync_error')}
                         </span>
                     }
                 </div>);
+            } else {
+                const dates = [
+                    to.last_custom_json_bandwidth_update,
+                    to.last_post,
+                    to.last_comment,
+                    to.created,
+                ];
+                let lastSeen = max(dates);
+                if (!lastSeen.startsWith('19')) {
+                    messagesTopCenter.push(<div key='to-last-seen'style={{fontSize: '12px', fontWeight: 'normal'}}>
+                        {
+                            <span>
+                                <TimeAgoWrapper prefix={tt('messages.last_seen')} date={`${lastSeen}Z`} />
+                            </span>
+                        }
+                    </div>);
+                }
             }
         }
         return messagesTopCenter;
