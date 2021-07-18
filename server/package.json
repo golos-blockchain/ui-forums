@@ -26,8 +26,7 @@
     "passport-mail": "latest",
     "passport-vk": "latest",
     "passport-yandex": "latest",
-    "simple-jsonrpc-js": "^1.2.0",
-    "tarantool-driver": "^2.0.1"
+    "simple-jsonrpc-js": "^1.2.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.6"
