@@ -76,13 +76,13 @@ export function markNotificationRead(account, fields) {
     });
 }
 
-export async function notificationSubscribe(account, subscriber_id = '') {
+export async function notificationSubscribe(account, scopes = 'message') {
     if (!notifyAvailable()) return;
     if (window.__subscriber_id) return;
     try {
         const request = Object.assign({}, request_base, {method: 'get'});
         setSession(request);
-        let response = await fetch(notifyUrl(`/subscribe/@${account}/${subscriber_id}`), request);
+        let response = await fetch(notifyUrl(`/subscribe/@${account}/${scopes}`), request);
         if (response.ok) {
             saveSession(response);
             const result = await response.json();
@@ -115,13 +115,11 @@ export async function notificationTake(account, removeTaskIds, forEach) {
 
                 let removeTaskIdsArr = [];
                 for (let task of result.tasks) {
-                    const task_id = task[0];
-                    const { data, timestamp } = task[2];
-                    const [ type, op ] = data;
+                    const [ type, op ] = task.data;
 
-                    forEach(type, op, timestamp, task_id);
+                    forEach(type, op, task.timestamp, task.id);
 
-                    removeTaskIdsArr.push(task_id.toString());
+                    removeTaskIdsArr.push(task.id.toString());
                 }
 
                 removeTaskIds = removeTaskIdsArr.join('-');

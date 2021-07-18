@@ -76,8 +76,8 @@ export function fetchAccountNotifications(account) {
                 dispatch({
                     type: types.ACCOUNT_NOTIFICATIONS_FETCH,
                     payload: {
-                        all: result.counters[0],
-                        message: result.counters[10],
+                        all: result.counters.total,
+                        message: result.counters.message,
                     },
                 });
             } catch (error) {
@@ -91,7 +91,7 @@ export function clearAccountNotifications(account) {
     return async dispatch => {
         if (account) {
             try {
-                await markNotificationRead(account, '10');
+                await markNotificationRead(account, 'message');
             } catch (error) {
                 console.error(error, 'markNotificationRead');
             }
