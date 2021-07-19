@@ -47,22 +47,12 @@ module.exports = {
         max_upload_file_bytes: 1 * 1024 * 1024,
         client_id: 'b4d78455f0d5fca'
     },
-    MODERATION: {
-        // if post/comment has lesser net_rshares, it will be hidden
-        hide_threshold: -9999999999
+    NOTIFY_SERVICE: {
+        host: 'https://devnotify.golos.today/'
     },
     ELASTIC_SEARCH: {
-        url: 'https://betasearch.golos.today',
+        url: 'https://search.golos.today',
         login: 'golosclient',
         password: 'golosclient'
-    },
-    PROGRESSION: {
-        increment: 25,
-        steps: [
-            1.375, 4.050, 7.959, 14.300,
-            23.587, 35.625, 50.225, 67.200,
-            86.362, 107.525, 130.500, 155.100,
-            178.450, 200.550
-        ]
     }
 };
