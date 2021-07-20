@@ -133,6 +133,9 @@ class Messages extends React.Component {
         }
         try {
             removeTaskIds = await notificationTake(account.data.name, removeTaskIds, (type, op, timestamp, task_id) => {
+                if (scope !== 'message') {
+                    return;
+                }
                 const updateMessage = op.from === this.state.to || 
                     op.to === this.state.to;
                 const isMine = account.data.name === op.from;
@@ -170,7 +173,7 @@ class Messages extends React.Component {
         const { account } = this.props;
 
         let OPERATIONS = golos.messages.makeDatedGroups(messages, (message_object, idx) => {
-            return message_object.toMark;
+            return message_object.toMark && !message_object._offchain;
         }, (group, indexes, results) => {
             const json = JSON.stringify(['private_mark_message', {
                 from: this.state.to,
