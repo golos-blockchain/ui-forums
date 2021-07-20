@@ -117,7 +117,7 @@ export async function notificationTake(account, removeTaskIds, forEach) {
                 for (let task of result.tasks) {
                     const [ type, op ] = task.data;
 
-                    forEach(type, op, task.timestamp, task.id);
+                    forEach(type, op, task.timestamp, task.id, task.scope);
 
                     removeTaskIdsArr.push(task.id.toString());
                 }
@@ -130,6 +130,31 @@ export async function notificationTake(account, removeTaskIds, forEach) {
     } catch (ex) {
         console.error(ex);
         throw ex;
+    }
+}
+
+export async function sendOffchainMessage(op) {
+    if (!notifyAvailable()) return;
+    let url = notifyUrl(`/msgs/send_offchain`);
+    let response;
+    try {
+        let request = Object.assign({}, request_base, {
+            method: 'post',
+            body: JSON.stringify(op),
+        });
+        setSession(request);
+        response = await fetch(url, request);
+        if (response && response.ok) {
+            saveSession(response);
+            const result = await response.json();
+            if (result.status === 'ok') {
+                return;
+            } else {
+                throw new Error('error: ' +result.error);
+            }
+        }
+    } catch (ex) {
+        console.error('sendOffchainMessage', ex);
     }
 }
 

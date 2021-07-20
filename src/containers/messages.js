@@ -132,16 +132,20 @@ class Messages extends React.Component {
             this.notifyErrorsClear();
         }
         try {
-            removeTaskIds = await notificationTake(account.data.name, removeTaskIds, (type, op, timestamp, task_id) => {
+            removeTaskIds = await notificationTake(account.data.name, removeTaskIds, (type, op, timestamp, task_id, scope) => {
+                if (scope !== 'message') {
+                    return;
+                }
                 const updateMessage = op.from === this.state.to || 
                     op.to === this.state.to;
                 const isMine = account.data.name === op.from;
                 if (type === 'private_message') {
                     if (op.update) {
                         this.props.actions.messageEdited(op, timestamp, updateMessage, isMine, account);
-                    } else if (this.nonce !== op.nonce) {
+                    } else if (this.nonce !== op.nonce || this._offchain !== op._offchain) {
                         this.props.actions.messaged(op, timestamp, updateMessage, isMine, account);
                         this.nonce = op.nonce;
+                        this._offchain = op._offchain;
                         if (!isMine && !this.windowFocused) {
                             this.flashMessage();
                         }
@@ -170,7 +174,7 @@ class Messages extends React.Component {
         const { account } = this.props;
 
         let OPERATIONS = golos.messages.makeDatedGroups(messages, (message_object, idx) => {
-            return message_object.toMark;
+            return message_object.toMark && !message_object._offchain;
         }, (group, indexes, results) => {
             const json = JSON.stringify(['private_mark_message', {
                 from: this.state.to,

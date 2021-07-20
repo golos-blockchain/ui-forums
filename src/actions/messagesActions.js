@@ -9,6 +9,7 @@ import * as CONFIG from '../../config';
 import { getAccountAvatarSrc } from '../utils/accountMetaUtils';
 import { getMemoKey } from '../utils/MessageUtils';
 import { fitToPreview } from '../utils/ImageUtils';
+import { sendOffchainMessage } from '../utils/NotifyApiClient';
 
 export function sendMessage(account, to, toMemoKey, body, editInfo = undefined, type = 'text', meta = {}, replyingMessage = null) {
     return async dispatch => {
@@ -33,7 +34,7 @@ export function sendMessage(account, to, toMemoKey, body, editInfo = undefined, 
 
         const data = golos.messages.encode(memoKey, toMemoKey, message, editInfo ? editInfo.nonce : undefined);
 
-        const json = JSON.stringify(['private_message', {
+        const opData = {
             from: account.name,
             to,
             nonce: editInfo ? editInfo.nonce : data.nonce.toString(),
@@ -42,7 +43,13 @@ export function sendMessage(account, to, toMemoKey, body, editInfo = undefined, 
             checksum: data.checksum,
             update: editInfo ? true : false,
             encrypted_message: data.encrypted_message,
-        }]);
+        };
+
+        if (!editInfo) {
+            sendOffchainMessage(opData);
+        }
+
+        const json = JSON.stringify(['private_message', opData]);
         golos.broadcast.customJson(account.key, [], [account.name], 'private_message', json, (err, result) => {
             if (err) {
                 alert(err);
