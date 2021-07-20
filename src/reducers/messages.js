@@ -50,7 +50,10 @@ export default function messages(state = initialState, action) {
         }
         case types.MESSAGES_ADD_RESOLVED: {
             let messages = [...state.messages];
-            messages.push(action.payload);
+            const idx = messages.findIndex(i => i.nonce === action.payload.nonce);
+            if (idx === -1) {
+                messages.push(action.payload);
+            }
             return Object.assign({}, state, {
                 messages,
             });

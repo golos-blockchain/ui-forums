@@ -46,11 +46,7 @@ export function sendMessage(account, to, toMemoKey, body, editInfo = undefined, 
         };
 
         if (!editInfo) {
-            try {
-                sendOffchainMessage(opData);
-            } catch (ex) {
-                console.error('sendOffchainMessage', ex);
-            }
+            sendOffchainMessage(opData);
         }
 
         const json = JSON.stringify(['private_message', opData]);

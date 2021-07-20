@@ -132,7 +132,7 @@ class Messages extends React.Component {
             this.notifyErrorsClear();
         }
         try {
-            removeTaskIds = await notificationTake(account.data.name, removeTaskIds, (type, op, timestamp, task_id) => {
+            removeTaskIds = await notificationTake(account.data.name, removeTaskIds, (type, op, timestamp, task_id, scope) => {
                 if (scope !== 'message') {
                     return;
                 }
@@ -142,9 +142,10 @@ class Messages extends React.Component {
                 if (type === 'private_message') {
                     if (op.update) {
                         this.props.actions.messageEdited(op, timestamp, updateMessage, isMine, account);
-                    } else if (this.nonce !== op.nonce) {
+                    } else if (this.nonce !== op.nonce || this._offchain !== op._offchain) {
                         this.props.actions.messaged(op, timestamp, updateMessage, isMine, account);
                         this.nonce = op.nonce;
+                        this._offchain = op._offchain;
                         if (!isMine && !this.windowFocused) {
                             this.flashMessage();
                         }

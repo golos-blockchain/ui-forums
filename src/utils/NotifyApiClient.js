@@ -117,7 +117,7 @@ export async function notificationTake(account, removeTaskIds, forEach) {
                 for (let task of result.tasks) {
                     const [ type, op ] = task.data;
 
-                    forEach(type, op, task.timestamp, task.id);
+                    forEach(type, op, task.timestamp, task.id, task.scope);
 
                     removeTaskIdsArr.push(task.id.toString());
                 }
@@ -154,8 +154,7 @@ export async function sendOffchainMessage(op) {
             }
         }
     } catch (ex) {
-        console.error(ex);
-        throw ex;
+        console.error('sendOffchainMessage', ex);
     }
 }
 
