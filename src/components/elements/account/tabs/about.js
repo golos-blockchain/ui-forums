@@ -200,7 +200,7 @@ export default class AccountAbout extends React.Component {
                 content = (
                     <Segment attached>
                         {location !== '' ? (<div>{tt('account.location')}&nbsp;<Icon name='location arrow' color='blue' />{location}</div>) : null}
-                        {website !== '' ? (<div>{tt('account.website')}&nbsp;<a target="_blank" rel="nofollow noopener" href={website}>{website}</a></div>) : null}
+                        {website !== '' ? (<div>{tt('account.website')}&nbsp;<a target="_blank" rel="noreferrer noopener" href={website}>{website}</a></div>) : null}
                         {about !== '' ? (<div><br />{about}</div>) : null}
                     </Segment>
                 );

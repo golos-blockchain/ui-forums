@@ -43,7 +43,7 @@ export default class Message extends React.Component {
             const previewWidth = message.previewWidth ? message.previewWidth + 'px' : 'auto';
             const previewHeight = message.previewHeight ? message.previewHeight + 'px' : 'auto';
 
-            content = (<a href={src} target='_blank' rel='noopener' tabIndex='-1' onClick={this.doNotSelectMessage}>
+            content = (<a href={src} target='_blank' rel='noreferrer noopener' tabIndex='-1' onClick={this.doNotSelectMessage}>
                 <img src={srcPreview} alt={src} style={{width: previewWidth, height: previewHeight, objectFit: 'cover'}} />
             </a>);
         } else {
@@ -57,7 +57,7 @@ export default class Message extends React.Component {
                         if (!href.startsWith('http://') && !href.startsWith('https://')) {
                             href = 'http://' + href;
                         }
-                        spans.push(<a href={href} target='_blank' rel='noopener' tabIndex='-1' onClick={this.doNotSelectMessage}>{word}</a>);
+                        spans.push(<a href={href} target='_blank' rel='noreferrer noopener' tabIndex='-1' onClick={this.doNotSelectMessage}>{word}</a>);
                         spans.push(' ');
                     } else if (word.length <= 2 && /\p{Extended_Pictographic}/u.test(word)) {
                         spans.push(<span style={{fontSize: '20px'}}>{word}</span>);
