@@ -161,12 +161,14 @@ class Messages extends React.Component {
             this.notifyErrorsInc(1);
             setTimeout(() => {
                 this.setCallback(this.props.account || account, removeTaskIds);
-            }, 1000);
+            }, 2000);
             return;
         }
 
         this.notifyErrorsClear();
-        this.setCallback(this.props.account || account, removeTaskIds);
+        setTimeout(() => {
+            this.setCallback(this.props.account || account, removeTaskIds);
+        }, 250);
     }
 
     markMessages() {
