@@ -1,19 +1,19 @@
 version: "3"
 services:
 
-    chainbb:
+    ui-forums:
         image: golosblockchain/forum-ui:latest
         build: .
         restart: always
         depends_on:
-            - chainbb-rest
+            - ui-forums-rest
         volumes:
             - ./config.js:/config.js
             - ./configSecure.js:/configSecure.js
         ports:
             - "3000:3000"
 
-    chainbb-rest:
+    ui-forums-rest:
         image: golosblockchain/forum-ui:rest
         build:
             context: .
