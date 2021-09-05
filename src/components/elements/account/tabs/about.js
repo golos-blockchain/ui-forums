@@ -1,6 +1,6 @@
 import React from 'react';
 import tt from 'counterpart';
-import golos from 'golos-classic-js';
+import golos from 'golos-lib-js';
 
 import { Segment, Icon, Label, Button } from 'semantic-ui-react';
 import { Form } from 'formsy-semantic-ui-react';

@@ -1,5 +1,5 @@
 import React from 'react';
-import golos from 'golos-classic-js';
+import golos from 'golos-lib-js';
 import tt from 'counterpart';
 
 import { Header, Icon, Segment, Table, Dropdown, Button } from 'semantic-ui-react';

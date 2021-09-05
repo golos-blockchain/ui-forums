@@ -1,4 +1,4 @@
-import { Signature, hash } from 'golos-classic-js/lib/auth/ecc';
+import { Signature, hash } from 'golos-lib-js/lib/auth/ecc';
 
 import { notifyApiLogin, notifyApiLogout } from './NotifyApiClient';
 

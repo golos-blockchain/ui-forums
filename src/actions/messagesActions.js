@@ -1,5 +1,5 @@
 //import ReactDOMServer from 'react-dom/server';
-import golos from 'golos-classic-js';
+import golos from 'golos-lib-js';
 import tt from 'counterpart';
 
 import * as types from './actionTypes';

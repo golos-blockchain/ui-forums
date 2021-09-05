@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
 import tt from 'counterpart';
 import ttGetByKey from '../../utils/ttGetByKey';
-import { Asset } from 'golos-classic-js/lib/utils';
+import { Asset } from 'golos-lib-js/lib/utils';
 
 import { Button, Container, Dropdown, Grid, Header, Icon, Label, Menu, Popup } from 'semantic-ui-react';
 

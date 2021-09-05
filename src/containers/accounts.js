@@ -3,7 +3,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { goToTop } from 'react-scrollable-anchor';
 import find from 'lodash/find';
-import golos from 'golos-classic-js';
+import golos from 'golos-lib-js';
 
 import { Header, Segment, Table } from 'semantic-ui-react';
 

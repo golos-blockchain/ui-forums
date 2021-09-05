@@ -3,7 +3,7 @@ import { withRouter } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import tt from 'counterpart';
-import golos from 'golos-classic-js';
+import golos from 'golos-lib-js';
 
 import { Button, Divider, Header, Icon, Label, Modal, Segment, List, Popup } from 'semantic-ui-react';
 import { Form } from 'formsy-semantic-ui-react';

@@ -9,6 +9,7 @@ const fs = require('fs');
 import React from 'react';
 import { Helmet } from 'react-helmet';
 const ReactDOMServer = require('react-dom/server');
+import golos from 'golos-lib-js';
 
 const app = new koa();
 const router = new koaRouter();
@@ -52,6 +53,8 @@ router.get('(.*)', async (ctx) => {
             return;
         } catch (e) {}
     }
+
+    await golos.importNativeLib();
 
     const state = await getState(ctx.path);
 

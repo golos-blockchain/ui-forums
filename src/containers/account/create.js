@@ -5,9 +5,9 @@ import { connect } from 'react-redux';
 import { goToTop } from 'react-scrollable-anchor';
 import tt from 'counterpart';
 import ttGetByKey from '../../utils/ttGetByKey';
-import golos from 'golos-classic-js';
-import { PrivateKey, key_utils } from 'golos-classic-js/lib/auth/ecc';
-import { validateAccountName, Asset } from 'golos-classic-js/lib/utils';
+import golos from 'golos-lib-js';
+import { PrivateKey, key_utils } from 'golos-lib-js/lib/auth/ecc';
+import { validateAccountName, Asset } from 'golos-lib-js/lib/utils';
 import { jsPDF } from 'jspdf';
 
 import { Header, Label, Button, Icon, Loader } from 'semantic-ui-react';
