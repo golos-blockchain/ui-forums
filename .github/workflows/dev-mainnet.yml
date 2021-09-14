@@ -1,8 +1,8 @@
-name: dev
+name: dev-mainnet
 
 on:
   push:
-    branches: dev
+    branches: dev-mainnet
 
 jobs:
   dev:
@@ -19,7 +19,7 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: vizlex/forum-ui-test:latest
+          tags: vizlex/forum-ui-test:mainnet-latest
   rest:
     runs-on: ubuntu-latest
     steps:
@@ -34,4 +34,4 @@ jobs:
           context: .
           file: ./server/Dockerfile
           push: true
-          tags: vizlex/forum-ui-test:rest
+          tags: vizlex/forum-ui-test:mainnet-rest
