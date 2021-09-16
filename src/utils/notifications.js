@@ -30,7 +30,7 @@ export async function notifyLogin(account, posting_key) {
         }
     }
 
-    res = yield notifyApiLogin(username, localStorage.getItem('X-Auth-Session'));
+    res = await notifyApiLogin(account, localStorage.getItem('X-Auth-Session'));
     if (res.status !== 'ok') {
         console.error('notifyApiLogin error', JSON.stringify(res));
         throw new Error(res.error);

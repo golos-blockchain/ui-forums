@@ -116,7 +116,7 @@ class HeaderMenu extends Component {
         let userItem = (
             <Menu.Item>
                 <Button
-                    as={Link} to={authUrl('/register')}
+                    as='a' href={authUrl('/register')}
                     content={tt('login.sign_up')}
                     color='blue'
                     inverted/>
