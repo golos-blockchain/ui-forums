@@ -18,6 +18,14 @@ export const authUrl = (pathname) => {
     return new URL(pathname, host).toString();
 };
 
+export const authRegisterUrl = () => {
+    let pathname = '/register';
+    if (authAvailable() && CONFIG.AUTH_SERVICE.custom_client) {
+        pathname = '/' + CONFIG.AUTH_SERVICE.custom_client + pathname;
+    }
+    return authUrl(pathname);
+};
+
 function setSession(request) {
     request.headers['X-Auth-Session'] = localStorage.getItem('X-Auth-Session');
 }

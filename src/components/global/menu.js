@@ -16,7 +16,7 @@ import * as statusActions from '../../actions/statusActions';
 import LoginButton from '../elements/login/button';
 import LogoutItem from '../elements/login/logout';
 import AccountAvatar from '../elements/account/avatar';
-import { authUrl } from '../../utils/AuthApiClient';
+import { authRegisterUrl } from '../../utils/AuthApiClient';
 
 class HeaderMenu extends Component {
     state = {
@@ -116,7 +116,7 @@ class HeaderMenu extends Component {
         let userItem = (
             <Menu.Item>
                 <Button
-                    as='a' href={authUrl('/register')}
+                    as='a' href={authRegisterUrl()}
                     content={tt('login.sign_up')}
                     color='blue'
                     inverted/>

@@ -48,7 +48,8 @@ module.exports = {
         client_id: 'b4d78455f0d5fca'
     },
     AUTH_SERVICE: {
-        host: 'https://devauth.golos.today/'
+        host: 'https://devauth.golos.today/',
+        custom_client: 'golostalk'
     },
     NOTIFY_SERVICE: {
         host: 'https://devnotify.golos.today/'
