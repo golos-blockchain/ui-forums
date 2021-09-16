@@ -1,5 +1,6 @@
 const koa = require('koa');
 const koaRouter = require('koa-router');
+const bodyParser = require('koa-bodyparser');
 const compress = require('koa-compress');
 const cors = require('koa-cors');
 const livereload = require('koa-livereload');
@@ -562,6 +563,7 @@ router.get('/invite/:public_key', async (ctx) => {
 
 app.use(livereload());
 app.use(cors());
+app.use(bodyParser());
 app.use(router.routes());
 app.use(router.allowedMethods());
 
