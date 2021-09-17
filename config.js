@@ -40,15 +40,19 @@ module.exports = {
         account_donates_per_page: 10
     },
     STM_Config: {
-        img_proxy_prefix: 'https://devimages.golos.today/',
-        img_proxy_backup_prefix: 'https://steemitimages.com/',
+        img_proxy_prefix: 'https://devimages.golos.today',
+        img_proxy_backup_prefix: 'https://steemitimages.com',
         ipfs_prefix: false,
         upload_image: 'https://api.imgur.com/3/image',
         max_upload_file_bytes: 1 * 1024 * 1024,
         client_id: 'b4d78455f0d5fca'
     },
+    AUTH_SERVICE: {
+        host: 'https://devauth.golos.today',
+        custom_client: 'golostalk'
+    },
     NOTIFY_SERVICE: {
-        host: 'https://devnotify.golos.today/'
+        host: 'https://devnotify.golos.today'
     },
     ELASTIC_SEARCH: {
         url: 'https://search.golos.today',

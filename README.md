@@ -17,10 +17,6 @@ But there are also some manipulations **required** to deploy ui-forums on your s
 
 You should set `REST_API` to your URL with 5000 port where ui-forums-rest should run. Example: `http://127.0.0.1:5000`.
 
-## configSecure.js
-
-You should set `account` to account which should be used as creator of new accounts, `referer` to account which should be used as referer for them, `signing_key` to active private key of `account`, and `gmail_send` to some @gmail.com mailbox which should be used as sender of registration emails (`pass` should be an [**application** password](https://support.google.com/mail/answer/185833), not just password of your mailbox).
-
 # Deployment
 
 ui-forums-rest runs on 5000 port, and main ui-forums site runs on [http://localhost:3000](http://localhost:3000)
