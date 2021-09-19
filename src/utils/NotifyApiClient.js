@@ -33,10 +33,10 @@ function saveSession(response) {
     localStorage.setItem('X-Session', session);
 }
 
-export function notifyApiLogin(account, signatures) {
+export function notifyApiLogin(account, authSession) {
     if (!notifyAvailable()) return;
     const request = Object.assign({}, request_base, {
-        body: JSON.stringify({account, signatures}),
+        body: JSON.stringify({account, authSession}),
     });
     setSession(request);
     return fetch(notifyUrl(`/login_account`), request).then(r => {

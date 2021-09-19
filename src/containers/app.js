@@ -12,7 +12,6 @@ import * as CONFIG from '../../config';
 import * as CONFIG_SEC from '../../configSecure.min';
 
 import Account from '../containers/account';
-import CreateAccount from '../containers/account/create';
 import Leave from '../containers/leave';
 import BreadcrumbMenu from '../components/global/breadcrumb';
 import BannerMenu from '../components/global/banner';
@@ -119,7 +118,6 @@ class App extends React.Component {
                     {/*<Route exact path='/' render={(props) => <Redirect to='/forums'/>}/>*/}
                     <Route path='/@:username/:section?' component={Account} />
                     {/*<Route path='/accounts' component={AccountsLayout} />*/}
-                    <Route path='/create_account' component={CreateAccount} />
                     <Route path='/create/forum' component={ForumCreateLayout} />
                     <Route path='/feed' component={FeedLayout} />
                     <Route path='/msgs/:to?' component={MessagesLayout} />

@@ -1,6 +1,6 @@
 const koa = require('koa');
-const session = require('koa-session');
 const koaRouter = require('koa-router');
+const bodyParser = require('koa-bodyparser');
 const compress = require('koa-compress');
 const cors = require('koa-cors');
 const livereload = require('koa-livereload');
@@ -10,7 +10,6 @@ const CONFIG = require('../config');
 const CONFIG_SEC = require('../configSecure');
 
 const useLogger = require('./logger');
-const useAuthApi = require('./api/auth');
 const useMessagesApi = require('./api/messages');
 const useNodeSendApi = require('./api/node_send');
 
@@ -563,13 +562,11 @@ router.get('/invite/:public_key', async (ctx) => {
 });
 
 app.use(livereload());
-app.use(cors({ credentials: true }));
-app.keys = ['your-session-secret'];
-app.use(session({}, app));
+app.use(cors());
+app.use(bodyParser());
 app.use(router.routes());
 app.use(router.allowedMethods());
 
-useAuthApi(app);
 useMessagesApi(app);
 useNodeSendApi(app);
 

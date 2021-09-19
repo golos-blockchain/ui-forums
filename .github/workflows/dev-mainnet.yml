@@ -1,8 +1,8 @@
-name: Build dev
+name: Build dev-mainnet
 
 on:
   push:
-    branches: dev
+    branches: dev-mainnet
 
 jobs:
   dev:
@@ -19,7 +19,7 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: testuigolos/forums:dev
+          tags: testuigolos/forums:dev-mainnet
   rest:
     runs-on: ubuntu-latest
     steps:
@@ -34,4 +34,4 @@ jobs:
           context: .
           file: ./server/Dockerfile
           push: true
-          tags: testuigolos/forums:rest
+          tags: testuigolos/forums:rest-mainnet

@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 
 import { Button, Checkbox, Form, Header, Icon, Message, Modal } from 'semantic-ui-react';
 
+import { authRegisterUrl } from '../../../utils/AuthApiClient';
 import { notifyLogin } from '../../../utils/notifications';
 
 class LoginModal extends React.Component {
@@ -218,7 +219,7 @@ class LoginModal extends React.Component {
                     </Modal.Content>
                     <Modal.Actions>
                         {cancelIsRegister && !isMemo ?
-                            (<Button as='a' href='/create_account' target='_blank' color='orange'>{tt('login.sign_up')}</Button>) : null}
+                            (<Button as='a' href={authRegisterUrl()} target='_blank' color='orange'>{tt('login.sign_up')}</Button>) : null}
                         {!cancelIsRegister && !isMemo ?
                             (<Button color='orange' onClick={this.handleClose}>{tt('g.cancel')}</Button>) : null}
                         <Button color='blue' icon onClick={this.handleSubmit}>{tt('login.sign_in')} <Icon name='right chevron' /></Button>

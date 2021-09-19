@@ -9,9 +9,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "atob": "^2.1.2",
-    "btoa": "^1.2.1",
-    "gmail-send": "^1.8.10",
     "golos-classic-js": "^0.8.2",
     "koa": "^2.13.0",
     "koa-bodyparser": "latest",
@@ -19,13 +16,7 @@
     "koa-cors": "0.0.16",
     "koa-livereload": "^0.2.0",
     "koa-logger": "^3.2.1",
-    "koa-passport": "latest",
     "koa-router": "^10.0.0",
-    "koa-session": "^3.4.0",
-    "passport-facebook": "latest",
-    "passport-mail": "latest",
-    "passport-vk": "latest",
-    "passport-yandex": "latest",
     "simple-jsonrpc-js": "^1.2.0"
   },
   "devDependencies": {
