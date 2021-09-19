@@ -1,4 +1,4 @@
-import golos from 'golos-classic-js';
+import golos from 'golos-lib-js';
 
 import * as types from './actionTypes';
 

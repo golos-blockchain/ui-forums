@@ -1,7 +1,7 @@
 import React from 'react';
 import { Helmet } from 'react-helmet';
 import { BrowserRouter, StaticRouter, Route, Switch, Redirect } from 'react-router-dom';
-import golos from 'golos-classic-js';
+import golos from 'golos-lib-js';
 import createBrowserHistory from 'history/createBrowserHistory'
 import createMemoryHistory from 'history/createMemoryHistory'
 import ttGetByKey from '../utils/ttGetByKey';

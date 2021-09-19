@@ -1,6 +1,6 @@
 import React from 'react';
 import tt from 'counterpart';
-import { Asset } from 'golos-classic-js/lib/utils';
+import { Asset } from 'golos-lib-js/lib/utils';
 
 import { Button, Popup, Dropdown, Icon, Label, Modal, Divider } from 'semantic-ui-react';
 import { Form } from 'formsy-semantic-ui-react';
@@ -104,7 +104,7 @@ export default class Donating extends React.Component {
             if (donatesJoined[item.from]) {
                 let fromList = donatesJoined[item.from].assets;
                 if (fromList[asset.symbol]) {
-                    fromList[asset.symbol].amount += asset.amount;
+                    fromList[asset.symbol] = fromList[asset.symbol].plus(asset);
                     continue;
                 }
             } else {

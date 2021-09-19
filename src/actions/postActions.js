@@ -1,4 +1,4 @@
-import golos from 'golos-classic-js';
+import golos from 'golos-lib-js';
 import getSlug from 'speakingurl';
 import tt from 'counterpart';
 import fetch from 'cross-fetch';

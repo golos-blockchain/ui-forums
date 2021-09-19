@@ -1,4 +1,4 @@
-import { Asset } from 'golos-classic-js/lib/utils';
+import { Asset } from 'golos-lib-js/lib/utils';
 
 import * as types from '../actions/actionTypes';
 import * as ForumReducer from './forum';
@@ -226,12 +226,12 @@ export default function post(state = initialState, action = {type: '_ssr_state_i
                 }
             }
             let asset = Asset(amount);
-            let list = asset.isUIA ? msg.donate_uia_list : msg.donate_list;
+            let list = asset.isUIA() ? msg.donate_uia_list : msg.donate_list;
             list.push({from: name, amount: amount, app: 'golos-forum'});
-            if (asset.isUIA) {
+            if (asset.isUIA()) {
                 msg.donates_uia += parseInt(asset.amountFloat);
             } else {
-                asset.amount += Asset(msg.donates).amount;
+                asset = asset.plus(Asset(msg.donates));
                 msg.donates = asset.toString();
             }
             return Object.assign({}, state, {
