@@ -48,11 +48,11 @@ module.exports = {
         client_id: 'b4d78455f0d5fca'
     },
     AUTH_SERVICE: {
-        host: 'https://devauth.golos.today',
+        host: 'https://dev.golos.app',
         custom_client: 'golostalk'
     },
     NOTIFY_SERVICE: {
-        host: 'https://devnotify.golos.today'
+        host: 'https://devnotify.golos.app'
     },
     ELASTIC_SEARCH: {
         url: 'https://search.golos.today',

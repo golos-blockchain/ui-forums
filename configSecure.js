@@ -6,6 +6,7 @@ module.exports = {
             'golos.id',
             'golos.in',
             'golos.today',
+            'golos.app',
             'golostalk.com',
             'golos.cf',
             'dpos.space',

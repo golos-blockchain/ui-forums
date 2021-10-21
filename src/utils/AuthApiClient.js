@@ -14,7 +14,7 @@ const authAvailable = () => {
 };
 
 export const authUrl = (pathname) => {
-    const host = authAvailable() ? CONFIG.AUTH_SERVICE.host : 'https://auth.golos.today';
+    const host = authAvailable() ? CONFIG.AUTH_SERVICE.host : 'https://dev.golos.app';
     return new URL(pathname, host).toString();
 };
 
