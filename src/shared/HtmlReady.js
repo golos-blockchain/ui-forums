@@ -190,7 +190,7 @@ function header(tag, state, child) {
 
 // For all img elements with non-local URLs, prepend the proxy URL (e.g. `https://img0.steemit.com/0x0/`)
 function proxifyImages(doc) {
-    if (!CONFIG.STM_Config.img_proxy_prefix && !CONFIG.STM_Config.img_proxy_backup_prefix) return
+    if (!CONFIG.images.img_proxy_prefix && !CONFIG.images.img_proxy_backup_prefix) return
     if (!doc) return;
     const imgs = doc.getElementsByTagName('img');
     for (let i = 0; i < imgs.length; ++i) {
@@ -303,12 +303,12 @@ function embedVimeoNode(child, links, /*images*/) {try{
 } catch(error) {console.log(error); return false}}
 
 function ipfsPrefix(url) {
-    if(CONFIG.STM_Config.ipfs_prefix) {
+    if(CONFIG.images.ipfs_prefix) {
         // Convert //ipfs/xxx  or /ipfs/xxx  into  https://steemit.com/ipfs/xxxxx
         if(/^\/?\/ipfs\//.test(url)) {
             const slash = url.charAt(1) === '/' ? 1 : 0
             url = url.substring(slash + '/ipfs/'.length) // start with only 1 /
-            return CONFIG.STM_Config.ipfs_prefix + '/' + url
+            return CONFIG.images.ipfs_prefix + '/' + url
         }
     }
     return url

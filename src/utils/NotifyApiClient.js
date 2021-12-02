@@ -10,11 +10,11 @@ const request_base = {
 };
 
 const notifyAvailable = () => {
-    return /*process.env.BROWSER &&*/ CONFIG.NOTIFY_SERVICE && CONFIG.NOTIFY_SERVICE.host;
+    return /*process.env.BROWSER &&*/ CONFIG.notify_service && CONFIG.notify_service.host;
 };
 
 const notifyUrl = (pathname) => {
-    return new URL(pathname, CONFIG.NOTIFY_SERVICE.host).toString();
+    return new URL(pathname, CONFIG.notify_service.host).toString();
 };
 
 function setSession(request) {

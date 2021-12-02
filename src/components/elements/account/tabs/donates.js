@@ -110,7 +110,7 @@ export default class AccountDonates extends React.Component {
                         <Grid.Column width={8}>
                             <Paginator
                                 page={this.state.page}
-                                perPage={CONFIG.FORUM.account_donates_per_page}
+                                perPage={CONFIG.forum.account_donates_per_page}
                                 total={totalDonates}
                                 callback={this.changePage}
                                 />

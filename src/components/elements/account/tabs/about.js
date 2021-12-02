@@ -5,9 +5,7 @@ import golos from 'golos-lib-js';
 import { Segment, Icon, Label, Button } from 'semantic-ui-react';
 import { Form } from 'formsy-semantic-ui-react';
 
-import * as CONFIG from '../../../../../config';
-
-import { imgurUpload } from '../../../../utils/imgurUpload';
+import { imgurUpload, max_upload_avatar_bytes, } from '../../../../utils/imgurUpload';
 
 export default class AccountAbout extends React.Component {
     constructor(props) {
@@ -29,7 +27,7 @@ export default class AccountAbout extends React.Component {
     onValidSubmit = async (formData) => {
         let profile_image = formData.profile_image;
         if (formData.profile_image && !formData.profile_image.includes('imgur')) {
-            let uploaded = await imgurUpload(formData.profile_image, CONFIG.STM_Config.max_upload_avatar_bytes);
+            let uploaded = await imgurUpload(formData.profile_image, max_upload_avatar_bytes);
             if (!uploaded) {
                 return;
             }
@@ -72,14 +70,14 @@ export default class AccountAbout extends React.Component {
         const file = document.getElementsByName('avatar_file')[0].files[0];
         if (!file) return;
 
-        if (file.size > CONFIG.STM_Config.max_upload_avatar_bytes) {
+        if (file.size > max_upload_avatar_bytes) {
             alert(tt('g.too_big_file'));
             return;
         }
 
         this.setState({ avatarUploading: true });
 
-        const uploaded = await imgurUpload(file, CONFIG.STM_Config.max_upload_avatar_bytes);
+        const uploaded = await imgurUpload(file, max_upload_avatar_bytes);
         if (uploaded) {
             this.setState({
                 profile_image: uploaded.link,

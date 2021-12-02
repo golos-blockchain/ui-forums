@@ -23,7 +23,7 @@ export default class Forum extends React.Component {
     async getForum() {
       try {
         const { category } = this.props;
-        const response = await fetch(`${ CONFIG.REST_API }/topics/${ category }`);
+        const response = await fetch(`${ CONFIG.rest_api }/topics/${ category }`);
         if (response.ok) {
           const result = await response.json();
           this.setState({

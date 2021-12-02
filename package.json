@@ -5,6 +5,7 @@
   "dependencies": {
     "babel-runtime": "6.26.0",
     "classnames": "^2.2.5",
+    "co-body": "^6.1.0",
     "core-js": "^2.5.1",
     "counterpart": "^0.18.6",
     "cross-fetch": "^3.0.6",
@@ -20,6 +21,7 @@
     "koa": "^2.13.0",
     "koa-compress": "^5.0.1",
     "koa-cors": "0.0.16",
+    "koa-helmet": "^6.1.0",
     "koa-livereload": "^0.2.0",
     "koa-router": "^10.0.0",
     "koa-static": "^5.0.0",
@@ -86,10 +88,9 @@
     }
   },
   "scripts": {
-    "pre-build": "node ./src/minifyImport.js",
-    "start": "npm run pre-build && react-app-rewired start",
-    "start:server": "NODE_ENV=development nodemon server",
-    "build": "npm run pre-build && react-app-rewired build && yarn run delete-maps",
+    "start": "react-app-rewired start",
+    "start:server": "GOLOS_SERVER_NODE=https://apibeta.golos.today NODE_ENV=development nodemon server",
+    "build": "react-app-rewired build && yarn run delete-maps",
     "prod": "NODE_ENV=development webpack --config webpack.server.js --mode=development && node ./server-build/index.js",
     "delete-maps": "yarn run delete-map-files && yarn run delete-references-to-map-files",
     "delete-map-files": "find ./build -name '*.map' -delete",

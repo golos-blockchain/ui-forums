@@ -9,7 +9,6 @@ import ttGetByKey from '../utils/ttGetByKey';
 import { Container } from 'semantic-ui-react';
 
 import * as CONFIG from '../../config';
-import * as CONFIG_SEC from '../../configSecure.min';
 
 import Account from '../containers/account';
 import Leave from '../containers/leave';
@@ -41,13 +40,13 @@ function _logError(...parameters) {
 }
 console.error = _logError;
 
-golos.config.set('websocket', CONFIG.GOLOS_NODE);
-golos.config.set('chain_id', CONFIG.GOLOS_CHAIN_ID);
+golos.config.set('websocket', CONFIG.golos_node);
+golos.config.set('chain_id', CONFIG.golos_chain_id);
 
 if (typeof window !== 'undefined') {
     if (window.location.pathname === '/msgs'
         || window.location.pathname.startsWith('/msgs/')) {
-        golos.config.set('websocket', CONFIG.GOLOS_MSGS_NODE);
+        golos.config.set('websocket', CONFIG.golos_msgs_node);
     }
 }
 
@@ -70,7 +69,7 @@ class App extends React.Component {
     }
 
     checkLeave = (e) => {
-        if (!CONFIG_SEC.anti_phishing.enabled) return;
+        if (!CONFIG.anti_phishing.enabled) return;
 
         const pathname = window.location.pathname;
         if (pathname === '/leave_page') return;
@@ -81,7 +80,7 @@ class App extends React.Component {
             a &&
             a.hostname &&
             a.hostname !== window.location.hostname &&
-            !CONFIG_SEC.anti_phishing.white_list.some(domain =>
+            !CONFIG.anti_phishing.white_list.some(domain =>
                 new RegExp(`${domain}$`).test(a.hostname)
             )
         ) {
@@ -98,17 +97,17 @@ class App extends React.Component {
         const isBlank = pathname === '/msgs' || pathname.startsWith('/msgs/');
         let container = (<div className='AppContainer'>
             <Helmet>
-                <title>{ttGetByKey(CONFIG.FORUM, 'page_title')}</title>
-                <meta name='description' content={ttGetByKey(CONFIG.FORUM, 'meta_description')} />
+                <title>{ttGetByKey(CONFIG.forum, 'page_title')}</title>
+                <meta name='description' content={ttGetByKey(CONFIG.forum, 'meta_description')} />
                 <meta name='viewport' content='width=device-width, initial-scale=1' />
                 <meta name='twitter:card' content='summary' />
-                <meta name='twitter:title' content={ttGetByKey(CONFIG.FORUM, 'meta_title')} />
-                <meta name='twitter:description' content={ttGetByKey(CONFIG.FORUM, 'meta_description')} />
-                <meta name='twitter:image:src' content={CONFIG.FORUM.meta_image} />
+                <meta name='twitter:title' content={ttGetByKey(CONFIG.forum, 'meta_title')} />
+                <meta name='twitter:description' content={ttGetByKey(CONFIG.forum, 'meta_description')} />
+                <meta name='twitter:image:src' content={CONFIG.forum.meta_image} />
                 <meta property='og:type' content='article' />  
-                <meta property='og:title' content={ttGetByKey(CONFIG.FORUM, 'meta_title')} />
-                <meta property='og:description' content={ttGetByKey(CONFIG.FORUM, 'meta_description')} />
-                <meta property='og:image' content={CONFIG.FORUM.meta_image} />
+                <meta property='og:title' content={ttGetByKey(CONFIG.forum, 'meta_title')} />
+                <meta property='og:description' content={ttGetByKey(CONFIG.forum, 'meta_description')} />
+                <meta property='og:image' content={CONFIG.forum.meta_image} />
             </Helmet>
             {!isBlank ? (<HeaderMenu />) : null}
             {!isBlank ? (<BreadcrumbMenu {...this.props.ssrState} withSearch={true} />) : null}

@@ -15,7 +15,7 @@ export async function getState(url) {
 
     let parts = url.split('/');
     if (url === '/') {
-        let uri = CONFIG.REST_API;
+        let uri = CONFIG.rest_api;
         const response = await fetch(uri);
         if (response.ok) {
             const result = await response.json();
@@ -29,7 +29,7 @@ export async function getState(url) {
         state.breadcrumb = breadcrumb();
         const forumid = parts[2];
         const page = parts[3] || '1';
-        let url = `${ CONFIG.REST_API }/forum/${ forumid }?page=${ page }`;
+        let url = `${ CONFIG.rest_api }/forum/${ forumid }?page=${ page }`;
         const response = await fetch(url);
         if (response.ok) {
             const result = await response.json()

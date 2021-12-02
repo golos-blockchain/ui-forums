@@ -51,7 +51,7 @@ class ForumList extends React.Component {
 
     async getForumList() {
       try {
-        let uri = CONFIG.REST_API + '/forums';
+        let uri = CONFIG.rest_api + '/forums';
         const response = await fetch(uri);
         if (response.ok) {
           const result = await response.json();

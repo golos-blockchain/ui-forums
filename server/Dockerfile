@@ -8,7 +8,6 @@ RUN npm install --global gulp-cli
 
 # Bundle app source
 COPY config.js /
-COPY configSecure.js /
 COPY server/ /server/
 WORKDIR /server
 RUN npm install

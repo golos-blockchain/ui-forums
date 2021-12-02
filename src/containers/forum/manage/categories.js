@@ -243,7 +243,7 @@ class ForumCategoriesForm extends React.Component {
         golos.broadcast.customJson(wif, [account], [], 'account_notes',
             JSON.stringify(['set_value', {
                 account: account,
-                key: 'g.f.' + CONFIG.FORUM._id.toLowerCase(),
+                key: 'g.f.' + CONFIG.forum._id.toLowerCase(),
                 value: values
             }]),
             (err, result) => {
@@ -258,7 +258,7 @@ class ForumCategoriesForm extends React.Component {
         golos.broadcast.customJson(this.props.account.key, [], [account], 'account_notes',
             JSON.stringify(['set_value', {
                 account: account,
-                key: 'g.pst.f.' + CONFIG.FORUM._id.toLowerCase() + '.stats.lst.accs',
+                key: 'g.pst.f.' + CONFIG.forum._id.toLowerCase() + '.stats.lst.accs',
                 value: '[".all"]'
             }]),
             (err, result) => {
@@ -302,7 +302,7 @@ class ForumCategoriesForm extends React.Component {
                                 <List.Description>
                                     {forum.name}
                                 </List.Description>
-                            </td><td>&nbsp;&nbsp;&nbsp;</td>{account.name === CONFIG.FORUM.creator ? (<td>
+                            </td><td>&nbsp;&nbsp;&nbsp;</td>{account.name === CONFIG.forum.creator ? (<td>
                                 <Popup
                                     mouseEnterDelay={500}
                                     trigger={
@@ -421,7 +421,7 @@ class ForumCategoriesForm extends React.Component {
                 {tt('forum_controls.only_creator_can_edit')}
             </Button>
         );
-        if (account.name === CONFIG.FORUM.creator) {
+        if (account.name === CONFIG.forum.creator) {
             submit = (
                 <Button fluid color='blue' type='submit'>
                     {tt('forum_controls.submit_changes')}
@@ -478,7 +478,7 @@ class ForumCategoriesForm extends React.Component {
                         </Header>
                     </Segment>
                     <Segment attached>
-                        {account.name === CONFIG.FORUM.creator ? (<Button
+                        {account.name === CONFIG.forum.creator ? (<Button
                             color='purple'
                             parentIds={[]}
                             onClick={this.addEditCategory}

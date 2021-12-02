@@ -11,5 +11,5 @@ export function getForumName(forum) {
 };
 
 export function getPageTitle(title) {
-    return ((title && title.length) ? `${title} | ` : ``) + ttGetByKey(CONFIG.FORUM, 'page_title');
+    return ((title && title.length) ? `${title} | ` : ``) + ttGetByKey(CONFIG.forum, 'page_title');
 };

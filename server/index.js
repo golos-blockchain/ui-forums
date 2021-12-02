@@ -2,19 +2,22 @@ const koa = require('koa');
 const koaRouter = require('koa-router');
 const bodyParser = require('koa-bodyparser');
 const compress = require('koa-compress');
+const coBody = require('co-body');
 const cors = require('koa-cors');
 const livereload = require('koa-livereload');
 const golos = require('golos-classic-js');
 
 const CONFIG = require('../config');
-const CONFIG_SEC = require('../configSecure');
 
+const useKoaHelmet = require('./koaHelmet');
 const useLogger = require('./logger');
 const useMessagesApi = require('./api/messages');
 const useNodeSendApi = require('./api/node_send');
 
-golos.config.set('websocket', CONFIG_SEC.GOLOS_SERVER_NODE);
-golos.config.set('chain_id', CONFIG.GOLOS_CHAIN_ID);
+if (!process.env.GOLOS_SERVER_NODE)
+    throw new Error('Please set GOLOS_SERVER_NODE environment variable in docker-compose.yml (if production) or in package.json (if development). Example: wss://api-full.golos.id/ws');
+golos.config.set('websocket', process.env.GOLOS_SERVER_NODE);
+golos.config.set('chain_id', CONFIG.golos_chain_id);
 
 const app = new koa();
 
@@ -50,7 +53,7 @@ const PREFIX_PST = 'g.pst.f.';
 const LST = '.lst';
 const ACCS = '.accs';
 
-const GLOBAL_ID = CONFIG.FORUM._id.toLowerCase();
+const GLOBAL_ID = CONFIG.forum._id.toLowerCase();
 const NOTE_     = PREFIX + GLOBAL_ID;
 const NOTE_PST_ = PREFIX_PST + GLOBAL_ID;
 const NOTE_PST_HIDMSG_LST      = NOTE_PST_ + '.hidmsg' + LST;
@@ -60,7 +63,7 @@ const NOTE_PST_HIDACC_LST_ACCS = NOTE_PST_ + '.hidacc' + LST + ACCS;
 const NOTE_PST_STATS_LST       = NOTE_PST_ + '.stats' + LST;
 
 let getValues = async (keys) => {
-    let vals = await golos.api.getValuesAsync(CONFIG.FORUM.creator, Object.keys(keys));
+    let vals = await golos.api.getValuesAsync(CONFIG.forum.creator, Object.keys(keys));
     for (let [key, type] of Object.entries(keys)) {
         const fallback = (type == Object) ? {} : [];
         if (!vals[key]) {
@@ -202,6 +205,12 @@ router.get('/', async (ctx) => {
     }
 });
 
+router.post('/csp_violation', async (ctx) => {
+    let params = ctx.request.body || ctx.request.rawBody;
+    console.log('-- /csp_violation -->', ctx.req.headers['user-agent'], params);
+    ctx.body = {};
+});
+
 router.get('/forums', async (ctx) => {
     let keys = {};
     keys[NOTE_] = Object;
@@ -233,7 +242,7 @@ router.get('/forum/:slug', async (ctx) => {
 
     const tag = idToTag(_id);
     const data = await golos.api.getAllDiscussionsByActiveAsync(
-        '', '', ctx.query.page ? (ctx.query.page - 1) * CONFIG.FORUM.posts_per_page : 0, CONFIG.FORUM.posts_per_page,
+        '', '', ctx.query.page ? (ctx.query.page - 1) * CONFIG.forum.posts_per_page : 0, CONFIG.forum.posts_per_page,
         [tag],
         0, 0
     );
@@ -314,9 +323,16 @@ router.get('/:category/@:author/:permlink', async (ctx) => {
     keys[NOTE_PST_HIDACC_LST_ACCS] = Array;
     const vals = await getValues(keys);
 
+    // for .chunk.js.map file requests which becoming meant as this route
+    // example: GET /static/@js/8.4538698b.chunk.js.map
+    if ((ctx.params.author === 'js' || ctx.params.author === 'css')
+        && ctx.params.category === 'static') {
+        return;
+    }
+
     let { _id, forum } = findForum(vals[NOTE_], ctx.params.category);
 
-    let data = await golos.api.getContentAsync(ctx.params.author, ctx.params.permlink, CONFIG.FORUM.votes_per_page, 0);
+    let data = await golos.api.getContentAsync(ctx.params.author, ctx.params.permlink, CONFIG.forum.votes_per_page, 0);
     data.url = getUrl(data.url, _id);
     await fillDonates(data, vals[NOTE_PST_HIDACC_LST]);
     data.author_banned = !!vals[NOTE_PST_HIDACC_LST][data.author];
@@ -340,7 +356,7 @@ router.get('/:category/@:author/:permlink/responses', async (ctx) => {
 
     targets = [];
 
-    let data = await golos.api.getAllContentRepliesAsync(ctx.params.author, ctx.params.permlink, CONFIG.FORUM.votes_per_page, 0, [], [], false, 'false');
+    let data = await golos.api.getAllContentRepliesAsync(ctx.params.author, ctx.params.permlink, CONFIG.forum.votes_per_page, 0, [], [], false, 'false');
     for (let item of data) {
         item.url = getUrl(item.url, ctx.params.category);
         item.author_banned = !!vals[NOTE_PST_HIDACC_LST][item.author];
@@ -533,8 +549,8 @@ router.get('/@:author/donates/:direction', async (ctx) => {
 
     const total = donates.length;
 
-    const start = ctx.query.page ? (ctx.query.page - 1) * CONFIG.FORUM.account_donates_per_page : 0;
-    const end = start + CONFIG.FORUM.account_donates_per_page;
+    const start = ctx.query.page ? (ctx.query.page - 1) * CONFIG.forum.account_donates_per_page : 0;
+    const end = start + CONFIG.forum.account_donates_per_page;
     donates = donates.slice(start, end);
 
     ctx.body = {
@@ -563,6 +579,7 @@ router.get('/invite/:public_key', async (ctx) => {
 
 app.use(livereload());
 app.use(cors());
+useKoaHelmet(app, process.env.NODE_ENV !== 'development');
 app.use(bodyParser());
 app.use(router.routes());
 app.use(router.allowedMethods());

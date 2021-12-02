@@ -45,7 +45,7 @@ class Account extends React.Component {
     async getModerationInfo() {
         try {
             const { username } = this.props.match.params;
-            let uri = CONFIG.REST_API + '/@' + username;
+            let uri = CONFIG.rest_api + '/@' + username;
             const response = await fetch(uri);
             if (response.ok) {
                 const result = await response.json();

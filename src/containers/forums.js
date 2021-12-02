@@ -69,7 +69,7 @@ class Forums extends React.Component {
 
     async getForums() {
         try {
-            let uri = CONFIG.REST_API;
+            let uri = CONFIG.rest_api;
             if (this.props.forums && this.props.forums.group) {
                 uri = uri + '/' + this.props.forums.group;
             }
@@ -154,14 +154,14 @@ class Forums extends React.Component {
             );*/
             if (showConfig) {
                 let forum4 = {
-                    target: CONFIG.FORUM
+                    target: CONFIG.forum
                 };
                 display = (
                     <ForumManage
                         account={account}
                         newForum={this.state.newForum}
                         section={this.props.section}
-                        target={CONFIG.FORUM}
+                        target={CONFIG.forum}
                         forum={forum4}
                         categories={this.state.forums}
                         moders={this.state.moders}
@@ -229,8 +229,8 @@ class Forums extends React.Component {
                                     color='blue'
                                     size='huge'
                                 >
-                                <Header.Content dangerouslySetInnerHTML={{__html: ttGetByKey(CONFIG.FORUM, 'title')}}></Header.Content>
-                                <Header.Subheader dangerouslySetInnerHTML={{__html: ttGetByKey(CONFIG.FORUM, 'description')}}></Header.Subheader>
+                                <Header.Content dangerouslySetInnerHTML={{__html: ttGetByKey(CONFIG.forum, 'title')}}></Header.Content>
+                                <Header.Subheader dangerouslySetInnerHTML={{__html: ttGetByKey(CONFIG.forum, 'description')}}></Header.Subheader>
                                 </Header>
                             </Grid.Column>
                             <Grid.Column width={2}>

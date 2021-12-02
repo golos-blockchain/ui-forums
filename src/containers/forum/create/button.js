@@ -82,7 +82,7 @@ class ForumCreateButton extends React.Component {
 
     async nsUnique(value) {
         try {
-            let uri = CONFIG.REST_API + `/api/ns_lookup?ns=${value}`;
+            let uri = CONFIG.rest_api + `/api/ns_lookup?ns=${value}`;
             const response = await fetch(uri);
             if (response.ok) {
                 const result = await response.json();

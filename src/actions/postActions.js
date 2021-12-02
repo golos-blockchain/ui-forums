@@ -123,7 +123,7 @@ function getForumName(forum) {
 export function fetchPost(params) {
     return async dispatch => {
         const { category, author, permlink } = params;
-        const response = await fetch(`${ CONFIG.REST_API }/${ category }/@${ author }/${ permlink }`);
+        const response = await fetch(`${ CONFIG.rest_api }/${ category }/@${ author }/${ permlink }`);
         if (response.ok) {
             const result = await response.json();
             let trail = result.forum.trail.map(item => {
@@ -164,7 +164,7 @@ export function fetchPostByAuthorResolved(payload = {}) {
 
 export function fetchPostByAuthor(author, page = 1) {
     return async dispatch => {
-        let uri = `${ CONFIG.REST_API }/@${ author }/posts`;
+        let uri = `${ CONFIG.rest_api }/@${ author }/posts`;
         if (page > 1) {
             uri = uri + '?page=' + page;
         }
@@ -237,7 +237,7 @@ export function fetchPostRepliesByAuthorStarted(payload = {}) {
 
 export function fetchPostRepliesByAuthor(author, page = 1) {
     return async dispatch => {
-        let uri = `${ CONFIG.REST_API }/@${ author }/replies`;
+        let uri = `${ CONFIG.rest_api }/@${ author }/replies`;
         if (page > 1) {
             uri = uri + '?page=' + page;
         }
@@ -274,7 +274,7 @@ export function fetchPostResponsesByAuthorResolved(payload = {}) {
 
 export function fetchPostResponsesByAuthor(author, page = 1) {
     return async dispatch => {
-        let uri = `${ CONFIG.REST_API }/@${ author }/responses`;
+        let uri = `${ CONFIG.rest_api }/@${ author }/responses`;
         if (page > 1) {
             uri = uri + '?page=' + page;
         }
@@ -308,7 +308,7 @@ export function fetchDonatesByAuthorResolved(payload = {}) {
 
 export function fetchDonatesByAuthor(author, direction, page = 1) {
     return async dispatch => {
-        let uri = `${ CONFIG.REST_API }/@${ author }/donates/${ direction }`;
+        let uri = `${ CONFIG.rest_api }/@${ author }/donates/${ direction }`;
         if (page > 1) {
             uri = uri + '?page=' + page;
         }
@@ -343,7 +343,7 @@ export function fetchPostResponsesResolved(payload = {}) {
 export function fetchPostResponses(params) {
     return async dispatch => {
         const { category, author, permlink } = params;
-        const response = await fetch(`${ CONFIG.REST_API }/${ category }/@${ author }/${ permlink }/responses`);
+        const response = await fetch(`${ CONFIG.rest_api }/${ category }/@${ author }/${ permlink }/responses`);
         if (response.ok) {
             const result = await response.json();
             console.log(result);
@@ -381,7 +381,7 @@ export function fetchPostVotesResolved(payload = {}) {
 export function fetchPostDonates(params) {
     return async dispatch => {
         const { category, author, permlink } = params;
-        const response = await fetch(`${ CONFIG.REST_API }/${ category }/@${ author }/${ permlink }/donates`);
+        const response = await fetch(`${ CONFIG.rest_api }/${ category }/@${ author }/${ permlink }/donates`);
         if (response.ok) {
             const result = await response.json();
             dispatch(fetchPostDonatesResolved({

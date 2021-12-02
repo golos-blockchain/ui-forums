@@ -3,8 +3,8 @@ const golos = require('golos-classic-js');
 
 const CONFIG = require('../config');
 
-golos.config.set('websocket', CONFIG.GOLOS_NODE);
-golos.config.set('chain_id', CONFIG.GOLOS_CHAIN_ID);
+golos.config.set('websocket', CONFIG.golos_node);
+golos.config.set('chain_id', CONFIG.golos_chain_id);
 
 const PREFIX = 'g.f.';
 const PREFIX_PST = 'g.pst.f.';
@@ -12,7 +12,7 @@ const PREFIX_PST = 'g.pst.f.';
 const LST = '.lst';
 const ACCS = '.accs';
 
-const GLOBAL_ID = CONFIG.FORUM._id.toLowerCase();
+const GLOBAL_ID = CONFIG.forum._id.toLowerCase();
 const NOTE_     = PREFIX + GLOBAL_ID;
 const NOTE_PST_ = PREFIX_PST + GLOBAL_ID;
 const NOTE_PST_HIDMSG_LST      = NOTE_PST_ + '.hidmsg' + LST;
@@ -66,13 +66,13 @@ async function fillStats(stats, cats, hidden, banned, parentStats = []) {
 (async () => {
     console.log('WELCOME TO FIX_STATS!');
     console.log('Forum _id: ' + GLOBAL_ID);
-    console.log('Forum creator: ' + CONFIG.FORUM.creator);
+    console.log('Forum creator: ' + CONFIG.forum.creator);
     console.log('');
 
     let wif = null;
     while (!wif) {
-        wif = reader.question('@' + CONFIG.FORUM.creator + ', enter your posting private key: ');
-        const auth = await golos.auth.login(CONFIG.FORUM.creator, wif);
+        wif = reader.question('@' + CONFIG.forum.creator + ', enter your posting private key: ');
+        const auth = await golos.auth.login(CONFIG.forum.creator, wif);
         if (auth.active && !auth.password) {
             console.error('Login failed! Use posting, not active key.');
             wif = null;
@@ -85,7 +85,7 @@ async function fillStats(stats, cats, hidden, banned, parentStats = []) {
     }
 
     console.log('Obtaining all information...');
-    const vals = await golos.api.getValuesAsync(CONFIG.FORUM.creator,
+    const vals = await golos.api.getValuesAsync(CONFIG.forum.creator,
         [NOTE_, NOTE_PST_HIDMSG_LST, NOTE_PST_HIDACC_LST]);
     console.log(vals);
 
@@ -102,16 +102,16 @@ async function fillStats(stats, cats, hidden, banned, parentStats = []) {
     await fillStats(stats, cats, hidden, banned);
 
     console.log('Clearing stat...');
-    await golos.broadcast.customJsonAsync(wif, [], [CONFIG.FORUM.creator], 'account_notes',
+    await golos.broadcast.customJsonAsync(wif, [], [CONFIG.forum.creator], 'account_notes',
         JSON.stringify(['set_value', {
-            account: CONFIG.FORUM.creator,
+            account: CONFIG.forum.creator,
             key: NOTE_PST_STATS_LST,
             value: ''
         }]));
     console.log('Setting stat: ', JSON.stringify(stats));
-    await golos.broadcast.customJsonAsync(wif, [], [CONFIG.FORUM.creator], 'account_notes',
+    await golos.broadcast.customJsonAsync(wif, [], [CONFIG.forum.creator], 'account_notes',
         JSON.stringify(['set_value', {
-            account: CONFIG.FORUM.creator,
+            account: CONFIG.forum.creator,
             key: NOTE_PST_STATS_LST,
             value: JSON.stringify(stats)
         }]));

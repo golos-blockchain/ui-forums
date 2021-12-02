@@ -117,7 +117,7 @@ export default class Donating extends React.Component {
         for (let [from, item] of Object.entries(donatesJoined)) {
             for (let [, asset] of Object.entries(item.assets)) {
                 donatesTotal++;
-                if (donatesInPage >= CONFIG.FORUM.donates_per_page) continue;
+                if (donatesInPage >= CONFIG.forum.donates_per_page) continue;
                 donates.push(<Dropdown.Item
                     text={from}
                     description={asset.toString(0)}
