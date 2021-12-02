@@ -5,8 +5,6 @@ import golos from 'golos-lib-js';
 import { Segment, Icon, Label, Button } from 'semantic-ui-react';
 import { Form } from 'formsy-semantic-ui-react';
 
-import * as CONFIG from '../../../../../config';
-
 import { imgurUpload, max_upload_avatar_bytes, } from '../../../../utils/imgurUpload';
 
 export default class AccountAbout extends React.Component {

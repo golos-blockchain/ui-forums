@@ -206,7 +206,7 @@ router.get('/', async (ctx) => {
 });
 
 router.post('/csp_violation', async (ctx) => {
-    const params = await coBody.json(ctx);
+    let params = ctx.request.body || ctx.request.rawBody;
     console.log('-- /csp_violation -->', ctx.req.headers['user-agent'], params);
     ctx.body = {};
 });
@@ -322,6 +322,13 @@ router.get('/:category/@:author/:permlink', async (ctx) => {
     keys[NOTE_PST_HIDACC_LST] = Object;
     keys[NOTE_PST_HIDACC_LST_ACCS] = Array;
     const vals = await getValues(keys);
+
+    // for .chunk.js.map file requests which becoming meant as this route
+    // example: GET /static/@js/8.4538698b.chunk.js.map
+    if ((ctx.params.author === 'js' || ctx.params.author === 'css')
+        && ctx.params.category === 'static') {
+        return;
+    }
 
     let { _id, forum } = findForum(vals[NOTE_], ctx.params.category);
 
