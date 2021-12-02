@@ -9,7 +9,6 @@ services:
             - ui-forums-rest
         volumes:
             - ./config.js:/config.js
-            - ./configSecure.js:/configSecure.js
         ports:
             - "3000:3000"
 
@@ -21,6 +20,7 @@ services:
         restart: always
         volumes:
             - ./config.js:/config.js
-            - ./configSecure.js:/configSecure.js
         ports:
             - "5000:5000"
+        environment:
+            - GOLOS_SERVER_NODE: https://apibeta.golos.today

@@ -15,6 +15,7 @@ const app = new koa();
 const router = new koaRouter();
 
 import { configureStore } from '../src/store';
+import useKoaHelmet from '../server/koaHelmet';
 
 const { persistor, store } = configureStore();
 import { PersistGate } from 'redux-persist/lib/integration/react';
@@ -72,6 +73,7 @@ router.get('(.*)', async (ctx) => {
 });
 
 app.use(cors({ credentials: true }));
+useKoaHelmet(app, true);
 app.use(router.routes());
 app.use(router.allowedMethods());
 

@@ -1,9 +1,9 @@
 module.exports = {
-    GOLOS_NODE: 'https://restdev.golostalk.com/node_send',
-    GOLOS_MSGS_NODE: 'wss://apibeta.golos.today/ws',
-    GOLOS_CHAIN_ID: '782a3039b478c839e4cb0c941ff4eaeb7df40bdd68bd441afd444b9da763de12',
-    REST_API: 'https://restdev.golostalk.com',
-    FORUM: {
+    golos_node: 'https://restdev.golostalk.com/node_send',
+    golos_msgs_node: 'wss://apibeta.golos.today/ws',
+    golos_chain_id: '782a3039b478c839e4cb0c941ff4eaeb7df40bdd68bd441afd444b9da763de12',
+    rest_api: 'https://restdev.golostalk.com',
+    forum: {
         _id: 'golostalk',
         creator: 'golostalk',
         footer_banner: '<a href="https://golos.id" target="_new"><img style="width: 700px" src="https://i.imgur.com/6mxuwsE.jpg" /></a>',
@@ -39,24 +39,58 @@ module.exports = {
         donates_per_page: 10,
         account_donates_per_page: 10
     },
-    STM_Config: {
+    images: {
         img_proxy_prefix: 'https://devimages.golos.today',
         img_proxy_backup_prefix: 'https://steemitimages.com',
-        ipfs_prefix: false,
         upload_image: 'https://api.imgur.com/3/image',
-        max_upload_file_bytes: 1 * 1024 * 1024,
         client_id: 'b4d78455f0d5fca'
     },
-    AUTH_SERVICE: {
+    auth_service: {
         host: 'https://dev.golos.app',
         custom_client: 'golostalk'
     },
-    NOTIFY_SERVICE: {
+    notify_service: {
         host: 'https://devnotify.golos.app'
     },
-    ELASTIC_SEARCH: {
+    elastic_search: {
         url: 'https://search.golos.today',
         login: 'golosclient',
         password: 'golosclient'
+    },
+    helmet: {
+        directives: {
+            defaultSrc: "'self'",
+            childSrc: "'self' www.youtube.com player.vimeo.com w.soundcloud.com *.facebook.com vk.com www.google.com *.yandex.ru",
+            scriptSrc: "'self' 'unsafe-inline' 'unsafe-eval' unpkg.com/ionicons@5.4.0/",
+            styleSrc: "'self' 'unsafe-inline' fonts.googleapis.com",
+            imgSrc: "* data:",
+            fontSrc: "'self' data: fonts.gstatic.com",
+            connectSrc: "'self' restdev.golostalk.com api.imgur.com *.golos.today wss://apibeta.golos.today *.golos.app unpkg.com/ionicons@5.4.0/ cdn.jsdelivr.net/npm/emoji-picker-element-data@%5E1/",
+            reportUri: "/csp_violation",
+            objectSrc: "'self'",
+            frameAncestors: "'none'"
+        }
+    },
+    anti_phishing: {
+        enabled: true,
+        white_list: [
+            'golos.id',
+            'golos.in',
+            'golos.today',
+            'golos.app',
+            'golostalk.com',
+            'golos.cf',
+            'dpos.space',
+            'rudex.org',
+            'steem-engine.com',
+            'github.com',
+            't.me',
+            'twitter.com',
+            'vk.com',
+            'coinmarketcap.com',
+            'sharpay.io',
+            'coins.black',
+            'golos.chatbro.com'
+        ]
     }
 };

@@ -95,7 +95,7 @@ export function addMessageResolved(payload) {
 export function fetchMessages(account, to) {
     return async dispatch => {
         if (!account.data) return;
-        let url = `${ CONFIG.REST_API }/msgs/chat/@${ account.name }/@${ to }`;
+        let url = `${ CONFIG.rest_api }/msgs/chat/@${ account.name }/@${ to }`;
         const response = await fetch(url);
         if (response.ok) {
             const result = await response.json();
@@ -155,7 +155,7 @@ export function fetchContacts(account) {
     return async dispatch => {
         if (!account.data) return;
 
-        let url = `${ CONFIG.REST_API }/msgs/contacts/@${ account.name }`;
+        let url = `${ CONFIG.rest_api }/msgs/contacts/@${ account.name }`;
         const response = await fetch(url);
         if (response.ok) {
             const result = await response.json();
@@ -210,7 +210,7 @@ export function searchContacts(selfName, query) {
             return;
         }
 
-        let url = `${ CONFIG.REST_API }/msgs/contacts/search/${ query }`;
+        let url = `${ CONFIG.rest_api }/msgs/contacts/search/${ query }`;
         const response = await fetch(url);
         if (response.ok) {
             let result = await response.json();

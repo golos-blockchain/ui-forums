@@ -84,7 +84,7 @@ export function setForum(forum) {
 
 export function fetchForumDetails(ns) {
     return dispatch => {
-        /*axios.get(`${ CONFIG.REST_API }/status/${ns}`)
+        /*axios.get(`${ CONFIG.rest_api }/status/${ns}`)
             .then(response => {
                 dispatch(statusActions.setStatus(response.data))
                 dispatch({
@@ -100,9 +100,9 @@ export function fetchForumDetails(ns) {
 
 export async function updateForumStats(wif, account, _id, forum, addPosts, addComments, addTotalPosts = 0, addTotalComments = 0) {
     try {
-        const key = 'g.pst.f.' + CONFIG.FORUM._id.toLowerCase() + '.stats.lst';
+        const key = 'g.pst.f.' + CONFIG.forum._id.toLowerCase() + '.stats.lst';
 
-        let vals = await golos.api.getValuesAsync(CONFIG.FORUM.creator, [key]);
+        let vals = await golos.api.getValuesAsync(CONFIG.forum.creator, [key]);
         vals[key] = vals[key] ? JSON.parse(vals[key]) : {};
 
         let operations = [];

@@ -10,18 +10,18 @@ const request_base = {
 };
 
 const authAvailable = () => {
-    return CONFIG.AUTH_SERVICE && CONFIG.AUTH_SERVICE.host;
+    return CONFIG.auth_service && CONFIG.auth_service.host;
 };
 
 export const authUrl = (pathname) => {
-    const host = authAvailable() ? CONFIG.AUTH_SERVICE.host : 'https://dev.golos.app';
+    const host = authAvailable() ? CONFIG.auth_service.host : 'https://dev.golos.app';
     return new URL(pathname, host).toString();
 };
 
 export const authRegisterUrl = () => {
     let pathname = '/register';
-    if (authAvailable() && CONFIG.AUTH_SERVICE.custom_client) {
-        pathname = '/' + CONFIG.AUTH_SERVICE.custom_client + pathname;
+    if (authAvailable() && CONFIG.auth_service.custom_client) {
+        pathname = '/' + CONFIG.auth_service.custom_client + pathname;
     }
     return authUrl(pathname);
 };

@@ -13,14 +13,14 @@ export default class Leave extends React.Component {
 
     render() {
         const targetPage = this.props.location.search.slice(1) + this.props.location.hash;
-        const ourForum = (<Link to='/'>{ttGetByKey(CONFIG.FORUM, 'link_title')}</Link>);
+        const ourForum = (<Link to='/'>{ttGetByKey(CONFIG.forum, 'link_title')}</Link>);
         return (
             <Segment textAlign='left' padded='very'>
                 <Helmet>
                     <title>{getPageTitle(tt('leave_page.title'))}</title>
                 </Helmet>
                 <Header size='huge' style={{fontWeight: 'normal'}}>
-                    {tt('leave_page.title')}<Link to='/'>{ttGetByKey(CONFIG.FORUM, 'link_title')}</Link>
+                    {tt('leave_page.title')}<Link to='/'>{ttGetByKey(CONFIG.forum, 'link_title')}</Link>
                     <Header.Subheader>
                         <br/>
                         <p>

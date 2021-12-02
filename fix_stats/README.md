@@ -5,9 +5,9 @@ For Windows and UNIX (Linux or macOS).
 Requires [Node.js 16 or newer](https://github.com/nodesource/distributions/blob/master/README.md).
 
 Following fields should be filled in `config.js` to use this tool:
-- GOLOS_NODE
-- FORUM._id
-- FORUM.creator
+- golos_node
+- forum._id
+- forum.creator
 
 Usage for Windows: double-click the `fix.bat` file.  
 Or, if some problems, start the PowerShell in current folder and run:

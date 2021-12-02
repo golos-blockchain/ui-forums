@@ -179,7 +179,7 @@ class Forum extends React.Component {
       if (!page) page = this.state.page;
       try {
           const { forumid } = this.props;
-          let url = `${ CONFIG.REST_API }/forum/${ forumid }?page=${ page }`;
+          let url = `${ CONFIG.rest_api }/forum/${ forumid }?page=${ page }`;
           if (this.state.showModerated) {
               url += `&filter=all`;
           } else if (this.state.filter && this.state.filter !== 'false') {
@@ -252,7 +252,7 @@ class Forum extends React.Component {
           subforums = false,
           page = this.state.page,
           isUser = this.props.account.isUser,
-          perPage = CONFIG.FORUM.posts_per_page,
+          perPage = CONFIG.forum.posts_per_page,
           posts = (forum && forum.stats) ? forum.stats.posts : 0,
           topics = this.state.topics;
       const children_cnt = Object.keys(children).length;
@@ -405,7 +405,7 @@ class Forum extends React.Component {
       let meta = false;
       if (forum && forumid) {
           const title = getPageTitle(getForumName(forum));
-          const image = CONFIG.FORUM.meta_image;
+          const image = CONFIG.forum.meta_image;
           meta = (
               <Helmet>
                   <title>{title}</title>

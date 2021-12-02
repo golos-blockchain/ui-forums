@@ -6,7 +6,7 @@ import * as CONFIG from '../../config';
 
 const initialState = {
   trail: [{
-    name: ttGetByKey(CONFIG.FORUM, 'breadcrumb_title'),
+    name: ttGetByKey(CONFIG.forum, 'breadcrumb_title'),
     link: '/'
   }]
 }

@@ -7,15 +7,15 @@ cd ui-forums
 
 # Configure
 
-After cloning project with Git, you have 2 files - `config.js` and `configSecure.js` in `ui-forums` folder.
+After cloning project with Git, you have `config.js` file in `ui-forums` folder.
 
-"Main idea" is what you can replace "GolosTalk" in `config.js` and `configSecure.js` with your actual forum name.
+"Main idea" is what you can replace "GolosTalk" in `config.js` with your actual forum name.
 
 But there are also some manipulations **required** to deploy ui-forums on your server. They are described below.
 
 ## config.js
 
-You should set `REST_API` to your URL with 5000 port where ui-forums-rest should run. Example: `http://127.0.0.1:5000`.
+You should set `rest_api` to your URL with 5000 port where ui-forums-rest should run. Example: `http://127.0.0.1:5000`.
 
 # Deployment
 

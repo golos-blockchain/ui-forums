@@ -40,10 +40,10 @@ class SearchResults extends React.Component {
     }
 
     async getTags() {
-        const GLOBAL_ID = CONFIG.FORUM._id.toLowerCase();
+        const GLOBAL_ID = CONFIG.forum._id.toLowerCase();
         let tagIdMap = {};
         try {
-            let uri = CONFIG.REST_API;
+            let uri = CONFIG.rest_api;
             const response = await fetch(uri);
             if (response.ok) {
                 const result = await response.json();

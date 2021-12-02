@@ -31,8 +31,8 @@ export default class HeaderMenu extends Component {
             </Grid.Column>
             */}
             <Grid.Column width={16} textAlign='center' style={{margin: '0.5em 0 0.5em 0'}}>
-              <h4 className="ui inverted header" dangerouslySetInnerHTML={{__html: ttGetByKey(CONFIG.FORUM, 'footer_title')}}></h4>
-              <p dangerouslySetInnerHTML={{__html: ttGetByKey(CONFIG.FORUM, 'footer_description')}}></p>
+              <h4 className="ui inverted header" dangerouslySetInnerHTML={{__html: ttGetByKey(CONFIG.forum, 'footer_title')}}></h4>
+              <p dangerouslySetInnerHTML={{__html: ttGetByKey(CONFIG.forum, 'footer_description')}}></p>
             </Grid.Column>
           </Grid>
         </Container>

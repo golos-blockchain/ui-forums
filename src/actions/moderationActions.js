@@ -17,13 +17,13 @@ function setValue(wif, isPosting, account, key, value, callback) {
 
 function hidmsg(wif, account, objWithMsg, callback) {
     setValue(wif, true, account,
-        'g.pst.f.' + CONFIG.FORUM._id.toLowerCase() + '.hidmsg.lst',
+        'g.pst.f.' + CONFIG.forum._id.toLowerCase() + '.hidmsg.lst',
         objWithMsg, callback);
 }
 
 function hidacc(wif, account, objWithAcc, callback) {
     setValue(wif, true, account,
-        'g.pst.f.' + CONFIG.FORUM._id.toLowerCase() + '.hidacc.lst',
+        'g.pst.f.' + CONFIG.forum._id.toLowerCase() + '.hidacc.lst',
         objWithAcc, callback);
 }
 

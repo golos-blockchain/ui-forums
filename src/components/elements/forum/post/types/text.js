@@ -34,10 +34,10 @@ export default class ForumPostText extends React.Component {
                     <Grid.Column mobile={6} tablet={6} computer={5} largeScreen={4} textAlign="center">
                     </Grid.Column>
                 );
-        if (topic.children > CONFIG.FORUM.replies_per_page) {
+        if (topic.children > CONFIG.forum.replies_per_page) {
             paginator = (
                 <Paginator
-                    perPage={CONFIG.FORUM.replies_per_page}
+                    perPage={CONFIG.forum.replies_per_page}
                     total={topic.children}
                     url={topic.url}
                 />
