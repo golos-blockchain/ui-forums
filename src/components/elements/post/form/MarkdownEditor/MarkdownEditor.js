@@ -29,7 +29,7 @@ export default class MarkdownEditor extends PureComponent {
         scrollContainer: PropTypes.any,
         commentMode: PropTypes.bool,
         onChangeNotify: PropTypes.func.isRequired,
-        uploadImage: PropTypes.func.isRequired,
+        uploadImage: PropTypes.func,
     };
 
     constructor(props) {

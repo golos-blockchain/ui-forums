@@ -147,7 +147,7 @@ export default class PostContent extends React.Component {
                 <Button
                     onClick={this.handleResponding}
                     color='green'
-                    icon='left reply'
+                    icon='reply'
                     content={tt('g.reply')}
                     floated='right'
                 />
@@ -157,7 +157,6 @@ export default class PostContent extends React.Component {
                     trigger={
                         <Button
                             onClick={this.handleRespondingWithQuote}
-                            color='gray'
                             icon='left quote'
                             floated='right'
                         />

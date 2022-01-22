@@ -22,7 +22,7 @@ export default class AccountLink extends React.Component {
                         {link}
                         &nbsp;
                         <Link to={`/msgs/@${username}`} target='_blank'>
-                            <Icon name='envelope outline' color='blue' title={tt('g.write_message')} />
+                            <Icon name='envelope' color='blue' title={tt('g.write_message')} />
                         </Link>
                     </span>
                 );
@@ -43,7 +43,7 @@ export default class AccountLink extends React.Component {
                     <span>
                         &nbsp;
                         <Link to={`/msgs/@${username}`} target='_blank'>
-                            <Icon name='envelope outline' color='blue' title={tt('g.write_message')} />
+                            <Icon name='envelope' color='blue' title={tt('g.write_message')} />
                         </Link>
                     </span>
                 ) : null}

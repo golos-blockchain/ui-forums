@@ -36,7 +36,7 @@ export default class PostTitle extends React.Component {
         let rootTitle = false;
         if (this.props.op) {
             rootTitle = (
-                <Segment inverted color='blue' attached stacked={(this.props.page !== 1)} verticalAlign='top'>
+                <Segment inverted color='blue' attached stacked={(this.props.page !== 1)}>
                     <Header size='large'>
                         <Icon name='comments' />
                         <Header.Content as='h1'>

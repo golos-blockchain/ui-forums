@@ -42,7 +42,7 @@ export default class ForumIndex extends React.Component {
                         }}>
                         {title}
                       </Link>
-                      <Header.Subheader textAlign='right'>
+                      <Header.Subheader>
                         {newest === 'last_reply' ? '↳ ' : '- '}
                         <Link to={`${url}`}>
                           <TimeAgoWrapper date={`${created}Z`} />
@@ -87,12 +87,12 @@ export default class ForumIndex extends React.Component {
                 </Header.Content>
               </Header>
             </Grid.Column>
-            <Grid.Column width={2} className='tablet or lower hidden' textAlign='center'>
+            <Grid.Column width={2} className='tablet or lower hidden center aligned'>
               <Header size='medium'>
                 <NumericLabel params={numberFormat}>{(forum.stats) ? forum.stats.posts : '?'}</NumericLabel>
               </Header>
             </Grid.Column>
-            <Grid.Column width={2} className='tablet or lower hidden' textAlign='center'>
+            <Grid.Column width={2} className='tablet or lower hidden center aligned'>
               <Header size='medium'>
                 <NumericLabel params={numberFormat}>{(forum.stats) ? (!forum.stats.posts ? 0 : forum.stats.comments) : '?'}</NumericLabel>
               </Header>
