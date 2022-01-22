@@ -13,7 +13,7 @@ export default class AccountPendingRewards extends React.Component {
         hasBalance: []
     };
 
-    componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
         if (nextProps.chainstate && nextProps.chainstate.ts !== this.state.chainstate.ts) {
             const { chainstate } = nextProps;
             const fields = [

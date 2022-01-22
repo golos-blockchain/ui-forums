@@ -10,7 +10,7 @@ export default class PostPreview extends React.Component {
     post: {}
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     this.setState({
       post: {
         content: {

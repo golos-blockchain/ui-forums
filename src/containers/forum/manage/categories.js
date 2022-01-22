@@ -45,51 +45,6 @@ class ForumCategoriesForm extends React.Component {
         }
     }
 
-    componentWillReceiveProps(nextProps) {
-        /*const { forum } = nextProps
-        if(forum.last) {
-            switch(forum.last.type) {
-                case types.FORUM_CONFIG_PROCESSING:
-                    this.setState({processing: true})
-                    break;
-                case types.FORUM_CONFIG_RESOLVED:
-                    if (this.state.showConfirm && this.state.processing) {
-                        this.setState({
-                            processing: false,
-                            awaitingBlock: true,
-                        })
-                        if(this.props.newForum) {
-                            this.props.history.push(`/f/${this.props.forum.target._id}`);
-                        }
-                        this.timeout = setTimeout(() => {
-                            this.setState({
-                                showConfirm: false,
-                                awaitingBlock: false,
-                            })
-                            new Noty({
-                                closeWith: ['click', 'button'],
-                                layout: 'topRight',
-                                progressBar: true,
-                                theme: 'semanticui',
-                                text: ReactDOMServer.renderToString(
-                                    <Header>
-                                      Forum configuration submitted!
-                                      <Header.Subheader>
-                                        If these changes do not appear immediately - wait a few moment and then refresh the page.
-                                      </Header.Subheader>
-                                    </Header>
-                                ),
-                                type: 'success',
-                                timeout: 8000
-                            }).show();
-                        }, 3000)
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }*/
-    }
     handleChange = (e, data) => {
         if (data.value && data.value.constructor === Array) {
             data.value = data.value.join(',');

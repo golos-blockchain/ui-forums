@@ -16,7 +16,7 @@ export default class AccountSidebar extends React.Component {
         props.actions.getAccounts([username]);
     }
 
-    componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
         const { username } = nextProps.match.params;
         if (username !== this.state.username) {
             this.setState({username});

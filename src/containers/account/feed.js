@@ -34,7 +34,7 @@ class Feed extends React.Component {
         };
     }
 
-    componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
         if (nextProps.chainstate) {
             if (nextProps.chainstate.paths[`/@${this.state.user}/feed`]) {
                 const content = nextProps.chainstate.paths[`/@${this.state.user}/feed`].content;

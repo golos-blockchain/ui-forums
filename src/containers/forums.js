@@ -46,7 +46,7 @@ class Forums extends React.Component {
         this.props.actions.resetPostState();
     }
 
-    componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
         if (nextProps.section === this.props.section) return;
         this.setState({
             showConfig: (['categories', 'permissions'].indexOf(nextProps.section) >= 0) ? true : false

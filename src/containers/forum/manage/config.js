@@ -46,7 +46,7 @@ class ForumConfigForm extends React.Component {
         }
     }
 
-    componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
         const { forum } = nextProps;
         if (forum.last) {
             switch(forum.last.type) {

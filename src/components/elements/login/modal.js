@@ -23,7 +23,7 @@ class LoginModal extends React.Component {
         };
     }
 
-    componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
         if (nextProps.open && nextProps.open !== this.state.loginOpen) {
             this.setState({
                 loginOpen : nextProps.open ? true : false

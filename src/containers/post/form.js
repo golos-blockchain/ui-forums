@@ -94,7 +94,7 @@ class PostForm extends React.Component {
         }
     }
 
-    componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
         if (nextProps.post && nextProps.post.submitted) {
             const submitted = nextProps.post.submitted;
             if (submitted.formId === this.state.formId && submitted.ts !== this.state.submitted.ts) {

@@ -32,7 +32,7 @@ export default class AccountReplies extends React.Component {
         goToTop();
     };
 
-    componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
         const { username } = this.state;
         const { post } = nextProps;
         if(post.authors[username]) {

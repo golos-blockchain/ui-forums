@@ -10,7 +10,7 @@ export default class AccountFollow extends React.Component {
       following: props.account.following || []
     }
   }
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if(this.state.processing && nextProps.length !== this.state.following.length) {
       this.setState({processing: false})
     }

@@ -56,7 +56,7 @@ class HeaderMenu extends Component {
         clearInterval(this.intervalNotify);
     }
 
-    componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
         if (nextProps.account && nextProps.account.data) {
             const { data } = nextProps.account;
             let hasBalance = [data.tip_balance];

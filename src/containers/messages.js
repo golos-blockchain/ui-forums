@@ -201,7 +201,7 @@ class Messages extends React.Component {
         return !props.account || !props.account.name;
     }
 
-    componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
         if (this.needsLogin(nextProps)) {
             this.setState({
                 showLogin: true

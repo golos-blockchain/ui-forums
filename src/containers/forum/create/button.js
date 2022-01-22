@@ -27,7 +27,7 @@ class ForumCreateButton extends React.Component {
         };
     }
 
-    componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
         const { forum } = nextProps;
         const t = this;
         if (forum.last) {

@@ -31,7 +31,7 @@ export default class AccountResponses extends React.Component {
         goToTop();
     };
 
-    componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
         const { username } = this.state;
         const { post } = nextProps;
         if (post.authors && post.authors[username] && post.authors[username].responses) {

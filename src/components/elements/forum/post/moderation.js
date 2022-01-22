@@ -14,7 +14,7 @@ export default class ForumPostModeration extends React.Component {
         };
     }
 
-    componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
         const { moderation, topic } = nextProps;
         if (moderation && moderation.last) {
             const last_topic = moderation.last.payload[1].topic;

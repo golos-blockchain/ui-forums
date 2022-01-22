@@ -35,7 +35,7 @@ class Replies extends React.Component {
     this.state = state
     this.changePage = this.changePage.bind(this);
   }
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     const { post } = nextProps
     const user = nextProps.account.name || false
     if(user && nextProps.account && this.props.account.name !== user) {

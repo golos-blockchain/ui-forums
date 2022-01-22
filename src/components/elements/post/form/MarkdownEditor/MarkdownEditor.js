@@ -45,7 +45,7 @@ export default class MarkdownEditor extends PureComponent {
         this._onCursorActivityLazy = debounce(this._onCursorActivity, 50);
     }
 
-    componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
         if (nextProps.previewEnabled !== this.props.previewEnabled) {
             SimpleMDE.togglePreview(this._simplemde);
         }

@@ -35,7 +35,7 @@ export default class PostVoteTable extends React.Component {
         };
     }
 
-    componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
         if (nextProps.votes && this.state.votes && nextProps.votes.lenth !== this.state.votes.lenth) {
             this.setState({
                 data: nextProps.votes,

@@ -17,7 +17,7 @@ class AccountAvatar extends React.Component {
     this.loadAccountIfNotLoaded(props, username);
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     const { username } = nextProps;
     if (username !== this.state.username) {
       this.setState({username});
