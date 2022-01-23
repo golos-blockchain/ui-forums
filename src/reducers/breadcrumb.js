@@ -1,8 +1,8 @@
 import update from 'immutability-helper';
-import ttGetByKey from '../utils/ttGetByKey';
+import ttGetByKey from '@/utils/ttGetByKey';
 
-import * as types from '../actions/actionTypes';
-import * as CONFIG from '../../config';
+import * as types from '@/actions/actionTypes';
+import * as CONFIG from '@/config';
 
 const initialState = {
   trail: [{

@@ -1,6 +1,6 @@
 import uniqBy from 'lodash/uniqBy';
 
-import * as types from '../actions/actionTypes';
+import * as types from '@/actions/actionTypes';
 
 const initialAccounts = {
     auths: []

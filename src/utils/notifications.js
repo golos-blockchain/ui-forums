@@ -1,7 +1,7 @@
 import { Signature, hash } from 'golos-lib-js/lib/auth/ecc';
 
-import { authApiLogin, authApiLogout } from './AuthApiClient';
-import { notifyApiLogin, notifyApiLogout } from './NotifyApiClient';
+import { authApiLogin, authApiLogout } from '@/utils/AuthApiClient';
+import { notifyApiLogin, notifyApiLogout } from '@/utils/NotifyApiClient';
 
 export async function notifyLogin(account, posting_key) {
     let res = await notifyApiLogin(account, localStorage.getItem('X-Auth-Session'));

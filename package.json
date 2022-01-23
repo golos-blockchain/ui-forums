@@ -27,6 +27,7 @@
     "koa-static": "^5.0.0",
     "loadable-components": "2.0.0",
     "lodash": "^4.17.11",
+    "next-redux-wrapper": "^7.0.5",
     "noty": "^3.1.0",
     "prop-types": "15.6.0",
     "rc-pagination": "^1.8.7",
@@ -88,10 +89,13 @@
     }
   },
   "scripts": {
+    "dev": "GOLOS_SERVER_NODE=https://apibeta.golos.today next dev",
+    "build": "next build",
+    "prod": "GOLOS_SERVER_NODE=https://apibeta.golos.today next start",
     "start": "react-app-rewired start",
     "start:server": "GOLOS_SERVER_NODE=https://apibeta.golos.today NODE_ENV=development nodemon server",
-    "build": "react-app-rewired build && yarn run delete-maps",
-    "prod": "NODE_ENV=development webpack --config webpack.server.js --mode=development && node ./server-build/index.js",
+    "build0": "react-app-rewired build && yarn run delete-maps",
+    "prod0": "NODE_ENV=development webpack --config webpack.server.js --mode=development && node ./server-build/index.js",
     "delete-maps": "yarn run delete-map-files && yarn run delete-references-to-map-files",
     "delete-map-files": "find ./build -name '*.map' -delete",
     "delete-references-to-map-files": "find ./build -regex '.*\\.\\(js\\|css\\)' -exec sed -i -E '\\/[\\*\\/]#\\ssourceMappingURL=main(\\.[0-9a-f]+)?\\.(css|js)\\.map(\\*\\/)?/g' {} +",

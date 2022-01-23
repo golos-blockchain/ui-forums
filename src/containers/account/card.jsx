@@ -1,0 +1,73 @@
+import React from 'react';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+
+//import { Card, Popup } from 'semantic-ui-react';
+
+import * as accountActions from '@/actions/accountActions';
+import * as statusActions from '@/actions/statusActions';
+
+//import AccountAvatar from '@/elements/account/avatar';
+//import AccountFollow from '@/elements/account/follow';
+//import AccountLink from '@/elements/account/link';
+
+class AccountCard extends React.Component {
+    render() {
+        let { trigger } = this.props;
+        return trigger;
+        /*return (
+            <Popup
+                hoverable
+                basic
+                trigger={trigger}
+                content={
+                    <Card
+                        raised={true}
+                        style={{width: '192px'}}
+                    >
+                      <AccountAvatar
+                          noPopup={true}
+                          size={192}
+                          username={username}
+                      />
+                      <Card.Content>
+                          <Card.Header>
+                              <AccountLink
+                                  noPopup={true}
+                                  username={username}
+                              />
+                          </Card.Header>
+                      </Card.Content>
+                      {<Card.Content extra>
+                          <div className='ui two buttons'>
+                              <AccountFollow who={username} {...this.props}/>
+                          </div>
+                      </Card.Content>}
+                    </Card>
+                }
+                style={{
+                    background: 'transparent',
+                    padding: 0
+                }}
+            />
+        );*/
+    }
+}
+
+
+function mapStateToProps(state, ownProps) {
+    return {
+        account: state.account,
+        preferences: state.preferences,
+        state: state.state
+    }
+}
+
+function mapDispatchToProps(dispatch) {
+    return {actions: bindActionCreators({
+        ...accountActions,
+        ...statusActions
+    }, dispatch)}
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(AccountCard);

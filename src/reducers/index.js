@@ -1,29 +1,17 @@
-import account from './account';
-import accounts from './accounts';
-import breadcrumb from './breadcrumb';
-import chainstate from './chainstate';
-import forum from './forum';
-import messages from './messages';
-import moderation from './moderation';
-import post from './post';
-import preferences from './preferences';
-import search from './search';
-import subscriptions from './subscriptions';
-import status from './status';
+import account from '@/reducers/account';
+import accounts from '@/reducers/accounts';
+import breadcrumb from '@/reducers/breadcrumb';
+import chainstate from '@/reducers/chainstate';
+import search from '@/reducers/search';
+import status from '@/reducers/status';
 
 const forumReducer = {
     account,
     accounts,
     breadcrumb,
     chainstate,
-    forum,
-    messages,
-    moderation,
-    post,
-    preferences,
     search,
-    subscriptions,
-    status
+    status,
 };
 
 export default forumReducer;
