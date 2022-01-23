@@ -1,11 +1,11 @@
 import golos from 'golos-lib-js';
 
-import * as types from './actionTypes';
-import * as AccountsActions from './accountsActions';
-import * as chainstateActions from './chainstateActions';
+import * as types from '@/actions/actionTypes';
+import * as AccountsActions from '@/actions/accountsActions';
+import * as chainstateActions from '@/actions/chainstateActions';
 
-import importNoty from '../utils/importNoty';
-import { getNotifications, markNotificationRead } from '../utils/NotifyApiClient';
+import importNoty from '@/utils/importNoty';
+import { getNotifications, markNotificationRead } from '@/utils/NotifyApiClient';
 
 export function claimRewards(params) {
     return dispatch => {

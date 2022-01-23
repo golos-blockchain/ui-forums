@@ -1,8 +1,8 @@
 import golos from 'golos-lib-js';
 
-import * as types from './actionTypes';
-import * as ForumActions from './forumActions';
-import * as CONFIG from '../../config';
+import * as types from '@/actions/actionTypes';
+import * as ForumActions from '@/actions/forumActions';
+import * as CONFIG from '@/config';
 
 function setValue(wif, isPosting, account, key, value, callback) {
     golos.broadcast.customJson(wif,

@@ -1,5 +1,6 @@
 .aws
 .boto
+.next
 
 build/
 node_modules/

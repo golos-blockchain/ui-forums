@@ -1,6 +1,6 @@
 import tt from 'counterpart';
 
-import * as CONFIG from '../../config';
+import * as CONFIG from '@/config';
 
 export const max_upload_avatar_bytes = 1 * 1024 * 1024;
 export const max_upload_image_bytes = 1 * 1024 * 1024;

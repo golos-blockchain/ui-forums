@@ -1,4 +1,4 @@
-import * as types from '../actions/actionTypes';
+import * as types from '@/actions/actionTypes';
 
 export default function preferences(state = false, action) {
     switch (action.type) {

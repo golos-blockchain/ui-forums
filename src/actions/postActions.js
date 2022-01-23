@@ -3,10 +3,10 @@ import getSlug from 'speakingurl';
 import tt from 'counterpart';
 import fetch from 'cross-fetch';
 
-import * as types from './actionTypes';
-import * as BreadcrumbActions from './breadcrumbActions';
-import * as ForumActions from './forumActions';
-import * as CONFIG from '../../config';
+import * as types from '@/actions/actionTypes';
+import * as BreadcrumbActions from '@/actions/breadcrumbActions';
+import * as ForumActions from '@/actions/forumActions';
+import * as CONFIG from '@/config';
 
 export function setVoteProcessing(id) {
     return {

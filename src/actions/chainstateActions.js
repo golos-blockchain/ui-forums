@@ -1,6 +1,6 @@
 import golos from 'golos-lib-js';
 
-import * as types from './actionTypes';
+import * as types from '@/actions/actionTypes';
 
 export function getAccounts(accounts) {
     return dispatch => {
