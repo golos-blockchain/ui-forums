@@ -1,9 +1,9 @@
 import pull from 'lodash/pull';
 import uniq from 'lodash/uniq';
 
-import * as types from '../actions/actionTypes';
+import * as types from '@/actions/actionTypes';
 
-import { saveMemoKeyInSession } from '../utils/MessageUtils';
+import { saveMemoKeyInSession } from '@/utils/MessageUtils';
 
 export default function account(state = false, action) {
     switch (action.type) {

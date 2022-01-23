@@ -1,15 +1,14 @@
-import account from './account';
-import accounts from './accounts';
-import breadcrumb from './breadcrumb';
-import chainstate from './chainstate';
-import forum from './forum';
-import messages from './messages';
-import moderation from './moderation';
-import post from './post';
-import preferences from './preferences';
-import search from './search';
-import subscriptions from './subscriptions';
-import status from './status';
+import account from '@/reducers/account';
+import accounts from '@/reducers/accounts';
+import breadcrumb from '@/reducers/breadcrumb';
+import chainstate from '@/reducers/chainstate';
+import forum from '@/reducers/forum';
+import moderation from '@/reducers/moderation';
+import post from '@/reducers/post';
+import preferences from '@/reducers/preferences';
+import search from '@/reducers/search';
+import status from '@/reducers/status';
+import subscriptions from '@/reducers/subscriptions';
 
 const forumReducer = {
     account,
@@ -17,13 +16,12 @@ const forumReducer = {
     breadcrumb,
     chainstate,
     forum,
-    messages,
     moderation,
     post,
     preferences,
     search,
+    status,
     subscriptions,
-    status
 };
 
 export default forumReducer;

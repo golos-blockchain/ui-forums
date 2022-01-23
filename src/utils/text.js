@@ -1,7 +1,7 @@
 import tt from 'counterpart';
-import ttGetByKey from './ttGetByKey';
+import ttGetByKey from '@/utils/ttGetByKey';
 
-import * as CONFIG from '../../config';
+import * as CONFIG from '@/config';
 
 export function getForumName(forum) {
     return ((tt.getLocale() === 'ru') ?

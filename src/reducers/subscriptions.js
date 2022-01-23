@@ -1,6 +1,6 @@
 import store from 'store';
 
-import * as types from '../actions/actionTypes';
+import * as types from '@/actions/actionTypes';
 
 export default function subscriptions(state = false, action) {
   // Load from localStorage as default, or initialPreferences

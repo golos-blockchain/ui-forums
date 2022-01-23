@@ -1,4 +1,4 @@
-import * as CONFIG from '../../config';
+import * as CONFIG from '@/config';
 
 const request_base = {
     method: 'post',

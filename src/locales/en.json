@@ -19,6 +19,8 @@
     "submitted": "Your post has been submitted!",
     "submitted_edit": "Your post has been edited!",
     "submitted_desc": "It may take a few moments to appear on forum.",
+    "forum_404": "No such forum :(",
+    "forum_404_desc": "But there are many another interesting forums.",
     "post_404": "No such post :(",
     "post_404_desc": "But there are many another interesting posts.",
     "reply_hidden_AUTHOR": "Reply by @%(AUTHOR)s hidden (low ratings) - click to show",

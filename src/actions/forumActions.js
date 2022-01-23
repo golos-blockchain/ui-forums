@@ -1,7 +1,7 @@
 import golos from 'golos-lib-js';
 
-import * as types from './actionTypes';
-import * as CONFIG from '../../config';
+import * as types from '@/actions/actionTypes';
+import * as CONFIG from '@/config';
 
 export function forumReservation(account, name, namespace) {
     return dispatch => {
