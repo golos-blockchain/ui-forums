@@ -1,6 +1,5 @@
 module.exports = {
     golos_node: 'http://37.18.27.45:3000/api/node_send',
-    golos_msgs_node: 'wss://apibeta.golos.today/ws',
     golos_chain_id: '782a3039b478c839e4cb0c941ff4eaeb7df40bdd68bd441afd444b9da763de12',
     rest_api: 'https://dev.golostalk.com',
     forum: {
