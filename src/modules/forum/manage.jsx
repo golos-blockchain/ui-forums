@@ -12,9 +12,9 @@ import * as statusActions from '@/actions/statusActions';
 import * as preferenceActions from '@/actions/preferenceActions';
 
 import AccountLink from '@/elements/account/link';
-import ForumCategoriesForm from '@/containers/forum/manage/categories';
+import ForumCategoriesForm from '@/modules/forum/manage/categories';
 //import ForumUpgrade from '@/elements/forum/manage/upgrade';
-import ForumPermissions from '@/containers/forum/manage/permissions';
+import ForumPermissions from '@/modules/forum/manage/permissions';
 
 class ForumManage extends React.Component {
     componentDidMount() {

@@ -6,7 +6,7 @@ import plusSvg from './plus.svg';
 import { Label, Button, Icon, Modal, Popup } from 'semantic-ui-react';
 import { Form } from 'formsy-semantic-ui-react';
 
-import AddImageDialog from '@/containers/dialogs/image';
+import AddImageDialog from '@/modules/dialogs/image';
 
 const MAX_HEADING = 4;
 const TOOLBAR_OFFSET = 7;

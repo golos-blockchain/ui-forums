@@ -7,7 +7,7 @@ import { withRouter } from 'next/router';
 import { Breadcrumb, Container, Grid, Icon } from 'semantic-ui-react';
 
 import * as breadcrumbActions from '@/actions/breadcrumbActions';
-import SearchBox from '@/containers/search';
+import SearchBox from '@/modules/search';
 
 class BreadcrumbMenu extends Component {
     render() {

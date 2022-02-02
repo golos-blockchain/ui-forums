@@ -7,7 +7,7 @@ import { Button, Divider, Header, Popup, Segment } from 'semantic-ui-react';
 import MarkdownViewer from '@/utils/MarkdownViewer';
 import PostControls from '@/elements/post/controls';
 
-import PostForm from '@/containers/post/form';
+import PostForm from '@/modules/post/form';
 import PostFormHeader from '@/elements/post/form/header';
 import PostTitle from '@/elements/post/title';
 
