@@ -1,5 +1,5 @@
 import React from 'react';
-import Link from 'next/link'
+import Link from '@/elements/link'
 
 import { Button, Header, Grid, Label, Segment, Table } from 'semantic-ui-react'
 import { Form, Input } from 'formsy-semantic-ui-react'

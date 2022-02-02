@@ -1,6 +1,6 @@
 import React from 'react'
 import Head from 'next/head'
-import Link from 'next/link'
+import Link from '@/elements/link'
 import tt from 'counterpart'
 import ttGetByKey from '@/utils/ttGetByKey'
 import { getPageTitle } from '@/utils/text'

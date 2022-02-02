@@ -1,5 +1,5 @@
 import React from 'react';
-import Link from 'next/link';
+import Link from '@/elements/link';
 
 import { Grid, Header, Icon, Segment } from 'semantic-ui-react';
 

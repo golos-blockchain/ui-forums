@@ -1,5 +1,5 @@
 import React from 'react';
-import Link from 'next/link'
+import Link from '@/elements/link'
 import { goToTop } from 'react-scrollable-anchor';
 import tt from 'counterpart';
 

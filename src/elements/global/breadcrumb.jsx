@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import Link from 'next/link';
+import Link from '@/elements/link';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'next/router';

@@ -1,5 +1,5 @@
 import React from 'react';
-import Link from 'next/link';
+import Link from '@/elements/link';
 import tt from 'counterpart';
 
 export default class ForumLink extends React.Component {

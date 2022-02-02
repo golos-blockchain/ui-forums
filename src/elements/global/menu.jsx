@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import Link from 'next/link'
+import Link from '@/elements/link'
 import tt from 'counterpart';
 import ttGetByKey from '@/utils/ttGetByKey';
 import golos from 'golos-lib-js';

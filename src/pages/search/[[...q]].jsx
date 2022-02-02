@@ -1,7 +1,7 @@
 import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import Link from 'next/link';
+import Link from '@/elements/link';
 import { withRouter } from 'next/router';
 import { goToTop } from 'react-scrollable-anchor';
 import golos from 'golos-lib-js';
