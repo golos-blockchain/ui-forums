@@ -5,22 +5,7 @@ services:
         image: golosblockchain/forum-ui:latest
         build: .
         restart: always
-        depends_on:
-            - ui-forums-rest
         volumes:
-            - ./config.js:/config.js
+            - ./config/default.js:/config/default.js
         ports:
             - "3000:3000"
-
-    ui-forums-rest:
-        image: golosblockchain/forum-ui:rest
-        build:
-            context: .
-            dockerfile: server/Dockerfile
-        restart: always
-        volumes:
-            - ./config.js:/config.js
-        ports:
-            - "5000:5000"
-        environment:
-            - GOLOS_SERVER_NODE: https://apibeta.golos.today
