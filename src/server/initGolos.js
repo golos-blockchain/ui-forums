@@ -2,9 +2,9 @@ const config = require('config')
 const golos = require('golos-lib-js')
 
 function initGolos() {
-    if (!process.env.GOLOS_SERVER_NODE)
-        throw new Error('Please set GOLOS_SERVER_NODE environment variable in docker-compose.yml (if production) or in package.json (if development). Example: wss://api-full.golos.id/ws')
-    golos.config.set('websocket', process.env.GOLOS_SERVER_NODE)
+    if (!config.has('golos_server_node'))
+        throw new Error('Please set golos_server_node in config. Example: wss://api-full.golos.id/ws')
+    golos.config.set('websocket', config.get('golos_server_node'))
     golos.config.set('chain_id', config.get('golos_chain_id'))
 }
 

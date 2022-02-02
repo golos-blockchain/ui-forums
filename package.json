@@ -54,9 +54,9 @@
     "shave": "^2.5.4"
   },
   "scripts": {
-    "dev": "GOLOS_SERVER_NODE=https://apibeta.golos.today next dev",
+    "dev": "next dev",
     "build": "next build",
-    "prod": "GOLOS_SERVER_NODE=https://apibeta.golos.today next start"
+    "prod": "next start"
   },
   "optionalDependencies": {
     "fsevents": "^2.3.2"
