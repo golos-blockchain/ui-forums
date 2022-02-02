@@ -83,7 +83,7 @@ export function setForum(forum) {
 
 export function fetchForumDetails(ns) {
     return dispatch => {
-        /*axios.get(`${ $GLS_Config.rest_api }/status/${ns}`)
+        /*axios.get(`${ $GLS_Config.site_domain }/status/${ns}`)
             .then(response => {
                 dispatch(statusActions.setStatus(response.data))
                 dispatch({

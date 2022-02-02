@@ -1,8 +1,8 @@
 module.exports = {
-    golos_node: 'http://37.18.27.45:3000/api/node_send',
     golos_server_node: 'https://apibeta.golos.today',
     golos_chain_id: '782a3039b478c839e4cb0c941ff4eaeb7df40bdd68bd441afd444b9da763de12',
-    rest_api: 'https://dev.golostalk.com',
+    site_domain: 'https://dev.golostalk.com',
+    proxy_node: true,
     forum: {
         _id: 'golostalk',
         creator: 'golostalk',

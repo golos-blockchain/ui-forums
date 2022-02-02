@@ -79,7 +79,7 @@ class ForumLayout extends React.Component {
 
     changePage = (page) => {
         const path = this.props.router.asPath
-        let newPath = new URL(path, $GLS_Config.rest_api)
+        let newPath = new URL(path, $GLS_Config.site_domain)
         newPath.searchParams.set('page', page)
         this.props.router.push(newPath.pathname + newPath.search,
             undefined,
@@ -147,9 +147,9 @@ class ForumLayout extends React.Component {
     changeVisibility = (e, data) => {
         this.setState({showModerated: data.checked}, () => {
             const path = this.props.router.asPath
-            let oldPath = new URL(path, $GLS_Config.rest_api)
+            let oldPath = new URL(path, $GLS_Config.site_domain)
             oldPath.searchParams.delete('filter')
-            let newPath = new URL(path, $GLS_Config.rest_api)
+            let newPath = new URL(path, $GLS_Config.site_domain)
             if (data.checked)
                 newPath.searchParams.set('filter', 'all')
             else

@@ -6,16 +6,20 @@ import { initNative, } from '@/server/initGolos'
 
 function initConfig() {
     let cfg = {
-        golos_node: config.get('golos_node'),
         golos_chain_id: config.get('golos_chain_id'),
-        rest_api: config.get('rest_api'),
+        site_domain: config.get('site_domain'),
         forum: config.get('forum'),
-        images: config.get('rest_api'),
+        images: config.get('images'),
         auth_service: config.get('auth_service'),
         notify_service: config.get('notify_service'),
         elastic_search: config.get('elastic_search'),
         helmet: config.get('helmet'),
         anti_phishing: config.get('anti_phishing'),
+    }
+    if (config.get('proxy_node')) {
+        cfg.golos_node = new URL('/api/node_send', cfg.site_domain).toString()
+    } else {
+        cfg.golos_node = config.get('golos_server_node')
     }
     global.$GLS_Config = cfg
     return cfg

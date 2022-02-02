@@ -7,19 +7,19 @@ cd ui-forums
 
 # Configure
 
-After cloning project with Git, you have `config.js` file in `ui-forums` folder.
+After cloning project with Git, you have `config/defailt.js` file in `ui-forums` folder.
 
-"Main idea" is what you can replace "GolosTalk" in `config.js` with your actual forum name.
+"Main idea" is what you can replace "GolosTalk" in `defailt.js` with your actual forum name.
 
 But there are also some manipulations **required** to deploy ui-forums on your server. They are described below.
 
-## config.js
+## defailt.js
 
-You should set `rest_api` to your URL with 5000 port where ui-forums-rest should run. Example: `http://127.0.0.1:5000`.
+You should set `site_domain` to your site domain where forum runs.
 
 # Deployment
 
-ui-forums-rest runs on 5000 port, and main ui-forums site runs on [http://localhost:3000](http://localhost:3000)
+Site runs on [http://localhost:3000](http://localhost:3000)
 
 There are 3 ways to deploy.
 
@@ -36,9 +36,6 @@ docker-compose up
 Requires [Docker](https://docs.docker.com/engine/install/).
 
 ```
-sudo docker build -t local/ui-forums-rest -f server/Dockerfile .
-sudo docker run -d -p 5000:5000 --name ui-forums-rest local/ui-forums-rest
-
 sudo docker build -t local/ui-forums -f Dockerfile .
 sudo docker run -d -p 3000:3000 --name ui-forums local/ui-forums
 ```
@@ -48,13 +45,8 @@ sudo docker run -d -p 3000:3000 --name ui-forums local/ui-forums
 Requires [Node.js 16 or newer](https://github.com/nodesource/distributions/blob/master/README.md).
 
 ```
-cd server
-npm install
-node index.js & disown
-cd ..
-npm install --global gulp-cli
-npm install
-npm start
+yarn install
+yarn run start
 ```
 
 # Troobleshooting

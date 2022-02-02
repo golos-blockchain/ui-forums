@@ -122,7 +122,7 @@ function getForumName(forum) {
 export function fetchPost(params) {
     return async dispatch => {
         const { category, author, permlink } = params;
-        const response = await fetch(`${ $GLS_Config.rest_api }/${ category }/@${ author }/${ permlink }`);
+        const response = await fetch(`${ $GLS_Config.site_domain }/${ category }/@${ author }/${ permlink }`);
         if (response.ok) {
             const result = await response.json();
             let trail = result.forum.trail.map(item => {
@@ -163,7 +163,7 @@ export function fetchPostByAuthorResolved(payload = {}) {
 
 export function fetchPostByAuthor(author, page = 1) {
     return async dispatch => {
-        let uri = `${ $GLS_Config.rest_api }/@${ author }/posts`;
+        let uri = `${ $GLS_Config.site_domain }/@${ author }/posts`;
         if (page > 1) {
             uri = uri + '?page=' + page;
         }
@@ -236,7 +236,7 @@ export function fetchPostRepliesByAuthorStarted(payload = {}) {
 
 export function fetchPostRepliesByAuthor(author, page = 1) {
     return async dispatch => {
-        let uri = `${ $GLS_Config.rest_api }/@${ author }/replies`;
+        let uri = `${ $GLS_Config.site_domain }/@${ author }/replies`;
         if (page > 1) {
             uri = uri + '?page=' + page;
         }
@@ -273,7 +273,7 @@ export function fetchPostResponsesByAuthorResolved(payload = {}) {
 
 export function fetchPostResponsesByAuthor(author, page = 1) {
     return async dispatch => {
-        let uri = `${ $GLS_Config.rest_api }/@${ author }/responses`;
+        let uri = `${ $GLS_Config.site_domain }/@${ author }/responses`;
         if (page > 1) {
             uri = uri + '?page=' + page;
         }
@@ -307,7 +307,7 @@ export function fetchDonatesByAuthorResolved(payload = {}) {
 
 export function fetchDonatesByAuthor(author, direction, page = 1) {
     return async dispatch => {
-        let uri = `${ $GLS_Config.rest_api }/@${ author }/donates/${ direction }`;
+        let uri = `${ $GLS_Config.site_domain }/@${ author }/donates/${ direction }`;
         if (page > 1) {
             uri = uri + '?page=' + page;
         }
@@ -342,7 +342,7 @@ export function fetchPostResponsesResolved(payload = {}) {
 export function fetchPostResponses(params) {
     return async dispatch => {
         const { category, author, permlink } = params;
-        const response = await fetch(`${ $GLS_Config.rest_api }/${ category }/@${ author }/${ permlink }/responses`);
+        const response = await fetch(`${ $GLS_Config.site_domain }/${ category }/@${ author }/${ permlink }/responses`);
         if (response.ok) {
             const result = await response.json();
             console.log(result);
@@ -380,7 +380,7 @@ export function fetchPostVotesResolved(payload = {}) {
 export function fetchPostDonates(params) {
     return async dispatch => {
         const { category, author, permlink } = params;
-        const response = await fetch(`${ $GLS_Config.rest_api }/${ category }/@${ author }/${ permlink }/donates`);
+        const response = await fetch(`${ $GLS_Config.site_domain }/${ category }/@${ author }/${ permlink }/donates`);
         if (response.ok) {
             const result = await response.json();
             dispatch(fetchPostDonatesResolved({

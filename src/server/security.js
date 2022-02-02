@@ -10,7 +10,7 @@ function convertEntriesToArrays(obj) {
 }
 
 let cspDirectives = convertEntriesToArrays(config.get('helmet.directives'))
-cspDirectives.reportURI = new URL('/api/csp_violation', config.get('rest_api'))
+cspDirectives.reportURI = new URL('/api/csp_violation', config.get('site_domain'))
 // TODO: it should be relative, instead of using config. But next-secure-headers do not supports it
 
 const secureHeadersOpts = {

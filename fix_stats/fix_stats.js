@@ -1,9 +1,9 @@
 const reader = require('readline-sync');
 const golos = require('golos-lib-js');
 
-const CONFIG = require('../config');
+const CONFIG = require('../config/default');
 
-golos.config.set('websocket', CONFIG.golos_node);
+golos.config.set('websocket', CONFIG.golos_server_node);
 golos.config.set('chain_id', CONFIG.golos_chain_id);
 
 const PREFIX = 'g.f.';
