@@ -25,7 +25,7 @@ export default class ForumPostText extends React.Component {
                         ? <Icon color='blue' name='angle double right' />
                         : (topic.children > 0)
                         ? <Icon color='blue' name='angle right' />
-                        : <Icon name='circle thin' />
+                        : <Icon name='circle outline' />
                 ,
                 paginator = false,
                 last_reply = (

@@ -151,7 +151,7 @@ class PostForm extends React.Component {
         // Clear the preview
         this.setState({ preview: {} });
         // Reset the form
-        this.form.formsyForm.reset();
+        this.form.reset();
         // Parent callback
         this.props.onCancel();
         e.preventDefault();
@@ -224,7 +224,7 @@ class PostForm extends React.Component {
     };
 
     submit = (e) => {
-        const form = this.form.formsyForm;
+        const form = this.form;
         const model = form.getModel();
         const _id = (this.props.forum) ? this.props.forum._id : false;
         const data = {
@@ -337,7 +337,7 @@ class PostForm extends React.Component {
                     <Segment attached='bottom' padded className={`${activeItem === 'debug' ? 'active ' : ''}tab`}>
                         <code>
                             <pre>
-                                {JSON.stringify((this.form) ? this.form.formsyForm.getModel() : {}, null, 2)}
+                                {JSON.stringify((this.form) ? this.form.getModel() : {}, null, 2)}
                             </pre>
                         </code>
                     </Segment>

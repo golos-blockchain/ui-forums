@@ -59,7 +59,7 @@ class ForumManage extends React.Component {
         let panes = [
             //{ menuItem: { key: 'overview', icon: 'cubes', color: 'black', content: tt('forum_controls.overview') }, render: () => <ForumOverview forum={forum} /> },
             { menuItem: { key: 'categories', icon: 'indent', color: 'red', content: tt('forum_controls.categories') }, render: () => <ForumCategoriesForm newForum={this.props.newForum} categories={categories} hideConfig={this.props.hideConfig}/> },
-            { menuItem: { key: 'permissions', icon: 'protect', color: 'purple', content: tt('forum_controls.permissions') }, render: () => <ForumPermissions account={account} moders={moders} supers={supers} admins={admins} /> },
+            { menuItem: { key: 'permissions', icon: 'shield', color: 'purple', content: tt('forum_controls.permissions') }, render: () => <ForumPermissions account={account} moders={moders} supers={supers} admins={admins} /> },
             //{ menuItem: { key: 'configuration', icon: 'settings', color: 'orange', content: tt('forum_controls.configuration') }, render: () => <ForumConfigForm newForum={this.props.newForum} hideConfig={this.props.hideConfig}/> },
             //{ menuItem: { key: 'upgrades', icon: 'arrow circle up', color: 'blue', content: 'Upgrades' }, render: () => <ForumUpgrade account={account} forum={forum} target={target} /> },
             { menuItem: { key: 'close', icon: 'window close', color: 'black', position: 'right' } },
