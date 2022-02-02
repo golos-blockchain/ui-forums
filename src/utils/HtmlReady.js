@@ -1,4 +1,4 @@
-import xmldom from 'xmldom';
+import xmldom from '@xmldom/xmldom';
 
 import linksRe from '@/utils/Links';
 import { proxifyImageUrl } from '@/utils/ProxifyUrl';
