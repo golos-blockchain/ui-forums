@@ -10,11 +10,12 @@ import { Dimmer, Loader } from 'semantic-ui-react';
 import MarkdownEditorToolbar from '@/elements/post/form/MarkdownEditorToolbar';
 import { imgurUpload } from '@/utils/imgurUpload';
 
+if (typeof(document) !== 'undefined') import('simplemde/dist/simplemde.min.css');
+
 const LINE_HEIGHT = 28;
 let SimpleMDE;
 
 if (typeof(document) !== 'undefined') SimpleMDE = require('simplemde');
-
 
 let lastWidgetId = 0;
 

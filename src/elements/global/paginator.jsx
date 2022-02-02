@@ -5,6 +5,8 @@ import Pagination from 'rc-pagination';
 import localeEn from 'rc-pagination/lib/locale/en_US';
 import localeRu from 'rc-pagination/lib/locale/ru_RU';
 
+import 'rc-pagination/assets/index.css'
+
 export default class Paginator extends Component {
 
     changePage = (data) => {

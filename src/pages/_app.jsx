@@ -13,13 +13,11 @@ import BreadcrumbMenu from '@/elements/global/breadcrumb';
 import FooterMenu from '@/elements/global/footer';
 import HeaderMenu from '@/elements/global/menu';
 
-import '@/semantic/dist/semantic.min.css'
+import '@/semantic/dist/semantic.css'
 import '@/pages/index.css'
-import 'rc-pagination/assets/index.css'
 import '@/elements/post/form/MarkdownEditor/MarkdownEditor.css';
 import '@/elements/post/form/MarkdownEditorToolbar/index.css';
 import '@/elements/post/button/voting.css';
-if (typeof(document) !== 'undefined') import('simplemde/dist/simplemde.min.css');
 
 class MyApp extends React.Component {
     state = {
