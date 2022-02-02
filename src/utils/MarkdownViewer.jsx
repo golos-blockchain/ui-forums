@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import Remarkable from 'remarkable';
+import { Remarkable } from 'remarkable';
 import hljs from 'highlight.js';
 import sanitize from 'sanitize-html';
 
@@ -14,7 +14,6 @@ const remarkable = new Remarkable('full', {
     html: true, // remarkable renders first then sanitize runs...
     breaks: true,
     langPrefix: 'hljs language-',  // CSS language prefix for fenced blocks
-    linkify: false, // linkify is done locally
     typographer: false, // https://github.com/jonschlinkert/remarkable/issues/142#issuecomment-221546793
     quotes: '“”‘’',
     highlight: function (str, lang) {
