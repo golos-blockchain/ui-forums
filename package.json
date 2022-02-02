@@ -47,7 +47,7 @@
     "speakingurl": "^14.0.1",
     "store": "^1.3.20",
     "ws": "^7.4.1",
-    "xmldom": "^0.1.22"
+    "xmldom": "^0.6.0"
   },
   "devDependencies": {
     "enzyme": "^2.7.1",
