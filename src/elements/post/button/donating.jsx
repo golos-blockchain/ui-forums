@@ -5,8 +5,6 @@ import { Asset } from 'golos-lib-js/lib/utils';
 import { Button, Popup, Dropdown, Icon, Label, Modal, Divider } from 'semantic-ui-react';
 import { Form } from 'formsy-semantic-ui-react';
 
-import * as CONFIG from '@/config';
-
 import translateError from '@/utils/translateError';
 import { withNative } from '@/utils/golosNative'
 
@@ -119,7 +117,7 @@ class Donating extends React.Component {
             for (let [from, item] of Object.entries(donatesJoined)) {
                 for (let [, asset] of Object.entries(item.assets)) {
                     donatesTotal++;
-                    if (donatesInPage >= CONFIG.forum.donates_per_page) continue;
+                    if (donatesInPage >= $GLS_Config.forum.donates_per_page) continue;
                     donates.push(<Dropdown.Item
                         text={from}
                         description={asset.toString(0)}

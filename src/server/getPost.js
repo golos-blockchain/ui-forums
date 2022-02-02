@@ -1,6 +1,5 @@
 import golos from 'golos-lib-js'
 
-import * as CONFIG from '@/config'
 import { initGolos } from '@/server/initGolos'
 
 import {
@@ -56,7 +55,7 @@ export async function getPost(category, author, permlink) {
 
     let { _id, forum } = findForum(vals[NOTE_], category)
 
-    let data = await golos.api.getContentAsync(author, permlink, CONFIG.forum.votes_per_page, 0)
+    let data = await golos.api.getContentAsync(author, permlink, $GLS_Config.forum.votes_per_page, 0)
     data.url = getUrl(data.url, _id)
     await fillDonates(data, vals[NOTE_PST_HIDACC_LST])
     data.author_banned = !!vals[NOTE_PST_HIDACC_LST][data.author]
@@ -84,7 +83,7 @@ export async function getPostResponses(category, author, permlink, vals = undefi
 
     let targets = []
 
-    let data = await golos.api.getAllContentRepliesAsync(author, permlink, CONFIG.forum.votes_per_page, 0, [], [], false, 'false')
+    let data = await golos.api.getAllContentRepliesAsync(author, permlink, $GLS_Config.forum.votes_per_page, 0, [], [], false, 'false')
     for (let item of data) {
         item.url = getUrl(item.url, category)
         item.author_banned = !!vals[NOTE_PST_HIDACC_LST][item.author]

@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 
 import { Container, Grid } from 'semantic-ui-react';
 
-import * as CONFIG from '@/config';
-
 class BannerMenu extends Component {
 
     render() {
@@ -12,7 +10,7 @@ class BannerMenu extends Component {
                 <Grid stackable>
                     <Grid.Row verticalAlign='middle'>
                         <Grid.Column width={10} only='large screen' className='banner'>
-                            <p dangerouslySetInnerHTML={{__html: (CONFIG.forum.footer_banner)}}></p>
+                            <p dangerouslySetInnerHTML={{__html: ($GLS_Config.forum.footer_banner)}}></p>
                         </Grid.Column>
                     </Grid.Row>
                 </Grid>

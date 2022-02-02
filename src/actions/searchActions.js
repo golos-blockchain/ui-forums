@@ -1,11 +1,10 @@
 import * as types from '@/actions/actionTypes';
-import * as CONFIG from '@/config';
 
 export function search(query) {
     return async dispatch => {
         //alert(query.value);
 
-        let url = new URL(CONFIG.elastic_search.url);
+        let url = new URL($GLS_Config.elastic_search.url);
         url += 'blog/post/_search?pretty';
         let sort = {};
         let main = [];
@@ -49,7 +48,7 @@ export function search(query) {
                     "must": [
                         {
                             "match_phrase_prefix": {
-                                "category": "fm-" + CONFIG.forum._id + "-"
+                                "category": "fm-" + $GLS_Config.forum._id + "-"
                             }
                         },
                         ...main,
@@ -72,7 +71,7 @@ export function search(query) {
         const response = await fetch(url, {
             method: 'post',
             headers: new Headers({
-                'Authorization': 'Basic ' + btoa(CONFIG.elastic_search.login + ':' + CONFIG.elastic_search.password),
+                'Authorization': 'Basic ' + btoa($GLS_Config.elastic_search.login + ':' + $GLS_Config.elastic_search.password),
                 'Content-Type': 'application/json'
             }),
             body: JSON.stringify(body)

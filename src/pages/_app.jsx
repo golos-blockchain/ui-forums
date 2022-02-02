@@ -7,7 +7,6 @@ import ttGetByKey from '@/utils/ttGetByKey';
 
 import { Container } from 'semantic-ui-react';
 
-import CONFIG from '@/config';
 import {wrapper} from '@/store';
 import BannerMenu from '@/elements/global/banner';
 import BreadcrumbMenu from '@/elements/global/breadcrumb';
@@ -22,17 +21,23 @@ import '@/elements/post/form/MarkdownEditorToolbar/index.css';
 import '@/elements/post/button/voting.css';
 if (typeof(document) !== 'undefined') import('simplemde/dist/simplemde.min.css');
 
-if (process.browser) {
-    golos.config.set('websocket', CONFIG.golos_node);
-    golos.config.set('chain_id', CONFIG.golos_chain_id);
-}
-
 class MyApp extends React.Component {
     state = {
     }
 
+    constructor(props) {
+        super(props)
+        if (props.pageProps._golos_config) {
+            (typeof(window) === 'undefined' ? global : window).$GLS_Config = props.pageProps._golos_config
+            if (process.browser) {
+                golos.config.set('websocket', $GLS_Config.golos_node);
+                golos.config.set('chain_id', $GLS_Config.golos_chain_id);
+            }
+        }
+    }
+
     checkLeave = (e) => {
-        if (!CONFIG.anti_phishing.enabled) return
+        if (!$GLS_Config.anti_phishing.enabled) return
 
         const pathname = window.location.pathname
         if (pathname === '/leave_page') return
@@ -43,7 +48,7 @@ class MyApp extends React.Component {
             a &&
             a.hostname &&
             a.hostname !== window.location.hostname &&
-            !CONFIG.anti_phishing.white_list.some(domain =>
+            !$GLS_Config.anti_phishing.white_list.some(domain =>
                 new RegExp(`${domain}$`).test(a.hostname)
             )
         ) {
@@ -63,20 +68,20 @@ class MyApp extends React.Component {
         //const pathname = window.location.pathname;
         const isBlank = false//pathname === '/msgs' || pathname.startsWith('/msgs/');
         const { Component, pageProps, } = this.props
-        const container = (
+        const container = typeof($GLS_Config) !== 'undefined' ? (
             <div className='AppContainer'>
                 <Head>
-                    <title>{ttGetByKey(CONFIG.forum, 'page_title')}</title>
-                    <meta name='description' content={ttGetByKey(CONFIG.forum, 'meta_description')} />
+                    <title>{ttGetByKey($GLS_Config.forum, 'page_title')}</title>
+                    <meta name='description' content={ttGetByKey($GLS_Config.forum, 'meta_description')} />
                     <meta name='viewport' content='width=device-width, initial-scale=1' />
                     <meta name='twitter:card' content='summary' />
-                    <meta name='twitter:title' content={ttGetByKey(CONFIG.forum, 'meta_title')} />
-                    <meta name='twitter:description' content={ttGetByKey(CONFIG.forum, 'meta_description')} />
-                    <meta name='twitter:image:src' content={CONFIG.forum.meta_image} />
+                    <meta name='twitter:title' content={ttGetByKey($GLS_Config.forum, 'meta_title')} />
+                    <meta name='twitter:description' content={ttGetByKey($GLS_Config.forum, 'meta_description')} />
+                    <meta name='twitter:image:src' content={$GLS_Config.forum.meta_image} />
                     <meta property='og:type' content='article' />  
-                    <meta property='og:title' content={ttGetByKey(CONFIG.forum, 'meta_title')} />
-                    <meta property='og:description' content={ttGetByKey(CONFIG.forum, 'meta_description')} />
-                    <meta property='og:image' content={CONFIG.forum.meta_image} />
+                    <meta property='og:title' content={ttGetByKey($GLS_Config.forum, 'meta_title')} />
+                    <meta property='og:description' content={ttGetByKey($GLS_Config.forum, 'meta_description')} />
+                    <meta property='og:image' content={$GLS_Config.forum.meta_image} />
                 </Head>
                 {!isBlank ? (<HeaderMenu />) : null}
                 {!isBlank ? (<BreadcrumbMenu withSearch={true} />) : null}
@@ -87,7 +92,7 @@ class MyApp extends React.Component {
                 {!isBlank ? (<BannerMenu />) : null}
                 {!isBlank ? (<FooterMenu />) : null}
             </div>
-        )
+        ) : <Component {...pageProps} />
           if (process.browser) return (
             <ReactReduxContext.Consumer>
               {({store}) => {

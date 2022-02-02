@@ -11,7 +11,6 @@ import sanitize from 'sanitize-html';
 
 import { Button, Dropdown, Input } from 'semantic-ui-react';
 
-import * as CONFIG from '@/config';
 import * as searchActions from '@/actions/searchActions';
 
 import Paginator from '@/elements/global/paginator';
@@ -22,7 +21,7 @@ import { wrapSSR, } from '@/server/ssr';
 
 export const getServerSideProps = wrapSSR(async (context) => {
     const data = await getForums()
-    const GLOBAL_ID = CONFIG.forum._id.toLowerCase();
+    const GLOBAL_ID = $GLS_Config.forum._id.toLowerCase();
     let tagIdMap = {};
     const fillTags = (forums) => {
         for (let [_id, forum] of Object.entries(forums)) {

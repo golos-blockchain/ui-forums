@@ -3,8 +3,6 @@ import Link from 'next/link';
 
 import { Grid, Header, Icon, Segment } from 'semantic-ui-react';
 
-import * as CONFIG from '@/config';
-
 import TimeAgoWrapper from '@/utils/TimeAgoWrapper';
 import AccountAvatar from '@/elements/account/avatar';
 import AccountLink from '@/elements/account/link';
@@ -34,10 +32,10 @@ export default class ForumPostText extends React.Component {
                     <Grid.Column mobile={6} tablet={6} computer={5} largeScreen={4} textAlign="center">
                     </Grid.Column>
                 );
-        if (topic.children > CONFIG.forum.replies_per_page) {
+        if (topic.children > $GLS_Config.forum.replies_per_page) {
             paginator = (
                 <Paginator
-                    perPage={CONFIG.forum.replies_per_page}
+                    perPage={$GLS_Config.forum.replies_per_page}
                     total={topic.children}
                     url={topic.url}
                 />

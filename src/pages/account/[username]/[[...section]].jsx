@@ -7,7 +7,6 @@ import { goToTop } from 'react-scrollable-anchor'
 
 import { Grid } from 'semantic-ui-react'
 
-import * as CONFIG from '@/config'
 import * as accountActions from '@/actions/accountActions'
 import * as breadcrumbActions from '@/actions/breadcrumbActions'
 import * as chainstateActions from '@/actions/chainstateActions'

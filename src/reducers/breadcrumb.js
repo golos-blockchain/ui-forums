@@ -2,20 +2,26 @@ import update from 'immutability-helper';
 import ttGetByKey from '@/utils/ttGetByKey';
 
 import * as types from '@/actions/actionTypes';
-import * as CONFIG from '@/config';
 
-const initialState = {
-  trail: [{
-    name: ttGetByKey(CONFIG.forum, 'breadcrumb_title'),
-    link: '/'
-  }]
+const getInitialState = () => {
+  let name = ''
+  if (typeof($GLS_Config) !== 'undefined') {
+    name = ttGetByKey($GLS_Config.forum, 'breadcrumb_title')
+  }
+  return {
+    trail: [{
+      name,
+      link: '/'
+    }]
+  }
 }
 
-export default function breadcrumb(state = initialState, action = {type: '_ssr_state_init'}) {
+export default function breadcrumb(state, action) {
+  state = state || getInitialState()
   switch(action.type) {
     case types.SET_BREADCRUMB:
       const payload = action.payload,
-            baseTrail = initialState.trail,
+            baseTrail = getInitialState().trail,
             trail = update(baseTrail, {$push: payload})
       return Object.assign({}, state, {
         trail: trail

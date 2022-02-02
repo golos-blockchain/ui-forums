@@ -9,7 +9,6 @@ import fetch from 'cross-fetch';
 
 import { Button, Dimmer, Divider, Loader, Grid, Header, Segment, Popup } from 'semantic-ui-react';
 
-import * as CONFIG from '@/config';
 // import * as accountActions from '../actions/accountActions';
 import * as breadcrumbActions from '@/actions/breadcrumbActions';
 // import * as postActions from '../actions/postActions';
@@ -52,10 +51,6 @@ class IndexLayout extends React.Component {
         let { section, } = this.props.router.query
         section = section ? section[0] : ''
         return section
-    }
-
-    componentWillMount() {
-        //this.props.actions.resetPostState();
     }
 
     toggleVisibility = (e, props) => {
@@ -132,14 +127,14 @@ class IndexLayout extends React.Component {
             );*/
             if (this.getSection()) {
                 let forum4 = {
-                    target: CONFIG.forum
+                    target: $GLS_Config.forum
                 };
                 display = (
                     <ForumManage
                         account={account}
                         newForum={this.state.newForum}
                         section={this.getSection()}
-                        target={CONFIG.forum}
+                        target={$GLS_Config.forum}
                         forum={forum4}
                         categories={this.state.forums}
                         moders={this.state.moders}
@@ -207,8 +202,8 @@ class IndexLayout extends React.Component {
                                     color='blue'
                                     size='huge'
                                 >
-                                <Header.Content dangerouslySetInnerHTML={{__html: ttGetByKey(CONFIG.forum, 'title')}}></Header.Content>
-                                <Header.Subheader dangerouslySetInnerHTML={{__html: ttGetByKey(CONFIG.forum, 'description')}}></Header.Subheader>
+                                <Header.Content dangerouslySetInnerHTML={{__html: ttGetByKey($GLS_Config.forum, 'title')}}></Header.Content>
+                                <Header.Subheader dangerouslySetInnerHTML={{__html: ttGetByKey($GLS_Config.forum, 'description')}}></Header.Subheader>
                                 </Header>
                             </Grid.Column>
                             <Grid.Column width={2}>

@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "classnames": "^2.2.5",
+    "config": "^3.3.7",
     "core-js": "^2.5.1",
     "cors": "2.8.5",
     "counterpart": "^0.18.6",

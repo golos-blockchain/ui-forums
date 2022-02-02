@@ -9,7 +9,6 @@ import tt from 'counterpart';
 
 import { Divider, Grid, Header, Segment } from 'semantic-ui-react';
 
-import * as CONFIG from '@/config';
 import * as accountActions from '@/actions/accountActions';
 import * as breadcrumbActions from '@/actions/breadcrumbActions';
 import * as forumActions from '@/actions/forumActions';
@@ -117,7 +116,7 @@ class ThreadLayout extends React.Component {
 
     getPageForPost = (id) => {
         let collection = this.props.post.responses,
-            perPage = CONFIG.forum.replies_per_page || 10,
+            perPage = $GLS_Config.forum.replies_per_page || 10,
             position = false;
         for (var i = 0; i < collection.length; i++) {
             const { author, permlink } = collection[i];
@@ -193,7 +192,7 @@ class ThreadLayout extends React.Component {
 
     render() {
         let page = (this.state) ? this.state.page : 1,
-            perPage = CONFIG.forum.replies_per_page || 10,
+            perPage = $GLS_Config.forum.replies_per_page || 10,
             responses = (this.props.post) ? this.props.post.responses : 0,
             content = (this.props.post) ? this.props.post.content : false,
             postForm = false;
@@ -267,7 +266,7 @@ class ThreadLayout extends React.Component {
                   </Segment>
             );
         }
-        let image = CONFIG.forum.meta_image;
+        let image = $GLS_Config.forum.meta_image;
         if (content && content.json_metadata && content.json_metadata.image && content.json_metadata.image.length > 0) {
             image = content.json_metadata.image[0];
         }

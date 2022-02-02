@@ -2,7 +2,6 @@ import golos from 'golos-lib-js';
 
 import * as types from '@/actions/actionTypes';
 import * as ForumActions from '@/actions/forumActions';
-import * as CONFIG from '@/config';
 
 function setValue(wif, isPosting, account, key, value, callback) {
     golos.broadcast.customJson(wif,
@@ -17,13 +16,13 @@ function setValue(wif, isPosting, account, key, value, callback) {
 
 function hidmsg(wif, account, objWithMsg, callback) {
     setValue(wif, true, account,
-        'g.pst.f.' + CONFIG.forum._id.toLowerCase() + '.hidmsg.lst',
+        'g.pst.f.' + $GLS_Config.forum._id.toLowerCase() + '.hidmsg.lst',
         objWithMsg, callback);
 }
 
 function hidacc(wif, account, objWithAcc, callback) {
     setValue(wif, true, account,
-        'g.pst.f.' + CONFIG.forum._id.toLowerCase() + '.hidacc.lst',
+        'g.pst.f.' + $GLS_Config.forum._id.toLowerCase() + '.hidacc.lst',
         objWithAcc, callback);
 }
 

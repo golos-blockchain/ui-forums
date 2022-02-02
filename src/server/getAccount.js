@@ -1,7 +1,5 @@
 import golos from 'golos-lib-js'
 
-import * as CONFIG from '@/config'
-
 import {
     NOTE_, NOTE_PST_HIDMSG_LST, NOTE_PST_HIDMSG_LST_ACCS, NOTE_PST_HIDACC_LST, NOTE_PST_HIDACC_LST_ACCS,
     getValues, getAllTags, findForum, getUrl,
@@ -117,8 +115,8 @@ export async function getAccountDonates(vals, username, direction = 'to', page =
 
     const total = donates.length;
 
-    const start = page ? (page - 1) * CONFIG.forum.account_donates_per_page : 0;
-    const end = start + CONFIG.forum.account_donates_per_page;
+    const start = page ? (page - 1) * $GLS_Config.forum.account_donates_per_page : 0;
+    const end = start + $GLS_Config.forum.account_donates_per_page;
     donates = donates.slice(start, end);
 
     let ret = {

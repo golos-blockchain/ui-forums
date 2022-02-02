@@ -9,7 +9,6 @@ import { Asset } from 'golos-lib-js/lib/utils';
 
 import { Button, Container, Dropdown, Grid, Header, Icon, Label, Menu, Popup } from 'semantic-ui-react';
 
-import * as CONFIG from '@/config';
 import * as accountActions from '@/actions/accountActions';
 import * as accountsActions from '@/actions/accountsActions';
 import * as statusActions from '@/actions/statusActions';
@@ -239,7 +238,7 @@ class HeaderMenu extends Component {
                 <Container>
                     <Link href='/'>
                         <a className='title active item mobile hidden'>
-                            <strong dangerouslySetInnerHTML={{__html: ttGetByKey(CONFIG.forum, 'logo_title')}}></strong>
+                            <strong dangerouslySetInnerHTML={{__html: ttGetByKey($GLS_Config.forum, 'logo_title')}}></strong>
                         </a>
                     </Link>
                     {/*

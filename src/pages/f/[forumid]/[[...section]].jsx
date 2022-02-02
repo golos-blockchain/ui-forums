@@ -9,7 +9,6 @@ import fetch from 'cross-fetch'
 
 import { Accordion, Dimmer, Grid, Header, Icon, Loader, Message, Segment } from 'semantic-ui-react'
 
-import * as CONFIG from '@/config';
 import * as breadcrumbActions from '@/actions/breadcrumbActions';
 import * as forumActions from '@/actions/forumActions';
 import * as moderationActions from '@/actions/moderationActions';
@@ -80,7 +79,7 @@ class ForumLayout extends React.Component {
 
     changePage = (page) => {
         const path = this.props.router.asPath
-        let newPath = new URL(path, CONFIG.rest_api)
+        let newPath = new URL(path, $GLS_Config.rest_api)
         newPath.searchParams.set('page', page)
         this.props.router.push(newPath.pathname + newPath.search,
             undefined,
@@ -141,16 +140,16 @@ class ForumLayout extends React.Component {
         }
     }
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         this.props.actions.resetPostState();
     }
 
     changeVisibility = (e, data) => {
         this.setState({showModerated: data.checked}, () => {
             const path = this.props.router.asPath
-            let oldPath = new URL(path, CONFIG.rest_api)
+            let oldPath = new URL(path, $GLS_Config.rest_api)
             oldPath.searchParams.delete('filter')
-            let newPath = new URL(path, CONFIG.rest_api)
+            let newPath = new URL(path, $GLS_Config.rest_api)
             if (data.checked)
                 newPath.searchParams.set('filter', 'all')
             else
@@ -180,7 +179,7 @@ class ForumLayout extends React.Component {
             subforums = false,
             page = this.props.page,
             isUser = this.props.account.isUser,
-            perPage = CONFIG.forum.posts_per_page,
+            perPage = $GLS_Config.forum.posts_per_page,
             posts = (forum && forum.stats) ? forum.stats.posts : 0,
             topics = this.state.topics;
         const { forumid } = this.props.router.query
@@ -290,7 +289,7 @@ class ForumLayout extends React.Component {
         let meta = false;
         if (forum && forumid) {
             const title = getPageTitle(getForumName(forum));
-            const image = CONFIG.forum.meta_image;
+            const image = $GLS_Config.forum.meta_image;
             meta = (
                 <Head>
                     <title>{title}</title>

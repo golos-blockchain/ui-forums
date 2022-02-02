@@ -7,8 +7,6 @@ import { getPageTitle } from '@/utils/text'
 
 import { Header, Segment, Button } from 'semantic-ui-react'
 
-import * as CONFIG from '@/config'
-
 import { wrapSSR, } from '@/server/ssr'
 
 export const getServerSideProps = wrapSSR(async ({req, res}) => {
@@ -33,14 +31,14 @@ export default class Leave extends React.Component {
         if (process.browser) {
             targetPage = window.location.search.slice(1) + window.location.hash
         }
-        const ourForum = (<Link href='/'>{ttGetByKey(CONFIG.forum, 'link_title')}</Link>);
+        const ourForum = (<Link href='/'>{ttGetByKey($GLS_Config.forum, 'link_title')}</Link>);
         return (
             <Segment textAlign='left' padded='very'>
                 <Head>
                     <title>{getPageTitle(tt('leave_page.title'))}</title>
                 </Head>
                 <Header size='huge' style={{fontWeight: 'normal'}}>
-                    {tt('leave_page.title')}<Link href='/'>{ttGetByKey(CONFIG.forum, 'link_title')}</Link>
+                    {tt('leave_page.title')}<Link href='/'>{ttGetByKey($GLS_Config.forum, 'link_title')}</Link>
                     <Header.Subheader>
                         <br/>
                         <p>

@@ -5,8 +5,6 @@ import tt from 'counterpart';
 import { Header, Icon, Segment, Table, Dropdown, Button } from 'semantic-ui-react';
 import { Form } from 'formsy-semantic-ui-react';
 
-import * as CONFIG from '@/config';
-
 import AccountLink from '@/elements/account/link';
 import LoginModal from '@/elements/login/modal';
 
@@ -79,25 +77,25 @@ export default class ForumPermissions extends React.Component {
             await golos.broadcast.customJsonAsync(wif, [], [account], 'account_notes',
                 JSON.stringify(['set_value', {
                     account: account,
-                    key: 'g.pst.f.' + CONFIG.forum._id.toLowerCase() + '.hidmsg.lst.accs',
+                    key: 'g.pst.f.' + $GLS_Config.forum._id.toLowerCase() + '.hidmsg.lst.accs',
                     value: JSON.stringify([...this.state.moders, ...this.state.supers])
                 }]));
             await golos.broadcast.customJsonAsync(wif, [], [account], 'account_notes',
                 JSON.stringify(['set_value', {
                     account: account,
-                    key: 'g.pst.f.' + CONFIG.forum._id.toLowerCase() + '.hidacc.lst.accs',
+                    key: 'g.pst.f.' + $GLS_Config.forum._id.toLowerCase() + '.hidacc.lst.accs',
                     value: JSON.stringify(this.state.supers)
                 }]));
             /*await golos.broadcast.customJsonAsync(wif, [], [account], 'account_notes',
                 JSON.stringify(['set_value', {
                     account: account,
-                    key: 'g.pst.f.' + CONFIG.forum._id.toLowerCase() + '.banacc.lst.accs',
+                    key: 'g.pst.f.' + $GLS_Config.forum._id.toLowerCase() + '.banacc.lst.accs',
                     value: JSON.stringify(this.state.admins)
                 }]));*/
             await golos.broadcast.customJsonAsync(wif, [], [account], 'account_notes',
                 JSON.stringify(['set_value', {
                     account: account,
-                    key: 'g.pst.f.' + CONFIG.forum._id.toLowerCase() + '.stats.lst.accs',
+                    key: 'g.pst.f.' + $GLS_Config.forum._id.toLowerCase() + '.stats.lst.accs',
                     value: '[".all"]'
                 }]));
         } catch (err) {
@@ -112,7 +110,7 @@ export default class ForumPermissions extends React.Component {
         const { moders, supers, moders_edit, supers_edit, showConfirm, loading } = this.state;
         let moder_list = null;
         let super_list = null;
-        if (account.name === CONFIG.forum.creator) {
+        if (account.name === $GLS_Config.forum.creator) {
             moder_list = (
                 <Dropdown
                     options={moders_edit}
@@ -162,7 +160,7 @@ export default class ForumPermissions extends React.Component {
         }
 
         let submit = null;
-        if (account.name === CONFIG.forum.creator) {
+        if (account.name === $GLS_Config.forum.creator) {
             submit = (
                 <Button fluid color='blue' onClick={this.handleApply}>
                     {tt('forum_controls.submit_changes')}

@@ -5,8 +5,6 @@ import tt from 'counterpart';
 
 import { Grid, Segment, Table } from 'semantic-ui-react';
 
-import * as CONFIG from '@/config';
-
 import AccountLink from '@/elements/account/link';
 import Paginator from '@/elements/global/paginator';
 import TimeAgoWrapper from '@/utils/TimeAgoWrapper';
@@ -94,7 +92,7 @@ export default class AccountDonates extends React.Component {
                         <Grid.Column width={8}>
                             <Paginator
                                 page={this.state.page}
-                                perPage={CONFIG.forum.account_donates_per_page}
+                                perPage={$GLS_Config.forum.account_donates_per_page}
                                 total={total}
                                 callback={this.changePage}
                                 />

@@ -1,6 +1,6 @@
+import config from 'config';
 import golos from 'golos-lib-js';
 
-import * as CONFIG from '@/config';
 import { initGolos } from '@/server/initGolos'
 
 const PREFIX = 'g.f.';
@@ -9,7 +9,7 @@ const PREFIX_PST = 'g.pst.f.';
 const LST = '.lst';
 const ACCS = '.accs';
 
-export const GLOBAL_ID = CONFIG.forum._id.toLowerCase();
+export const GLOBAL_ID = config.get('forum._id').toLowerCase();
 export const NOTE_     = PREFIX + GLOBAL_ID;
 export const NOTE_PST_ = PREFIX_PST + GLOBAL_ID;
 export const NOTE_PST_HIDMSG_LST      = NOTE_PST_ + '.hidmsg' + LST;
@@ -19,7 +19,7 @@ export const NOTE_PST_HIDACC_LST_ACCS = NOTE_PST_ + '.hidacc' + LST + ACCS;
 export const NOTE_PST_STATS_LST       = NOTE_PST_ + '.stats' + LST;
 
 export let getValues = async (keys) => {
-    let vals = await golos.api.getValuesAsync(CONFIG.forum.creator, Object.keys(keys));
+    let vals = await golos.api.getValuesAsync(config.get('forum.creator'), Object.keys(keys));
     for (let [key, type] of Object.entries(keys)) {
         const fallback = (type == Object) ? {} : [];
         if (!vals[key]) {
@@ -180,7 +180,7 @@ export async function getForum(forum_id, page = 0, filter = '') {
 
     const tag = idToTag(_id);
     const data = await golos.api.getAllDiscussionsByActiveAsync(
-        '', '', page ? (page - 1) * CONFIG.forum.posts_per_page : 0, CONFIG.forum.posts_per_page,
+        '', '', page ? (page - 1) * config.get('forum.posts_per_page') : 0, config.get('forum.posts_per_page'),
         [tag],
         0, 0
     );
