@@ -9,7 +9,7 @@
     "author": "",
     "license": "ISC",
     "dependencies": {
-        "golos-classic-js": "^0.8.2",
+        "golos-lib-js": "^0.9.24",
         "readline-sync": "^1.4.10"
     }
 }

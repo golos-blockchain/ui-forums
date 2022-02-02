@@ -1,5 +1,5 @@
 const reader = require('readline-sync');
-const golos = require('golos-classic-js');
+const golos = require('golos-lib-js');
 
 const CONFIG = require('../config');
 
