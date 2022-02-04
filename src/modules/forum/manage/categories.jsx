@@ -194,35 +194,30 @@ class ForumCategoriesForm extends React.Component {
 
         let values = JSON.stringify(this.state.categories);
 
+        const handler = (err, result) => {
+            if (err) {
+                alert(err);
+                return;
+            }
+            ++tasks;
+            if (tasks === 2) {
+                this.setState({ loading: false });
+            }
+        }
+
         golos.broadcast.customJson(wif, [account], [], 'account_notes',
             JSON.stringify(['set_value', {
                 account: account,
                 key: 'g.f.' + $GLS_Config.forum._id.toLowerCase(),
                 value: values
-            }]),
-            (err, result) => {
-                ++tasks;
-                if (tasks === 2) this.setState({ loading: false });
-                if (err) {
-                    alert(err);
-                    return;
-                }
-            });
+            }]), handler);
 
         golos.broadcast.customJson(this.props.account.key, [], [account], 'account_notes',
             JSON.stringify(['set_value', {
                 account: account,
                 key: 'g.pst.f.' + $GLS_Config.forum._id.toLowerCase() + '.stats.lst.accs',
                 value: '[".all"]'
-            }]),
-            (err, result) => {
-                ++tasks;
-                if (tasks === 2) this.setState({ loading: false });
-                if (err) {
-                    alert(err);
-                    return;
-                }
-            });
+            }]), handler);
     };
 
     render() {
@@ -445,86 +440,86 @@ class ForumCategoriesForm extends React.Component {
                         <Divider section />
                         {submit}
                     </Segment>
-                    <Modal size='small' open={addEditParentIds != null}>
-                        <Modal.Header>{(addEditParentIds == null || !addEditParentIds.length) ? tt('categories.add') : tt('categories.add_sub') + ' ' + this.getParentCat(categories, addEditParentIds).name_ru}</Modal.Header>
-                        <Modal.Content>
-                            <Modal.Description>
-                                <Form
-                                    ref={ref => this.form = ref }
-                                    onValidSubmit={this.onAddEdit}
-                                >
-                                    <Form.Input
-                                        name='name_ru'
-                                        label={tt('categories.name_ru')}
-                                        required
-                                        focus
-                                        autoFocus
-                                        value={editCat ? editCat.name_ru : undefined}
-                                        validationErrors={{
-                                            isDefaultRequiredValue: tt('g.this_field_required'),
-                                        }}
-                                        errorLabel={ errorLabel }
-                                    />
-                                    <Form.Input
-                                        name='name'
-                                        label={tt('categories.name')}
-                                        required
-                                        focus
-                                        value={editCat ? editCat.name : undefined}
-                                        validationErrors={{
-                                            isDefaultRequiredValue: tt('g.this_field_required')
-                                        }}
-                                        errorLabel={ errorLabel }
-                                    />
-                                    <Form.Input
-                                        name='desc_ru'
-                                        label={tt('categories.desc_ru')}
-                                        focus
-                                        value={editCat ? editCat.desc_ru : undefined}
-                                        placeholder={tt('categories.desc_ru')}
-                                        validationErrors={{
-                                            isDefaultRequiredValue: tt('g.this_field_required')
-                                        }}
-                                        errorLabel={ errorLabel }
-                                    />
-                                    <Form.Input
-                                        name='desc'
-                                        label={tt('categories.desc')}
-                                        focus
-                                        value={editCat ? editCat.desc : undefined}
-                                        placeholder={tt('categories.desc')}
-                                        validationErrors={{
-                                            isDefaultRequiredValue: tt('g.this_field_required')
-                                        }}
-                                        errorLabel={ errorLabel }
-                                    />
-                                    <Form.Input
-                                        name='tag'
-                                        label={tt('categories.tag')}
-                                        required
-                                        focus
-                                        value={editCat ? editCatId : undefined}
-                                        disabled={editCat != null}
-                                        placeholder={tt('categories.tag')}
-                                        validationErrors={{
-                                            isDefaultRequiredValue: tt('g.this_field_required')
-                                        }}
-                                        validations={{
-                                            isAlphanumericWithDashes: (values, value) => {
-                                                return (!value || /^[0-9A-Za-z\s-]+$/.test(value)) ? true : tt('validation.only_letters_digits_dashes');
-                                            }
-                                        }}
-                                        errorLabel={ errorLabel }
-                                    />
-                                    <Divider hidden />
-                                    <Button floated='right' primary>{editCat ? tt('categories.edit') : tt('categories.add')}</Button>
-                                    <Button color='orange' 
-                                        onClick={this.onAddEditCancel}>{tt('g.cancel')}</Button>
-                                </Form>
-                            </Modal.Description>
-                        </Modal.Content>
-                    </Modal>
                 </Form>
+                <Modal size='small' open={addEditParentIds != null}>
+                    <Modal.Header>{(addEditParentIds == null || !addEditParentIds.length) ? tt('categories.add') : tt('categories.add_sub') + ' ' + this.getParentCat(categories, addEditParentIds).name_ru}</Modal.Header>
+                    <Modal.Content>
+                        <Modal.Description>
+                            <Form
+                                ref={ref => this.form = ref }
+                                onValidSubmit={this.onAddEdit}
+                            >
+                                <Form.Input
+                                    name='name_ru'
+                                    label={tt('categories.name_ru')}
+                                    required
+                                    focus
+                                    autoFocus
+                                    value={editCat ? editCat.name_ru : undefined}
+                                    validationErrors={{
+                                        isDefaultRequiredValue: tt('g.this_field_required'),
+                                    }}
+                                    errorLabel={ errorLabel }
+                                />
+                                <Form.Input
+                                    name='name'
+                                    label={tt('categories.name')}
+                                    required
+                                    focus
+                                    value={editCat ? editCat.name : undefined}
+                                    validationErrors={{
+                                        isDefaultRequiredValue: tt('g.this_field_required')
+                                    }}
+                                    errorLabel={ errorLabel }
+                                />
+                                <Form.Input
+                                    name='desc_ru'
+                                    label={tt('categories.desc_ru')}
+                                    focus
+                                    value={editCat ? editCat.desc_ru : undefined}
+                                    placeholder={tt('categories.desc_ru')}
+                                    validationErrors={{
+                                        isDefaultRequiredValue: tt('g.this_field_required')
+                                    }}
+                                    errorLabel={ errorLabel }
+                                />
+                                <Form.Input
+                                    name='desc'
+                                    label={tt('categories.desc')}
+                                    focus
+                                    value={editCat ? editCat.desc : undefined}
+                                    placeholder={tt('categories.desc')}
+                                    validationErrors={{
+                                        isDefaultRequiredValue: tt('g.this_field_required')
+                                    }}
+                                    errorLabel={ errorLabel }
+                                />
+                                <Form.Input
+                                    name='tag'
+                                    label={tt('categories.tag')}
+                                    required
+                                    focus
+                                    value={editCat ? editCatId : undefined}
+                                    disabled={editCat != null}
+                                    placeholder={tt('categories.tag')}
+                                    validationErrors={{
+                                        isDefaultRequiredValue: tt('g.this_field_required')
+                                    }}
+                                    validations={{
+                                        isAlphanumericWithDashes: (values, value) => {
+                                            return (!value || /^[0-9A-Za-z\s-]+$/.test(value)) ? true : tt('validation.only_letters_digits_dashes');
+                                        }
+                                    }}
+                                    errorLabel={ errorLabel }
+                                />
+                                <Divider hidden />
+                                <Button floated='right' primary>{editCat ? tt('categories.edit') : tt('categories.add')}</Button>
+                                <Button color='orange' 
+                                    onClick={this.onAddEditCancel}>{tt('g.cancel')}</Button>
+                            </Form>
+                        </Modal.Description>
+                    </Modal.Content>
+                </Modal>
             </div>
         )
     };

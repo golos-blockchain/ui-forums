@@ -8,7 +8,7 @@ import { Form } from 'formsy-semantic-ui-react';
 import AccountLink from '@/elements/account/link';
 import LoginModal from '@/elements/login/modal';
 
-export default class ForumPermissions extends React.Component {
+class ForumPermissions extends React.Component {
     constructor(props, state) {
         super(props);
         const { moders, supers, admins } = props;
@@ -102,7 +102,7 @@ export default class ForumPermissions extends React.Component {
             console.log(err);
             alert(err);
         }
-        setTimeout(() => this.setState({ loading: false }), 500);
+        this.setState({ loading: false })
     }
 
     render() {
@@ -240,3 +240,5 @@ export default class ForumPermissions extends React.Component {
         );
     }
 }
+
+export default ForumPermissions

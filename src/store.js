@@ -19,6 +19,9 @@ const reducer = (state, action) => {
       if (state.chainstate) {
         nextState.chainstate = state.chainstate
       }
+      if (state.moderation) {
+        nextState.moderation = state.moderation
+      }
       return nextState
     default:
       return combinedReducer(state, action);

@@ -2,7 +2,6 @@ import React from 'react'
 import Head from 'next/head'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import { withRouter } from 'next/router'
 import ReactDOMServer from 'react-dom/server'
 import tt from 'counterpart'
 import fetch from 'cross-fetch'
@@ -24,16 +23,17 @@ import ForumEmpty from '@/elements/forum/empty';
 import ForumPosts from '@/elements/forum/posts';
 import PostForm from '@/modules/post/form';
 import { getForumName, getPageTitle } from '@/utils/text';
-import { getForum } from '@/server/getForums'
+import { getForum, getForumData } from '@/server/getForums'
 import { wrapSSR, } from '@/server/ssr'
+import { withRouter } from '@/utils/withRouter'
 
 import importNoty from '@/utils/importNoty';
 
 export const getServerSideProps = wrapSSR(async ({ req, res, params, query, _store, }) => {
     const page = query.page ? parseInt(query.page) : 1
-    const data = await getForum(params.forumid, page, query.filter)
-    if (data.forum) { // forum url correct
-        let trail = data.forum.trail.map(item => {
+    const f = await getForum(params.forumid)
+    if (f.forum) { // forum url correct
+        let trail = f.forum.trail.map(item => {
             return {
                 name: getForumName(item),
                 link: `/f/${item._id}`
@@ -44,13 +44,32 @@ export const getServerSideProps = wrapSSR(async ({ req, res, params, query, _sto
         res.statusCode = 404
     }
 
+    if (query.__preloading) {
+        return {
+            props: {
+                loading: true,
+                forum: {
+                    ...f.forum,
+                    moders: f.moders,
+                    supers: f.supers,
+                    hidden: f.hidden,
+                    banned: f.banned,
+                },
+                childForums: f.childForums,
+            }
+        }
+    }
+    
+    let data = await getForumData(f.vals, f._id, f.forum, page, query.filter)
+
     let forumNew = null
-    const { forum, moders, supers, hidden, banned } = data
+    const { forum, moders, supers, hidden, banned } = f
     if (forum)
         forumNew = Object.assign({moders, supers, hidden, banned}, forum)
+
     return {
         props: {
-            childForums: data.childForums,
+            childForums: f.childForums,
             topics: data.data,
             forum: forumNew,
             filter: query.filter || '',
@@ -63,7 +82,6 @@ class ForumLayout extends React.Component {
     constructor(props, state) {
         super(props, state);
         this.state = {
-            loadingPosts: !!props.forum && !props.topics,
             topics: props.topics,
             newForum: false,
             showNewPost: false,
@@ -78,14 +96,9 @@ class ForumLayout extends React.Component {
     }
 
     changePage = (page) => {
-        const path = this.props.router.asPath
-        let newPath = new URL(path, $GLS_Config.site_domain)
-        newPath.searchParams.set('page', page)
-        this.props.router.push(newPath.pathname + newPath.search,
-            undefined,
-            {
-                scroll: true
-            })
+        this.props.router.withQuery('page', page).push({
+            scroll: true
+        })
     }
 
     showNewPost = () => this.setState({ showNewPost: true });
@@ -114,16 +127,21 @@ class ForumLayout extends React.Component {
         this.setState({
             topics: false,
             showNewPost: false,
-            loadingPosts: true
         });
         setTimeout(() => {
-            this.props.router.replace(this.props.router.asPath,
-                undefined,
-                {
-                    scroll: false
-                })
+            this.props.router.refresh({
+                scroll: false
+            })
         }, 4000);
     };
+
+    componentDidMount() {
+        if (this.props.loading) {
+            this.props.router.refresh({
+                scroll: false
+            })
+        }
+    }
 
     componentDidUpdate(prevProps, prevState) {
         const prevForumid = prevProps.router.query.forumid
@@ -135,7 +153,11 @@ class ForumLayout extends React.Component {
             || (this.props.topics && !prevProps.topics)) {
             this.setState({
                 topics: this.props.topics,
-                loadingPosts: false,
+            })
+        }
+        if (this.props.loading) {
+            this.props.router.refresh({
+                scroll: false
             })
         }
     }
@@ -146,18 +168,10 @@ class ForumLayout extends React.Component {
 
     changeVisibility = (e, data) => {
         this.setState({showModerated: data.checked}, () => {
-            const path = this.props.router.asPath
-            let oldPath = new URL(path, $GLS_Config.site_domain)
-            oldPath.searchParams.delete('filter')
-            let newPath = new URL(path, $GLS_Config.site_domain)
-            if (data.checked)
-                newPath.searchParams.set('filter', 'all')
-            else
-                newPath.searchParams.delete('filter')
-            this.props.router.push(newPath.pathname + newPath.search,
-                oldPath.pathname + oldPath.search,
-                {
-                    scroll: false
+            this.props.router
+                .withQuery('filter', data.checked ? 'all' : null, false)
+                .push({
+                    scroll: false,
                 })
             //this.getForum();
         });
@@ -237,7 +251,7 @@ class ForumLayout extends React.Component {
                 </Segment>
             );
         }
-        if (!this.state.loadingPosts) {
+        if (!this.props.loading && !!topics) {
             if (forum) {
                 if (this.state.showNewPost) {
                     controls = false;

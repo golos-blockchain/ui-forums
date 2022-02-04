@@ -1,5 +1,6 @@
 import config from 'config';
 import golos from 'golos-lib-js';
+import cloneDeep from 'lodash/cloneDeep';
 
 import { initGolos } from '@/server/initGolos'
 
@@ -18,22 +19,54 @@ export const NOTE_PST_HIDACC_LST      = NOTE_PST_ + '.hidacc' + LST;
 export const NOTE_PST_HIDACC_LST_ACCS = NOTE_PST_ + '.hidacc' + LST + ACCS;
 export const NOTE_PST_STATS_LST       = NOTE_PST_ + '.stats' + LST;
 
-export let getValues = async (keys) => {
-    let vals = await golos.api.getValuesAsync(config.get('forum.creator'), Object.keys(keys));
-    for (let [key, type] of Object.entries(keys)) {
-        const fallback = (type == Object) ? {} : [];
-        if (!vals[key]) {
-            vals[key] = fallback;
-            continue;
+let cacheSec = 0
+const cacheAgeKey = 'cache.account_notes_age_seconds'
+if (config.has(cacheAgeKey)) {
+    cacheSec = parseInt(config.get(cacheAgeKey))
+    console.log('cache.account_notes_age_seconds is', cacheSec)
+} else {
+    console.log('cache.account_notes_age_seconds is disabled in config')
+}
+
+export let getValues = async () => {
+    const now = Date.now()
+    let cacheSec = config.get('cache.account_notes_age_seconds')
+    let vals
+    if (global.forumCache && (now - global.forumCache.time <= cacheSec)) {
+        vals = cloneDeep(global.forumCache.vals)
+    } else {
+        let keys = {}
+        keys[NOTE_] = Object
+        keys[NOTE_PST_HIDMSG_LST] = Object
+        keys[NOTE_PST_HIDMSG_LST_ACCS] = Array
+        keys[NOTE_PST_HIDACC_LST] = Object
+        keys[NOTE_PST_HIDACC_LST_ACCS] = Array
+        keys[NOTE_PST_STATS_LST] = Object;
+
+        vals = await golos.api.getValuesAsync(config.get('forum.creator'), Object.keys(keys));
+        for (let [key, type] of Object.entries(keys)) {
+            const fallback = (type == Object) ? {} : [];
+            if (!vals[key]) {
+                vals[key] = fallback;
+                continue;
+            }
+            try {
+                vals[key] = JSON.parse(vals[key]);
+            } catch (ex) {
+                vals[key] = fallback;
+            }
         }
-        try {
-            vals[key] = JSON.parse(vals[key]);
-        } catch (ex) {
-            vals[key] = fallback;
+        global.forumCache = {
+            vals: cloneDeep(vals),
+            time: now,
         }
     }
     return vals;
 };
+
+export function clearCache() {
+    global.forumCache = null
+}
 
 function idToTag(_id) {
     return 'fm-' + GLOBAL_ID + '-' + _id.toLowerCase();
@@ -131,15 +164,7 @@ async function setForumStats(forums, stats, hidden, banned) {
 export async function getForums() {
     initGolos()
 
-    let keys = {};
-    keys[NOTE_] = Object;
-    keys[NOTE_PST_HIDMSG_LST] = Object;
-    keys[NOTE_PST_HIDMSG_LST_ACCS] = Array;
-    keys[NOTE_PST_HIDACC_LST] = Object;
-    keys[NOTE_PST_HIDACC_LST_ACCS] = Array;
-    keys[NOTE_PST_STATS_LST] = Object;
-
-    let vals = await getValues(keys);
+    let vals = await getValues();
 
     await setForumStats(vals[NOTE_], vals[NOTE_PST_STATS_LST], vals[NOTE_PST_HIDMSG_LST], vals[NOTE_PST_HIDACC_LST]);
 
@@ -153,31 +178,34 @@ export async function getForums() {
     return ret
 }
 
-export async function getForum(forum_id, page = 0, filter = '') {
+export async function getForum(forum_id) {
     initGolos()
 
-    let keys = {};
-    keys[NOTE_] = Object;
-    keys[NOTE_PST_HIDMSG_LST] = Object;
-    keys[NOTE_PST_HIDMSG_LST_ACCS] = Array;
-    keys[NOTE_PST_HIDACC_LST] = Object;
-    keys[NOTE_PST_HIDACC_LST_ACCS] = Array;
-    keys[NOTE_PST_STATS_LST] = Object;
-
-    const vals = await getValues(keys);
+    const vals = await getValues();
 
     let {_id, forum} = findForum(vals[NOTE_], forum_id);
     if (!forum) {
         console.error('404: cannot find forum', forum_id)
         return {
-            data: [],
-            childForums: {},
             forum: null,
         }
     }
 
     await setForumStats({[_id]: forum, ...forum.children}, vals[NOTE_PST_STATS_LST], vals[NOTE_PST_HIDMSG_LST], vals[NOTE_PST_HIDACC_LST]);
 
+    return {
+        _id,
+        forum,
+        childForums: forum ? Object.assign({}, forum.children) : null,
+        moders: vals[NOTE_PST_HIDMSG_LST_ACCS],
+        supers: vals[NOTE_PST_HIDACC_LST_ACCS],
+        hidden: vals[NOTE_PST_HIDMSG_LST],
+        banned: vals[NOTE_PST_HIDACC_LST],
+        vals
+    }
+}
+
+export async function getForumData(vals, _id, forum, page = 0, filter = '') {
     const tag = idToTag(_id);
     const data = await golos.api.getAllDiscussionsByActiveAsync(
         '', '', page ? (page - 1) * config.get('forum.posts_per_page') : 0, config.get('forum.posts_per_page'),

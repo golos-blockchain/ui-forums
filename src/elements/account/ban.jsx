@@ -6,39 +6,38 @@ import { Button } from 'semantic-ui-react';
 export default class AccountBan extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {
-            loading: false
-        };
+    }
+
+    reload = () => {
+        setTimeout(() => {
+            window.location.reload()
+        }, 500)
     }
 
     ban = (e) => {
         const { account, who } = this.props;
-        this.props.actions.moderatorBanAccount(account.key, account, who);
-        setTimeout(() => {
-            window.location.reload();
-        },
-        500);
+        this.props.actions.moderatorBanAccount(account.key, account, who, '',
+            () => {
+                this.reload()
+            });
     };
 
     unBan = (e) => {
         const { account, who } = this.props;
-        this.props.actions.moderatorUnBanAccount(account.key, account, who);
-        setTimeout(() => {
-            window.location.reload();
-        },
-        500);
+        this.props.actions.moderatorUnBanAccount(account.key, account, who,
+            () => {
+                this.reload()
+            });
     };
 
     render() {
         const { account, who, isBanned } = this.props;
-        const { loading } = this.state;
         if (account.name === who && !isBanned) return false;
         return (
             <Button
-                color={loading ? 'grey' : isBanned ? 'green' : 'red' }
+                color={isBanned ? 'green' : 'red' }
                 content={isBanned ? tt('forum_controls.unban') : tt('forum_controls.ban')}
-                loading={loading}
-                onClick={loading ? () => {} : (isBanned) ? this.unBan : this.ban}
+                onClick={(isBanned) ? this.unBan : this.ban}
             />
         );
     }

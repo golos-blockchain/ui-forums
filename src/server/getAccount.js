@@ -6,13 +6,7 @@ import {
 } from '@/server/getForums'
 
 export async function getAccount(username) {
-    let keys = {}
-    keys[NOTE_] = Object;
-    keys[NOTE_PST_HIDMSG_LST_ACCS] = Array
-    keys[NOTE_PST_HIDMSG_LST] = Object
-    keys[NOTE_PST_HIDACC_LST_ACCS] = Array
-    keys[NOTE_PST_HIDACC_LST] = Object
-    const vals = await getValues(keys)
+    const vals = await getValues()
 
     let data = await golos.api.getAccountsAsync([username])
     let ret = {

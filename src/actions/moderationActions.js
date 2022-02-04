@@ -26,7 +26,7 @@ function hidacc(wif, account, objWithAcc, callback) {
         objWithAcc, callback);
 }
 
-export function moderatorHidePostForum(wif, moderator, post, _id, forum, why = '') {
+export function moderatorHidePostForum(wif, moderator, post, _id, forum, why = '', callback = null) {
     return dispatch => {
         const { name } = moderator;
         let obj = {};
@@ -44,9 +44,10 @@ export function moderatorHidePostForum(wif, moderator, post, _id, forum, why = '
                     loading: false
                 });
             } else {
+                if (callback) callback()
                 ForumActions.updateForumStats(wif, name, _id, forum,
                     -1,
-                    0);
+                    0)
                 dispatch({
                     type: types.MODERATION_HIDE_RESOLVED,
                     payload: {moderator, post},
@@ -57,7 +58,7 @@ export function moderatorHidePostForum(wif, moderator, post, _id, forum, why = '
     };
 }
 
-export function moderatorRevealPostForum(wif, moderator, post, _id, forum) {
+export function moderatorRevealPostForum(wif, moderator, post, _id, forum, callback = null) {
     return dispatch => {
         const { name } = moderator;
         let obj = {};
@@ -75,9 +76,10 @@ export function moderatorRevealPostForum(wif, moderator, post, _id, forum) {
                     loading: false
                 });
             } else {
+                if (callback) callback()
                 ForumActions.updateForumStats(wif, name, _id, forum,
                     1,
-                    0);
+                    0)
                 dispatch({
                     type: types.MODERATION_REVEAL_RESOLVED,
                     payload: {moderator, post},
@@ -88,7 +90,7 @@ export function moderatorRevealPostForum(wif, moderator, post, _id, forum) {
     };
 }
 
-export function moderatorBanAccount(wif, moderator, accountName, why = '') {
+export function moderatorBanAccount(wif, moderator, accountName, why = '', callback = null) {
     return dispatch => {
         const { name } = moderator;
         let obj = {};
@@ -111,12 +113,13 @@ export function moderatorBanAccount(wif, moderator, accountName, why = '') {
                     payload: {moderator, accountName},
                     loading: false
                 });
+                if (callback) callback()
             }
         });
     };
 }
 
-export function moderatorUnBanAccount(wif, moderator, accountName) {
+export function moderatorUnBanAccount(wif, moderator, accountName, callback = null) {
     return dispatch => {
         const { name } = moderator;
         let obj = {};
@@ -139,6 +142,9 @@ export function moderatorUnBanAccount(wif, moderator, accountName) {
                     payload: {moderator, accountName},
                     loading: false
                 });
+                if (callback) {
+                    callback()
+                }
             }
         });
     };

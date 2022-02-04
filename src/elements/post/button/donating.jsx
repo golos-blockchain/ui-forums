@@ -6,7 +6,7 @@ import { Button, Popup, Dropdown, Icon, Label, Modal, Divider } from 'semantic-u
 import { Form } from 'formsy-semantic-ui-react';
 
 import translateError from '@/utils/translateError';
-import { withNative } from '@/utils/golosNative'
+import { withNative } from '@/utils/withNative'
 
 class Donating extends React.Component {
     constructor(props) {

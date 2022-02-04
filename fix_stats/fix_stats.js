@@ -116,5 +116,6 @@ async function fillStats(stats, cats, hidden, banned, parentStats = []) {
             value: JSON.stringify(stats)
         }]));
     console.log('SUCCESSFUL!');
+    console.log('Changes will appear on forum in nearest ~5-10 minutes');
     console.log('Press Ctrl+C to exit');
 })();

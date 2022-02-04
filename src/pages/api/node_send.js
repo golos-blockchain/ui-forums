@@ -49,6 +49,8 @@ let handler = nextConnect()
                 }
             }
 
+            updateOffchainCache(params)
+
             return result;
         });
 
@@ -68,6 +70,67 @@ let handler = nextConnect()
     })
 
 export default handler
+
+const updateOffchainCache = (params) => {
+    if (!params || !global.forumCache) {
+        return
+    }
+
+    let [ api, method, args ] = params;
+
+    const isBroadcast = 
+        (api == 'network_broadcast_api') &&
+        (method === 'broadcast_transaction' || method === 'broadcast_transaction_with_callback');
+
+    if (!isBroadcast) {
+        return
+    }
+
+    let trx = method === 'broadcast_transaction_with_callback' ? args[1] : args[0]
+
+    if (!trx || !trx.operations || !trx.operations.length) {
+        return
+    }
+
+    for (const op of trx.operations) {
+        if (op[0] === 'custom_json' && op[1] && op[1].id === 'account_notes') {
+            let inOp
+            try {
+                inOp = JSON.parse(op[1].json)
+            } catch (err) {
+                console.error('Offchain error', err)
+                continue
+            }
+            if (inOp[0] !== 'set_value' || !inOp[1].key || !inOp[1].value) {
+                continue
+            }
+            const key = inOp[1].key
+            let val = inOp[1].value
+
+            const isAccs = key.endsWith('.accs')
+            const isLst = key.endsWith('.lst')
+
+            if (!val.length) {
+                delete global.forumCache.vals[key]
+            } else if (isAccs) {
+                val = JSON.parse(val)
+                global.forumCache.vals[key] = val
+            } else if (isLst) {
+                val = JSON.parse(val)
+                if (global.forumCache.vals[key]) {
+                    global.forumCache.vals[key] = {
+                        ...global.forumCache.vals[key],
+                        ...val,
+                    }
+                } else {
+                    global.forumCache.vals[key] = val
+                }
+            }
+        } else if (op[0] === 'comment') {
+            console.log(op, global.forumCache)
+        }
+    }
+}
 
 export {
     noBodyParser as config,

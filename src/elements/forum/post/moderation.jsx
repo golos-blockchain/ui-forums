@@ -3,45 +3,16 @@ import React from 'react';
 import { Button } from 'semantic-ui-react';
 
 import LoginModal from '@/elements/login/modal';
+import { withRouter } from '@/utils/withRouter'
 
 let Noty; if (typeof(document) !== 'undefined') Noty = import('noty');
 
-export default class ForumPostModeration extends React.Component {
+class ForumPostModeration extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             showConfirm: false
         };
-    }
-
-    UNSAFE_componentWillReceiveProps(nextProps) {
-        const { moderation, topic } = nextProps;
-        if (moderation && moderation.last) {
-            const last_topic = moderation.last.payload[1].topic;
-            if (last_topic === topic._id) {
-                const processing = moderation.last.loading;
-                if (!processing) {
-                    switch (moderation.last.type) {
-                        case 'MODERATION_REMOVE_RESOLVED':
-                        case 'MODERATION_RESTORE_RESOLVED':
-                            if (Noty) new Noty({
-                                closeWith: ['click', 'button'],
-                                layout: 'topRight',
-                                progressBar: true,
-                                theme: 'semanticui',
-                                text: 'Post removal operation successfully broadcast.',
-                                type: 'info',
-                                timeout: 4000
-                            }).show();
-                            this.props.removeTopic(last_topic);
-                            this.props.onClose();
-                            break;
-                        default:
-                            break;
-                    }
-                }
-            }
-        }
     }
 
     showConfirm = () => {
@@ -52,22 +23,26 @@ export default class ForumPostModeration extends React.Component {
         this.setState({showConfirm: false});
     };
 
+    reload = () => {
+        setTimeout(() => {
+            this.props.router
+                .withQuery('__preloading', '1', false)
+                .push({
+                    scroll: false,
+                })
+        }, 2000)
+    }
+
     handleHidePost = () => {
         const moderator = this.props.account;
-        this.props.actions.moderatorHidePostForum(moderator.key, moderator, this.props.topic, this.props.forum._id, this.props.forum);
-        setTimeout(() => {
-            window.location.reload();
-        },
-        1000);
+        this.props.actions.moderatorHidePostForum(moderator.key, moderator, this.props.topic, this.props.forum._id, this.props.forum)
+        this.reload()
     };
 
     handleRevealPost = () => {
         const moderator = this.props.account;
-        this.props.actions.moderatorRevealPostForum(moderator.key, moderator, this.props.topic, this.props.forum._id, this.props.forum);
-        setTimeout(() => {
-            window.location.reload();
-        },
-        1000);
+        this.props.actions.moderatorRevealPostForum(moderator.key, moderator, this.props.topic, this.props.forum._id, this.props.forum)
+        this.reload()
     };
 
     render() {
@@ -123,3 +98,5 @@ export default class ForumPostModeration extends React.Component {
         );
     }
 }
+
+export default withRouter(ForumPostModeration)

@@ -20,7 +20,7 @@ import ForumManage from '@/modules/forum/manage';
 import { getForums } from '@/server/getForums'
 import { wrapSSR, } from '@/server/ssr'
 
-export const getServerSideProps = wrapSSR(async ({ req, res, params, _store, }) => {
+export const getServerSideProps = wrapSSR(async ({ req, res, params, query, _store, }) => {
     _store.dispatch(breadcrumbActions.setBreadcrumb([]));
     const data = await getForums()
     return {

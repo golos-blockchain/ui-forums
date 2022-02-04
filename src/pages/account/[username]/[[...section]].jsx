@@ -1,6 +1,5 @@
 import React from 'react'
 import Head from 'next/head'
-import { withRouter } from 'next/router'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { goToTop } from 'react-scrollable-anchor'
@@ -18,19 +17,20 @@ import * as statusActions from '@/actions/statusActions'
 import AccountSidebar from '@/elements/account/sidebar'
 import AccountTabs from '@/elements/account/tabs'
 import { getPageTitle } from '@/utils/text'
+import { withRouter } from 'utils/withRouter'
 import { wrapSSR, } from '@/server/ssr'
 import { getAccount, getAccountPosts, getAccountResponses, getAccountDonates } from '@/server/getAccount'
 
 export const getServerSideProps = wrapSSR(async (context) => {
-    const { params, _store } = context
+    const { params, _store, query } = context
     let { username, section } = params
-    const data = await getAccount(username)
     _store.dispatch(breadcrumbActions.setBreadcrumb([
         {
             name: `@${username}`,
             link: `/@${username}`
         }
     ]))
+    const data = await getAccount(username)
     _store.dispatch(chainstateActions.getAccountsResolved(data.data))
     if (section) {
         switch (section[0]) {

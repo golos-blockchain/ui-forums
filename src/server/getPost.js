@@ -38,13 +38,7 @@ async function fillDonatesBatch(data, targets, bannedAccs) {
 export async function getPost(category, author, permlink) {
     initGolos()
 
-    let keys = {}
-    keys[NOTE_] = Object
-    keys[NOTE_PST_HIDMSG_LST] = Object
-    keys[NOTE_PST_HIDMSG_LST_ACCS] = Array
-    keys[NOTE_PST_HIDACC_LST] = Object
-    keys[NOTE_PST_HIDACC_LST_ACCS] = Array
-    const vals = await getValues(keys)
+    const vals = await getValues()
 
     // for .chunk.js.map file requests which becoming meant as this route
     // example: GET /static/@js/8.4538698b.chunk.js.map
@@ -76,9 +70,7 @@ export async function getPostResponses(category, author, permlink, vals = undefi
     initGolos()
 
     if (!vals) {
-        let keys = {};
-        keys[NOTE_PST_HIDACC_LST] = Object
-        vals = await getValues(keys)
+        vals = await getValues()
     }
 
     let targets = []
