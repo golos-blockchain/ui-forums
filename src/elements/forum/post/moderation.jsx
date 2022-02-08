@@ -5,8 +5,6 @@ import { Button } from 'semantic-ui-react';
 import LoginModal from '@/elements/login/modal';
 import { withRouter } from '@/utils/withRouter'
 
-let Noty; if (typeof(document) !== 'undefined') Noty = import('noty');
-
 class ForumPostModeration extends React.Component {
     constructor(props) {
         super(props);

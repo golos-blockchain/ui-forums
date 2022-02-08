@@ -18,6 +18,7 @@ import '@/pages/index.css'
 import '@/elements/post/form/MarkdownEditor/MarkdownEditor.css';
 import '@/elements/post/form/MarkdownEditorToolbar/index.css';
 import '@/elements/post/button/voting.css';
+import 'noty/lib/noty.css'
 
 class MyApp extends React.Component {
     state = {
