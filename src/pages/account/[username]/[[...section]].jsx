@@ -11,8 +11,6 @@ import * as breadcrumbActions from '@/actions/breadcrumbActions'
 import * as chainstateActions from '@/actions/chainstateActions'
 import * as moderationActions from '@/actions/moderationActions'
 import * as postActions from '@/actions/postActions'
-import * as preferenceActions from '@/actions/preferenceActions'
-import * as statusActions from '@/actions/statusActions'
 
 import AccountSidebar from '@/elements/account/sidebar'
 import AccountTabs from '@/elements/account/tabs'
@@ -125,8 +123,6 @@ function mapStateToProps(state, ownProps) {
         account: state.account,
         chainstate: state.chainstate,
         post: state.post,
-        preferences: state.preferences,
-        status: state.status
     };
 }
 
@@ -137,8 +133,6 @@ function mapDispatchToProps(dispatch) {
         ...chainstateActions,
         ...moderationActions,
         ...postActions,
-        ...preferenceActions,
-        ...statusActions
     }, dispatch)};
 }
 

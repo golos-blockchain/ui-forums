@@ -11,7 +11,6 @@ import { Button, Dimmer, Divider, Header, Loader, Menu, Segment } from 'semantic
 import { Form } from 'formsy-semantic-ui-react';
 
 import * as postActions from '@/actions/postActions';
-import * as statusActions from '@/actions/statusActions';
 
 import PostFormError from '@/elements/post/form/error';
 import PostFormFieldBody from '@/elements/post/form/field/body';
@@ -446,7 +445,6 @@ function mapStateToProps(state, ownProps) {
 function mapDispatchToProps(dispatch) {
     return {actions: bindActionCreators({
         ...postActions,
-        ...statusActions
     }, dispatch)};
 }
 

@@ -7,7 +7,6 @@ import { Dimmer, Grid, Loader } from 'semantic-ui-react'
 import * as accountActions from '@/actions/accountActions'
 import * as chainstateActions from '@/actions/chainstateActions'
 import * as postActions from '@/actions/postActions'
-import * as preferenceActions from '@/actions/preferenceActions'
 
 import PostContent from '@/elements/post/content'
 
@@ -50,7 +49,6 @@ function mapStateToProps(state, ownProps) {
   return {
     account: state.account,
     post: ownProps.post || state.post,
-    preferences: state.preferences
   }
 }
 
@@ -59,7 +57,6 @@ function mapDispatchToProps(dispatch) {
     ...accountActions,
     ...chainstateActions,
     ...postActions,
-    ...preferenceActions
   }, dispatch)}
 }
 

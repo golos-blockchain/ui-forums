@@ -9,7 +9,6 @@ import { Button, Dimmer, Divider, Grid, Header, Icon, Label, Loader, Segment } f
 import * as accountActions from '@/actions/accountActions'
 import * as breadcrumbActions from '@/actions/breadcrumbActions'
 import * as postActions from '@/actions/postActions'
-import * as preferenceActions from '@/actions/preferenceActions'
 
 import AccountLink from '@/elements/account/link'
 import MarkdownViewer from '@/utils/MarkdownViewer';
@@ -146,7 +145,6 @@ function mapStateToProps(state, ownProps) {
   return {
     account: state.account,
     post: ownProps.post || state.post,
-    preferences: state.preferences
   }
 }
 
@@ -155,7 +153,6 @@ function mapDispatchToProps(dispatch) {
     ...accountActions,
     ...breadcrumbActions,
     ...postActions,
-    ...preferenceActions
   }, dispatch)}
 }
 

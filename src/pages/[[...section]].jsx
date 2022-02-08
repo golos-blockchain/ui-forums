@@ -12,8 +12,6 @@ import { Button, Dimmer, Divider, Loader, Grid, Header, Segment, Popup } from 's
 // import * as accountActions from '../actions/accountActions';
 import * as breadcrumbActions from '@/actions/breadcrumbActions';
 // import * as postActions from '../actions/postActions';
-// import * as statusActions from '../actions/statusActions';
-// import * as preferenceActions from '../actions/preferenceActions';
 
 import ForumIndex from '@/elements/forum/index';
 import ForumManage from '@/modules/forum/manage';
@@ -39,7 +37,6 @@ class IndexLayout extends React.Component {
         super(props);
         this.state = {
             group: false,
-            minimized: /*props.preferences.forums_minimized || */[],
             forums: props.forums || null,
             moders: props.moders || [],
             supers: props.supers || [],
@@ -51,19 +48,6 @@ class IndexLayout extends React.Component {
         let { section, } = this.props.router.query
         section = section ? section[0] : ''
         return section
-    }
-
-    toggleVisibility = (e, props) => {
-        const forum = props.value;
-        let { minimized } = this.state;
-        if(minimized.indexOf(forum) !== -1) {
-            const index = minimized.indexOf(forum);
-            minimized.splice(index, 1);
-        } else {
-            minimized.push(forum);
-        }
-        this.props.actions.setPreference({ 'forums_minimized': minimized });
-        this.setState({ minimized });
     }
 
     showConfig = () => {
@@ -145,24 +129,16 @@ class IndexLayout extends React.Component {
                 );
             } else {
                 display = groups.map((group) => {
-                    const isMinimized = this.state.minimized.indexOf(group) >= 0;
                     let groupings = [];
                     for (let [_id, forum] of Object.entries(forums)) {
                         if (forum.group !== group) continue;
-                        groupings.push(<ForumIndex key={_id} _id={_id} forum={forum} isMinimized={isMinimized} />);
+                        groupings.push(<ForumIndex key={_id} _id={_id} forum={forum} />);
                     }
                     return (<div key={group || 'main'} style={{marginBottom: '10px'}}>
                                 <Segment secondary attached>
                                     <Grid>
                                         <Grid.Row verticalAlign='middle'>
                                             <Grid.Column computer={1} tablet={2} mobile={2}>
-                                                {/*<Button
-                                                    basic
-                                                    onClick={this.toggleVisibility}
-                                                    value={group}
-                                                    icon={isMinimized ? 'plus' : 'minus'}
-                                                    size='small'
-                                                />*/}
                                             </Grid.Column>
                                             <Grid.Column computer={6} tablet={8} mobile={8}>
                                                 <Header size='tiny'>
@@ -170,16 +146,16 @@ class IndexLayout extends React.Component {
                                                 </Header>
                                             </Grid.Column>
                                             <Grid.Column width={2} className='tablet or lower hidden' textAlign='center'>
-                                                <Header size='tiny' style={{ display: isMinimized ? 'none' : '' }}>
+                                                <Header size='tiny' style={{ display: '' }}>
                                                     {tt('forum_controls.posts')}
                                                 </Header>
                                             </Grid.Column>
                                             <Grid.Column width={2} className='tablet or lower hidden'>
-                                                <Header size='tiny' textAlign='center' style={{ display: isMinimized ? 'none' : '' }}>
+                                                <Header size='tiny' textAlign='center' style={{ display: '' }}>
                                                     {tt('forum_controls.replies')}
                                                 </Header>
                                             </Grid.Column>
-                                            <Grid.Column computer={5} tablet={6} mobile={6} style={{ display: isMinimized ? 'none' : '' }}>
+                                            <Grid.Column computer={5} tablet={6} mobile={6} style={{ display: '' }}>
                                                 <Header size='tiny' textAlign='center'>
                                                     {tt('forum_controls.recently_active')}
                                                 </Header>
@@ -233,19 +209,12 @@ class IndexLayout extends React.Component {
 
 function mapStateToProps(state, ownProps) {
     return {
-        //account: state.account,
-        //preferences: state.preferences,
-        //status: state.status
     };
 }
 
 function mapDispatchToProps(dispatch) {
     return {actions: bindActionCreators({
-        //...accountActions,
         ...breadcrumbActions,
-        //...postActions,
-        //...statusActions,
-        //...preferenceActions
     }, dispatch)};
 }
 

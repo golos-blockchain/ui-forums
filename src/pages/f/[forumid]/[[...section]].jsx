@@ -11,9 +11,7 @@ import { Accordion, Dimmer, Grid, Header, Icon, Loader, Message, Segment } from 
 import * as breadcrumbActions from '@/actions/breadcrumbActions';
 import * as forumActions from '@/actions/forumActions';
 import * as moderationActions from '@/actions/moderationActions';
-import * as subscriptionActions from '@/actions/subscriptionActions';
 import * as postActions from '@/actions/postActions';
-import * as statusActions from '@/actions/statusActions';
 
 import ForumControls from '@/elements/forum/controls';
 import ForumIndex from '@/elements/forum/index';
@@ -343,8 +341,6 @@ function mapStateToProps(state, ownProps) {
         account: state.account,
         moderation: state.moderation,
         post: state.post,
-        status: state.status,
-        subscriptions: state.subscriptions
     };
 }
 
@@ -354,8 +350,6 @@ function mapDispatchToProps(dispatch) {
         ...moderationActions,
         ...forumActions,
         ...postActions,
-        ...statusActions,
-        ...subscriptionActions,
     }, dispatch)};
 }
 

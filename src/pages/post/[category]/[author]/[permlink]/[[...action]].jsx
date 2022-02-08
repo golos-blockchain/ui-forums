@@ -13,8 +13,6 @@ import * as accountActions from '@/actions/accountActions';
 import * as breadcrumbActions from '@/actions/breadcrumbActions';
 import * as forumActions from '@/actions/forumActions';
 import * as postActions from '@/actions/postActions';
-import * as preferenceActions from '@/actions/preferenceActions';
-import * as statusActions from '@/actions/statusActions';
 
 import Post from '@/elements/post';
 import PostForm from '@/modules/post/form';
@@ -318,8 +316,6 @@ function mapStateToProps(state, ownProps) {
     return {
         account: state.account,
         post: ownProps.post || state.post,
-        preferences: state.preferences,
-        status: state.status
     };
 }
 
@@ -327,8 +323,6 @@ function mapDispatchToProps(dispatch) {
     return {actions: bindActionCreators({
         ...accountActions,
         ...postActions,
-        ...preferenceActions,
-        ...statusActions
     }, dispatch)}
 }
 

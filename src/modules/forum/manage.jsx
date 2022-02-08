@@ -8,28 +8,12 @@ import { Button, Header, Icon, Segment, Tab } from 'semantic-ui-react';
 
 import * as accountActions from '@/actions/accountActions';
 import * as forumActions from '@/actions/forumActions';
-import * as statusActions from '@/actions/statusActions';
-import * as preferenceActions from '@/actions/preferenceActions';
 
 import AccountLink from '@/elements/account/link';
 import ForumCategoriesForm from '@/modules/forum/manage/categories';
-//import ForumUpgrade from '@/elements/forum/manage/upgrade';
 import ForumPermissions from '@/modules/forum/manage/permissions';
 
 class ForumManage extends React.Component {
-    componentDidMount() {
-        const { forum, reservation } = this.props;
-        const id = (reservation) ? reservation._id : forum.target._id;
-        if (!this.props.forum || !this.props.forum.data) {
-          //  this.props.actions.fetchForumDetails(id);
-        }
-        //this.interval = setInterval(() => this.props.actions.fetchForumDetails(id), 15000);
-    }
-
-    componentWillUnmount() {
-        clearInterval(this.interval);
-    }
-
     componentDidUpdate(prevProps, prevState) {
         // If we have a reservation, and are returned a forum, the transfer has completed
         if (this.props.reservation && this.props.forum.target) {
@@ -118,8 +102,6 @@ function mapStateToProps(state, ownProps) {
     return {
         account: state.account,
         forum: ownProps.forum,
-        preferences: state.preferences,
-        status: state.status
     };
 }
 
@@ -127,8 +109,6 @@ function mapDispatchToProps(dispatch) {
     return {actions: bindActionCreators({
         ...accountActions,
         ...forumActions,
-        ...preferenceActions,
-        ...statusActions,
     }, dispatch)};
 }
 

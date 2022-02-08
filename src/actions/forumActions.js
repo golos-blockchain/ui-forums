@@ -81,22 +81,6 @@ export function setForum(forum) {
     };
 }
 
-export function fetchForumDetails(ns) {
-    return dispatch => {
-        /*axios.get(`${ $GLS_Config.site_domain }/status/${ns}`)
-            .then(response => {
-                dispatch(statusActions.setStatus(response.data))
-                dispatch({
-                    type: types.FORUM_LOAD_RESOLVED,
-                    payload: response.data,
-                })
-            })
-            .catch((error) => {
-                console.log(error);
-            })*/
-    };
-}
-
 export async function updateForumStats(wif, account, _id, forum, addPosts, addComments, addTotalPosts = 0, addTotalComments = 0) {
     try {
         const key = 'g.pst.f.' + $GLS_Config.forum._id.toLowerCase() + '.stats.lst';

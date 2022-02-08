@@ -10,7 +10,7 @@ import ForumLink from '@/utils/forumlink';
 
 export default class ForumIndex extends React.Component {
   render() {
-    const { _id, forum, isMinimized } = this.props;
+    const { _id, forum } = this.props;
     let lastPost = (forum.last_post) ? (new Date(forum.last_post['created']).getTime()) : 0,
         lastReply = (forum.last_reply) ? (new Date(forum.last_reply['created']).getTime()) : 0,
         highlight = (forum.highlight),
@@ -65,7 +65,7 @@ export default class ForumIndex extends React.Component {
         key={_id}
         style={{
             background: highlight ? "#ececec" : "",
-            display: isMinimized ? "none" : ""
+            display: ""
         }}
         >
         <Grid>

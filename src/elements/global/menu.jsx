@@ -11,7 +11,6 @@ import { Button, Container, Dropdown, Grid, Header, Icon, Label, Menu, Popup } f
 
 import * as accountActions from '@/actions/accountActions';
 import * as accountsActions from '@/actions/accountsActions';
-import * as statusActions from '@/actions/statusActions';
 
 import LoginButton from '@/elements/login/button';
 import LogoutItem from '@/elements/login/logout';
@@ -20,7 +19,6 @@ import { authRegisterUrl } from '@/utils/AuthApiClient';
 
 class HeaderMenu extends Component {
     state = {
-        isClaiming: false,
     };
 
     async componentDidMount() {
@@ -62,20 +60,6 @@ class HeaderMenu extends Component {
     componentWillUnmount() {
         clearInterval(this.interval);
         clearInterval(this.intervalNotify);
-    }
-
-    handleClaim = () => {
-        const account = this.props.account;
-        const data = account.data;
-        const reward_sbd = data.reward_sbd_balance;
-        const reward_steem = data.reward_steem_balance;
-        const reward_vests = data.reward_vesting_balance;
-        this.setState({ isClaiming: true });
-        this.props.actions.claimRewards({ account, reward_sbd, reward_steem, reward_vests });
-    };
-
-    vests_to_sp(vests) {
-        return Math.round(vests / 1e6 * this.props.status.network.steem_per_mvests * 1000) / 1000;
     }
 
     toggleLocale = (e, { value }) => {
@@ -130,27 +114,6 @@ class HeaderMenu extends Component {
                 <LoginButton {... this.props}/>
             </Menu.Item>
         );
-        /*const indicator = (!loading) ? (
-            <Popup
-                trigger={
-                    <Icon name='checkmark' />
-                }
-                position='bottom center'
-                inverted
-                content={`Golos Blockchain - OK`}
-                basic
-            />
-        ) : (
-            <Popup
-                trigger={
-                    <Icon loading name='asterisk' />
-                }
-                position='bottom center'
-                inverted
-                content={`Connecting to the Golos blockchain`}
-                basic
-            />
-        );*/
         if (name) {
             if (account) {
                 data = account.data;
@@ -165,15 +128,6 @@ class HeaderMenu extends Component {
                     notifications={notifications ? Math.max(notifications.message, 0) : 0}
                 />
             );
-            /*userItem = (
-                <Dropdown style={{padding: '0 1.1em'}} item trigger={avatar} pointing='top right' icon={null} className='icon'>
-                    <Dropdown.Menu>
-                        <Dropdown.Item as={Link} to={`/@${name}`} icon='user' content={tt('account.profile')} />
-                        <Dropdown.Item as={Link} to={`/accounts`} icon='users' content='Accounts' />
-                        <LogoutItem {...this.props} />
-                    </Dropdown.Menu>
-                </Dropdown>
-            );*/
             userItem = (
                 <Dropdown style={{padding: '0 1.1em'}} item trigger={avatar} pointing='top right' icon={null} className='icon'>
                     <Dropdown.Menu>
@@ -241,18 +195,10 @@ class HeaderMenu extends Component {
                             <strong dangerouslySetInnerHTML={{__html: ttGetByKey($GLS_Config.forum, 'logo_title')}}></strong>
                         </a>
                     </Link>
-                    {/*
-                    <Link href='/' className='title item'>General</Link>
-                    <Link href='/forums/steem' className='title item'>Steem</Link>
-                    <Link href='/forums/crypto' className='title item'>Crypto</Link>
-                    */}
                     {<Menu.Menu position='right'>
                         {localeSelect}
                         {pendingBalance}
                         {userItem}
-                        {/*<Menu.Item>
-                            {indicator}
-                        </Menu.Item>*/}
                     </Menu.Menu>}
                 </Container>
             </Menu>
@@ -265,8 +211,6 @@ function mapStateToProps(state, ownProps) {
     return {
         account: state.account,
         accounts: state.accounts,
-        preferences: state.preferences,
-        status: state.status
     };
 }
 
@@ -274,7 +218,6 @@ function mapDispatchToProps(dispatch) {
     return {actions: bindActionCreators({
         ...accountActions,
         ...accountsActions,
-        ...statusActions
     }, dispatch)};
 }
 

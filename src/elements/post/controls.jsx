@@ -39,11 +39,9 @@ export default class PostControls extends React.Component {
     const voting = (
       <Voting
         account={this.props.account}
-        status={this.props.status}
         post={post}
         loading={(processing.votes.indexOf(postId) !== -1)}
         error={(processing.errors['vote-'+postId] ? processing.errors['vote-'+postId] : false)}
-        onWeightChange={this.props.actions.setPreference}
         clearVoteError={this.clearVoteError}
         onVoteCast={this.castVote}
       />
@@ -51,7 +49,6 @@ export default class PostControls extends React.Component {
     const donating = (
       <Donating
         account={this.props.account}
-        status={this.props.status}
         post={post}
         error={(processing.errors['donate-'+postId] ? processing.errors['donate-'+postId] : false)}
         clearDonateError={this.clearDonateError}

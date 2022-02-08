@@ -136,12 +136,6 @@ export function fetchPost(params) {
                 link: result.data.url
             });
             dispatch(BreadcrumbActions.setBreadcrumb(trail));
-            dispatch({
-                type: types.SET_STATUS,
-                payload: {
-                    network: result.network
-                }
-            });
             dispatch(ForumActions.setForum(result.forum));
             dispatch(fetchPostResolved({
                 forum: result.forum,
@@ -170,12 +164,6 @@ export function fetchPostByAuthor(author, page = 1) {
         const response = await fetch(uri);
         if (response.ok) {
             const result = await response.json();
-            dispatch({
-                type: types.SET_STATUS,
-                payload: {
-                    network: result.network
-                }
-            });
             dispatch(fetchPostByAuthorResolved({
                 account: author,
                 posts: result.data.posts,
@@ -246,12 +234,6 @@ export function fetchPostRepliesByAuthor(author, page = 1) {
         }));
         if (response.ok) {
             const result = await response.json();
-            dispatch({
-                type: types.SET_STATUS,
-                payload: {
-                    network: result.network
-                }
-            });
             dispatch(fetchPostRepliesByAuthorResolved({
                 account: author,
                 replies: result.data.replies,
@@ -280,12 +262,6 @@ export function fetchPostResponsesByAuthor(author, page = 1) {
         const response = await fetch(uri);
         if (response.ok) {
             const result = await response.json();
-            dispatch({
-                type: types.SET_STATUS,
-                payload: {
-                    network: result.network
-                }
-            });
             dispatch(fetchPostResponsesByAuthorResolved({
                 account: author,
                 responses: result.data.responses,
@@ -314,12 +290,6 @@ export function fetchDonatesByAuthor(author, direction, page = 1) {
         const response = await fetch(uri);
         if (response.ok) {
             const result = await response.json();
-            dispatch({
-                type: types.SET_STATUS,
-                payload: {
-                    network: result.network
-                }
-            });
             dispatch(fetchDonatesByAuthorResolved({
                 account: author,
                 donates: result.data.donates,

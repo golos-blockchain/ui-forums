@@ -64,8 +64,7 @@ const makeStore = () => {
       key: 'nextjs',
       whitelist: [
         'account',
-        'accounts',
-        'preferences',], // make sure it does not clash with server keys
+        'accounts',], // make sure it does not clash with server keys
       storage,
     };
 

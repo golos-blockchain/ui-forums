@@ -528,8 +528,6 @@ class ForumCategoriesForm extends React.Component {
 function mapStateToProps(state, ownProps) {
     return {
         account: state.account,
-        preferences: state.preferences,
-        status: state.status
     };
 }
 
