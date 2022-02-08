@@ -23,7 +23,7 @@ class SearchBox extends React.Component {
         query: ''
     };
 
-    componentWillMount() {
+    componentDidMount() {
         this.resetComponent();
         this.search = debounce(this.props.actions.search, 400);
     }
