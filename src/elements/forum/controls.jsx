@@ -7,7 +7,7 @@ import Paginator from '@/elements/global/paginator'
 
 export default class ForumControls extends React.Component {
     render() {
-        const { isUser, isBanned, page, perPage, posts } = this.props;
+        const { forumid, isUser, isBanned, page, perPage, posts } = this.props;
         let newPostButton = (
                 <Popup
                     trigger={
@@ -51,7 +51,7 @@ export default class ForumControls extends React.Component {
                             page={page}
                             perPage={perPage}
                             total={posts}
-                            callback={this.props.changePage}
+                            baseHref={`/f/${forumid}`}
                         />
                     </Menu.Item>
                 </Menu.Menu>

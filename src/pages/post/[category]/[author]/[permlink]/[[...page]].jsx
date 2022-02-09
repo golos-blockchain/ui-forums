@@ -26,7 +26,6 @@ import { withRouter, } from '@/utils/withRouter'
 
 import importNoty from '@/utils/importNoty';
 
-const regexPage = /#comments-page-(\d+)+$/;
 const regexPost = /#@?([A-Za-z0-9\-_]+)\/([A-Za-z0-9\-_]+)$/;
 
 export const getServerSideProps = wrapSSR(async ({ req, res, params, query, _store, }) => {
@@ -55,8 +54,12 @@ export const getServerSideProps = wrapSSR(async ({ req, res, params, query, _sto
     const responses = await getPostResponses(category, author, permlink, data.vals)
     _store.dispatch(postActions.fetchPostResponsesResolved(responses.data))
 
+    const page = params.page ? parseInt(params.page[0]) : 1
+
     return {
         props: {
+            page,
+            basePath: `/${category}/@${author}/${permlink}`
         }
     }
 })
@@ -65,24 +68,13 @@ class ThreadLayout extends React.Component {
     constructor(props) {
         super(props);
         this.state = Object.assign({}, props.params, {
-            page: 1,
             replyAuthor: '',
             scrollTo2: '',
         });
     }
 
-    componentDidMount() {
-        const { hash } = window.location;
-        let matchesPage = hash.match(regexPage);
-        if (matchesPage) {
-            this.setState({
-                page: parseInt(matchesPage[1], 10)
-            });
-        }
-    }
-
     componentDidUpdate() {
-        const { hash } = window.location;
+        /*const { hash } = window.location;
         let matchesPost = hash.match(regexPost);
         if (matchesPost) {
             const anchor = '@' + matchesPost[1] + '/' + matchesPost[2];
@@ -103,7 +95,7 @@ class ThreadLayout extends React.Component {
                     page: this.getPageForPost(anc)
                 });
             }
-        }
+        }*/
     }
 
     scrollToPost = (id) => {
@@ -194,7 +186,7 @@ class ThreadLayout extends React.Component {
     };
 
     render() {
-        let page = (this.state) ? this.state.page : 1,
+        let page = this.props.page,
             perPage = $GLS_Config.forum.replies_per_page || 10,
             responses = (this.props.post) ? this.props.post.responses : 0,
             content = (this.props.post) ? this.props.post.content : false,
@@ -208,7 +200,7 @@ class ThreadLayout extends React.Component {
         }
         let comments_nav = (
             <Segment basic>
-                <Grid id={(page ? `comments-page-${page}` : '')}>
+                <Grid>
                     <Grid.Row verticalAlign='middle'>
                         <Grid.Column className='mobile hidden' width={8}>
                             <Header>
@@ -220,7 +212,7 @@ class ThreadLayout extends React.Component {
                                 page={page}
                                 perPage={perPage}
                                 total={responses.length}
-                                callback={this.changePage}
+                                baseHref={this.props.basePath}
                                 />
                         </Grid.Column>
                     </Grid.Row>
@@ -230,7 +222,7 @@ class ThreadLayout extends React.Component {
         const isBanned = this.props.post.forum && !!this.props.post.forum.banned[this.props.account.name];
         let nav = (
             <Segment basic>
-                <Grid id={(page ? `comments-page-${page}` : '')}>
+                <Grid>
                     <Grid.Row verticalAlign='middle'>
                         <Grid.Column className='mobile hidden' width={8}>
                             <Header>
@@ -242,7 +234,7 @@ class ThreadLayout extends React.Component {
                                 page={page}
                                 perPage={perPage}
                                 total={responses.length}
-                                callback={this.changePage}
+                                baseHref={this.props.basePath}
                               />
                         </Grid.Column>
                     </Grid.Row>
