@@ -28,7 +28,7 @@ import { withRouter } from '@/utils/withRouter'
 import importNoty from '@/utils/importNoty';
 
 export const getServerSideProps = wrapSSR(async ({ req, res, params, query, _store, }) => {
-    const page = query.page ? parseInt(query.page) : 1
+    const page = params.page ? parseInt(params.page[0]) : 1
     const f = await getForum(params.forumid)
     if (f.forum) { // forum url correct
         let trail = f.forum.trail.map(item => {
@@ -86,11 +86,6 @@ class ForumLayout extends React.Component {
             showModerated: false,
             showSubforums: true,
         };
-    }
-
-    getSection = (props) => {
-        let { section, } = (props || this.props).router.query
-        return section ? section[0] : ''
     }
 
     changePage = (page) => {
@@ -236,6 +231,7 @@ class ForumLayout extends React.Component {
             controls = (
                 <Segment basic vertical>
                     <ForumControls
+                        forumid={forumid}
                         changePage={this.changePage.bind(this)}
                         changeVisibility={this.changeVisibility.bind(this)}
                         isUser={isUser}
