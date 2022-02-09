@@ -34,7 +34,7 @@ export class RouterFluent {
     }
 
     noQuery(key) {
-        return this.query(key, undefined)
+        return this.withQuery(key, undefined)
     }
 
     _stringify() {
@@ -89,7 +89,15 @@ export class RouterX {
     }
 
     refresh(options) {
-        return this.replace(this.asPath, undefined, options)
+        const [ path, hash ] = this.asPath.split('#')
+        let ret = this.replace(path, undefined, options)
+        if (hash) {
+            ret = this.replace(path, undefined, options)
+            if (hash && !window.location.hash) { // protects from race collision
+                window.location.hash = hash
+            }
+        }
+        return ret
     }
 
     _chain(func) {

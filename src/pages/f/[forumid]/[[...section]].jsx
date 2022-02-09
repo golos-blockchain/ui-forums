@@ -127,7 +127,7 @@ class ForumLayout extends React.Component {
             showNewPost: false,
         });
         setTimeout(() => {
-            this.props.router.refresh({
+            this.props.router.withQuery('__preloading', '1', false).push({
                 scroll: false
             })
         }, 4000);
@@ -135,7 +135,7 @@ class ForumLayout extends React.Component {
 
     componentDidMount() {
         if (this.props.loading) {
-            this.props.router.refresh({
+            this.props.router.noQuery('__preloading').push({
                 scroll: false
             })
         }
@@ -154,7 +154,7 @@ class ForumLayout extends React.Component {
             })
         }
         if (this.props.loading) {
-            this.props.router.refresh({
+            this.props.router.noQuery('__preloading').push({
                 scroll: false
             })
         }

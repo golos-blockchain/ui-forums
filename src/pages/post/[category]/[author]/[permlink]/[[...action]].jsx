@@ -19,9 +19,10 @@ import PostForm from '@/modules/post/form';
 import Post404 from '@/elements/post/404';
 import Response from '@/elements/response';
 import Paginator from '@/elements/global/paginator';
-import { getForumName, getPageTitle } from '@/utils/text';
 import { getPost, getPostResponses } from '@/server/getPost'
 import { wrapSSR, } from '@/server/ssr'
+import { getForumName, getPageTitle } from '@/utils/text';
+import { withRouter, } from '@/utils/withRouter'
 
 import importNoty from '@/utils/importNoty';
 
@@ -180,6 +181,10 @@ class ThreadLayout extends React.Component {
             type: 'success',
             timeout: 8000
         }).show();
+        await new Promise(resolve => setTimeout(resolve, 4000))
+        await this.props.router.refresh({
+            scroll: false
+        })
         let anchor = '@' + submitted.post.author + '/' + submitted.post.permlink;
         this.setState({
             submitted: new Date(),
@@ -326,4 +331,4 @@ function mapDispatchToProps(dispatch) {
     }, dispatch)}
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ThreadLayout);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ThreadLayout))

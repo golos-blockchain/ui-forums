@@ -114,13 +114,6 @@ class PostForm extends React.Component {
                         if (parent.root_post) {
                             [ parent_author, parent_permlink ] = parent.root_post.split('/');
                         }
-                        setTimeout(() => {
-                            t.props.actions.fetchPostResponses({
-                                author: parent_author,
-                                category: this.props.forum._id,
-                                permlink: parent_permlink
-                            })
-                        }, 5000);
                     }
                     // Remove the draft from storage
                     this.removeDraft();

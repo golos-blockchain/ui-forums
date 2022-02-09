@@ -126,8 +126,6 @@ const updateOffchainCache = (params) => {
                     global.forumCache.vals[key] = val
                 }
             }
-        } else if (op[0] === 'comment') {
-            console.log(op, global.forumCache)
         }
     }
 }
