@@ -3,10 +3,9 @@ import getSlug from 'speakingurl';
 import tt from 'counterpart';
 import fetch from 'cross-fetch';
 
-import * as types from './actionTypes';
-import * as BreadcrumbActions from './breadcrumbActions';
-import * as ForumActions from './forumActions';
-import * as CONFIG from '../../config';
+import * as types from '@/actions/actionTypes';
+import * as BreadcrumbActions from '@/actions/breadcrumbActions';
+import * as ForumActions from '@/actions/forumActions';
 
 export function setVoteProcessing(id) {
     return {
@@ -123,7 +122,7 @@ function getForumName(forum) {
 export function fetchPost(params) {
     return async dispatch => {
         const { category, author, permlink } = params;
-        const response = await fetch(`${ CONFIG.rest_api }/${ category }/@${ author }/${ permlink }`);
+        const response = await fetch(`${ $GLS_Config.site_domain }/${ category }/@${ author }/${ permlink }`);
         if (response.ok) {
             const result = await response.json();
             let trail = result.forum.trail.map(item => {
@@ -137,12 +136,6 @@ export function fetchPost(params) {
                 link: result.data.url
             });
             dispatch(BreadcrumbActions.setBreadcrumb(trail));
-            dispatch({
-                type: types.SET_STATUS,
-                payload: {
-                    network: result.network
-                }
-            });
             dispatch(ForumActions.setForum(result.forum));
             dispatch(fetchPostResolved({
                 forum: result.forum,
@@ -164,19 +157,13 @@ export function fetchPostByAuthorResolved(payload = {}) {
 
 export function fetchPostByAuthor(author, page = 1) {
     return async dispatch => {
-        let uri = `${ CONFIG.rest_api }/@${ author }/posts`;
+        let uri = `${ $GLS_Config.site_domain }/@${ author }/posts`;
         if (page > 1) {
             uri = uri + '?page=' + page;
         }
         const response = await fetch(uri);
         if (response.ok) {
             const result = await response.json();
-            dispatch({
-                type: types.SET_STATUS,
-                payload: {
-                    network: result.network
-                }
-            });
             dispatch(fetchPostByAuthorResolved({
                 account: author,
                 posts: result.data.posts,
@@ -237,7 +224,7 @@ export function fetchPostRepliesByAuthorStarted(payload = {}) {
 
 export function fetchPostRepliesByAuthor(author, page = 1) {
     return async dispatch => {
-        let uri = `${ CONFIG.rest_api }/@${ author }/replies`;
+        let uri = `${ $GLS_Config.site_domain }/@${ author }/replies`;
         if (page > 1) {
             uri = uri + '?page=' + page;
         }
@@ -247,12 +234,6 @@ export function fetchPostRepliesByAuthor(author, page = 1) {
         }));
         if (response.ok) {
             const result = await response.json();
-            dispatch({
-                type: types.SET_STATUS,
-                payload: {
-                    network: result.network
-                }
-            });
             dispatch(fetchPostRepliesByAuthorResolved({
                 account: author,
                 replies: result.data.replies,
@@ -274,19 +255,13 @@ export function fetchPostResponsesByAuthorResolved(payload = {}) {
 
 export function fetchPostResponsesByAuthor(author, page = 1) {
     return async dispatch => {
-        let uri = `${ CONFIG.rest_api }/@${ author }/responses`;
+        let uri = `${ $GLS_Config.site_domain }/@${ author }/responses`;
         if (page > 1) {
             uri = uri + '?page=' + page;
         }
         const response = await fetch(uri);
         if (response.ok) {
             const result = await response.json();
-            dispatch({
-                type: types.SET_STATUS,
-                payload: {
-                    network: result.network
-                }
-            });
             dispatch(fetchPostResponsesByAuthorResolved({
                 account: author,
                 responses: result.data.responses,
@@ -308,19 +283,13 @@ export function fetchDonatesByAuthorResolved(payload = {}) {
 
 export function fetchDonatesByAuthor(author, direction, page = 1) {
     return async dispatch => {
-        let uri = `${ CONFIG.rest_api }/@${ author }/donates/${ direction }`;
+        let uri = `${ $GLS_Config.site_domain }/@${ author }/donates/${ direction }`;
         if (page > 1) {
             uri = uri + '?page=' + page;
         }
         const response = await fetch(uri);
         if (response.ok) {
             const result = await response.json();
-            dispatch({
-                type: types.SET_STATUS,
-                payload: {
-                    network: result.network
-                }
-            });
             dispatch(fetchDonatesByAuthorResolved({
                 account: author,
                 donates: result.data.donates,
@@ -343,7 +312,7 @@ export function fetchPostResponsesResolved(payload = {}) {
 export function fetchPostResponses(params) {
     return async dispatch => {
         const { category, author, permlink } = params;
-        const response = await fetch(`${ CONFIG.rest_api }/${ category }/@${ author }/${ permlink }/responses`);
+        const response = await fetch(`${ $GLS_Config.site_domain }/${ category }/@${ author }/${ permlink }/responses`);
         if (response.ok) {
             const result = await response.json();
             console.log(result);
@@ -381,7 +350,7 @@ export function fetchPostVotesResolved(payload = {}) {
 export function fetchPostDonates(params) {
     return async dispatch => {
         const { category, author, permlink } = params;
-        const response = await fetch(`${ CONFIG.rest_api }/${ category }/@${ author }/${ permlink }/donates`);
+        const response = await fetch(`${ $GLS_Config.site_domain }/${ category }/@${ author }/${ permlink }/donates`);
         if (response.ok) {
             const result = await response.json();
             dispatch(fetchPostDonatesResolved({

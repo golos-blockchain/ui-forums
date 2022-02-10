@@ -1,8 +1,7 @@
 import golos from 'golos-lib-js';
 
-import * as types from './actionTypes';
-import * as ForumActions from './forumActions';
-import * as CONFIG from '../../config';
+import * as types from '@/actions/actionTypes';
+import * as ForumActions from '@/actions/forumActions';
 
 function setValue(wif, isPosting, account, key, value, callback) {
     golos.broadcast.customJson(wif,
@@ -17,17 +16,17 @@ function setValue(wif, isPosting, account, key, value, callback) {
 
 function hidmsg(wif, account, objWithMsg, callback) {
     setValue(wif, true, account,
-        'g.pst.f.' + CONFIG.forum._id.toLowerCase() + '.hidmsg.lst',
+        'g.pst.f.' + $GLS_Config.forum._id.toLowerCase() + '.hidmsg.lst',
         objWithMsg, callback);
 }
 
 function hidacc(wif, account, objWithAcc, callback) {
     setValue(wif, true, account,
-        'g.pst.f.' + CONFIG.forum._id.toLowerCase() + '.hidacc.lst',
+        'g.pst.f.' + $GLS_Config.forum._id.toLowerCase() + '.hidacc.lst',
         objWithAcc, callback);
 }
 
-export function moderatorHidePostForum(wif, moderator, post, _id, forum, why = '') {
+export function moderatorHidePostForum(wif, moderator, post, _id, forum, why = '', callback = null) {
     return dispatch => {
         const { name } = moderator;
         let obj = {};
@@ -45,9 +44,10 @@ export function moderatorHidePostForum(wif, moderator, post, _id, forum, why = '
                     loading: false
                 });
             } else {
+                if (callback) callback()
                 ForumActions.updateForumStats(wif, name, _id, forum,
                     -1,
-                    0);
+                    0)
                 dispatch({
                     type: types.MODERATION_HIDE_RESOLVED,
                     payload: {moderator, post},
@@ -58,7 +58,7 @@ export function moderatorHidePostForum(wif, moderator, post, _id, forum, why = '
     };
 }
 
-export function moderatorRevealPostForum(wif, moderator, post, _id, forum) {
+export function moderatorRevealPostForum(wif, moderator, post, _id, forum, callback = null) {
     return dispatch => {
         const { name } = moderator;
         let obj = {};
@@ -76,9 +76,10 @@ export function moderatorRevealPostForum(wif, moderator, post, _id, forum) {
                     loading: false
                 });
             } else {
+                if (callback) callback()
                 ForumActions.updateForumStats(wif, name, _id, forum,
                     1,
-                    0);
+                    0)
                 dispatch({
                     type: types.MODERATION_REVEAL_RESOLVED,
                     payload: {moderator, post},
@@ -89,7 +90,7 @@ export function moderatorRevealPostForum(wif, moderator, post, _id, forum) {
     };
 }
 
-export function moderatorBanAccount(wif, moderator, accountName, why = '') {
+export function moderatorBanAccount(wif, moderator, accountName, why = '', callback = null) {
     return dispatch => {
         const { name } = moderator;
         let obj = {};
@@ -112,12 +113,13 @@ export function moderatorBanAccount(wif, moderator, accountName, why = '') {
                     payload: {moderator, accountName},
                     loading: false
                 });
+                if (callback) callback()
             }
         });
     };
 }
 
-export function moderatorUnBanAccount(wif, moderator, accountName) {
+export function moderatorUnBanAccount(wif, moderator, accountName, callback = null) {
     return dispatch => {
         const { name } = moderator;
         let obj = {};
@@ -140,6 +142,9 @@ export function moderatorUnBanAccount(wif, moderator, accountName) {
                     payload: {moderator, accountName},
                     loading: false
                 });
+                if (callback) {
+                    callback()
+                }
             }
         });
     };

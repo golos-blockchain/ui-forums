@@ -1,14 +1,15 @@
-FROM node:16.1
-
-# Install app dependencies
-RUN npm install --global gulp-cli
-RUN npm install --global serve
+FROM node:16.1 as build
 
 # Bundle app source
-COPY . /
-WORKDIR /
-RUN npm install
-RUN chmod +x /docker_run.sh
+WORKDIR /var/app
+RUN mkdir -p /var/app
+COPY . /var/app
+RUN yarn install
+RUN yarn build
+
+FROM node:16.1 as prod
+WORKDIR /var/app
+COPY --from=build /var/app /var/app
 
 EXPOSE 3000
-CMD ["/docker_run.sh"]
+CMD [ "yarn", "run", "prod" ]

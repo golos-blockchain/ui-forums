@@ -1,64 +1,54 @@
-# Clone
+# Скачивание
 
 ```
 git clone https://github.com/golos-blockchain/ui-forums
 cd ui-forums
 ```
 
-# Configure
+# Настройка
 
-After cloning project with Git, you have `config.js` file in `ui-forums` folder.
+После того, как вы скачали проект с GitHub, у вас есть файл `config/default.js` в папке `ui-forums`.
 
-"Main idea" is what you can replace "GolosTalk" in `config.js` with your actual forum name.
+В этом файле необходимо задать:
+- `site_domain` - домен вашего форума, пример: https://dev.golostalk.com
+- `golos_server_node` - адрес ноды Golos, пример wss://api-full.golos.id/ws
 
-But there are also some manipulations **required** to deploy ui-forums on your server. They are described below.
+Через этот файл можно внести и многие другие изменения, например, заменить "GolosTalk" названием вашего форума.
 
-## config.js
+# Развертывание
 
-You should set `rest_api` to your URL with 5000 port where ui-forums-rest should run. Example: `http://127.0.0.1:5000`.
+Форум запускается на [http://localhost:3000](http://localhost:3000)
 
-# Deployment
+Есть 3 способа развернуть форум.
 
-ui-forums-rest runs on 5000 port, and main ui-forums site runs on [http://localhost:3000](http://localhost:3000)
+## Docker Compose (рекомендуется)
 
-There are 3 ways to deploy.
-
-## Docker Compose (recommended)
-
-Requires [Docker](https://docs.docker.com/engine/install/) and [Docker Compose](https://docs.docker.com/compose/install/).
+Нужно установить [Docker](https://docs.docker.com/engine/install/) и [Docker Compose](https://docs.docker.com/compose/install/).
 
 ```
 docker-compose up
 ```
 
-## Docker without Compose
+## Docker без Compose
 
-Requires [Docker](https://docs.docker.com/engine/install/).
+Нужно установить [Docker](https://docs.docker.com/engine/install/).
 
 ```
-sudo docker build -t local/ui-forums-rest -f server/Dockerfile .
-sudo docker run -d -p 5000:5000 --name ui-forums-rest local/ui-forums-rest
-
 sudo docker build -t local/ui-forums -f Dockerfile .
 sudo docker run -d -p 3000:3000 --name ui-forums local/ui-forums
 ```
 
-## Manual
+## Ручной (для разработчиков)
 
-Requires [Node.js 16 or newer](https://github.com/nodesource/distributions/blob/master/README.md).
+Нужно установить [Node.js 16](https://github.com/nodesource/distributions/blob/master/README.md).
 
 ```
-cd server
-npm install
-node index.js & disown
-cd ..
-npm install --global gulp-cli
-npm install
-npm start
+yarn install
+yarn run start
 ```
 
-# Troobleshooting
+# Устранение проблем
 
-## Wrong statistics of top/comments in categories
+## Неверная статистика постов\комментов в разделах
 
-Use [fix_stats](fix_stats) tool.
+Используйте утилиту [fix_stats](fix_stats).

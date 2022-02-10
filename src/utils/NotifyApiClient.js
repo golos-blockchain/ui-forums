@@ -1,5 +1,3 @@
-import * as CONFIG from '../../config';
-
 const request_base = {
     method: 'post',
     credentials: 'include',
@@ -10,11 +8,11 @@ const request_base = {
 };
 
 const notifyAvailable = () => {
-    return /*process.env.BROWSER &&*/ CONFIG.notify_service && CONFIG.notify_service.host;
+    return /*process.env.BROWSER &&*/ $GLS_Config.notify_service && $GLS_Config.notify_service.host;
 };
 
 const notifyUrl = (pathname) => {
-    return new URL(pathname, CONFIG.notify_service.host).toString();
+    return new URL(pathname, $GLS_Config.notify_service.host).toString();
 };
 
 function setSession(request) {

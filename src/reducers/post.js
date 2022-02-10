@@ -1,7 +1,7 @@
 import { Asset } from 'golos-lib-js/lib/utils';
 
-import * as types from '../actions/actionTypes';
-import * as ForumReducer from './forum';
+import * as types from '@/actions/actionTypes';
+import * as ForumReducer from '@/reducers/forum';
 
 const initialState = {
     forum: false,

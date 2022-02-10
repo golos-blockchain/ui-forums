@@ -1,9 +1,9 @@
 const reader = require('readline-sync');
-const golos = require('golos-classic-js');
+const golos = require('golos-lib-js');
 
-const CONFIG = require('../config');
+const CONFIG = require('../config/default');
 
-golos.config.set('websocket', CONFIG.golos_node);
+golos.config.set('websocket', CONFIG.golos_server_node);
 golos.config.set('chain_id', CONFIG.golos_chain_id);
 
 const PREFIX = 'g.f.';
@@ -116,5 +116,6 @@ async function fillStats(stats, cats, hidden, banned, parentStats = []) {
             value: JSON.stringify(stats)
         }]));
     console.log('SUCCESSFUL!');
+    console.log('Changes will appear on forum in nearest ~5-10 minutes');
     console.log('Press Ctrl+C to exit');
 })();

@@ -1,7 +1,6 @@
 import golos from 'golos-lib-js';
 
-import * as types from './actionTypes';
-import * as CONFIG from '../../config';
+import * as types from '@/actions/actionTypes';
 
 export function forumReservation(account, name, namespace) {
     return dispatch => {
@@ -82,27 +81,11 @@ export function setForum(forum) {
     };
 }
 
-export function fetchForumDetails(ns) {
-    return dispatch => {
-        /*axios.get(`${ CONFIG.rest_api }/status/${ns}`)
-            .then(response => {
-                dispatch(statusActions.setStatus(response.data))
-                dispatch({
-                    type: types.FORUM_LOAD_RESOLVED,
-                    payload: response.data,
-                })
-            })
-            .catch((error) => {
-                console.log(error);
-            })*/
-    };
-}
-
 export async function updateForumStats(wif, account, _id, forum, addPosts, addComments, addTotalPosts = 0, addTotalComments = 0) {
     try {
-        const key = 'g.pst.f.' + CONFIG.forum._id.toLowerCase() + '.stats.lst';
+        const key = 'g.pst.f.' + $GLS_Config.forum._id.toLowerCase() + '.stats.lst';
 
-        let vals = await golos.api.getValuesAsync(CONFIG.forum.creator, [key]);
+        let vals = await golos.api.getValuesAsync($GLS_Config.forum.creator, [key]);
         vals[key] = vals[key] ? JSON.parse(vals[key]) : {};
 
         let operations = [];
