@@ -109,8 +109,8 @@ export async function getAccountDonates(vals, username, direction = 'to', page =
 
     const total = donates.length;
 
-    const start = page ? (page - 1) * $GLS_Config.forum.account_donates_per_page : 0;
-    const end = start + $GLS_Config.forum.account_donates_per_page;
+    const start = page ? (page - 1) * 10 : 0;
+    const end = start + 10;
     donates = donates.slice(start, end);
 
     let ret = {

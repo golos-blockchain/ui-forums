@@ -6,7 +6,7 @@ import * as types from '@/actions/actionTypes';
 const getInitialState = () => {
   let name = ''
   if (typeof($GLS_Config) !== 'undefined') {
-    name = ttGetByKey($GLS_Config.forum, 'breadcrumb_title')
+    name = ttGetByKey($GLS_Config.forum, 'link_title')
   }
   return {
     trail: [{

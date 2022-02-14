@@ -6,6 +6,7 @@ services:
         build: .
         restart: always
         volumes:
-            - ./config/default.js:/config/default.js
+            - ./config/default.js:/var/app/config/default.js
+            # - ./public/index.html:/var/app/public/index.html
         ports:
             - "3000:3000"

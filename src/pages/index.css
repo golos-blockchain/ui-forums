@@ -1,3 +1,26 @@
+/* Header background */
+/*
+.ui.inverted.blue.menu {
+  background-color: #2185D0;
+}
+*/
+
+/* Footer background */
+/*
+.ui.inverted.segment {
+  background: #1B1C1D;
+}
+*/
+
+/* Forum title background */
+/*
+.ui.inverted.blue.segment {
+  background-color: #2185D0 !important;
+}
+*/
+
+/*---------------------------------------------------------------*/
+
 /* Mobile */
 @media only screen and (max-width: 767px) {
   [class*="mobile hidden"],
@@ -76,27 +99,6 @@
 .ui.inverted.menu .dropdown .item>a:not(.ui) {
   color: #000000;
 }
-
-/* Header background */
-/*
-.ui.inverted.blue.menu {
-  background-color: #2185D0;
-}
-*/
-
-/* Footer background */
-/*
-.ui.inverted.segment {
-  background: #1B1C1D;
-}
-*/
-
-/* Forum title background */
-/*
-.ui.inverted.blue.segment {
-  background-color: #2185D0 !important;
-}
-*/
 
 .pull-left {
   float: left;
