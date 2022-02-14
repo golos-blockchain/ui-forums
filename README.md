@@ -11,7 +11,7 @@ cd ui-forums
 
 В этом файле необходимо задать:
 - `site_domain` - домен вашего форума, пример: https://dev.golostalk.com
-- `golos_server_node` - адрес ноды Golos, пример wss://api-full.golos.id/ws
+- `golos_server_node` - адрес ноды Golos, пример https://api.golos.today
 
 Через этот файл можно внести и многие другие изменения, например, заменить "GolosTalk" названием вашего форума.
 

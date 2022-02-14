@@ -81,6 +81,7 @@ class MyApp extends React.Component {
                     <meta property='og:title' content={ttGetByKey($GLS_Config.forum, 'meta_title')} />
                     <meta property='og:description' content={ttGetByKey($GLS_Config.forum, 'meta_description')} />
                     <meta property='og:image' content={$GLS_Config.forum.meta_image} />
+                    <link rel='icon' href={$GLS_Config.forum.favicon_png_image} type='image/png' />
                 </Head>
                 {!isBlank ? (<HeaderMenu />) : null}
                 {!isBlank ? (<BreadcrumbMenu withSearch={true} />) : null}
