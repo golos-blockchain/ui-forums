@@ -68,29 +68,32 @@ class MyApp extends React.Component {
         const isBlank = false//pathname === '/msgs' || pathname.startsWith('/msgs/');
         const { Component, pageProps, } = this.props
         const container = typeof($GLS_Config) !== 'undefined' ? (
-            <div className='AppContainer'>
-                <Head>
-                    <title>{ttGetByKey($GLS_Config.forum, 'page_title')}</title>
-                    <meta name='description' content={ttGetByKey($GLS_Config.forum, 'meta_description')} />
-                    <meta name='viewport' content='width=device-width, initial-scale=1' />
-                    <meta name='twitter:card' content='summary' />
-                    <meta name='twitter:title' content={ttGetByKey($GLS_Config.forum, 'meta_title')} />
-                    <meta name='twitter:description' content={ttGetByKey($GLS_Config.forum, 'meta_description')} />
-                    <meta name='twitter:image:src' content={$GLS_Config.forum.meta_image} />
-                    <meta property='og:type' content='article' />  
-                    <meta property='og:title' content={ttGetByKey($GLS_Config.forum, 'meta_title')} />
-                    <meta property='og:description' content={ttGetByKey($GLS_Config.forum, 'meta_description')} />
-                    <meta property='og:image' content={$GLS_Config.forum.meta_image} />
-                    <link rel='icon' href={$GLS_Config.forum.favicon_png_image} type='image/png' />
-                </Head>
-                {!isBlank ? (<HeaderMenu />) : null}
-                {!isBlank ? (<BreadcrumbMenu withSearch={true} />) : null}
-                <Container fluid={isBlank} className={isBlank ? 'noPadding' : ''}>
-                    <Component {...pageProps} />
-                </Container>
-                {!isBlank ? (<BreadcrumbMenu withSearch={true} />) : null}
-                {!isBlank ? (<BannerMenu />) : null}
-                {!isBlank ? (<FooterMenu />) : null}
+            <div>
+                <link rel='stylesheet' href='/custom.css' key='css-custom' />
+                <div className='AppContainer'>
+                    <Head>
+                        <title>{ttGetByKey($GLS_Config.forum, 'page_title')}</title>
+                        <meta name='description' content={ttGetByKey($GLS_Config.forum, 'meta_description')} />
+                        <meta name='viewport' content='width=device-width, initial-scale=1' />
+                        <meta name='twitter:card' content='summary' />
+                        <meta name='twitter:title' content={ttGetByKey($GLS_Config.forum, 'meta_title')} />
+                        <meta name='twitter:description' content={ttGetByKey($GLS_Config.forum, 'meta_description')} />
+                        <meta name='twitter:image:src' content={$GLS_Config.forum.meta_image} />
+                        <meta property='og:type' content='article' />  
+                        <meta property='og:title' content={ttGetByKey($GLS_Config.forum, 'meta_title')} />
+                        <meta property='og:description' content={ttGetByKey($GLS_Config.forum, 'meta_description')} />
+                        <meta property='og:image' content={$GLS_Config.forum.meta_image} />
+                        <link rel='icon' href={$GLS_Config.forum.favicon_png_image} type='image/png' />
+                    </Head>
+                    {!isBlank ? (<HeaderMenu />) : null}
+                    {!isBlank ? (<BreadcrumbMenu withSearch={true} />) : null}
+                    <Container fluid={isBlank} className={isBlank ? 'noPadding' : ''}>
+                        <Component {...pageProps} />
+                    </Container>
+                    {!isBlank ? (<BreadcrumbMenu withSearch={true} />) : null}
+                    {!isBlank ? (<BannerMenu />) : null}
+                    {!isBlank ? (<FooterMenu />) : null}
+                </div>
             </div>
         ) : <Component {...pageProps} />
           if (process.browser) return (
