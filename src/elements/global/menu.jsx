@@ -16,6 +16,7 @@ import LoginButton from '@/elements/login/button';
 import LogoutItem from '@/elements/login/logout';
 import AccountAvatar from '@/elements/account/avatar';
 import { authRegisterUrl } from '@/utils/AuthApiClient';
+import { msgsHost, msgsLink, } from '@/utils/ExtLinkUtils'
 
 class HeaderMenu extends Component {
     state = {
@@ -118,6 +119,7 @@ class HeaderMenu extends Component {
             if (account) {
                 data = account.data;
             }
+            const msgsAvail = msgsHost()
             avatar = (
                 <AccountAvatar
                     className=''
@@ -125,7 +127,7 @@ class HeaderMenu extends Component {
                     size={35}
                     style={{margin: 0}}
                     username={name}
-                    notifications={notifications ? Math.max(notifications.message, 0) : 0}
+                    notifications={(notifications && msgsAvail) ? Math.max(notifications.message, 0) : 0}
                 />
             );
             userItem = (
@@ -133,7 +135,7 @@ class HeaderMenu extends Component {
                     <Dropdown.Menu>
                         <Dropdown.Item as={'a'} href={`/@${name}`} icon='user' content={tt('account.profile')} />
                         <Dropdown.Item as={'a'} href={`/@${name}/responses`} icon='comments' content={tt('account.responses')} />
-                        <Dropdown.Item as={'a'} label={notifiLabel} target='_blank' href={`/msgs/`} icon='envelope' content={tt('g.messages')} />
+                        {msgsAvail ? <Dropdown.Item as={'a'} label={notifiLabel} target='_blank' rel='noopener noreferrer' href={msgsLink()} icon='envelope' content={tt('g.messages')} /> : null}
                         <Dropdown.Item as={'a'} target='_blank' href={`https://golos.id/@${name}`} icon='users' content={tt('account.blogs')} />
                         <LogoutItem {...this.props} />
                     </Dropdown.Menu>

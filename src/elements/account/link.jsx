@@ -4,6 +4,8 @@ import tt from 'counterpart'
 
 import { Popup, Icon } from 'semantic-ui-react'
 
+import { msgsHost, msgsLink, } from '@/utils/ExtLinkUtils'
+
 export default class AccountLink extends React.Component {
     render() {
         const { color, username, reputation, withMsgsButton, noPopup, isBanned } = this.props
@@ -16,16 +18,14 @@ export default class AccountLink extends React.Component {
             </Link>
         )
         if (noPopup) {
-            if (withMsgsButton)
+            if (withMsgsButton && msgsHost())
                 link = (
                     <span>
                         {link}
                         &nbsp;
-                        <Link href={`/msgs/@${username}`}>
-                            <a target='_blank'>
-                                <Icon name='envelope' color='blue' title={tt('g.write_message')} />
-                            </a>
-                        </Link>
+                        <a href={msgsLink(username)} target='_blank' rel='noopener noreferrer'>
+                            <Icon name='envelope' color='blue' title={tt('g.write_message')} />
+                        </a>
                     </span>
                 )
             return link
@@ -38,14 +38,12 @@ export default class AccountLink extends React.Component {
                     mouseEnterDelay={500}
                     inverted
                 /> : null}
-                {withMsgsButton ? (
+                {(withMsgsButton && msgsHost()) ? (
                     <span>
                         &nbsp;
-                        <Link href={`/msgs/@${username}`}>
-                            <a target='_blank'>
-                                <Icon name='envelope' color='blue' title={tt('g.write_message')} />
-                            </a>
-                        </Link>
+                        <a href={msgsLink(username)} target='_blank' rel='noopener noreferrer'>
+                            <Icon name='envelope' color='blue' title={tt('g.write_message')} />
+                        </a>
                     </span>
                 ) : null}
             </span>
