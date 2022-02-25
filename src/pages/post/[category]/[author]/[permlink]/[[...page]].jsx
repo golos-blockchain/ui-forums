@@ -69,40 +69,47 @@ class ThreadLayout extends React.Component {
         super(props);
         this.state = Object.assign({}, props.params, {
             replyAuthor: '',
-            scrollTo2: '',
         });
     }
 
-    componentDidUpdate() {
-        /*const { hash } = window.location;
-        let matchesPost = hash.match(regexPost);
+    scrollToPostIfNeed = () => {
+        const { hash } = window.location
+        let matchesPost = hash.match(regexPost)
         if (matchesPost) {
-            const anchor = '@' + matchesPost[1] + '/' + matchesPost[2];
-            if (this.state.scrollTo2 !== '+' + anchor && this.state.scrollTo2 !== anchor) {
-                this.setState({
-                    scrollTo2: anchor
-                });
-            }
-            if (this.state.scrollTo2.startsWith('@')) {
-                const anc = this.state.scrollTo2
-                const page = this.getPageForPost(anc);
-                if (!page) return;
-                setTimeout(() => {
-                    goToAnchor(anc)
-                }, 50);
-                this.setState({
-                    scrollTo2: '+' + this.state.scrollTo2,
-                    page: this.getPageForPost(anc)
-                });
-            }
-        }*/
+            const id = '@' + matchesPost[1] + '/' + matchesPost[2]
+            this.scrollToPost(id)
+        }
+    }
+
+    componentDidMount() {
+        this.scrollToPostIfNeed()
+    }
+
+    componentDidUpdate() {
+        this.scrollToPostIfNeed()
     }
 
     scrollToPost = (id) => {
+        if (this.state.scrolledTo === id) {
+            return true
+        }
         let page = this.getPageForPost(id)
-        if (page === false) return false;
-        this.changePage(page, id)
-        return true;
+        if (page === false) return false
+        if (this.props.page !== page) {
+            console.log('page wrong')
+            let newPath = this.props.basePath + (page >= 2 ? ('/' + page) : '')
+            newPath += '#' + id
+            this.props.router.push(newPath)
+        } else {
+            console.log('page is ok, scrolling to post')
+            setTimeout(() => {
+                goToAnchor(id)
+            }, 50);
+            this.setState({
+                scrolledTo: id,
+            })
+        }
+        return true
     };
 
     getPageForPost = (id) => {
@@ -117,20 +124,6 @@ class ThreadLayout extends React.Component {
         }
         if (position === false) return position;
         return Math.floor(position / perPage) + 1;
-    };
-
-    changePage = (page = false, scrollTo = false) => {
-        let state = {};
-        if (page) {
-            state.page = page;
-        }
-        if (scrollTo) {
-            state.scrollTo = scrollTo;
-        } else {
-            goToTop();
-        }
-        this.setState(state);
-        if (page) window.location.hash = page > 1 ? 'comments-page-' + page : '';
     };
 
     goReply = (replyAuthor, replyQuote = null) => {
@@ -282,15 +275,12 @@ class ThreadLayout extends React.Component {
                 <Post
                     action={this.state.action}
                     page={page}
-                    changePage={this.changePage}
-                    scrollToPost={this.scrollToPost}
                     goReply={this.goReply}
                     { ...this.props } />
                 { comments_nav }
                 <Response
                     page={page}
                     perPage={perPage}
-                    changePage={this.changePage}
                     scrollToPost={this.scrollToPost}
                     goReply={this.goReply}
                     { ...this.props } />
