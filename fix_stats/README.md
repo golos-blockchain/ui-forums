@@ -4,8 +4,8 @@ For Windows and UNIX (Linux or macOS).
 
 Requires [Node.js 16 or newer](https://github.com/nodesource/distributions/blob/master/README.md).
 
-Following fields should be filled in `config.js` to use this tool:
-- golos_node
+Following fields should be filled in `config/default.js` to use this tool:
+- golos_server_node
 - forum._id
 - forum.creator
 
