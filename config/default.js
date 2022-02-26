@@ -50,6 +50,9 @@ module.exports = {
     notify_service: {
         host: 'https://devnotify.golos.app'
     },
+    messenger_service: {
+        host: "https://devchat.golos.app"
+    },
     elastic_search: {
         url: 'https://search.golos.today',
         login: 'golosclient',

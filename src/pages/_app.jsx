@@ -64,8 +64,6 @@ class MyApp extends React.Component {
     }
 
     render() {
-        //const pathname = window.location.pathname;
-        const isBlank = false//pathname === '/msgs' || pathname.startsWith('/msgs/');
         const { Component, pageProps, } = this.props
         const container = typeof($GLS_Config) !== 'undefined' ? (
             <div>
@@ -85,14 +83,14 @@ class MyApp extends React.Component {
                         <meta property='og:image' content={$GLS_Config.forum.meta_image} />
                         <link rel='icon' href={$GLS_Config.forum.favicon_png_image} type='image/png' />
                     </Head>
-                    {!isBlank ? (<HeaderMenu />) : null}
-                    {!isBlank ? (<BreadcrumbMenu withSearch={true} />) : null}
-                    <Container fluid={isBlank} className={isBlank ? 'noPadding' : ''}>
+                    <HeaderMenu />
+                    <BreadcrumbMenu withSearch={true} />
+                    <Container>
                         <Component {...pageProps} />
                     </Container>
-                    {!isBlank ? (<BreadcrumbMenu withSearch={true} />) : null}
-                    {!isBlank ? (<BannerMenu />) : null}
-                    {!isBlank ? (<FooterMenu />) : null}
+                    <BreadcrumbMenu withSearch={true} />
+                    <BannerMenu />
+                    <FooterMenu />
                 </div>
             </div>
         ) : <Component {...pageProps} />

@@ -12,6 +12,7 @@ function initConfig() {
         images: config.get('images'),
         auth_service: config.get('auth_service'),
         notify_service: config.get('notify_service'),
+        messenger_service: config.get('messenger_service'),
         elastic_search: config.get('elastic_search'),
         helmet: config.get('helmet'),
         anti_phishing: config.get('anti_phishing'),
