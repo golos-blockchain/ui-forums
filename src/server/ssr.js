@@ -11,6 +11,7 @@ function initConfig() {
         forum: config.get('forum'),
         images: config.get('images'),
         auth_service: config.get('auth_service'),
+        golos_signer: config.get('golos_signer'),
         notify_service: config.get('notify_service'),
         messenger_service: config.get('messenger_service'),
         elastic_search: config.get('elastic_search'),

@@ -58,6 +58,13 @@ class Donating extends React.Component {
 
     showModal = (e) => {
         e.preventDefault();
+        if (this.props.account.name && !this.props.account.key) { // OAuth
+            const { author } = this.props.post
+            if (author === this.props.account.name) {
+                alert(tt('donating.cannot_donate_yourself'))
+                return false
+            }
+        }
         this.setState({
             modalOpen: true
         });

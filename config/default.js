@@ -47,6 +47,10 @@ module.exports = {
         host: 'https://dev.golos.app',
         custom_client: 'golostalk'
     },
+    golos_signer: {
+        host: 'https://dev.golos.app',
+        client: 'golostalk'
+    },
     notify_service: {
         host: 'https://devnotify.golos.app'
     },
