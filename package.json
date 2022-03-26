@@ -13,7 +13,7 @@
     "formsy-react": "^2.2.5",
     "formsy-semantic-ui-react": "^2.1.3",
     "git-rev-sync": "^3.0.2",
-    "golos-lib-js": "^0.9.24",
+    "golos-lib-js": "^0.9.25",
     "highlight.js": "^11.4.0",
     "history": "^4.7.2",
     "immutability-helper": "^2.2.2",

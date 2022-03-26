@@ -185,7 +185,12 @@ class ForumCategoriesForm extends React.Component {
     };
 
     handleSubmit = (data) => {
-        this.setState({showConfirm: true})
+        const { account } = this.props
+        if (account.name && !account.key) { // OAuth
+            this.broadcast(account.name, '(active)')
+        } else {
+            this.setState({showConfirm: true})
+        }
     };
     hideConfirm = () => this.setState({showConfirm: false});
     broadcast = (account, wif) => {

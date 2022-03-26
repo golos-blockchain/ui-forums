@@ -17,6 +17,7 @@ import LogoutItem from '@/elements/login/logout';
 import AccountAvatar from '@/elements/account/avatar';
 import { authRegisterUrl } from '@/utils/AuthApiClient';
 import { msgsHost, msgsLink, } from '@/utils/ExtLinkUtils'
+import { useOAuthNode } from '@/utils/oauthHelper'
 
 class HeaderMenu extends Component {
     state = {
@@ -34,6 +35,19 @@ class HeaderMenu extends Component {
 
         if (!this.props.account || !this.props.account.data) {
             this.props.actions.fetchAccount(this.props.account.name);
+        }
+
+        if (this.props.account && !this.props.account.key) {
+            const host = golos.config.get('oauth.host')
+            let res = {}
+            if (host) {
+                res = await golos.oauth.checkReliable()
+            }
+            if (res.authorized && res.account === this.props.account.name) {
+                useOAuthNode(host)
+            } else {
+                this.props.actions.signoutAccount()
+            }
         }
 
         const fixMemo = (account) => {

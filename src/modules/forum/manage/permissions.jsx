@@ -66,7 +66,12 @@ class ForumPermissions extends React.Component {
     }
 
     handleApply = (data) => {
-        this.setState({showConfirm: true})
+        const { account } = this.props
+        if (account.name && !account.key) { // OAuth
+            this.broadcast(account.name, '')
+        } else {
+            this.setState({showConfirm: true})
+        }
     }
     hideConfirm = () => this.setState({showConfirm: false})
 

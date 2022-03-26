@@ -3,10 +3,11 @@ import golos from 'golos-lib-js';
 import tt from 'counterpart';
 import { connect } from 'react-redux';
 
-import { Button, Checkbox, Form, Header, Icon, Message, Modal } from 'semantic-ui-react';
+import { Button, Checkbox, Dimmer, Form, Header, Icon, Loader, Message, Modal } from 'semantic-ui-react';
 
 import { authRegisterUrl } from '@/utils/AuthApiClient';
 import { notifyLogin } from '@/utils/notifications';
+import { useOAuthNode } from '@/utils/oauthHelper'
 
 class LoginModal extends React.Component {
 
@@ -17,10 +18,12 @@ class LoginModal extends React.Component {
             loginOpen: props.open,
             error: false,
             loading: false,
+            signerLoading: false,
             account: props.account,
             key: '',
             rememberMe: true,
         };
+        this.signerAvailable = !!golos.config.get('oauth.host')
     }
 
     UNSAFE_componentWillReceiveProps(nextProps) {
@@ -119,6 +122,11 @@ class LoginModal extends React.Component {
                 return;
             }
             if (res.posting) {
+                // Need for case if previously was signed with OAuth
+                golos.config.set('websocket', $GLS_Config.golos_node)
+                golos.config.set('chain_id', $GLS_Config.golos_chain_id)
+                golos.config.set('credentials', undefined)
+
                 t.props.actions.signinAccount(account, res.posting, res.memo);
                 try {
                     await notifyLogin(account, res.posting);
@@ -134,6 +142,26 @@ class LoginModal extends React.Component {
             error: tt('login.wrong_password')
         });
     };
+
+    useOAuth = (e) => {
+        e.preventDefault()
+        const permissions = [ 'comment', 'vote', 'donate', 'custom' ]
+        golos.oauth.login(permissions)
+        this.setState({ signerLoading: true })
+        golos.oauth.waitForLogin(res => {
+            this.setState({ signerLoading: false })
+            this.props.actions.signinAccount(res.account, '')
+            useOAuthNode(golos.config.get('oauth.host'))
+            this.handleClose()
+        }, () => {
+            this.setState({ signerLoading: false })
+        }, 180, () => {
+            if (this.state.loading || !this.state.loginOpen) {
+                this.setState({ signerLoading: false })
+                return true
+            }
+        })
+    }
 
     render() {
         let {
@@ -179,6 +207,26 @@ class LoginModal extends React.Component {
             </Modal>
         )
         if (this.state.loginOpen) {
+            let signer = null
+            if (this.signerAvailable) {
+                const { signerLoading } = this.state
+                signer = (<a href='#' onClick={this.useOAuth}>
+                    <span style={{ float: 'left'}}>
+                        <Dimmer.Dimmable as='span' dimmed={signerLoading}>
+                            <Dimmer inverted active={signerLoading} style={{ background: 'transparent' }}>
+                                <Loader size='small' />
+                            </Dimmer>
+                            <span style={{ opacity: signerLoading ? 0 : 1, fontSize: '1.025rem' }}>
+                                <span style={{ marginTop: '0.3rem', display: 'inline-block' }}>
+                                    <span style={{ verticalAlign: 'middle' }}>{tt('login.sign_in_with')}</span>
+                                    <img style={{ verticalAlign: 'middle', marginLeft: '0.3rem', marginRight: '0.3rem' }} src='/images/signer24x24.png' />
+                                    <span style={{ verticalAlign: 'middle' }}>{tt('login.sign_in_with_signer')}</span>
+                                </span>
+                            </span>
+                        </Dimmer.Dimmable>
+                    </span>
+                </a>)
+            }
             modal = (
                 <Modal
                     open={this.state.loginOpen}
@@ -218,6 +266,7 @@ class LoginModal extends React.Component {
                             />) : null }
                     </Modal.Content>
                     <Modal.Actions>
+                        {signer}
                         {cancelIsRegister && !isMemo ?
                             (<Button as='a' href={authRegisterUrl()} target='_blank' color='orange'>{tt('login.sign_up')}</Button>) : null}
                         {!cancelIsRegister && !isMemo ?
