@@ -175,6 +175,7 @@
     "memo_title": "Please authorize",
     "memo_description": "This operation requires your Memo key or password.",
     "no_such_account_name": "No such account name",
+    "account_frozen": "This account is temporarily frozen.",
     "wrong_password_format": "Invalid format of password/key",
     "wrong_password": "Wrong password/key",
     "wrong_password_not_active": "This operation requires active-key, not posting or owner",
@@ -284,6 +285,7 @@
     "search": "Search",
     "messages": "Messages",
     "modified": " (updated)",
+    "more": "More details",
     "write_message": "Write a message"
   }
 }

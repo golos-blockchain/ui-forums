@@ -18,6 +18,7 @@ import AccountAvatar from '@/elements/account/avatar';
 import { authRegisterUrl } from '@/utils/AuthApiClient';
 import { msgsHost, msgsLink, } from '@/utils/ExtLinkUtils'
 import { useOAuthNode } from '@/utils/oauthHelper'
+import { notifyLogout } from '@/utils/notifications'
 
 class HeaderMenu extends Component {
     state = {
@@ -35,6 +36,17 @@ class HeaderMenu extends Component {
 
         if (!this.props.account || !this.props.account.data) {
             this.props.actions.fetchAccount(this.props.account.name);
+        } else {
+            const { data } = this.props.account
+            if (data.frozen) {
+                console.error('Frozen, signing out...')
+                this.props.actions.signoutAccount()
+                try {
+                    await notifyLogout()
+                } catch (error) {
+                    console.error('notifyLogout', error)
+                }
+            }
         }
 
         if (this.props.account && !this.props.account.key) {

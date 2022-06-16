@@ -176,7 +176,7 @@ class Donating extends React.Component {
         let tip_balance = 0.0;
         let tip_balance_str = '0 GOLOS';
         if (this.props.account.data && nativeLoaded) {
-            tip_balance = Asset(this.props.account.data.tip_balance).amountFloat;
+            tip_balance = parseFloat(Asset(this.props.account.data.tip_balance).amountFloat)
 
             balances.push(<Dropdown.Item
                 text={Asset(this.props.account.data.tip_balance).toString(0)}
@@ -197,7 +197,7 @@ class Donating extends React.Component {
                     onClick={this.changeSym} />);
 
                 if (sym === symbol) {
-                    tip_balance = asset.amountFloat;
+                    tip_balance = parseFloat(asset.amountFloat)
                 }
             }
 

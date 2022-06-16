@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 
 import { Button, Checkbox, Dimmer, Form, Header, Icon, Loader, Message, Modal } from 'semantic-ui-react';
 
-import { authRegisterUrl } from '@/utils/AuthApiClient';
+import { authRegisterUrl, authUrl } from '@/utils/AuthApiClient';
 import { notifyLogin } from '@/utils/notifications';
 import { useOAuthNode } from '@/utils/oauthHelper'
 
@@ -74,12 +74,19 @@ class LoginModal extends React.Component {
         try {
             res = await golos.auth.login(account, key)
         } catch (err) {
-            if (err.message === 'No such account'){
-                t.setState({
-                    loading: false,
-                    error: tt('login.no_such_account_name')
-                });
+            let error = (err && err.message) || err
+            if (err === 'No such account') {
+                error = tt('login.no_such_account_name')
+            } else if (err === 'Account is frozen') {
+                error = <span>
+                        {tt('login.account_frozen')}
+                        <a href={authUrl('/sign/unfreeze/' + account)} target='_blank' rel='noopener noreferrer'>&nbsp;{tt('g.more')}</a>
+                    </span>
             }
+            t.setState({
+                loading: false,
+                error
+            })
             return;
         }
         if (isMemo) {
