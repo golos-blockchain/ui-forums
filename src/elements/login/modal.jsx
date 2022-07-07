@@ -1,5 +1,5 @@
 import React from 'react';
-import golos from 'golos-lib-js';
+import golos, { multiauth } from 'golos-lib-js';
 import tt from 'counterpart';
 import { connect } from 'react-redux';
 
@@ -7,7 +7,7 @@ import { Button, Checkbox, Dimmer, Form, Header, Icon, Loader, Message, Modal } 
 
 import { authRegisterUrl, authUrl } from '@/utils/AuthApiClient';
 import { notifyLogin } from '@/utils/notifications';
-import { useOAuthNode } from '@/utils/oauthHelper'
+import { useMultiAuth } from '@/utils/multiauthHelper'
 
 class LoginModal extends React.Component {
 
@@ -150,15 +150,12 @@ class LoginModal extends React.Component {
         });
     };
 
-    useOAuth = (e) => {
-        e.preventDefault()
-        const permissions = [ 'comment', 'vote', 'donate', 'custom' ]
-        golos.oauth.login(permissions)
+    waitForLogin = async (oAuth = false) => {
         this.setState({ signerLoading: true })
-        golos.oauth.waitForLogin(res => {
+        multiauth.waitForLogin(res => {
             this.setState({ signerLoading: false })
             this.props.actions.signinAccount(res.account, '')
-            useOAuthNode(golos.config.get('oauth.host'))
+            useMultiAuth(oAuth ? golos.config.get('oauth.host') : null)
             this.handleClose()
         }, () => {
             this.setState({ signerLoading: false })
@@ -168,6 +165,19 @@ class LoginModal extends React.Component {
                 return true
             }
         })
+    }
+
+    useOAuth = async (e) => {
+        e.preventDefault()
+        const permissions = [ 'comment', 'vote', 'donate', 'custom' ]
+        await multiauth.login(permissions)
+        this.waitForLogin(true)
+    }
+
+    useKeychain = async (e) => {
+        e.preventDefault()
+        await multiauth.login([], { type: multiauth.AuthType.KEYCHAIN})
+        this.waitForLogin()
     }
 
     render() {
@@ -217,7 +227,7 @@ class LoginModal extends React.Component {
             let signer = null
             if (this.signerAvailable) {
                 const { signerLoading } = this.state
-                signer = (<a href='#' onClick={this.useOAuth}>
+                signer = (
                     <span style={{ float: 'left'}}>
                         <Dimmer.Dimmable as='span' dimmed={signerLoading}>
                             <Dimmer inverted active={signerLoading} style={{ background: 'transparent' }}>
@@ -225,14 +235,19 @@ class LoginModal extends React.Component {
                             </Dimmer>
                             <span style={{ opacity: signerLoading ? 0 : 1, fontSize: '1.025rem' }}>
                                 <span style={{ marginTop: '0.3rem', display: 'inline-block' }}>
-                                    <span style={{ verticalAlign: 'middle' }}>{tt('login.sign_in_with')}</span>
-                                    <img style={{ verticalAlign: 'middle', marginLeft: '0.3rem', marginRight: '0.3rem' }} src='/images/signer24x24.png' />
-                                    <span style={{ verticalAlign: 'middle' }}>{tt('login.sign_in_with_signer')}</span>
+                                    <a href='#' onClick={this.useOAuth}>
+                                        <span style={{ verticalAlign: 'middle' }}>{tt('login.sign_in_with')}</span>
+                                        <img style={{ verticalAlign: 'middle', marginLeft: '0.3rem', marginRight: '0.3rem' }} src='/images/signer24x24.png' />
+                                        <span style={{ verticalAlign: 'middle' }}>{tt('login.sign_in_with_signer')}</span>
+                                    </a>
+                                    <span style={{ verticalAlign: 'middle' }}>{' ' + tt('g.or') + ' '}</span>
+                                    <a href='#' onClick={this.useKeychain}>
+                                        <span style={{ verticalAlign: 'middle' }}>{tt('login.sign_in_with_keychain')}</span>
+                                    </a>
                                 </span>
                             </span>
                         </Dimmer.Dimmable>
-                    </span>
-                </a>)
+                    </span>)
             }
             modal = (
                 <Modal
