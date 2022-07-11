@@ -163,6 +163,7 @@
     "sign_in": "Login",
     "sign_in_with": "Login with ",
     "sign_in_with_signer": "Golos Signer",
+    "sign_in_with_keychain": "Golos Keychain",
     "key_warn": "Please use your keys responsibly.",
     "key_warn_description": "As with all Steem powered applications, please be aware of what website you're on and if you trust the organization running it. Make sure you are only using your posting key and your active/owner keys remain safe (preferrably in a wallet or offline). Use active key only if cases when you want transfer some tokens, etc.",
     "account_name": "Account Name",
@@ -175,6 +176,7 @@
     "memo_title": "Please authorize",
     "memo_description": "This operation requires your Memo key or password.",
     "no_such_account_name": "No such account name",
+    "account_frozen": "This account is temporarily frozen.",
     "wrong_password_format": "Invalid format of password/key",
     "wrong_password": "Wrong password/key",
     "wrong_password_not_active": "This operation requires active-key, not posting or owner",
@@ -268,6 +270,7 @@
     "error": "Error",
     "add": "Add",
     "edit": "Edit",
+    "or": "or",
     "refresh": "Refresh",
     "remove": "Remove",
     "reply": "Reply",
@@ -284,6 +287,7 @@
     "search": "Search",
     "messages": "Messages",
     "modified": " (updated)",
+    "more": "More details",
     "write_message": "Write a message"
   }
 }

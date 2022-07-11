@@ -1,5 +1,5 @@
 import React from 'react';
-import golos from 'golos-lib-js'
+import golos, { multiauth } from 'golos-lib-js'
 import tt from 'counterpart';
 
 import { Dropdown } from 'semantic-ui-react';
@@ -8,9 +8,9 @@ import { notifyLogout } from '@/utils/notifications';
 
 export default class LogoutItem extends React.Component {
     logout = async (e) => {
-        const isOAuth = this.props.account.name && !this.props.account.key
-        if (isOAuth) {
-            await golos.oauth.logout()
+        const isMultiAuth = this.props.account.name && !this.props.account.key
+        if (isMultiAuth) {
+            await multiauth.logout()
             this.props.actions.signoutAccount()
         } else {
             this.props.actions.signoutAccount()

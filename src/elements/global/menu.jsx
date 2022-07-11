@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import Link from '@/elements/link'
 import tt from 'counterpart';
 import ttGetByKey from '@/utils/ttGetByKey';
-import golos from 'golos-lib-js';
+import golos, { multiauth } from 'golos-lib-js';
 import { Asset } from 'golos-lib-js/lib/utils';
 
 import { Button, Container, Dropdown, Grid, Header, Icon, Label, Menu, Popup } from 'semantic-ui-react';
@@ -17,7 +17,8 @@ import LogoutItem from '@/elements/login/logout';
 import AccountAvatar from '@/elements/account/avatar';
 import { authRegisterUrl } from '@/utils/AuthApiClient';
 import { msgsHost, msgsLink, } from '@/utils/ExtLinkUtils'
-import { useOAuthNode } from '@/utils/oauthHelper'
+import { useMultiAuth } from '@/utils/multiauthHelper'
+import { notifyLogout } from '@/utils/notifications'
 
 class HeaderMenu extends Component {
     state = {
@@ -35,16 +36,27 @@ class HeaderMenu extends Component {
 
         if (!this.props.account || !this.props.account.data) {
             this.props.actions.fetchAccount(this.props.account.name);
+        } else {
+            const { data } = this.props.account
+            if (data.frozen) {
+                console.error('Frozen, signing out...')
+                this.props.actions.signoutAccount()
+                try {
+                    await notifyLogout()
+                } catch (error) {
+                    console.error('notifyLogout', error)
+                }
+            }
         }
 
         if (this.props.account && !this.props.account.key) {
             const host = golos.config.get('oauth.host')
             let res = {}
             if (host) {
-                res = await golos.oauth.checkReliable()
+                res = await multiauth.checkReliable()
             }
             if (res.authorized && res.account === this.props.account.name) {
-                useOAuthNode(host)
+                useMultiAuth((res.authType === multiauth.AuthType.OAUTH) && host)
             } else {
                 this.props.actions.signoutAccount()
             }
