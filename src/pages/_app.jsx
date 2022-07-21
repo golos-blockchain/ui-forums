@@ -31,6 +31,8 @@ class MyApp extends React.Component {
             if (process.browser) {
                 golos.config.set('websocket', $GLS_Config.golos_node);
                 golos.config.set('chain_id', $GLS_Config.golos_chain_id);
+                golos.config.set('signed.websocket', $GLS_Config.golos_node)
+                golos.config.set('signed.chain_id', $GLS_Config.golos_chain_id)
                 if ($GLS_Config.golos_signer && $GLS_Config.golos_signer.host) {
                     const { host, client } = $GLS_Config.golos_signer
                     if (client) {
