@@ -1,7 +1,11 @@
 import golos from 'golos-lib-js';
+import { Asset } from 'golos-lib-js/lib/utils'
 import getSlug from 'speakingurl';
 import tt from 'counterpart';
 import fetch from 'cross-fetch';
+
+import { showConfirmAsync } from '@/elements/global/confirm'
+import { checkAllowed, AllowTypes } from '@/utils/Allowance'
 
 import * as types from '@/actions/actionTypes';
 import * as BreadcrumbActions from '@/actions/breadcrumbActions';
@@ -16,8 +20,33 @@ export function setVoteProcessing(id) {
 
 export function castVote(payload) {
     return async dispatch => {
-        const { author, permlink, weight } = payload,
+        const { author, permlink, weight, cashout_time } = payload,
               { key, name } = payload.account;
+
+        const cancelIt = () => {
+            dispatch(castVoteResolvedError({
+                payload: payload
+            }))
+        }
+
+        const allowType = (!cashout_time || cashout_time.startsWith('19')) ?
+            AllowTypes.voteArchived : AllowTypes.vote
+        let blocking = await checkAllowed(name,
+            [], null, allowType)
+        if (blocking.error) {
+            alert(blocking.error)
+            cancelIt()
+            return
+        }
+        if (blocking.confirm) {
+            try {
+                await showConfirmAsync({ text: blocking.confirm })
+            } catch (cancel) {
+                cancelIt()
+                return
+            }
+        }
+
         golos.broadcast.vote(key, name, author, permlink, weight, (err, result) => {
             if(err) {
                 dispatch(castVoteResolvedError({
@@ -63,6 +92,30 @@ export function castDonate(payload) {
     return async dispatch => {
         const { author, permlink, category, root_author, root_permlink, amount, note } = payload;
         const { key, name } = payload.account;
+
+        const cancelIt = () => {
+            dispatch(donateResolvedError({
+                payload: payload
+            }))
+        }
+
+        const tipAmount = Asset(amount)
+        let blocking = await checkAllowed(name,
+            [author], tipAmount, AllowTypes.transfer)
+        if (blocking.error) {
+            alert(blocking.error)
+            cancelIt()
+            return
+        }
+        if (blocking.confirm) {
+            try {
+                await showConfirmAsync({ text: blocking.confirm })
+            } catch (cancel) {
+                cancelIt()
+                return
+            }
+        }
+
         let donate_memo = {};
         donate_memo.app = 'golos-forum';
         donate_memo.version = 1;
@@ -447,7 +500,7 @@ export function processError(err) {
     };
 }
 
-export function submit(account, data, parent, forum, action = 'post') {
+export function submit(account, data, parent, forum, action = 'post', rootParent = null) {
     return async dispatch => {
         const ops = [];
 
@@ -459,6 +512,40 @@ export function submit(account, data, parent, forum, action = 'post') {
         const permlink = (data.existingPost) ? data.existingPost.permlink : generatePermlink(title, parent); // Prevent editing
         const parent_author = (data.existingPost) ? data.existingPost.parent_author : (parent) ? parent.author : '';
         const parent_permlink = (data.existingPost) ? data.existingPost.parent_permlink : (parent) ? parent.permlink : data.category;
+
+        const root_author = rootParent ? rootParent.author : author
+
+        const allowType = parent ?
+            (data.existingPost ? AllowTypes.commentEdit : AllowTypes.comment) :
+            (data.existingPost ? AllowTypes.postEdit : AllowTypes.post)
+
+        const cancelIt = () => {
+            dispatch({
+                type: types.POST_SUBMIT_ERROR,
+                payload: {
+                    formId: data.formId,
+                    hasError: true,
+                    ts: +new Date()
+                }
+            })
+        }
+
+        let blocking = await checkAllowed(author,
+            [parent_author || author, root_author],
+            null, allowType)
+        if (blocking.error) {
+            alert(blocking.error)
+            cancelIt()
+            return
+        }
+        if (blocking.confirm) {
+            try {
+                await showConfirmAsync({ text: blocking.confirm })
+            } catch (cancel) {
+                cancelIt()
+                return
+            }
+        }
 
         // JSON to append to the post
         const meta = {

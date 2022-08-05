@@ -9,7 +9,7 @@ import translateError from '@/utils/translateError';
 export default class Voting extends React.Component {
     castVote = (e, data) => {
         let voter = this.props.account.name;
-        let { author, permlink } = this.props.post;
+        let { author, permlink, cashout_time } = this.props.post;
         let weight = data.weight * 100;
         let myVote = null;
         if (this.props.post && this.props.post.active_votes) {
@@ -25,14 +25,16 @@ export default class Voting extends React.Component {
                 account: this.props.account,
                 author: author,
                 permlink: permlink,
-                weight: 0
+                weight: 0,
+                cashout_time
             });
         } else {
             this.props.onVoteCast({
                 account: this.props.account,
                 author: author,
                 permlink: permlink,
-                weight: weight
+                weight: weight,
+                cashout_time
             });
         }
     }

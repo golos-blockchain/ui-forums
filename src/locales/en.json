@@ -262,6 +262,19 @@
       "flags": "Flags"
     }
   },
+  "confirm": {
+    "title": "Confirmation"
+  },
+  "do_not_bother": {
+    "blocking_confirm": "User blocked you, now sending of operations requires cost. Do you want to send them %(AMOUNT)s from TIP-balance?",
+    "blocking_error": "User blocked you, now sending of operations requires cost. %(AMOUNT)s required on your TIP-balance.",
+    "bother_confirm": "User wants to not be bothered by accounts with low-reputation, now sending of operations requires cost. Do you want to send them %(AMOUNT)s from TIP-balance?",
+    "bother_error": "User wants to not be bothered by accounts with low-reputation, now sending of operations requires cost. %(AMOUNT)s required on your TIP-balance.",
+    "negrep_confirm": "You have negative reputation, now sending of operations requires cost. Do you want to send them %(AMOUNT)s from TIP-balance?",
+    "negrep_error": "You have negative reputation, now sending of operations requires cost. %(AMOUNT)s required on your TIP-balance.",
+    "window_confirm": "You have reached limit, now sending of operations requires cost. Do you want to send them %(AMOUNT)s from TIP-balance?",
+    "window_error": "You have reached limit now sending of operations requires cost. %(AMOUNT)s required on your TIP-balance."
+  },
   "g": {
     "and": "and",
     "author": "Author",
