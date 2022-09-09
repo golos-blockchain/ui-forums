@@ -12,6 +12,7 @@ import BannerMenu from '@/elements/global/banner';
 import BreadcrumbMenu from '@/elements/global/breadcrumb';
 import FooterMenu from '@/elements/global/footer';
 import HeaderMenu from '@/elements/global/menu';
+import ConfirmModal from '@/elements/global/confirm'
 
 import '@/semantic/dist/semantic.css'
 import '@/pages/index.css'
@@ -103,6 +104,7 @@ class MyApp extends React.Component {
                     <BreadcrumbMenu withSearch={true} />
                     <BannerMenu />
                     <FooterMenu />
+                    <ConfirmModal />
                 </div>
             </div>
         ) : <Component {...pageProps} />

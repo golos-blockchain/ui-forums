@@ -237,7 +237,7 @@ class PostForm extends React.Component {
                 realParent = { author: realParent[0].substring(1), permlink: realParent[1].split(')')[0] };
             }
         }
-        this.props.actions.submit(account, data, realParent || parent, this.props.forum, action);
+        this.props.actions.submit(account, data, realParent || parent, this.props.forum, action, parent);
         this.setState({
             submitting: true
         });
