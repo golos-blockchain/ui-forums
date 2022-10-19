@@ -163,6 +163,7 @@ class HeaderMenu extends Component {
                         <Dropdown.Item as={'a'} href={`/@${name}/responses`} icon='comments' content={tt('account.responses')} />
                         {msgsAvail ? <Dropdown.Item as={'a'} label={notifiLabel} target='_blank' rel='noopener noreferrer' href={msgsLink()} icon='envelope' content={tt('g.messages')} /> : null}
                         <Dropdown.Item as={'a'} target='_blank' href={`https://golos.id/@${name}`} icon='users' content={tt('account.blogs')} />
+                        <Dropdown.Item as={'a'} target='_blank' href={`https://wallet.golos.id/@${name}`} icon='payment' content={tt('g.wallet')} />
                         <LogoutItem {...this.props} />
                     </Dropdown.Menu>
                 </Dropdown>
@@ -204,7 +205,7 @@ class HeaderMenu extends Component {
                                 </Grid.Row>
                                 <Grid.Row columns={1}>
                                     <Grid.Column>
-                                        <Button as='a' target='_blank' href={'https://golos.id/@' + name + '/transfers'} color='purple' fluid size='small'>
+                                        <Button as='a' target='_blank' href={'https://wallet.golos.id/@' + name} color='purple' fluid size='small'>
                                             {tt('account.open_wallet')}
                                         </Button>
                                     </Grid.Column>
