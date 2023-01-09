@@ -17,7 +17,7 @@ const secureHeadersOpts = {
     contentSecurityPolicy: {
         directives: cspDirectives,
     },
-    referrerPolicy: 'no-referrer',
+    referrerPolicy: 'strict-origin',
 }
 
 const secureHeaders = createHeadersObject(secureHeadersOpts)
