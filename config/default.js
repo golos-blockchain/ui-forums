@@ -62,6 +62,9 @@ module.exports = {
         login: 'golosclient',
         password: 'golosclient'
     },
+    app_updater: {
+        host: 'https://files.golos.app'
+    },
     helmet: {
         directives: {
             defaultSrc: "'self'",

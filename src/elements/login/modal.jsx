@@ -237,6 +237,10 @@ class LoginModal extends React.Component {
         if (this.state.loginOpen) {
             let signer = null
             if (this.signerAvailable) {
+                const keychainLink = (browser) => {
+                    if (!$GLS_Config.app_updater) return '#'
+                    return new URL('/api/exe/keychain/' + browser + '/latest', $GLS_Config.app_updater.host).toString()
+                }
                 const { signerLoading } = this.state
                 signer = (
                     <span style={{ float: 'left'}}>
@@ -258,11 +262,11 @@ class LoginModal extends React.Component {
                                     <Modal open={this.state.downloadKeychain}>
                                         <Modal.Content>
                                             {tt('login.keychain_not_installed')}
-                                            <a href='https://files.golos.app/keychain-firefox/golos-keychain-1.0.0.zip'>
+                                            <a href={keychainLink('firefox')}>
                                                 Firefox
                                             </a>
                                             {' ' + tt('g.or') + ' '}
-                                            <a href='https://files.golos.app/keychain-chrome/golos-keychain-1.0.0.zip'>
+                                            <a href={keychainLink('chrome')}>
                                                 Chrome
                                             </a>
                                             .
