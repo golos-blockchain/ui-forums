@@ -63,10 +63,9 @@ class LoginModal extends React.Component {
     handleSubmit = async e => {
         e.preventDefault();
         const { isActive, isMemo } = this.props;
-        const { account, key, rememberMe } = this.state,
-              t = this;
+        const { account, key, rememberMe } = this.state
         // Indicate we're loading
-        t.setState({
+        this.setState({
             loading: true,
             error: false
         });
@@ -83,7 +82,7 @@ class LoginModal extends React.Component {
                         <a href={authUrl('/sign/unfreeze/' + account)} target='_blank' rel='noopener noreferrer'>&nbsp;{tt('g.more')}</a>
                     </span>
             }
-            t.setState({
+            this.setState({
                 loading: false,
                 error
             })
@@ -91,11 +90,11 @@ class LoginModal extends React.Component {
         }
         if (isMemo) {
             if (res.memo) {
-                t.props.actions.signinAccount(account, '', res.memo, rememberMe);
-                t.handleClose();
+                this.props.actions.signinAccount(account, '', res.memo, rememberMe);
+                this.handleClose();
                 return;
             } else if (res.posting || res.owner || res.active) {
-                t.setState({
+                this.setState({
                     loading: false,
                     error: tt('login.wrong_password_not_memo')
                 });
@@ -103,11 +102,11 @@ class LoginModal extends React.Component {
             }
         } else if (isActive) {
             if (res.active) {
-                t.props.actions.signinAccount(account, res.active);
-                t.handleClose();
+                this.props.actions.signinAccount(account, res.active);
+                this.handleClose();
                 return;
             } else if (res.posting || res.owner || res.memo) {
-                t.setState({
+                this.setState({
                     loading: false,
                     error: tt('login.wrong_password_not_active')
                 });
@@ -115,14 +114,14 @@ class LoginModal extends React.Component {
             }
         } else {
             if (res.active && !res.password) {
-                t.setState({
+                this.setState({
                     loading: false,
                     error: tt('login.wrong_password_active')
                 });
                 return;
             }
             if (res.owner && !res.password) {
-                t.setState({
+                this.setState({
                     loading: false,
                     error: tt('login.wrong_password_owner')
                 });
@@ -134,17 +133,17 @@ class LoginModal extends React.Component {
                 golos.config.set('chain_id', $GLS_Config.golos_chain_id)
                 golos.config.set('credentials', undefined)
 
-                t.props.actions.signinAccount(account, res.posting, res.memo);
+                this.props.actions.signinAccount(account, res.posting, res.memo);
                 try {
                     await notifyLogin(account, res.posting);
                 } catch (error) {
                     console.error('notifyLogin fail', error);
                 }
-                t.handleClose();
+                this.handleClose();
                 return;
             }
         }
-        t.setState({
+        this.setState({
             loading: false,
             error: tt('login.wrong_password')
         });
@@ -176,8 +175,20 @@ class LoginModal extends React.Component {
 
     useKeychain = async (e) => {
         e.preventDefault()
-        await multiauth.login([], { type: multiauth.AuthType.KEYCHAIN})
+        try {
+            await multiauth.login([], { type: multiauth.AuthType.KEYCHAIN})
+        } catch (err) {
+            if (err && err.message.includes('Golos Keychain extension is not installed or disabled')) {
+                this.setState({ downloadKeychain: true })
+                return
+            }
+            throw err
+        }
         this.waitForLogin()
+    }
+
+    closeKeychainModal = () => {
+        this.setState({ downloadKeychain: false })
     }
 
     render() {
@@ -244,6 +255,22 @@ class LoginModal extends React.Component {
                                     <a href='#' onClick={this.useKeychain}>
                                         <span style={{ verticalAlign: 'middle' }}>{tt('login.sign_in_with_keychain')}</span>
                                     </a>
+                                    <Modal open={this.state.downloadKeychain}>
+                                        <Modal.Content>
+                                            {tt('login.keychain_not_installed')}
+                                            <a href='https://files.golos.app/keychain-firefox/golos-keychain-1.0.0.zip'>
+                                                Firefox
+                                            </a>
+                                            {' ' + tt('g.or') + ' '}
+                                            <a href='https://files.golos.app/keychain-chrome/golos-keychain-1.0.0.zip'>
+                                                Chrome
+                                            </a>
+                                            .
+                                        </Modal.Content>
+                                        <Modal.Actions>
+                                            <Button color='orange' onClick={this.closeKeychainModal}>{tt('g.close')}</Button>
+                                        </Modal.Actions>
+                                    </Modal>
                                 </span>
                             </span>
                         </Dimmer.Dimmable>

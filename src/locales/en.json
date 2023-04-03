@@ -185,7 +185,8 @@
     "wrong_password_owner": "Cannot login with owner key (even if posting key is same)",
     "remember_me": "Remember",
     "remember_memo": "Remember my memo-key",
-    "sign_up": "Register"
+    "sign_up": "Register",
+    "keychain_not_installed": "You have not yet installed Golos KeyChain extension. You can download it here: "
   },
   "validation": {
     "account_name_should_be_shorter": "Account name should not be longer that 16 characters.",
@@ -281,6 +282,7 @@
     "and": "and",
     "author": "Author",
     "cancel": "Cancel",
+    "close": "Close",
     "proceed": "Proceed ",
     "error": "Error",
     "add": "Add",
