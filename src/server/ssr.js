@@ -15,6 +15,7 @@ function initConfig() {
         notify_service: config.get('notify_service'),
         messenger_service: config.get('messenger_service'),
         elastic_search: config.get('elastic_search'),
+        app_updater: config.has('app_updater') && config.get('app_updater'),
         helmet: config.get('helmet'),
         anti_phishing: config.get('anti_phishing'),
     }

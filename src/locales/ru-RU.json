@@ -185,7 +185,8 @@
     "wrong_password_owner": "Нельзя входить с owner-ключом (даже если такой же ключ служит и posting-ключом)",
     "remember_me": "Запомнить",
     "remember_memo": "Запомнить мой memo-ключ",
-    "sign_up": "Регистрация"
+    "sign_up": "Регистрация",
+    "keychain_not_installed": "У вас не установлено расширение Golos KeyChain. Скачайте его для "
   },
   "validation": {
     "account_name_should_not_be_empty": "Имя аккаунта должно быть непустым.",
@@ -281,6 +282,7 @@
     "and": "и",
     "author": "Автор",
     "cancel": "Отмена",
+    "close": "Закрыть",
     "proceed": "Далее ",
     "error": "Ошибка",
     "add": "Добавить",
